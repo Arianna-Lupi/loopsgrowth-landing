@@ -57,7 +57,7 @@ Página: `<body>` contiene `SkipLinks`, `SiteHeader`, `<main id="main">` (Hero, 
 
 ## Spacing Scale
 
-Valores declarados (todos múltiplos de 4). Base 4 px, en `rem` para que el zoom funcione.
+Valores declarados: exactamente el conjunto estándar 4, 8, 16, 24, 32, 48 y 64 px (todos múltiplos de 4). Ningún espaciado de la fase usa un valor fuera de este conjunto; lo que queda fuera son excepciones nombradas abajo. Base 4 px, en `rem` para que el zoom funcione.
 
 | Token | Value | Usage |
 |-------|-------|-------|
@@ -67,14 +67,14 @@ Valores declarados (todos múltiplos de 4). Base 4 px, en `rem` para que el zoom
 | lg | 24px | Padding interno horizontal de botones, separación entre título e intro, `scroll-margin-top` de `#agenda` |
 | xl | 32px | Gutter máximo, separación entre bloques de una misma sección |
 | 2xl | 48px | Gap entre columnas de `#agenda` (escritorio), padding vertical de sección compacta |
-| 3xl | 64px | Padding vertical de sección en móvil (menor a 768 px) |
-| 4xl | 96px | Padding vertical de sección desde 768 px |
+| 3xl | 64px | Padding vertical de sección (hero y `#agenda`) en todos los anchos, de 320 a 1280 px. Es el tope de la escala: no hay un paso mayor |
 
 Contenedor: `max-width: 72rem` (1152 px), centrado, con gutter `clamp(1rem, 4vw, 2rem)` (16 px a 320 px, 32 px como tope). Medida de prosa: `max-width: 65ch` (A11Y.md permite hasta 80ch). Puntos de quiebre globales: `40em` (640 px) y `64em` (1024 px), los `sm` y `lg` por defecto de Tailwind.
 
 Exceptions:
 - Objetivo táctil mínimo: `min-h-11` y `min-w-11` (44 px) en todo enlace o botón. CTA principal en `min-h-12` (48 px).
 - Borde y contorno: 3 px de grosor de anillo de foco y de borde pop, 2 px de `outline-offset`. No son múltiplos de 4 y no se ajustan (los exige A11Y.md y el estilo pop).
+- Efectos visuales, no espaciado: desplazamientos de la sombra pop (2, 4 y 6 px), `translate` de hover y active (2 px) y grosor de subrayado (2 y 3 px). No ocupan espacio en el layout, así que no pertenecen a la escala.
 - Alto mínimo del iframe: valor medido en el navegador, redondeado hacia arriba al siguiente múltiplo de 8. No se dicta aquí (ver `## Interaction Contract`).
 - Nunca alturas fijas (`h-`) en contenedores de texto: solo `min-h`, para sobrevivir al espaciado de texto de SC 1.4.12.
 
@@ -193,7 +193,7 @@ Reglas derivadas:
 
 ### Skip links
 - Contenedor `<nav aria-label="Saltos de página">` como primer hijo de `<body>`. Dos enlaces en este orden: "Saltar al contenido" (`#main`) y "Saltar al formulario" (`#agenda`).
-- Fuera de pantalla por defecto con posicionamiento (`position: absolute; transform: translateY(-200%)`), nunca `display: none` ni `visibility: hidden`. Al recibir foco: `top: 8px; left: 8px` (fijo a la ventana), fondo `#212121`, texto `#ffc602`, tamaño Label 700, padding `12px 16px`, `min-h-11`, radio 8 px, contorno de foco `3px solid #73187F` con offset 2 px (se ve contra el header blanco).
+- Fuera de pantalla por defecto con posicionamiento (`position: absolute; transform: translateY(-200%)`), nunca `display: none` ni `visibility: hidden`. Al recibir foco: `top: 8px; left: 8px` (fijo a la ventana), fondo `#212121`, texto `#ffc602`, tamaño Label 700, padding `8px 16px`, `min-h-11`, radio 8 px, contorno de foco `3px solid #73187F` con offset 2 px (se ve contra el header blanco).
 - `<main id="main" tabindex="-1">` para que el salto mueva el foco.
 
 ### Header
@@ -203,19 +203,19 @@ Reglas derivadas:
 - Alineación: `flex items-center justify-between`.
 
 ### Hero (provisional)
-- `<section aria-labelledby="hero-title">` sobre tono `light`. Padding vertical 64 px (menor a 768 px) y 96 px (desde 768 px). Columna única alineada a la izquierda, sin imagen (el lado derecho queda libre para el collage de la Fase 2).
+- `<section aria-labelledby="hero-title">` sobre tono `light`. Padding vertical 64 px en todos los anchos. Columna única alineada a la izquierda, sin imagen (el lado derecho queda libre para el collage de la Fase 2).
 - `<h1 id="hero-title">`: Display, `#212121`, `max-width: 22ch`. Único `<h1>` de la página.
 - Subtítulo `<p>`: Body, `max-width: 65ch`, separación de 24 px bajo el h1.
 - CTA principal: separación de 32 px bajo el subtítulo. Es el primer punto focal de la página: el único elemento con relleno de acento en el primer pantallazo.
 
 ### Botón CTA (`CtaLink`)
 - `<a href="#agenda">`, texto Body 700, `#212121`, relleno `var(--cta-bg)`, borde `3px solid #212121`, radio pill (999 px), sombra pop `4px 4px 0 #212121`.
-- Tamaño: `min-h-12` (48 px), `min-w-11`, padding horizontal 24 px, padding vertical 12 px. El texto puede partirse en dos líneas a 320 px; nunca truncar ni fijar `height`.
+- Tamaño: `min-h-12` (48 px), `min-w-11`, padding horizontal 24 px, padding vertical 8 px (el alto de 48 px lo garantiza `min-h-12`, no el padding). El texto puede partirse en dos líneas a 320 px; nunca truncar ni fijar `height`.
 - Mismo texto visible en todos los CTA del sitio: nombre accesible igual al texto visible (SC 2.5.3). Sin `aria-label`.
 - Estados en `## Interaction Contract`.
 
 ### Sección `#agenda`
-- `<section id="agenda" aria-labelledby="agenda-title" data-tone="purple">` con `scroll-margin-top: 24px`. Padding vertical 64 px (menor a 768 px) y 96 px (desde 768 px).
+- `<section id="agenda" aria-labelledby="agenda-title" data-tone="purple">` con `scroll-margin-top: 24px`. Padding vertical 64 px en todos los anchos.
 - Menor a 1024 px, una columna en este orden: h2, intro, enlace de respaldo, tarjeta del formulario. Desde 1024 px, dos columnas con `grid-template-columns: minmax(0, 5fr) minmax(0, 7fr)` y gap 48 px: izquierda h2, intro y enlace de respaldo (`align-self: start`); derecha la tarjeta.
 - Orden del DOM igual al orden visual (sin reordenar por CSS).
 - h2: Heading, `#ffffff`, `tabindex="-1"`. Intro: Body, `#ffffff`, `max-width: 65ch`, 16 px bajo el h2.
@@ -302,7 +302,7 @@ Subrayado siempre visible (la señal no depende del color). Hover: texto `#ffc60
 | 320 px | Una columna, gutter 16 px, CTA del header oculto, CTA del hero con texto en dos líneas si hace falta, iframe al 100 % sin scroll horizontal |
 | 390 px | Igual; ancho de medición de `--form-min-h-sm` |
 | 640 px | Aparece el CTA del header (`sm`) |
-| 768 px | Padding vertical de sección pasa de 64 a 96 px; una columna en `#agenda` |
+| 768 px | Sin cambio de padding (64 px en todos los anchos); una columna en `#agenda` |
 | 1024 px | `#agenda` pasa a dos columnas 5fr y 7fr (`lg`); ancho de medición de `--form-min-h-lg` (tarjeta más estrecha, caso más alto) |
 | 1280 px | Contenedor a 1152 px; segundo punto de medición de `--form-min-h-lg` |
 
