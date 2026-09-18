@@ -66,6 +66,7 @@ Un visitante entiende en segundos qué hace Loops Growth y llena el formulario d
 - **Marca**: Colores, tipografía y logo del brandbook sin desviarse; pixel-perfect.
 - **Performance/SEO**: La página promete SEO técnico; ella misma debe tener Core Web Vitals sólidos y HTML semántico.
 - **Contenido**: El copy viene de Ari; los entregables de texto escritos por nosotros se humanizan (sin em/en dashes).
+- **Skills obligatorias (regla de Juan)**: Todo trabajo de diseño web pasa por la skill `impeccable` y la taste skill (`design-taste-frontend`). Todo texto y copy pasa por la skill `humanizer` con la voz y tono de la marca (profesional sin ser aburrido, cercano, con energía, directo). Español neutro, nunca voseo (usar "tú", no "vos"/"tenés"/"agendá").
 
 ## Key Decisions
 
