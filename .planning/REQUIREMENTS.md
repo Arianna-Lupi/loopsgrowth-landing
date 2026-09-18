@@ -60,7 +60,7 @@ Requisitos para la primera entrega. Cada uno se asigna a una fase del roadmap.
 
 ### SEO y rendimiento
 
-- [ ] **SEO-01**: La página tiene title, meta description, canonical y imagen OG de 1200x630 propios.
+- [ ] **SEO-01**: La página tiene title, meta description, canonical e imagen OG de 1200x630 propios.
 - [ ] **SEO-02**: El HTML servido incluye JSON-LD `Organization`, `ProfessionalService`, `WebSite` y `WebPage`, sin `Review` ni `AggregateRating`.
 - [ ] **SEO-03**: La página tiene un solo H1 y landmarks semánticos, y genera sitemap y robots según el entorno.
 - [ ] **PERF-01**: En el build local, Lighthouse móvil da rendimiento 95 o más, accesibilidad 100 y SEO 100.
@@ -115,17 +115,61 @@ Excluido de forma explícita para evitar deriva de alcance.
 
 ## Traceability
 
-Qué fase cubre cada requisito. Se completa al crear el roadmap.
+Qué fase cubre cada requisito. Completado al crear el roadmap.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| (se completa con el roadmap) | | |
+| FND-01 | Phase 1 | Pending |
+| FND-02 | Phase 1 | Pending |
+| FND-03 | Phase 1 | Pending |
+| FND-04 | Phase 1 | Pending |
+| FND-05 | Phase 1 | Pending |
+| FORM-01 | Phase 1 | Pending |
+| FORM-02 | Phase 1 | Pending |
+| FORM-03 | Phase 1 | Pending |
+| FORM-04 | Phase 1 | Pending |
+| FORM-05 | Phase 1 | Pending |
+| COPY-02 | Phase 1 | Pending |
+| A11Y-03 | Phase 1 | Pending |
+| CONT-01 | Phase 2 | Pending |
+| CONT-02 | Phase 2 | Pending |
+| CONT-03 | Phase 2 | Pending |
+| CONT-04 | Phase 2 | Pending |
+| CONT-05 | Phase 2 | Pending |
+| CONT-06 | Phase 2 | Pending |
+| CONT-07 | Phase 2 | Pending |
+| CONT-08 | Phase 2 | Pending |
+| CONT-09 | Phase 2 | Pending |
+| CONT-10 | Phase 2 | Pending |
+| CONT-11 | Phase 2 | Pending |
+| CONT-12 | Phase 2 | Pending |
+| CONT-13 | Phase 2 | Pending |
+| COPY-01 | Phase 2 | Pending |
+| DSGN-01 | Phase 2 | Pending |
+| DSGN-02 | Phase 2 | Pending |
+| DSGN-03 | Phase 2 | Pending |
+| DSGN-04 | Phase 2 | Pending |
+| DSGN-05 | Phase 2 | Pending |
+| A11Y-01 | Phase 3 | Pending |
+| A11Y-02 | Phase 3 | Pending |
+| SEO-01 | Phase 3 | Pending |
+| SEO-02 | Phase 3 | Pending |
+| SEO-03 | Phase 3 | Pending |
+| PERF-01 | Phase 3 | Pending |
+| MEAS-01 | Phase 3 | Pending |
+| MEAS-02 | Phase 3 | Pending |
+| LNCH-01 | Phase 4 | Pending |
+| LNCH-02 | Phase 4 | Pending |
+| LNCH-03 | Phase 4 | Pending |
+| LNCH-04 | Phase 4 | Pending |
 
 **Coverage:**
 - v1 requirements: 43 total
-- Mapped to phases: 0
-- Unmapped: 43 ⚠️
+- Mapped to phases: 43
+- Unmapped: 0 ✓
+
+**Por fase:** Phase 1 = 12, Phase 2 = 19, Phase 3 = 8, Phase 4 = 4.
 
 ---
 *Requirements defined: 2026-09-18*
-*Last updated: 2026-09-18 after initial definition*
+*Last updated: 2026-09-18 after roadmap creation*
