@@ -65,8 +65,8 @@ Un visitante entiende en segundos qué hace Loops Growth y llena el formulario d
 - **Accesibilidad**: A11Y.md obligatorio en todo el frontend — https://github.com/fecarrico/A11Y.md/blob/main/docs/en/A11Y.md
 - **Marca**: Colores, tipografía y logo del brandbook sin desviarse; pixel-perfect.
 - **Performance/SEO**: La página promete SEO técnico; ella misma debe tener Core Web Vitals sólidos y HTML semántico.
-- **Contenido**: El copy viene de Ari; los entregables de texto escritos por nosotros se humanizan (sin em/en dashes).
-- **Skills obligatorias (regla de Juan)**: Todo trabajo de diseño web pasa por la skill `impeccable` y la taste skill (`design-taste-frontend`). Todo texto y copy pasa por la skill `humanizer` con la voz y tono de la marca (profesional sin ser aburrido, cercano, con energía, directo). Español neutro, nunca voseo (usar "tú", no "vos"/"tenés"/"agendá").
+- **Contenido**: El copy viene de Ari; todos los textos ya están en el doc de Ari (https://docs.google.com/document/d/1QK61DPEQ3UbBQcCBnepwoaBesyZE1ZvZ6VfLgPrgtI0/edit?tab=t.nvl47nvdgyma); no se humaniza ni se reescribe nada (cambio de Juan, 2026-09-18). Si falta un texto, se pide a Ari.
+- **Skills obligatorias (regla de Juan)**: Todo trabajo de diseño web pasa por la skill `impeccable` y la taste skill (`design-taste-frontend`). El texto y copy viene del doc de Ari y no pasa por `humanizer`. Español neutro, nunca voseo (usar "tú", no "vos"/"tenés"/"agendá").
 
 ## Key Decisions
 

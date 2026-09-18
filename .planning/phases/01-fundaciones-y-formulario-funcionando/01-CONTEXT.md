@@ -32,7 +32,7 @@ Sitio Astro 7 + Tailwind 4 corriendo en local (`npm run dev --host`, puerto 4321
 - Foco `:focus-visible` de 2 px con contraste 3:1, skip link al `main`, `min-h-11 min-w-11` en CTAs y contenido visible sin JavaScript, desde esta fase.
 
 ### Claude's Discretion
-Estructura interna de carpetas, nombres de componentes, esquema exacto del YAML, y detalles del script de foco. Reglas de proyecto que aplican: diseño web pasa por `impeccable` y `design-taste-frontend`; todo texto pasa por `humanizer`, en español neutro sin voseo ni guiones largos; A11Y.md estricto.
+Estructura interna de carpetas, nombres de componentes, esquema exacto del YAML, y detalles del script de foco. Reglas de proyecto que aplican: diseño web pasa por `impeccable` y `design-taste-frontend`; todo el texto sale tal cual del doc de Ari (fuente de verdad, sin humanizar ni reescribir; si falta un texto se pide a Ari, no se inventa); A11Y.md estricto.
 
 </decisions>
 

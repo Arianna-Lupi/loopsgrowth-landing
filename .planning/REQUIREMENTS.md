@@ -41,7 +41,7 @@ Requisitos para la primera entrega. Cada uno se asigna a una fase del roadmap.
 
 ### Copy
 
-- [ ] **COPY-01**: Todo el texto pasa por la skill `humanizer` con la voz de marca, en español neutro, sin voseo y sin guiones largos.
+- [ ] **COPY-01**: Todo el texto sale tal cual del doc de Ari (sin humanizar ni reescribir), en español neutro; si falta un texto se pide a Ari.
 - [ ] **COPY-02**: El build de producción falla si queda `[VERIFICAR]`, una afirmación `pending`, voseo, guion largo o el término "AEO".
 
 ### Diseño y marca

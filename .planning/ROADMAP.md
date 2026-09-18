@@ -13,7 +13,7 @@ Loops Growth necesita una landing de una sola página que lleve al visitante al 
 Las fases decimales aparecen entre sus enteras vecinas en orden numérico.
 
 - [ ] **Phase 1: Fundaciones y formulario funcionando** - Sitio local con el formulario de ClickUp embebido y probado con un envío real, con tokens, copy y accesibilidad base protegidos por scripts
-- [ ] **Phase 2: Secciones, marca y copy** - Las secciones del Copy v2 con el estilo collage pop, responsive y con el texto humanizado
+- [ ] **Phase 2: Secciones, marca y copy** - Las secciones del Copy v2 con el estilo collage pop, responsive y con el texto del doc de Ari
 - [ ] **Phase 3: SEO, medición mínima y QA** - Metadatos, JSON-LD, eventos de medición, accesibilidad y rendimiento verificados con datos
 - [ ] **Phase 4: Salida al evento** - Dominio, deploy con HTTPS, QR con UTM, QR de contingencia y vista previa social
 
@@ -22,7 +22,7 @@ Las fases decimales aparecen entre sus enteras vecinas en orden numérico.
 ### Phase 1: Fundaciones y formulario funcionando
 **Goal:** As a dueño de un negocio, I want to llenar el formulario de ClickUp sin salir de la página, so that Ari y Camila reciban mi solicitud de llamada.
 **Mode:** mvp
-**Reglas de proyecto**: el diseño web pasa por las skills `impeccable` y `design-taste-frontend`; todo el copy pasa por la skill `humanizer` con la voz de marca (español neutro, sin voseo, sin guiones largos).
+**Reglas de proyecto**: el diseño web pasa por las skills `impeccable` y `design-taste-frontend`; todo el copy sale tal cual del doc de Ari, sin pasar por `humanizer`.
 **Depends on**: Ninguna (primera fase)
 **Requirements**: FND-01, FND-02, FND-03, FND-04, FND-05, FORM-01, FORM-02, FORM-03, FORM-04, FORM-05, COPY-02, A11Y-03
 **Success Criteria** (what must be TRUE):
@@ -37,7 +37,7 @@ Las fases decimales aparecen entre sus enteras vecinas en orden numérico.
 ### Phase 2: Secciones, marca y copy
 **Goal:** As a dueño de un negocio, I want to entender en segundos qué hace Loops Growth y por qué confiar, so that llegue al formulario decidido a agendar.
 **Mode:** mvp
-**Reglas de proyecto**: el diseño web pasa por las skills `impeccable` y `design-taste-frontend` (esta es la fase con más trabajo de diseño); todo el copy pasa por la skill `humanizer` con la voz de marca (español neutro, sin voseo, sin guiones largos).
+**Reglas de proyecto**: el diseño web pasa por las skills `impeccable` y `design-taste-frontend` (esta es la fase con más trabajo de diseño); todo el copy sale tal cual del doc de Ari, sin pasar por `humanizer`.
 **Depends on**: Phase 1
 **Requirements**: CONT-01, CONT-02, CONT-03, CONT-04, CONT-05, CONT-06, CONT-07, CONT-08, CONT-09, CONT-10, CONT-11, CONT-12, CONT-13, COPY-01, DSGN-01, DSGN-02, DSGN-03, DSGN-04, DSGN-05
 **Success Criteria** (what must be TRUE):
@@ -52,7 +52,7 @@ Las fases decimales aparecen entre sus enteras vecinas en orden numérico.
 ### Phase 3: SEO, medición mínima y QA
 **Goal:** As a dueño de un negocio, I want to abrir la página desde buscadores, redes o un QR en cualquier dispositivo, so that pueda enviar el formulario sin tropiezos.
 **Mode:** mvp
-**Reglas de proyecto**: el diseño web (incluida la imagen OG) pasa por las skills `impeccable` y `design-taste-frontend`; todo el texto, incluidos title, meta description y demás metadatos, pasa por la skill `humanizer` con la voz de marca (español neutro, sin voseo, sin guiones largos).
+**Reglas de proyecto**: el diseño web (incluida la imagen OG) pasa por las skills `impeccable` y `design-taste-frontend`; todo el texto, incluidos title, meta description y demás metadatos, sale del doc de Ari (o se pide a Ari), sin pasar por `humanizer`.
 **Depends on**: Phase 2
 **Requirements**: SEO-01, SEO-02, SEO-03, PERF-01, MEAS-01, MEAS-02, A11Y-01, A11Y-02
 **Success Criteria** (what must be TRUE):
@@ -66,7 +66,7 @@ Las fases decimales aparecen entre sus enteras vecinas en orden numérico.
 ### Phase 4: Salida al evento
 **Goal:** As a asistente al evento, I want to escanear un QR y abrir la landing pública en mi móvil, so that pueda agendar mi llamada con Loops Growth.
 **Mode:** mvp
-**Reglas de proyecto**: cualquier pieza de diseño web que aparezca (vista previa social, página de destino del QR) pasa por las skills `impeccable` y `design-taste-frontend`; todo texto nuevo, incluido el del material impreso del QR, pasa por la skill `humanizer` con la voz de marca (español neutro, sin voseo, sin guiones largos).
+**Reglas de proyecto**: cualquier pieza de diseño web que aparezca (vista previa social, página de destino del QR) pasa por las skills `impeccable` y `design-taste-frontend`; todo texto nuevo, incluido el del material impreso del QR, sale del doc de Ari (o se pide a Ari), sin pasar por `humanizer`.
 **Depends on**: Phase 3, más dos decisiones externas: el dominio (o un subdominio gratuito) y la aprobación de Ari sobre las afirmaciones `pending`
 **Nota**: se planifica ahora, pero se ejecuta antes del evento, cuando las decisiones externas estén resueltas. No bloquea la entrega local de las fases anteriores.
 **Requirements**: LNCH-01, LNCH-02, LNCH-03, LNCH-04

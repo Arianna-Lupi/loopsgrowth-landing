@@ -14,7 +14,7 @@ La landing completa con las secciones del Copy v2 (Hero, El problema, Por qué a
 ## Implementation Decisions
 
 ### Hero, header y orden de la página
-- H1 con fórmula categoría + público + resultado, partiendo del H1 del Copy v2 de Ari y pasado por `humanizer`.
+- H1 con fórmula categoría + público + resultado, tomado tal cual del Copy v2 de Ari (sin humanizar ni reescribir).
 - Header con logo SVG a la izquierda y un botón CTA a la derecha, sin menú y no fijo (evita tapar el foco, SC 2.4.11).
 - Orden: Hero, El problema, Por qué ahora, La solución, Lo que logramos juntos, Casos de éxito, Quiénes somos, Qué incluye, Cómo funciona, Para quién es, FAQ, CTA final con formulario, Footer.
 - Mismo texto de CTA "Agenda tu llamada de 30 minutos" en hero, tras La solución, tras Casos de éxito y en el CTA final, todos con `href="#agenda"`.
@@ -34,11 +34,11 @@ La landing completa con las secciones del Copy v2 (Hero, El problema, Por qué a
 ### Secciones informativas
 - "Para quién es / para quién no": dos columnas. Comunica el perfil de USD 200k o más al año sin publicar rangos de inversión mensual que Ari no haya aprobado.
 - "Cómo funciona": cuatro fases en lista ordenada `<ol>`, cada una con plazo. Plazos `pending` hasta que Ari confirme.
-- FAQ de 5 a 6 preguntas con `<details>` nativo: qué es GEO, duración de la llamada, qué preparar, inversión, tiempos de resultados y si aplica a mi negocio. Respuestas redactadas con `humanizer`; los datos inventados van `pending`. Sin pregunta de garantía.
+- FAQ de 5 a 6 preguntas con `<details>` nativo: qué es GEO, duración de la llamada, qué preparar, inversión, tiempos de resultados y si aplica a mi negocio. Preguntas y respuestas tomadas tal cual del doc de Ari; si el doc no trae alguna, se pide a Ari en vez de redactarla. Sin pregunta de garantía.
 - Footer con contacto, redes y enlace a "Política de privacidad", que apunta a una página simple con texto de plantilla marcado `pending` para revisión de Ari.
 
 ### Claude's Discretion
-Estructura de componentes, nombres de archivos, esquema exacto de las secciones en `landing.es.yaml`, composición de cada collage y detalles de espaciado y tipografía dentro de los tokens. Reglas de proyecto que aplican: diseño web por `impeccable` y `design-taste-frontend`; todo texto por `humanizer` en español neutro sin voseo ni guiones largos; A11Y.md estricto.
+Estructura de componentes, nombres de archivos, esquema exacto de las secciones en `landing.es.yaml`, composición de cada collage y detalles de espaciado y tipografía dentro de los tokens. Reglas de proyecto que aplican: diseño web por `impeccable` y `design-taste-frontend`; todo el texto sale tal cual del doc de Ari (fuente de verdad, sin humanizar ni reescribir; si falta un texto se pide a Ari, no se inventa); A11Y.md estricto.
 
 </decisions>
 
@@ -59,6 +59,8 @@ Estructura de componentes, nombres de archivos, esquema exacto de las secciones 
 
 <specifics>
 ## Specific Ideas
+
+**Regla de copy (cambio de Juan, 2026-09-18):** todos los textos ya están en el doc de Ari (https://docs.google.com/document/d/1QK61DPEQ3UbBQcCBnepwoaBesyZE1ZvZ6VfLgPrgtI0/edit?tab=t.nvl47nvdgyma). No se pasa nada por `humanizer` ni se reescribe. El guardián `check-copy.mjs` sigue corriendo: si el doc trae voseo, guion largo, `[VERIFICAR]` o "AEO", se reporta a Ari en lugar de editar el texto en silencio.
 
 Referencias de diseño de Ari: m8l.com, skale.so y rankingonai.com. Fuentes del copy: Doc de proceso y copy https://docs.google.com/document/d/1QK61DPEQ3UbBQcCBnepwoaBesyZE1ZvZ6VfLgPrgtI0 y assets de marca en Drive https://drive.google.com/drive/folders/1byOfW_MgbJ5YrX8UY2uwgek2EyZsKlhe. Pendientes de Ari: duración de llamada (30 vs 20 min), unificar "SEO/GEO" vs "AEO", cifras `[VERIFICAR]`, sector y plazo de casos, plazos de las 4 fases y política de privacidad.
 

@@ -14,7 +14,7 @@ La landing lista para ser encontrada y medida, y verificada con evidencia: metad
 ## Implementation Decisions
 
 ### Metadatos, imagen OG y schema
-- Title de 60 caracteres o menos con "SEO y GEO", e-commerce y marca; meta description de 155 o menos. Redactados con `humanizer`, con "SEO/GEO" y nunca "AEO".
+- Title de 60 caracteres o menos con "SEO y GEO", e-commerce y marca; meta description de 155 o menos. Tomados del doc de Ari si los trae (sin humanizar); si no, se piden a Ari o se proponen como `pending` para su aprobación. Con "SEO/GEO" y nunca "AEO".
 - Imagen OG de 1200x630: composición estática con collage de marca, H1 corto y logo, diseñada con `impeccable` y exportada a PNG.
 - JSON-LD con `Organization`, `ProfessionalService`, `WebSite` y `WebPage`. Sin `Review` ni `AggregateRating`. Sin dirección ni teléfono si Ari no los entrega. `sameAs` con las redes.
 - robots en producción permite todos los rastreadores, incluidos los de IA (GPTBot, ClaudeBot, PerplexityBot, Google-Extended), porque somos una agencia de GEO. Sitemap y robots dependen de `PUBLIC_ENV` y `PUBLIC_SITE_URL` (decisión de la fase 1).
@@ -32,7 +32,7 @@ La landing lista para ser encontrada y medida, y verificada con evidencia: metad
 - `REPORT.md` queda como self-reported (limita a CONDITIONAL según A11Y.md). Checklist de VoiceOver en Safari para que lo corran Camila o Juan antes del evento.
 
 ### Claude's Discretion
-Estructura de los scripts de auditoría, redacción exacta de title y meta (dentro de los límites), composición de la imagen OG, formato de las tablas en los documentos de accesibilidad. Reglas de proyecto que aplican: diseño (incluida la imagen OG) por `impeccable` y `design-taste-frontend`; todo texto, incluidos title y meta, por `humanizer` en español neutro sin voseo ni guiones largos; A11Y.md estricto.
+Estructura de los scripts de auditoría, redacción exacta de title y meta (dentro de los límites), composición de la imagen OG, formato de las tablas en los documentos de accesibilidad. Reglas de proyecto que aplican: diseño (incluida la imagen OG) por `impeccable` y `design-taste-frontend`; todo el texto sale tal cual del doc de Ari (fuente de verdad, sin humanizar ni reescribir; si falta un texto se pide a Ari, no se inventa); A11Y.md estricto.
 
 </decisions>
 
