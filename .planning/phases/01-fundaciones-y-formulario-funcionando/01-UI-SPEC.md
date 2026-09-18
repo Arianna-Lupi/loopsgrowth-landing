@@ -1,7 +1,7 @@
 ---
 phase: "01"
 slug: fundaciones-y-formulario-funcionando
-status: draft
+status: approved
 shadcn_initialized: false
 preset: none
 created: "2026-09-18"
@@ -15,7 +15,7 @@ created: "2026-09-18"
 >
 > Fuentes: 01-CONTEXT.md (decisiones bloqueadas), `.claude/CLAUDE.md` (tabla de contraste medida y reglas de A11Y.md), `.planning/research/ARCHITECTURE.md` y `FEATURES.md` (tokens y patrón del embed). Nada de esto se volvió a preguntar; lo no decidido arriba se marca como supuesto en `## Assumptions and Open Items`.
 >
-> Reglas de proyecto que aplican a la ejecución: todo el trabajo visual pasa por las skills `impeccable` y `design-taste-frontend`, que afinan dentro de este contrato y no pueden romper los pares de contraste aprobados. Todo el texto pasa por `humanizer` con la voz de marca, en español neutro, sin voseo y sin guiones largos.
+> Reglas de proyecto que aplican a la ejecución: todo el trabajo visual pasa por las skills `impeccable` y `design-taste-frontend`, que afinan dentro de este contrato y no pueden romper los pares de contraste aprobados. Todo el texto sale tal cual del doc de Ari, sin humanizar ni reescribir (regla de Juan, 2026-09-18), en español neutro y sin voseo.
 
 ---
 
@@ -250,7 +250,7 @@ Todo el texto vive en `landing.es.yaml` como `{text, status}`. Español neutro, 
 | Confirmación de envío | No es nuestro copy: la muestra ClickUp dentro del iframe. FORM-05 solo verifica que aparezca. Si aparece en inglés, se registra como hallazgo para Ari (el formulario declara `lang="en-US"`), no se parchea desde la landing |
 | Destructive confirmation | none: Fase 1 no tiene acciones destructivas |
 
-Reglas de redacción para el planner: ningún texto nuevo se escribe sin pasar por `humanizer`. Sin "agendá", "tenés", "vos", "llená". Sin guiones largos. `scripts/check-copy.mjs` debe cubrir también los textos estructurales de arriba, no solo los del hero.
+Reglas de redacción para el planner: ningún texto nuevo se inventa: sale del doc de Ari o se marca `pending` y se pide a Ari. Sin "agendá", "tenés", "vos", "llená". Sin guiones largos. `scripts/check-copy.mjs` debe cubrir también los textos estructurales de arriba, no solo los del hero.
 
 ---
 
@@ -380,12 +380,12 @@ Corrida autónoma: no hubo usuario disponible. Cada punto es un valor por defect
 
 ## Checker Sign-Off
 
-- [ ] Dimension 1 Copywriting: PASS
-- [ ] Dimension 2 Visuals: PASS
-- [ ] Dimension 3 Color: PASS
-- [ ] Dimension 4 Typography: PASS
-- [ ] Dimension 5 Spacing: PASS
-- [ ] Dimension 6 Registry Safety: PASS
-- [ ] Dimension 7 Inventory Provenance: PASS
+- [x] Dimension 1 Copywriting: PASS
+- [x] Dimension 2 Visuals: PASS
+- [x] Dimension 3 Color: PASS
+- [x] Dimension 4 Typography: PASS
+- [x] Dimension 5 Spacing: FLAG (no bloqueante: min-height provisional del iframe no es múltiplo de 8; FORM-04 lo reemplaza por medición)
+- [x] Dimension 6 Registry Safety: PASS
+- [x] Dimension 7 Inventory Provenance: PASS
 
-**Approval:** pending
+**Approval:** approved 2026-09-18
