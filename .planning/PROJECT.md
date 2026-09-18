@@ -31,7 +31,7 @@ Un visitante entiende en segundos qué hace Loops Growth y llena el formulario d
 - [ ] Cumplimiento estricto de A11Y.md (reglas de accesibilidad del frontend)
 - [ ] SEO on-page básico de la propia landing (title, meta, headings, schema Organization, OG)
 - [ ] Sitio corriendo en local, validado por Ari y Camila, listo hoy
-- [ ] Elección de stack documentada con investigación (Astra/WordPress vs alternativas)
+- [ ] Elección de stack documentada con investigación (Astro vs alternativas)
 
 ### Out of Scope
 
@@ -61,7 +61,7 @@ Un visitante entiende en segundos qué hace Loops Growth y llena el formulario d
 ## Constraints
 
 - **Timeline**: Sitio local completo hoy — evento la próxima semana, Ari y Camila necesitan validar antes.
-- **Tech stack**: Elegido por investigación. Hipótesis de Juan: Astra (tema WordPress). Se contrasta con Astro/Next.js/Webflow según velocidad, performance, control de diseño y mantenimiento por el equipo.
+- **Tech stack**: Elegido por investigación. Hipótesis de Juan: Astro (framework, no el tema Astra de WordPress). Se contrasta con WordPress+Astra, Next.js, Vite HTML y Webflow/Framer según velocidad, performance, control de diseño y mantenimiento por el equipo.
 - **Accesibilidad**: A11Y.md obligatorio en todo el frontend — https://github.com/fecarrico/A11Y.md/blob/main/docs/en/A11Y.md
 - **Marca**: Colores, tipografía y logo del brandbook sin desviarse; pixel-perfect.
 - **Performance/SEO**: La página promete SEO técnico; ella misma debe tener Core Web Vitals sólidos y HTML semántico.
@@ -76,7 +76,7 @@ Un visitante entiende en segundos qué hace Loops Growth y llena el formulario d
 | Solo español | Copy v2 en español, ahorra tiempo | — Pending |
 | Casos de éxito como tarjetas de métricas, sin logos ni fotos | No hay material ni permisos de uso de marcas de clientes | — Pending |
 | Entrega hoy solo en local | Ari y Camila validan primero; dominio aún sin resolver | — Pending |
-| Stack: Astra (WordPress) como hipótesis, a validar con research | Juan lo propone; hay que confirmar contra alternativas | — Pending |
+| Stack: Astro como hipótesis, a validar con research | Juan lo propone; hay que confirmar contra alternativas (incl. WordPress+Astra) | — Pending |
 
 ## Evolution
 
