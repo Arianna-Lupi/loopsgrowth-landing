@@ -16,10 +16,9 @@ const fail = (msg) => {
 const expect = (cond, msg) => (cond ? pass(msg) : fail(msg));
 
 function build(envOverrides) {
-  const env = { ...process.env };
-  delete env.PUBLIC_ENV;
-  delete env.PUBLIC_SITE_URL;
-  Object.assign(env, envOverrides);
+  // Valores explícitos (no `delete`): astro.config.mjs y Vite leen además los archivos de entorno
+  // locales, y `process.env` gana sobre ellos. Así un archivo local no cambia el resultado.
+  const env = { ...process.env, PUBLIC_ENV: '', PUBLIC_SITE_URL: '', ...envOverrides };
   rmSync('dist', { recursive: true, force: true });
   return spawnSync('npx', ['astro', 'build'], { env, encoding: 'utf8' });
 }
