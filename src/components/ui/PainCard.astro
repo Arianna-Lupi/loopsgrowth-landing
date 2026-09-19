@@ -3,9 +3,11 @@
  * Tarjeta de dolor (CONT-02). Blanca por tono anidado `light` dentro de la sección dark. Imprime solo
  * el texto recibido (nunca `status`, `reason` ni `confirm_by`). La sombra dura sale de `--card-shadow`,
  * que declara el contenedor de la rejilla (el tono anidado redefine `--pop-shadow-color`). El numeral
- * es un contador de CSS decorativo. Sin hover, cursor, transform ni transición: no es interactiva.
+ * es un contador de CSS decorativo. La pegatina es una escena mini de 96 x 80 del collage de marca
+ * (`sticker-<sticker>`, Loopy oficial o flecha, píldora con palabra y sombra dura), decorativa y aria-hidden.
+ * Sin hover, cursor, transform ni transición: no es interactiva.
  */
-import CollagePiece from '../collage/CollagePiece.astro';
+import CollageScene from '../collage/CollageScene.astro';
 
 interface Props {
   sticker: 'clic' | 'lupa' | 'ojos';
@@ -18,7 +20,7 @@ const { sticker, text } = Astro.props;
 <li class="pain-card" data-tone="light">
   <div class="pain-head">
     <span class="pain-num" aria-hidden="true"></span>
-    <CollagePiece name={`sticker-${sticker}`} tone="light" size="4rem" />
+    <CollageScene scene={`sticker-${sticker}`} class="pain-sticker" />
   </div>
   <p class="pain-text">{text}</p>
 </li>
@@ -40,6 +42,11 @@ const { sticker, text } = Astro.props;
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
+  }
+
+  .pain-head :global(.pain-sticker) {
+    flex: none;
+    width: 6rem;
   }
 
   .pain-num::before {

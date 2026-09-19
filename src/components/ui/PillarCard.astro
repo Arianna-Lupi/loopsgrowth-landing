@@ -1,11 +1,11 @@
 ---
 /**
  * Tarjeta de pilar (CONT-04): chip de collage, h3, cuerpo y, si existe, lista del equipo. Imprime solo
- * los textos recibidos (nunca `status`, `reason` ni `confirm_by`). El chip es decorativo y lleva el
- * tono `light` porque va sobre la tarjeta blanca. Sombra dura, sin hover, cursor, transform ni
- * transición: la tarjeta no es interactiva.
+ * los textos recibidos (nunca `status`, `reason` ni `confirm_by`). El chip es una escena mini de 96 x 80
+ * del collage de marca (`chip-<chip>`, fondo `light` porque va sobre la tarjeta blanca), decorativa y
+ * aria-hidden. Sombra dura, sin hover, cursor, transform ni transición: la tarjeta no es interactiva.
  */
-import CollagePiece from '../collage/CollagePiece.astro';
+import CollageScene from '../collage/CollageScene.astro';
 
 interface Props {
   chip: 'lupa' | 'ojos' | 'loop' | 'clic';
@@ -18,7 +18,7 @@ const { chip, title, body, list } = Astro.props;
 ---
 
 <li class="pillar-card">
-  <CollagePiece name={`chip-${chip}`} tone="light" size="4rem" />
+  <CollageScene scene={`chip-${chip}`} class="pillar-chip" />
   <h3>{title}</h3>
   <p class="pillar-body">{body}</p>
   {
@@ -44,6 +44,11 @@ const { chip, title, body, list } = Astro.props;
     color: var(--on-surface);
     box-shadow: var(--shadow-pop);
     overflow-wrap: anywhere;
+  }
+
+  .pillar-card :global(.pillar-chip) {
+    flex: none;
+    width: 6rem;
   }
 
   .pillar-card h3 {

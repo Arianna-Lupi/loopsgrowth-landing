@@ -207,9 +207,9 @@ for (const viewport of [
       });
     });
 
-    test('tres pegatinas distintas, decorativas y de 64 px', async ({ page }) => {
+    test('tres pegatinas distintas, decorativas y de 96 x 80 px', async ({ page }) => {
       await page.goto('/');
-      const stickers = page.locator('#problema .pain-card svg[data-collage]');
+      const stickers = page.locator('#problema .pain-card [data-collage="sticker"]');
       await expect(stickers).toHaveCount(3);
       const info = await stickers.evaluateAll((els) =>
         els.map((el) => {
@@ -217,7 +217,7 @@ for (const viewport of [
           return {
             piece: el.getAttribute('data-collage-piece'),
             aria: el.getAttribute('aria-hidden'),
-            focusable: el.getAttribute('focusable'),
+            focusable: el.querySelectorAll('a[href], button, input, select, textarea, [tabindex]').length,
             w: r.width,
             h: r.height,
             title: el.querySelectorAll('title, text').length,
@@ -228,10 +228,10 @@ for (const viewport of [
       expect(info.map((i) => i.piece)).toEqual(['sticker-clic', 'sticker-lupa', 'sticker-ojos']);
       for (const i of info) {
         expect(i.aria).toBe('true');
-        expect(i.focusable).toBe('false');
+        expect(i.focusable).toBe(0);
         expect(i.title).toBe(0);
-        expect(Math.abs(i.w - 64)).toBeLessThanOrEqual(1);
-        expect(Math.abs(i.h - 64)).toBeLessThanOrEqual(1);
+        expect(Math.abs(i.w - 96)).toBeLessThanOrEqual(1);
+        expect(Math.abs(i.h - 80)).toBeLessThanOrEqual(1);
       }
     });
 
@@ -274,23 +274,15 @@ for (const viewport of [
       });
     });
 
-    test('collage compacto: 160 px, dos piezas dentro de su caja y sin cruzar el h2 ni la lista', async ({ page }) => {
+    test('collage compacto de Por qué ahora: 224 px bajo 64em y 320 px desde 64em, con su ranura de foto', async ({ page }) => {
       await page.goto('/');
+      const root = page.locator('#por-que-ahora .whynow-art[data-collage="whynow"]');
+      await expect(root).toHaveCount(1);
+      await expect(root).toHaveAttribute('aria-hidden', 'true');
+      await expect(root.locator('[data-photo-slot="whynow"]')).toHaveCount(1);
       const art = (await boxes(page, '#por-que-ahora .whynow-art'))[0];
-      expect(Math.abs(art.width - 160)).toBeLessThanOrEqual(1);
-      const pieces = await page.locator('#por-que-ahora .whynow-art svg[data-collage-piece]').evaluateAll((els) =>
-        els.map((el) => {
-          const r = el.getBoundingClientRect();
-          return { piece: el.getAttribute('data-collage-piece'), x: r.x, y: r.y + window.scrollY, w: r.width, h: r.height };
-        }),
-      );
-      expect(pieces.map((p) => p.piece).sort()).toEqual(['lupa', 'ojos-abajo']);
-      for (const p of pieces) {
-        expect(p.x).toBeGreaterThanOrEqual(art.x - 1);
-        expect(p.y).toBeGreaterThanOrEqual(art.y - 1);
-        expect(p.x + p.w).toBeLessThanOrEqual(art.x + art.width + 1);
-        expect(p.y + p.h).toBeLessThanOrEqual(art.y + art.height + 1);
-      }
+      expect(Math.abs(art.width - (wide ? 320 : 224))).toBeLessThanOrEqual(1);
+      expect(Math.abs(art.height - art.width)).toBeLessThanOrEqual(1);
       const h2 = (await boxes(page, '#por-que-ahora h2'))[0];
       const list = (await boxes(page, '#por-que-ahora .whynow-list'))[0];
       const overlaps = (a: Box, b: Box) =>
@@ -359,9 +351,9 @@ for (const viewport of [
       expect(shown).toBe(marksUnder('solution'));
     });
 
-    test('cuatro chips distintos, decorativos y de 64 px; h3 a 16 px y cuerpo a 8 px', async ({ page }) => {
+    test('cuatro chips distintos, decorativos y de 96 x 80 px; h3 a 16 px y cuerpo a 8 px', async ({ page }) => {
       await page.goto('/');
-      const chips = page.locator('#solucion svg[data-collage-piece^="chip-"]');
+      const chips = page.locator('#solucion [data-collage="chip"]');
       await expect(chips).toHaveCount(4);
       const info = await chips.evaluateAll((els) =>
         els.map((el) => {
@@ -369,7 +361,7 @@ for (const viewport of [
           return {
             piece: el.getAttribute('data-collage-piece'),
             aria: el.getAttribute('aria-hidden'),
-            focusable: el.getAttribute('focusable'),
+            focusable: el.querySelectorAll('a[href], button, input, select, textarea, [tabindex]').length,
             w: r.width,
             h: r.height,
             bottom: r.bottom,
@@ -380,14 +372,14 @@ for (const viewport of [
       expect(info.map((i) => i.piece)).toEqual(['chip-lupa', 'chip-ojos', 'chip-loop', 'chip-clic']);
       for (const i of info) {
         expect(i.aria).toBe('true');
-        expect(i.focusable).toBe('false');
+        expect(i.focusable).toBe(0);
         expect(i.extra).toBe(0);
-        expect(Math.abs(i.w - 64)).toBeLessThanOrEqual(1);
-        expect(Math.abs(i.h - 64)).toBeLessThanOrEqual(1);
+        expect(Math.abs(i.w - 96)).toBeLessThanOrEqual(1);
+        expect(Math.abs(i.h - 80)).toBeLessThanOrEqual(1);
       }
       const gaps = await page.locator('#solucion .pillar-card').evaluateAll((els) =>
         els.map((el) => {
-          const chip = el.querySelector('svg')!.getBoundingClientRect();
+          const chip = el.querySelector(':scope > [data-collage="chip"]')!.getBoundingClientRect();
           const h3 = el.querySelector('h3')!.getBoundingClientRect();
           const p = el.querySelector(':scope > p')!.getBoundingClientRect();
           return { chipToH3: h3.top - chip.bottom, h3ToP: p.top - h3.bottom };

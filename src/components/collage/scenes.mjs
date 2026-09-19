@@ -58,7 +58,73 @@ export const SCENES = {
       { id: 'hero-pill-geo', kind: 'pill', group: 'pills', on: 'ground', word: 'geo', bg: 'purple', fg: 'cream', x: 470, y: 352, anchor: 'right', fs: 30 },
     ],
   },
+  whynow: {
+    name: 'whynow',
+    family: 'whynow',
+    kind: 'full',
+    w: 320,
+    h: 320,
+    ground: 'yellow',
+    stage: 'purple',
+    layers: [
+      {
+        id: 'whynow-slot', kind: 'slot', on: 'ground', name: 'whynow',
+        x: 204, y: 14, w: 104, h: 128, rx: 16, fill: 'white', shadow: [8, 8],
+        dots: { x: 214, y: 24, w: 48, color: 'purple' },
+      },
+      { id: 'whynow-disc', kind: 'disc', on: 'ground', cx: 146, cy: 180, r: 122, fill: 'purple', shadow: [10, 10] },
+      { id: 'whynow-loopy', kind: 'loopy', on: 'stage', art: 'lupa', cx: 144, cy: 182, width: 150 },
+      { id: 'whynow-flecha', kind: 'doodle', on: 'ground', piece: 'flecha', x: 12, y: 14, w: 56, color: 'dark' },
+      { id: 'whynow-destello', kind: 'doodle', on: 'stage', piece: 'destello', x: 98, y: 108, w: 28, color: 'yellow' },
+      { id: 'whynow-mas', kind: 'doodle', on: 'ground', piece: 'mas', x: 288, y: 168, w: 18, color: 'purple' },
+      { id: 'whynow-puntos', kind: 'dots', on: 'ground', x: 252, y: 268, w: 60, color: 'dark' },
+      { id: 'whynow-pill-seo', kind: 'pill', on: 'ground', word: 'seo', bg: 'dark', fg: 'yellow', x: 8, y: 262, anchor: 'left', fs: 22 },
+      { id: 'whynow-pill-geo', kind: 'pill', on: 'ground', word: 'geo', bg: 'white', fg: 'purple', x: 308, y: 214, anchor: 'right', fs: 22 },
+    ],
+  },
 };
+
+/**
+ * Minis de 96 x 80 (pegatinas de dolor y chips de pilar): plantilla común de 'Escenas: puntos de
+ * partida' del plan 02-10. Disco con sombra dura, pieza sobre el escenario (Loopy o flecha), píldora
+ * con palabra anclada a la derecha y un destello suelto sobre el fondo.
+ * @param {string} name
+ * @param {'sticker' | 'chip'} family
+ * @param {{ stage: string, art?: 'ojos' | 'lupa', flecha?: string, word: string, bg: string, fg: string, shape?: 'card', spark: string }} o
+ */
+function mini(name, family, o) {
+  const inner = o.art
+    ? { id: `${name}-loopy`, kind: 'loopy', on: 'stage', art: o.art, cx: 40, cy: 42, width: o.art === 'lupa' ? 34 : 42 }
+    : { id: `${name}-flecha`, kind: 'doodle', on: 'stage', piece: 'flecha', x: 22, y: 28, w: 32, color: o.flecha };
+  const pill = { id: `${name}-pill`, kind: 'pill', on: 'ground', word: o.word, bg: o.bg, fg: o.fg, x: 88, anchor: 'right' };
+  if (o.shape) Object.assign(pill, { y: 42, fs: 10.5, shape: o.shape });
+  else Object.assign(pill, { y: 48, fs: 12 });
+  return {
+    name,
+    family,
+    kind: 'mini',
+    w: 96,
+    h: 80,
+    ground: 'light',
+    stage: o.stage,
+    layers: [
+      { id: `${name}-disc`, kind: 'disc', on: 'ground', cx: 40, cy: 42, r: 30, fill: o.stage, shadow: [4, 4] },
+      inner,
+      { id: `${name}-destello`, kind: 'doodle', on: 'ground', piece: 'destello', x: 68, y: 6, w: 18, color: o.spark },
+      pill,
+    ],
+  };
+}
+
+Object.assign(SCENES, {
+  'sticker-clic': mini('sticker-clic', 'sticker', { stage: 'yellow', flecha: 'dark', word: 'ads', bg: 'orange', fg: 'dark', spark: 'purple' }),
+  'sticker-lupa': mini('sticker-lupa', 'sticker', { stage: 'purple', art: 'lupa', word: 'seo', bg: 'yellow', fg: 'dark', spark: 'orange' }),
+  'sticker-ojos': mini('sticker-ojos', 'sticker', { stage: 'yellow', art: 'ojos', word: 'spy', bg: 'purple', fg: 'cream', spark: 'purple' }),
+  'chip-lupa': mini('chip-lupa', 'chip', { stage: 'purple', art: 'lupa', word: 'spy', bg: 'yellow', fg: 'dark', spark: 'orange' }),
+  'chip-ojos': mini('chip-ojos', 'chip', { stage: 'yellow', art: 'ojos', word: 'geo', bg: 'purple', fg: 'cream', spark: 'purple' }),
+  'chip-loop': mini('chip-loop', 'chip', { stage: 'purple', art: 'ojos', word: 'team work', bg: 'cream', fg: 'purple', shape: 'card', spark: 'orange' }),
+  'chip-clic': mini('chip-clic', 'chip', { stage: 'yellow', flecha: 'purple', word: 'seo', bg: 'purple', fg: 'cream', spark: 'dark' }),
+});
 
 // ---------------------------------------------------------------------------------------------
 // Geometría

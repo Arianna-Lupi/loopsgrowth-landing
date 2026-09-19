@@ -1,7 +1,7 @@
 import { test, expect, type Page } from '@playwright/test';
 import { rgbOfToken } from './lib/brand';
 import { CHIP_WORDS } from '../../src/components/collage/collage-rules.mjs';
-import { PHOTO_SLOTS } from '../../src/components/collage/scenes.mjs';
+import { PHOTO_SLOTS, SCENES as SCENE_DATA } from '../../src/components/collage/scenes.mjs';
 
 // Lenguaje del moodboard sobre el HTML construido (plan 02-10): rasgos por estructura, píldoras
 // decorativas, cajas, árbol de accesibilidad, ranuras de foto, ganchos, pesos y espaciado de texto.
@@ -10,32 +10,83 @@ const WORDS: string[] = CHIP_WORDS.map((w: { word: string }) => w.word);
 const WIDTHS = [320, 390, 768, 1024, 1280];
 
 /** Escenas de la página `/` que este spec revisa (selector de la raíz). */
-const SCENES: Record<string, string> = { hero: '.hero-collage[data-collage="hero"]' };
+const SCENES: Record<string, string> = {
+  hero: '.hero-collage[data-collage="hero"]',
+  whynow: '#por-que-ahora [data-collage-scene="whynow"]',
+  'sticker-clic': '#problema [data-collage-scene="sticker-clic"]',
+  'sticker-lupa': '#problema [data-collage-scene="sticker-lupa"]',
+  'sticker-ojos': '#problema [data-collage-scene="sticker-ojos"]',
+  'chip-lupa': '#solucion [data-collage-scene="chip-lupa"]',
+  'chip-ojos': '#solucion [data-collage-scene="chip-ojos"]',
+  'chip-loop': '#solucion [data-collage-scene="chip-loop"]',
+  'chip-clic': '#solucion [data-collage-scene="chip-clic"]',
+};
+const MINIS = Object.keys(SCENES).filter((n) => n.startsWith('sticker-') || n.startsWith('chip-'));
+const FULL = ['hero', 'whynow'];
+const NAMES = Object.keys(SCENES);
+
+/** Rasgos por estructura que debe traer cada escena (los mismos de REQUIRED_TRAITS, más ranura). */
+const expectedTraits = (name: string): string[] => {
+  const kinds = new Set((SCENE_DATA[name].layers as { kind: string }[]).map((l) => l.kind));
+  const t = ['stage', 'shadow', 'pill', 'doodle'];
+  if (FULL.includes(name)) t.push('dots', 'slot');
+  if (kinds.has('loopy')) t.push('loopy');
+  return t.sort();
+};
+
+/** Colores efectivos de una escena: rellenos y trazos del svg, fondos de píldora y `--cf-a` de los garabatos. */
+const paletteOf = (root: import('@playwright/test').Locator) =>
+  root.evaluate((el) => {
+    const probe = document.createElement('i');
+    document.body.appendChild(probe);
+    const resolve = (v: string) => {
+      probe.style.color = '';
+      probe.style.color = v;
+      return getComputedStyle(probe).color;
+    };
+    const out = new Set<string>();
+    for (const e of el.querySelectorAll('svg *')) {
+      const cs = getComputedStyle(e);
+      out.add(cs.fill);
+      out.add(cs.stroke);
+      const cf = (e.getAttribute('style') ?? '').match(/--cf-a:([^;]+)/)?.[1];
+      if (cf) out.add(resolve(cf));
+    }
+    for (const e of el.querySelectorAll('[data-pill]')) out.add(getComputedStyle(e).backgroundColor);
+    probe.remove();
+    return [...out];
+  });
 
 async function open(page: Page, width: number) {
   await page.setViewportSize({ width, height: 900 });
   await page.goto('/');
 }
 
-test.describe('hero: lenguaje del moodboard', () => {
-  test('rasgos por estructura: escenario, sombra, Loopy, garabato, retícula, píldora y ranura', async ({ page }) => {
+test.describe('escenas: lenguaje del moodboard', () => {
+  test('cada escena existe una vez (hero, Por qué ahora, tres pegatinas y cuatro chips)', async ({ page }) => {
     await open(page, 1280);
-    const traits = await page.locator('.hero-collage [data-trait]').evaluateAll((els) => [...new Set(els.map((e) => e.getAttribute('data-trait')))].sort());
-    expect(traits).toEqual(['doodle', 'dots', 'loopy', 'pill', 'shadow', 'slot', 'stage']);
+    for (const name of NAMES) await expect(page.locator(SCENES[name]), name).toHaveCount(1);
+    await expect(page.locator('[data-collage]:not(svg.collage-sprite)')).toHaveCount(NAMES.length);
   });
 
-  test('paleta: aparecen el morado y el amarillo de marca', async ({ page }) => {
-    await open(page, 1280);
-    const fills = await page.locator('.hero-collage svg *').evaluateAll((els) => [...new Set(els.map((e) => getComputedStyle(e).fill))]);
-    expect(fills).toContain(rgbOfToken('purple'));
-    const strokes = await page.locator('.hero-collage svg *').evaluateAll((els) => [...new Set(els.flatMap((e) => [getComputedStyle(e).fill, getComputedStyle(e).stroke]))]);
-    const pillBg = await page.locator('.hero-collage [data-pill]').evaluateAll((els) => els.map((e) => getComputedStyle(e).backgroundColor));
-    expect([...strokes, ...pillBg]).toContain(rgbOfToken('yellow'));
-  });
+  for (const name of NAMES) {
+    test(`${name}: rasgos por estructura (escenario, sombra, Loopy, garabato, retícula, píldora y ranura)`, async ({ page }) => {
+      await open(page, 1280);
+      const traits = await page.locator(SCENES[name]).evaluate((el) => [...new Set([...el.querySelectorAll('[data-trait]')].map((e) => e.getAttribute('data-trait')))].sort());
+      expect(traits).toEqual(expectedTraits(name));
+    });
+
+    test(`${name}: paleta con el morado de marca y el amarillo o el naranja`, async ({ page }) => {
+      await open(page, 1280);
+      const palette = await paletteOf(page.locator(SCENES[name]));
+      expect(palette).toContain(rgbOfToken('purple'));
+      expect(palette.includes(rgbOfToken('yellow')) || palette.includes(rgbOfToken('orange'))).toBe(true);
+    });
+  }
 
   test('píldoras: palabra de la lista, ocultas a tecnologías de asistencia y sin foco', async ({ page }) => {
     await open(page, 1280);
-    const pills = await page.locator('.hero-collage [data-pill]').evaluateAll((els) =>
+    const pills = await page.locator('[data-collage] [data-pill]').evaluateAll((els) =>
       els.map((e) => ({
         text: (e.textContent ?? '').trim(),
         word: e.getAttribute('data-pill'),
@@ -45,7 +96,7 @@ test.describe('hero: lenguaje del moodboard', () => {
         lang: e.getAttribute('lang'),
       })),
     );
-    expect(pills.length).toBe(2);
+    expect(pills.length).toBe(2 + 2 + 3 + 4);
     for (const p of pills) {
       expect(WORDS).toContain(p.text);
       expect(p.word).toBe(p.text);
@@ -58,19 +109,23 @@ test.describe('hero: lenguaje del moodboard', () => {
   });
 
   for (const width of WIDTHS) {
-    test(`caja: nada de lo pintado ni ninguna píldora sale de la raíz a ${width} px`, async ({ page }) => {
+    test(`caja: nada de lo pintado ni ninguna píldora sale de la raíz de ninguna escena a ${width} px`, async ({ page }) => {
       await open(page, width);
-      const bad = await page.locator(SCENES.hero).evaluate((root) => {
-        const r = root.getBoundingClientRect();
-        const out: string[] = [];
-        for (const el of root.querySelectorAll('[data-trait], [data-pill]')) {
-          const b = el.getBoundingClientRect();
-          if (b.left < r.left - 0.5 || b.right > r.right + 0.5 || b.top < r.top - 0.5 || b.bottom > r.bottom + 0.5) {
-            out.push(`${el.getAttribute('data-trait')}:${el.getAttribute('data-pill') ?? ''}`);
+      const bad: string[] = [];
+      for (const name of NAMES) {
+        const out = await page.locator(SCENES[name]).evaluate((root) => {
+          const r = root.getBoundingClientRect();
+          const out: string[] = [];
+          for (const el of root.querySelectorAll('[data-trait], [data-pill]')) {
+            const b = el.getBoundingClientRect();
+            if (b.left < r.left - 0.5 || b.right > r.right + 0.5 || b.top < r.top - 0.5 || b.bottom > r.bottom + 0.5) {
+              out.push(`${el.getAttribute('data-trait')}:${el.getAttribute('data-pill') ?? ''}`);
+            }
           }
-        }
-        return out;
-      });
+          return out;
+        });
+        bad.push(...out.map((o) => `${name}/${o}`));
+      }
       expect(bad).toEqual([]);
     });
   }
@@ -92,17 +147,28 @@ test.describe('hero: lenguaje del moodboard', () => {
     expect(mutated).not.toBe(withCollage);
   });
 
-  test('ranura: una sola, sin imagen y con la proporción de PHOTO_SLOTS', async ({ page }) => {
+  test('ranuras: exactamente dos (hero y whynow), sin imagen y con la proporción de PHOTO_SLOTS', async ({ page }) => {
     await open(page, 1280);
-    const slot = page.locator('[data-photo-slot="hero"]');
-    await expect(slot).toHaveCount(1);
-    await expect(slot.locator('img, image')).toHaveCount(0);
-    const box = await slot.evaluate((el) => {
-      const b = el.getBoundingClientRect();
-      return b.width / b.height;
-    });
-    const spec = PHOTO_SLOTS.find((s: { name: string }) => s.name === 'hero');
-    expect(Math.abs(box - spec.w / spec.h)).toBeLessThan(0.02);
+    const names = await page.locator('[data-photo-slot]').evaluateAll((els) => els.map((e) => e.getAttribute('data-photo-slot')));
+    expect(names.sort()).toEqual(['hero', 'whynow']);
+    for (const name of names) {
+      const slot = page.locator(`[data-photo-slot="${name}"]`);
+      await expect(slot.locator('img, image')).toHaveCount(0);
+      const box = await slot.evaluate((el) => {
+        const b = el.getBoundingClientRect();
+        return b.width / b.height;
+      });
+      const spec = PHOTO_SLOTS.find((s: { name: string }) => s.name === name);
+      expect(Math.abs(box - spec.w / spec.h)).toBeLessThan(0.02);
+    }
+  });
+
+  test('Por qué ahora: 224 px justo bajo 64em y 320 px desde 64em', async ({ page }) => {
+    for (const [width, expected] of [[1023, 224], [1024, 320]] as const) {
+      await open(page, width);
+      const w = await page.locator(SCENES.whynow).evaluate((el) => el.getBoundingClientRect().width);
+      expect(Math.abs(w - expected), `${width}: ${w}`).toBeLessThanOrEqual(1);
+    }
   });
 
   test('ganchos: dos pupilas path dentro del Loopy y grupos sin transform', async ({ page }) => {
@@ -129,25 +195,27 @@ test.describe('hero: lenguaje del moodboard', () => {
       await page.addStyleTag({ content: '* { line-height: 1.5 !important; letter-spacing: 0.12em !important; word-spacing: 0.16em !important; }' });
       const doc = await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth);
       expect(doc).toBe(true);
-      const clipped = await page.locator('.hero-collage [data-pill]').evaluateAll((els) => els.filter((e) => e.scrollWidth > e.clientWidth + 1).length);
+      const clipped = await page.locator('[data-collage] [data-pill]').evaluateAll((els) => els.filter((e) => e.scrollWidth > e.clientWidth + 1).length);
       expect(clipped).toBe(0);
     });
   }
 
-  test('pesos: raíz del hero menor a 8192 bytes y sprite menor a 16384', async ({ page }) => {
+  test('pesos: hero menor a 8192 bytes, cada mini menor a 1536, Por qué ahora menor a 3072 y sprite menor a 16384', async ({ page }) => {
     await open(page, 1280);
-    const root = await page.locator(SCENES.hero).evaluate((el) => new TextEncoder().encode(el.outerHTML).length);
+    const bytes = (name: string) => page.locator(SCENES[name]).evaluate((el) => new TextEncoder().encode(el.outerHTML).length);
+    expect(await bytes('hero')).toBeLessThan(8192);
+    expect(await bytes('whynow')).toBeLessThan(3072);
+    for (const name of MINIS) expect(await bytes(name), name).toBeLessThan(1536);
     const sprite = await page.locator('svg.collage-sprite').evaluate((el) => new TextEncoder().encode(el.outerHTML).length);
-    expect(root).toBeLessThan(8192);
     expect(sprite).toBeLessThan(16384);
   });
 });
 
-test.describe('hero: sin JavaScript', () => {
+test.describe('escenas: sin JavaScript', () => {
   test.use({ javaScriptEnabled: false });
-  test('la raíz y las píldoras son visibles', async ({ page }) => {
+  test('cada raíz y sus píldoras son visibles', async ({ page }) => {
     await page.goto('/');
-    await expect(page.locator(SCENES.hero)).toBeVisible();
-    for (const pill of await page.locator('.hero-collage [data-pill]').all()) await expect(pill).toBeVisible();
+    for (const name of NAMES) await expect(page.locator(SCENES[name]), name).toBeVisible();
+    for (const pill of await page.locator('[data-collage] [data-pill]').all()) await expect(pill).toBeVisible();
   });
 });

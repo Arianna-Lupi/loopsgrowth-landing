@@ -303,3 +303,92 @@ test('(vi) los archivos del mecanismo no traen hex ni construcciones prohibidas'
     assert.ok(!/set:html|<text[\s>]|<title|<image|<img[\s>]|<script/.test(text), `${f}: construcción prohibida`);
   }
 });
+
+// ---------------------------------------------------------------------------------------------
+// (vii) Escenas de las tarjetas: Por qué ahora, pegatinas y chips (tarea 2)
+// ---------------------------------------------------------------------------------------------
+
+const CARD_SCENES = ['whynow', 'sticker-clic', 'sticker-lupa', 'sticker-ojos', 'chip-lupa', 'chip-ojos', 'chip-loop', 'chip-clic'];
+const MINI_WORDS = {
+  'sticker-clic': 'ads',
+  'sticker-lupa': 'seo',
+  'sticker-ojos': 'spy',
+  'chip-lupa': 'spy',
+  'chip-ojos': 'geo',
+  'chip-loop': 'team work',
+  'chip-clic': 'seo',
+};
+
+test('(vii) escenas de las tarjetas: assertScene pasa y cada mini trae su palabra de la lista', async () => {
+  const { SCENES, assertScene } = await loadScenes();
+  const { CHIP_WORDS } = await loadRules();
+  for (const name of CARD_SCENES) {
+    assert.ok(SCENES[name], `falta la escena ${name}`);
+    assert.doesNotThrow(() => assertScene(name), name);
+  }
+  for (const [name, word] of Object.entries(MINI_WORDS)) {
+    const scene = SCENES[name];
+    assert.equal(scene.kind, 'mini');
+    assert.equal([scene.w, scene.h].join('x'), '96x80');
+    assert.equal(scene.ground, 'light');
+    const pills = scene.layers.filter((l) => l.kind === 'pill');
+    assert.deepEqual(pills.map((p) => p.word), [word], `${name}: palabra`);
+    assert.ok(CHIP_WORDS.some((c) => c.word === word), `${name}: palabra fuera de la lista`);
+  }
+  assert.equal(SCENES.whynow.kind, 'full');
+  assert.equal([SCENES.whynow.w, SCENES.whynow.h].join('x'), '320x320');
+  assert.equal(SCENES.whynow.ground, 'yellow');
+});
+
+test('(vii) escenas de las tarjetas: Loopy en cinco de las siete minis y solo dos ranuras de foto', async () => {
+  const { SCENES, PHOTO_SLOTS, sceneTraits } = await loadScenes();
+  for (const name of Object.keys(MINI_WORDS)) {
+    const hasLoopy = sceneTraits(SCENES[name]).has('loopy');
+    assert.equal(hasLoopy, name !== 'sticker-clic' && name !== 'chip-clic', `${name}: Loopy`);
+    assert.equal(SCENES[name].layers.some((l) => l.kind === 'slot'), false, `${name}: no lleva ranura`);
+  }
+  assert.ok(sceneTraits(SCENES.whynow).has('loopy') && sceneTraits(SCENES.whynow).has('slot'));
+  assert.deepEqual(PHOTO_SLOTS.map((s) => s.name).sort(), ['hero', 'whynow']);
+  const wn = PHOTO_SLOTS.find((s) => s.name === 'whynow');
+  assert.deepEqual([wn.x, wn.y, wn.w, wn.h], [204, 14, 104, 128]);
+});
+
+test('(vii) escenas de las tarjetas: los escenarios de los cuatro chips alternan por posición', async () => {
+  const { SCENES } = await loadScenes();
+  assert.deepEqual(
+    ['chip-lupa', 'chip-ojos', 'chip-loop', 'chip-clic'].map((n) => SCENES[n].stage),
+    ['purple', 'yellow', 'purple', 'yellow'],
+  );
+});
+
+test('(vii) escenas de las tarjetas: cada mutación lanza nombrando escena, capa y regla', async () => {
+  const { SCENES } = await loadScenes();
+  for (const name of CARD_SCENES) {
+    const pill = SCENES[name].layers.find((l) => l.kind === 'pill');
+    const doodle = SCENES[name].layers.find((l) => l.kind === 'doodle' && l.on === 'ground');
+    const cases = [
+      ['R7', (s) => { layerOf(s, pill.id).word = 'xyz'; }, pill.id],
+      ['R6', (s) => { layerOf(s, doodle.id).x = -20; }, doodle.id],
+    ];
+    const loopy = SCENES[name].layers.find((l) => l.kind === 'loopy');
+    if (loopy) cases.push(['R3', (s) => { layerOf(s, loopy.id).cx += 40; }, loopy.id]);
+    if (name !== 'whynow') {
+      cases.push(['R9', (s) => { s.layers.push({ id: `${name}-slot`, kind: 'slot', on: 'ground', name, x: 4, y: 4, w: 20, h: 20, rx: 4, fill: 'white', shadow: [2, 2] }); }, `${name}-slot`]);
+    }
+    for (const [rule, fn, layer] of cases) {
+      const message = await mutate(name, fn);
+      assert.ok(message, `${name} ${rule}: la mutación no lanzó`);
+      assert.ok(message.startsWith(`Escena "${name}"`), `${name} ${rule}: ${message}`);
+      assert.ok(message.includes(layer) && message.includes(rule), `${name} ${rule}: mensaje sin capa o regla: ${message}`);
+    }
+  }
+});
+
+test('(vii) los consumidores de las escenas no traen hex ni set:html', () => {
+  for (const f of ['src/components/ui/PainCard.astro', 'src/components/ui/PillarCard.astro', 'src/components/sections/WhyNow.astro']) {
+    const text = readFileSync(f, 'utf8');
+    assert.ok(!/#[0-9a-fA-F]{3}(?![0-9a-zA-Z_-])|#[0-9a-fA-F]{6}(?![0-9a-zA-Z_-])/.test(text), `${f}: hex`);
+    assert.ok(!/set:html/.test(text), `${f}: set:html`);
+    assert.ok(/CollageScene/.test(text) && !/CollagePiece/.test(text), `${f}: debe usar CollageScene y no CollagePiece`);
+  }
+});
