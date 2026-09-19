@@ -115,6 +115,29 @@ test.describe('orden de tabulación y foco a 1280 px', () => {
     await page.screenshot({ path: 'test-results/skip-link-focused.png', clip: { x: 0, y: 0, width: 640, height: 160 } });
   });
 
+  test('(f2) un skip link enfocado sobre la sección morada #agenda conserva un anillo visible (dos tonos)', async ({ page }) => {
+    await page.goto('/#agenda');
+    const link = page.locator('.skip a[href="#main"]');
+    await link.evaluate((el) => (el as HTMLElement).focus());
+    await expect(link).toBeFocused();
+    const info = await link.evaluate((el) => {
+      const cs = getComputedStyle(el);
+      const box = el.getBoundingClientRect();
+      const agenda = document.getElementById('agenda')!.getBoundingClientRect();
+      return {
+        outlineColor: cs.outlineColor,
+        boxShadow: cs.boxShadow,
+        overAgenda: agenda.top < box.bottom && agenda.bottom > box.top,
+      };
+    });
+    // El enlace (fixed) queda, al menos en parte, sobre #agenda: el contorno morado de UI-SPEC no se ve ahí,
+    // así que el anillo amarillo del box-shadow (6.15 sobre morado) debe estar presente.
+    expect(info.overAgenda).toBe(true);
+    expect(info.outlineColor).toBe('rgb(115, 24, 127)');
+    expect(info.boxShadow).toContain('rgb(255, 198, 2)');
+    await page.screenshot({ path: 'test-results/skip-link-focused-agenda.png', clip: { x: 0, y: 0, width: 640, height: 160 } });
+  });
+
   test('(g) Enter sobre el skip link 1 deja el foco en #main', async ({ page }) => {
     await page.goto('/');
     await page.keyboard.press('Tab');
