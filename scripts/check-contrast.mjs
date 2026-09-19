@@ -5,6 +5,7 @@ import {
   APPROVED_PAIRS,
   FORBIDDEN_PAIRS,
   TONE_PAIRS,
+  contrastRaw,
   contrastRatio,
   parseTokens,
 } from './lib/contrast.mjs';
@@ -47,11 +48,14 @@ for (const pair of APPROVED_PAIRS) {
     });
     continue;
   }
+  // El umbral se compara con el valor exacto; el redondeado es solo para mostrar y para
+  // contrastarlo con el ratio medido de UI-SPEC.
+  const raw = contrastRaw(fg, bg);
   const ratio = contrastRatio(fg, bg);
-  const meetsThreshold = ratio >= pair.min;
+  const meetsThreshold = raw >= pair.min;
   const matchesMeasured = Math.abs(ratio - pair.ratio) <= TOLERANCE;
   let detail = '';
-  if (!meetsThreshold) detail = `bajo el umbral ${pair.min}`;
+  if (!meetsThreshold) detail = `bajo el umbral ${pair.min} (real ${raw.toFixed(4)})`;
   else if (!matchesMeasured) detail = `se esperaba ${pair.ratio.toFixed(2)} y un token cambió`;
   results.push({
     kind: 'approved', pair: label, fg: tag(fg), bg: tag(bg), ok: meetsThreshold && matchesMeasured,
@@ -75,12 +79,13 @@ for (const [tone, vars] of Object.entries(tones)) {
       });
       continue;
     }
+    const raw = contrastRaw(fg, bg);
     const ratio = contrastRatio(fg, bg);
     const banned = forbiddenKeys.get(`${tag(fg)}|${tag(bg)}`);
-    const ok = ratio >= min && !banned;
+    const ok = raw >= min && !banned;
     let detail = '';
     if (banned) detail = `par prohibido (${banned.why})`;
-    else if (!ok) detail = `bajo el umbral ${min} (${use})`;
+    else if (!ok) detail = `bajo el umbral ${min} (real ${raw.toFixed(4)}; ${use})`;
     results.push({
       kind: 'tone', pair: label, fg: tag(fg), bg: tag(bg), ok, ratio, threshold: min, detail,
     });
@@ -99,8 +104,9 @@ for (const pair of FORBIDDEN_PAIRS) {
     });
     continue;
   }
+  const raw = contrastRaw(fg, bg);
   const ratio = contrastRatio(fg, bg);
-  const below = ratio < pair.min;
+  const below = raw < pair.min;
   results.push({
     kind: 'forbidden', pair: label, fg: tag(fg), bg: tag(bg), ok: below, ratio,
     threshold: pair.min, expected: pair.ratio,

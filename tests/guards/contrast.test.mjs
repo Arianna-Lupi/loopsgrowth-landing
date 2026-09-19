@@ -7,6 +7,7 @@ import { join } from 'node:path';
 import {
   APPROVED_PAIRS,
   FORBIDDEN_PAIRS,
+  contrastRaw,
   contrastRatio,
   parseTokens,
 } from '../../scripts/lib/contrast.mjs';
@@ -63,6 +64,19 @@ test('contrastRatio reproduce los 15 ratios medidos (9 aprobados y 6 prohibidos)
       `${fg} sobre ${bg}: se esperaba ${expected} y salió ${contrastRatio(fg, bg)}`,
     );
   }
+});
+
+test('contrastRaw no redondea: #6473b6 sobre blanco (4.4971) no cumple 4.5 aunque se muestre como 4.5', () => {
+  assert.equal(contrastRatio('#6473b6', HEX.white), 4.5);
+  assert.ok(contrastRaw('#6473b6', HEX.white) < 4.5);
+});
+
+test('un enlace de tono con ratio real 4.4971 falla check-contrast aunque el ratio redondeado sea 4.5', () => {
+  const file = mutatedTokens((css) => replaceInTone(css, 'light', '--link', '#6473b6'));
+  const res = run('--tokens', file);
+  assert.equal(res.status, 1);
+  assert.match(res.stderr, /tono light: --link sobre --surface/);
+  assert.match(res.stderr, /real 4\.4971/);
 });
 
 test('las listas exportadas traen 9 pares aprobados y 6 prohibidos', () => {

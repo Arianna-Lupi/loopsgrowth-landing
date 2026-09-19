@@ -18,12 +18,20 @@ export function luminance(hex) {
   return 0.2126 * r + 0.7152 * g + 0.0722 * b;
 }
 
-/** Razón de contraste con dos decimales. @param {string} a @param {string} b */
-export function contrastRatio(a, b) {
+/**
+ * Razón de contraste exacta, sin redondear. Es la que se compara con los umbrales: WCAG no
+ * redondea (4.4971 no cumple 4.5). @param {string} a @param {string} b
+ */
+export function contrastRaw(a, b) {
   const la = luminance(a);
   const lb = luminance(b);
   const [hi, lo] = la >= lb ? [la, lb] : [lb, la];
-  return Math.round(((hi + 0.05) / (lo + 0.05)) * 100) / 100;
+  return (hi + 0.05) / (lo + 0.05);
+}
+
+/** Razón de contraste con dos decimales, solo para mostrar. @param {string} a @param {string} b */
+export function contrastRatio(a, b) {
+  return Math.round(contrastRaw(a, b) * 100) / 100;
 }
 
 const stripComments = (css) => css.replace(/\/\*[\s\S]*?\*\//g, '');
