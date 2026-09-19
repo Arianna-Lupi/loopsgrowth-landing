@@ -120,7 +120,7 @@ Items acknowledged and deferred at milestone close, most recent first:
 ## Reanudar (2026-09-19)
 
 - Fase 1: ejecutada y verificada en codigo (`verification_deferred_human`, 6 items humanos en `01-UAT.md`). Codigo integrado en `master`.
-- Fase 2: `02-CONTEXT.md`, `02-UI-SPEC.md` (aprobado), `02-ARI-COPY-V2.md` y `02-PLANNING-BRIEF.md` listos; 7 planes escritos (`02-01` a `02-07`). Plan-checker de la fase 2 lanzado; falta aplicar lo que marque y ejecutar. Retomar con `/gsd-autonomous --from 2` (si el checker ya paso, sigue directo a `/gsd-execute-phase 2 --no-transition`).
+- Fase 2: `02-CONTEXT.md`, `02-UI-SPEC.md` (aprobado), `02-ARI-COPY-V2.md` y `02-PLANNING-BRIEF.md` listos; 7 planes escritos (`02-01` a `02-07`). Plan-checker PASO (iteracion 2, 0 bloqueadores): ahora son 8 planes (`02-01` a `02-08`, waves 1,1,2,3,4,5,6,7; el 07 original se dividio en 07 y 08). Siguiente paso: ejecutar la fase 2 con `/gsd-autonomous --from 2` (o `/gsd-execute-phase 2 --no-transition`). Antes de cada executor forzar aislamiento none. Al terminar: code review, verificador, luego fases 3 y 4.
 - Decisiones abiertas de Juan: cargar el iframe de ClickUp solo al acercarse a `#agenda` (medido: el formulario mete ~55 MB de JS descomprimido y `load` de 4,7 s; la pagina propia pesa 66 KB y da FCP de 48 ms).
 - Reglas de ejecucion aprendidas: forzar aislamiento `none` antes de cada executor (`gsd-tools query dispatch-isolation --raw --phase NN --force-isolation none`), `astro preview` en segundo plano rompe Playwright dentro de agentes (arrancarlo a mano y detenerlo con `astro preview stop`), planners grandes se estancan a los 600 s: dividir por plan.
 
