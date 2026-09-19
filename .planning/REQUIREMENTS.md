@@ -25,7 +25,7 @@ Requisitos para la primera entrega. Cada uno se asigna a una fase del roadmap.
 
 ### Contenido y secciones
 
-- [ ] **CONT-01**: El visitante ve un Hero con H1 en texto real (categoría, público y resultado), subtítulo, descripción y CTA principal.
+- [x] **CONT-01**: El visitante ve un Hero con H1 en texto real (categoría, público y resultado), subtítulo, descripción y CTA principal.
 - [ ] **CONT-02**: El visitante lee la sección "El problema" con los tres dolores del Copy v2.
 - [ ] **CONT-03**: El visitante lee la sección "Por qué ahora" sobre la búsqueda en Google y en asistentes de IA.
 - [ ] **CONT-04**: El visitante ve "La solución" con los 4 pilares (auditoría, estrategia Google e IA, equipo dedicado, reportes).
@@ -41,15 +41,15 @@ Requisitos para la primera entrega. Cada uno se asigna a una fase del roadmap.
 
 ### Copy
 
-- [ ] **COPY-01**: Todo el texto sale tal cual del doc de Ari (sin humanizar ni reescribir), en español neutro; si falta un texto se pide a Ari.
+- [x] **COPY-01**: Todo el texto sale tal cual del doc de Ari (sin humanizar ni reescribir), en español neutro; si falta un texto se pide a Ari.
 - [x] **COPY-02**: El build de producción falla si queda `[VERIFICAR]`, una afirmación `pending`, voseo, guion largo o el término "AEO".
 
 ### Diseño y marca
 
 - [ ] **DSGN-01**: La página aplica el estilo collage pop del brandbook (lupas, ojos, clics) con SVG decorativo estático por defecto.
 - [ ] **DSGN-02**: El logo e isotipo se usan en SVG respetando el área de salvado del brandbook.
-- [ ] **DSGN-03**: La página se ve y funciona de 320 px a 1280 px sin scroll horizontal.
-- [ ] **DSGN-04**: Todo el trabajo de diseño web pasa por las skills `impeccable` y `design-taste-frontend`.
+- [x] **DSGN-03**: La página se ve y funciona de 320 px a 1280 px sin scroll horizontal.
+- [x] **DSGN-04**: Todo el trabajo de diseño web pasa por las skills `impeccable` y `design-taste-frontend`.
 - [ ] **DSGN-05**: Cualquier movimiento se desactiva con `prefers-reduced-motion: reduce`.
 
 ### Accesibilidad
@@ -131,7 +131,7 @@ Qué fase cubre cada requisito. Completado al crear el roadmap.
 | FORM-05 | Phase 1 | Pending |
 | COPY-02 | Phase 1 | Complete |
 | A11Y-03 | Phase 1 | Complete |
-| CONT-01 | Phase 2 | Pending |
+| CONT-01 | Phase 2 | Complete |
 | CONT-02 | Phase 2 | Pending |
 | CONT-03 | Phase 2 | Pending |
 | CONT-04 | Phase 2 | Pending |
@@ -144,11 +144,11 @@ Qué fase cubre cada requisito. Completado al crear el roadmap.
 | CONT-11 | Phase 2 | Pending |
 | CONT-12 | Phase 2 | Pending |
 | CONT-13 | Phase 2 | Pending |
-| COPY-01 | Phase 2 | Pending |
+| COPY-01 | Phase 2 | Complete |
 | DSGN-01 | Phase 2 | Pending |
 | DSGN-02 | Phase 2 | Pending |
-| DSGN-03 | Phase 2 | Pending |
-| DSGN-04 | Phase 2 | Pending |
+| DSGN-03 | Phase 2 | Complete |
+| DSGN-04 | Phase 2 | Complete |
 | DSGN-05 | Phase 2 | Pending |
 | A11Y-01 | Phase 3 | Pending |
 | A11Y-02 | Phase 3 | Pending |

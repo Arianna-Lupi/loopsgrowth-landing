@@ -3,11 +3,11 @@ gsd_state_version: "1.0"
 current_phase: 02
 current_phase_name: Secciones, marca y copy
 status: executing
-stopped_at: "02-01 parcial: Tarea 1 (tracer) hecha, faltan Tareas 2 y 3"
-last_updated: "2026-09-19T17:29:24.779Z"
+stopped_at: Completed 02-01-PLAN.md
+last_updated: "2026-09-19T17:49:41.648Z"
 last_activity: 2026-09-19
 last_activity_desc: Phase 02 execution started
-state_head: eff9aee778546bbdb62a216b195f2109f9f57bb1
+state_head: 81271d1fa9560e83c5cbef6986430363f8208fa8
 progress:
   total_phases: 4
   completed_phases: 0
@@ -28,8 +28,8 @@ See: .planning/PROJECT.md (updated 2026-09-18)
 ## Current Position
 
 Phase: 02 (Secciones, marca y copy) — EXECUTING
-Plan: 1 of 8
-Status: Executing Phase 02
+Plan: 2 of 8
+Status: Ready to execute
 Last activity: 2026-09-19 — Phase 02 execution started
 
 Progress: [░░░░░░░░░░] 0%
@@ -62,6 +62,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 01 P02 | 37 min | 3 tasks | 22 files |
 | Phase 01 P03 | 30min | 3 tasks | 13 files |
 | Phase 01 P04 | 15min | 2 tasks | 6 files |
+| Phase 02 P01 | 3 sesiones | 3 tasks | 17 files |
 
 ## Accumulated Context
 
@@ -84,6 +85,7 @@ Recent decisions affecting current work:
 - [Phase 01]: El enlace de respaldo y el noscript usan la geometria Tabler external-link inline (16 px, aria-hidden), sin sumar libreria de iconos — UI-SPEC pide un SVG en linea; el hueco de dependencias se cierra en Fase 2 si hace falta mas iconografia
 - [Phase 01]: Plan 01-04: la reserva del iframe de ClickUp se mide con el scrollHeight de cu-form (fase natural, min-height 0), no con style.height — El formulario usa height 100% y iframe-resizer solo reporta la altura del propio iframe; style.height devuelve el min-height vigente (medicion circular). Tokens: sm 1664px y lg 1536px
 - [Phase 01]: Plan 01-04: FORM-05 sigue pendiente; los dos envios reales son humanos (Juan) y ninguna prueba automatica llena ni envia el formulario — Un envio crea una tarea real en la Lista de ClickUp de Ari; los bloques human-check se consolidan en 01-UAT.md
+- [Phase 02]: 02-01: collage del hero como SVG en linea (lupa morada con cristal blanco, mango oscuro) con seis piezas nombradas listas para animar en el plan 07
 
 ### Pending Todos
 
@@ -126,6 +128,6 @@ Items acknowledged and deferred at milestone close, most recent first:
 
 ## Session Continuity
 
-Last session: 2026-09-19T17:29:24.727Z
-Stopped at: 02-01 parcial: Tarea 1 (tracer) hecha, faltan Tareas 2 y 3
-Resume file: .planning/phases/02-secciones-marca-y-copy/02-01-SUMMARY.md
+Last session: 2026-09-19T17:49:41.621Z
+Stopped at: Completed 02-01-PLAN.md
+Resume file: None
