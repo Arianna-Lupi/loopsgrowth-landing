@@ -49,6 +49,11 @@ La landing completa con las secciones del Copy v2 (Hero, El problema, Por qué a
 - Paso de espaciado de 96 px solo para `--section-y` desde 1024 px (viene del `py-24` de rankingonai). Levanta la regla de escala hasta 64 px. Obliga a ajustar el padding de `#agenda` de la fase 1 y su prueba e2e.
 - CTA: 4 CTA (header, hero, tras La solución, tras Casos de éxito) más la sección `#agenda`, que es el CTA final por sí misma y no lleva un enlace a sí misma.
 
+### Morado de marca y logo (decisión de Juan, 2026-09-19)
+- El morado de la página se mantiene en `#73187F` (texto del brandbook, Pantone 248 U, y base de todos los pares de contraste medidos).
+- El vectorial del logo de Ari (`LOGO_LOOPSGRWOTH.ai`) usa `#4228D1` (azul violeta), y la muestra del propio brandbook también se dibuja en `#4228D1`. El logo se usa tal cual viene en el archivo, con sus colores, y la diferencia se reporta a Ari para que confirme cuál es el morado oficial. No se recalculan tokens ni contraste por esto.
+- Área de salvado del logo: el brandbook (pág. 7) dice X en los cuatro lados, con X igual a la altura del logo o del isotipo. Corrige la suposición de media altura del UI-SPEC (decisión 14), que solo vale para el logo apilado.
+
 ### Claude's Discretion
 Estructura de componentes, nombres de archivos, esquema exacto de las secciones en `landing.es.yaml`, composición de cada collage y detalles de espaciado y tipografía dentro de los tokens. Reglas de proyecto que aplican: diseño web por `impeccable` y `design-taste-frontend`; todo el texto sale tal cual del doc de Ari (fuente de verdad, sin humanizar ni reescribir; si falta un texto se pide a Ari, no se inventa); A11Y.md estricto.
 
