@@ -5,6 +5,8 @@ import { createHash } from 'node:crypto';
 import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import { parse } from 'yaml';
+import { walkClaims } from '../../scripts/lib/copy-rules.mjs';
 
 const CLI = 'scripts/check-copy.mjs';
 const FIX = 'tests/guards/fixtures';
@@ -229,21 +231,19 @@ test('9a. el YAML real sale con 0 fuera de producción y no se modifica (solo le
   assert.equal(sha(REAL_YAML), before);
 });
 
-test('9b. sobre el YAML real, producción solo reporta las cinco PENDING de la Fase 1', () => {
+test('9b. sobre el YAML real, producción solo reporta como PENDING las reclamaciones pending del propio YAML', () => {
   const before = sha(REAL_YAML);
   const res = run(['--file', REAL_YAML, '--json'], { env: PROD });
-  assert.equal(res.status, 1, res.out);
   assert.deepEqual(res.json?.structural, []);
   const violations = res.json?.content ?? [];
-  assert.ok(violations.length > 0, res.out);
   assert.ok(violations.every((v) => v.rule === 'PENDING'), JSON.stringify(violations));
-  assert.deepEqual(violations.map((v) => v.path).sort(), [
-    'agenda.intro',
-    'brand.term',
-    'call.duration',
-    'hero.subtitle',
-    'meta.title_template',
-  ]);
+  // Lo esperado se deriva del YAML: cuando Ari confirma un texto, esta prueba no se rompe.
+  const expected = walkClaims(parse(readFileSync(REAL_YAML, 'utf8')))
+    .filter((n) => n.kind === 'claim' && n.claim.status === 'pending')
+    .map((n) => n.path)
+    .sort();
+  assert.deepEqual(violations.map((v) => v.path).sort(), expected);
+  assert.equal(res.status, expected.length > 0 ? 1 : 0, res.out);
   assert.equal(sha(REAL_YAML), before);
 });
 

@@ -164,7 +164,6 @@ test('8. con el YAML real hay una fila por cada pending de walkClaims y el YAML 
   const expected = walkClaims(parse(readFileSync(REAL_YAML, 'utf8')))
     .filter((n) => n.kind === 'claim' && n.claim.status === 'pending')
     .map((n) => n.path);
-  assert.equal(expected.length, 5);
   const rows = dataRows(readFileSync(out, 'utf8'));
   assert.deepEqual(
     rows.map((r) => r.split(' | ')[0].replace(/^\| /, '')),

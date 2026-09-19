@@ -1,14 +1,29 @@
 import { test, expect, type Page } from '@playwright/test';
 import { readFileSync } from 'node:fs';
+import { parse } from 'yaml';
 
-const FORM_URL = 'https://forms.clickup.com/90131720021/f/2ky49tun-19253/DATFKMESVSMXZY5CO5';
+// Los textos esperados salen del YAML y no se copian a mano: cuando Ari confirma o cambia un
+// texto (el término, la duración, el subtítulo), la prueba sigue midiendo lo que la página debe
+// mostrar. Se resuelven {term} y {duration} igual que `fill()` de src/lib/content.ts.
+type Claim = { text: string };
+const es = (parse(readFileSync('src/content/landing.es.yaml', 'utf8')) as {
+  es: {
+    brand: { term: Claim };
+    call: { duration: Claim };
+    hero: { h1: Claim; subtitle: Claim };
+    agenda: { intro: Claim };
+    config: { form_url: string };
+  };
+}).es;
+const resolveText = (claim: Claim) =>
+  claim.text.replaceAll('{term}', es.brand.term.text).replaceAll('{duration}', es.call.duration.text);
+
+const FORM_URL = es.config.form_url;
 
 // Textos de Ari, tal cual (con el término y la duración ya resueltos desde el YAML).
-const H1_TEXT = 'Crecemos tu tienda a través de Google, ChatGPT y Gemini.';
-const SUBTITLE_TEXT =
-  'Un equipo dedicado y especializado que ejecuta tu SEO/GEO y tu visibilidad en asistentes de IA (ChatGPT, Gemini).';
-const INTRO_TEXT =
-  'Agenda una llamada de 30 minutos. Sin costo y sin compromiso. Entendemos tu negocio y te decimos con honestidad si podemos ayudarte. Si no somos el equipo correcto, también te lo decimos.';
+const H1_TEXT = resolveText(es.hero.h1);
+const SUBTITLE_TEXT = resolveText(es.hero.subtitle);
+const INTRO_TEXT = resolveText(es.agenda.intro);
 
 type Stop = {
   tag: string;
