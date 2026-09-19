@@ -7,9 +7,11 @@ const PORT = 4321;
 const TIMEOUT_MS = 60_000;
 const EXPECTED = ['forms.clickup.com/90131720021', 'lang="es"', 'href="#agenda"'];
 
+// Solo se limpia si este script lanzó el servidor. Si el puerto ya estaba ocupado por el servidor
+// de otra persona (por ejemplo su `astro dev` en segundo plano), no se toca.
 const fail = (msg) => {
   console.error(`FAIL: ${msg}`);
-  cleanup();
+  if (child) cleanup();
   process.exit(1);
 };
 
