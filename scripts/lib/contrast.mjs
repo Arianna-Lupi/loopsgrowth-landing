@@ -52,13 +52,24 @@ function resolve(value, scopes, depth = 0) {
   return value;
 }
 
+/** Tonos que `tokens.css` debe declarar siempre. Si falta uno, la guarda falla. */
+export const REQUIRED_TONES = ['light', 'purple'];
+
+// Un elemento de selector que es EXACTAMENTE un atributo de tono: `[data-tone="x"]`, con comillas
+// dobles, simples o sin comillas. Cualquier otra forma que nombre `data-tone` (descendiente,
+// compuesto, anidado) no cuenta como tono y se reporta como problema.
+const TONE_SELECTOR = /^\[\s*data-tone\s*=\s*["']?([\w-]+)["']?\s*\]$/;
+const TONE_MENTION = /\[\s*data-tone\b/g;
+
 /**
  * Lee `tokens.css`. Devuelve las variables de `@theme` (también `@theme static`) y,
  * por cada `[data-tone="x"]`, sus variables con `var(--x)` resueltas hasta dos niveles.
  * Solo los bloques `@theme` y los que nombran un `data-tone` cuentan: un `:root` suelto
  * (por ejemplo el de movimiento reducido) nunca se toma por un tono.
+ * `problems` lista lo que la guarda no pudo interpretar con seguridad: selectores de tono
+ * descendientes o compuestos y bloques de tono con llaves anidadas. Nunca se ignoran en silencio.
  * @param {string} cssText
- * @returns {{ theme: Record<string, string>, tones: Record<string, Record<string, string>> }}
+ * @returns {{ theme: Record<string, string>, tones: Record<string, Record<string, string>>, problems: string[] }}
  */
 export function parseTokens(cssText) {
   const css = stripComments(cssText);
@@ -66,6 +77,9 @@ export function parseTokens(cssText) {
   const theme = {};
   /** @type {Record<string, Record<string, string>>} */
   const rawTones = {};
+  /** @type {string[]} */
+  const problems = [];
+  let accepted = 0;
   for (const block of css.matchAll(/([^{}]+)\{([^{}]*)\}/g)) {
     const selector = block[1].trim();
     const decls = parseDeclarations(block[2]);
@@ -73,9 +87,27 @@ export function parseTokens(cssText) {
       Object.assign(theme, decls);
       continue;
     }
-    for (const t of selector.matchAll(/\[data-tone\s*=\s*"([^"]+)"\]/g)) {
-      rawTones[t[1]] = { ...(rawTones[t[1]] ?? {}), ...decls };
+    for (const part of selector.split(',')) {
+      const item = part.trim();
+      const m = TONE_SELECTOR.exec(item);
+      if (m) {
+        accepted += 1;
+        rawTones[m[1]] = { ...(rawTones[m[1]] ?? {}), ...decls };
+      } else if (item.includes('data-tone')) {
+        problems.push(
+          `selector de tono no admitido "${item.replace(/\s+/g, ' ')}": debe ser exactamente [data-tone="x"]`,
+        );
+      }
     }
+  }
+  // Toda mención de `[data-tone` que no fue aceptada como selector exacto en un bloque plano
+  // (por ejemplo un bloque con CSS anidado, que el análisis por bloques planos no ve) es un problema.
+  const mentions = (css.match(TONE_MENTION) ?? []).length;
+  const rejected = problems.length;
+  if (mentions > accepted + rejected) {
+    problems.push(
+      'hay bloques [data-tone] con llaves anidadas: los tonos deben declararse en bloques planos, sin CSS anidado',
+    );
   }
   /** @type {Record<string, Record<string, string>>} */
   const tones = {};
@@ -85,7 +117,7 @@ export function parseTokens(cssText) {
       tones[name][prop] = resolve(value, [decls, theme]);
     }
   }
-  return { theme, tones };
+  return { theme, tones, problems };
 }
 
 const P = '--color-brand-purple';

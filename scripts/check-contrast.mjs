@@ -4,6 +4,7 @@ import { readFileSync } from 'node:fs';
 import {
   APPROVED_PAIRS,
   FORBIDDEN_PAIRS,
+  REQUIRED_TONES,
   TONE_PAIRS,
   contrastRaw,
   contrastRatio,
@@ -30,8 +31,22 @@ try {
   process.exit(1);
 }
 
-const { theme, tones } = parseTokens(css);
+const { theme, tones, problems } = parseTokens(css);
 const results = [];
+
+// (0) La guarda no puede aprobar en silencio lo que no entiende: cada tono obligatorio debe
+// existir y todo selector o bloque de tono que no se pudo interpretar cuenta como fallo.
+for (const required of REQUIRED_TONES) {
+  if (!tones[required]) {
+    results.push({
+      kind: 'tone', pair: `tono ${required}`, ok: false, ratio: null, threshold: 0,
+      detail: 'el tono no se encontró en tokens.css',
+    });
+  }
+}
+for (const problem of problems) {
+  results.push({ kind: 'tone', pair: 'formato de tokens.css', ok: false, ratio: null, threshold: 0, detail: problem });
+}
 
 const hexOf = (token) => theme[token];
 const isHex = (value) => typeof value === 'string' && /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(value);

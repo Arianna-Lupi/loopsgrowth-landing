@@ -96,6 +96,53 @@ test('parseTokens lee @theme static, resuelve los tonos y no toma un :root suelt
   assert.equal(tones.light['--dur-1'], undefined);
 });
 
+test('parseTokens acepta comillas simples y sin comillas en [data-tone] y no reporta problemas', () => {
+  const css = `[data-tone='light'] { --surface: #ffffff; } [data-tone=purple] { --surface: #73187f; }`;
+  const { tones, problems } = parseTokens(css);
+  assert.deepEqual(Object.keys(tones).sort(), ['light', 'purple']);
+  assert.deepEqual(problems, []);
+});
+
+test('un tono con comillas simples sigue verificándose: check-contrast lo evalúa y no lo ignora', () => {
+  const file = mutatedTokens((css) =>
+    css
+      .replace('[data-tone="purple"]', "[data-tone='purple']")
+      .replace(/(\[data-tone='purple'\]\s*\{[^}]*?--focus-ring:\s*)[^;]+;/, '$1var(--color-brand-dark);'),
+  );
+  const res = run('--tokens', file);
+  assert.equal(res.status, 1);
+  assert.match(res.stderr, /tono purple: --focus-ring sobre --surface/);
+});
+
+test('si falta un tono obligatorio (light o purple) check-contrast sale con 1 y lo nombra', () => {
+  for (const tone of ['light', 'purple']) {
+    const file = mutatedTokens((css) => css.replaceAll(`[data-tone="${tone}"]`, '[data-tono="x"]'));
+    const res = run('--tokens', file);
+    assert.equal(res.status, 1, `sin el tono ${tone} debía fallar`);
+    assert.match(res.stderr, new RegExp(`tono ${tone}: .*no se encontró|tono ${tone} = n/a`));
+  }
+});
+
+test('CSS anidado dentro de un bloque [data-tone] hace fallar la guarda en vez de pasar en silencio', () => {
+  const file = mutatedTokens((css) =>
+    css.replace('[data-tone="purple"] {', '[data-tone="purple"] {\n  .card { color: red; }'),
+  );
+  const res = run('--tokens', file);
+  assert.equal(res.status, 1);
+  assert.match(res.stderr, /llaves anidadas|no se encontró/);
+});
+
+test('un selector descendiente [data-tone="x"] .card no se fusiona con el tono: se reporta y falla', () => {
+  const file = mutatedTokens(
+    (css) => `${css}\n[data-tone="purple"] .card { --surface: #ffffff; }\n`,
+  );
+  const res = run('--tokens', file);
+  assert.equal(res.status, 1);
+  assert.match(res.stderr, /selector de tono no admitido/);
+  const { tones } = parseTokens(readFileSync(file, 'utf8'));
+  assert.equal(tones.purple['--surface'], HEX.purple);
+});
+
 test('ejecución por defecto: código 0 y 9 pares aprobados ok en --json', () => {
   const res = run();
   assert.equal(res.status, 0, res.stderr);
