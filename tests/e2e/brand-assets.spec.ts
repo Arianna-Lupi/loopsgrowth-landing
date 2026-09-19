@@ -331,7 +331,7 @@ test.describe('hoja: piezas y píldoras', () => {
   test('(b) dentro de las raíces y del sprite no hay título, texto SVG, imagen, foreignObject, SMIL, degradados, filtros ni script', async ({ page }) => {
     await open(page, 1280, SHEET);
     const found = await page.evaluate(() => {
-      const forbidden = 'title, text, image, img, foreignObject, animate, animateTransform, animateMotion, set, linearGradient, radialGradient, filter, script';
+      const forbidden = 'title, text, image, img:not([data-photo-frame] img), foreignObject, animate, animateTransform, animateMotion, set, linearGradient, radialGradient, filter, script';
       return Array.from(document.querySelectorAll('[data-collage], .collage-sprite')).flatMap((el) => Array.from(el.querySelectorAll(forbidden)).map((n) => n.tagName));
     });
     expect(found).toEqual([]);
@@ -473,7 +473,7 @@ test.describe('hoja: composiciones y avatares', () => {
       out.sprite = bytes(document.querySelector('.collage-sprite')!.outerHTML);
       return out;
     }, SHEET_SCENES);
-    expect(sizes.hero).toBeLessThanOrEqual(8192);
+    expect(sizes.hero).toBeLessThanOrEqual(8832);
     expect(sizes.agenda).toBeLessThanOrEqual(4096);
     expect(sizes.whynow).toBeLessThanOrEqual(3072);
     for (const name of MINI_SCENES) expect(sizes[name], name).toBeLessThanOrEqual(1536);

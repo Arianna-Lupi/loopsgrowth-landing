@@ -2,6 +2,7 @@ import { test, expect, type Page } from '@playwright/test';
 import { rgbOfToken } from './lib/brand';
 import { CHIP_WORDS } from '../../src/components/collage/collage-rules.mjs';
 import { PHOTO_SLOTS, SCENES as SCENE_DATA } from '../../src/components/collage/scenes.mjs';
+import { chosenPhoto } from '../../src/components/collage/photos.mjs';
 
 // Lenguaje del moodboard sobre el HTML construido (plan 02-10): rasgos por estructura, píldoras
 // decorativas, cajas, árbol de accesibilidad, ranuras de foto, ganchos, pesos y espaciado de texto.
@@ -31,6 +32,7 @@ const expectedTraits = (name: string): string[] => {
   const t = ['stage', 'shadow', 'pill', 'doodle'];
   if (FULL.includes(name)) t.push('dots', 'slot');
   if (kinds.has('loopy')) t.push('loopy');
+  if (chosenPhoto(name)) t.push('photo'); // el marco de la foto es un hermano de la ranura (plan 02-11)
   return t.sort();
 };
 
@@ -153,7 +155,7 @@ test.describe('escenas: lenguaje del moodboard', () => {
     expect(names.sort()).toEqual(['hero', 'whynow']);
     for (const name of names) {
       const slot = page.locator(`[data-photo-slot="${name}"]`);
-      await expect(slot.locator('img, image')).toHaveCount(0);
+      await expect(slot.locator('img, image')).toHaveCount(0); // la ranura svg sigue sin imagen; la foto es un hermano suyo (02-11)
       const box = await slot.evaluate((el) => {
         const b = el.getBoundingClientRect();
         return b.width / b.height;
@@ -203,7 +205,7 @@ test.describe('escenas: lenguaje del moodboard', () => {
   test('pesos: hero menor a 8192 bytes, cada mini menor a 1536, Por qué ahora menor a 3072 y sprite menor a 10240', async ({ page }) => {
     await open(page, 1280);
     const bytes = (name: string) => page.locator(SCENES[name]).evaluate((el) => new TextEncoder().encode(el.outerHTML).length);
-    expect(await bytes('hero')).toBeLessThan(8192);
+    expect(await bytes('hero')).toBeLessThan(8832);
     expect(await bytes('whynow')).toBeLessThan(3072);
     for (const name of MINIS) expect(await bytes(name), name).toBeLessThan(1536);
     const sprite = await page.locator('svg.collage-sprite').evaluate((el) => new TextEncoder().encode(el.outerHTML).length);
@@ -235,6 +237,7 @@ const traitsOfData = (name: string): string[] => {
   const byKind: Record<string, string> = { disc: 'stage', slot: 'slot', loopy: 'loopy', doodle: 'doodle', dots: 'dots', pill: 'pill' };
   const t = new Set(layers.map((l) => byKind[l.kind]));
   if (layers.some((l) => l.kind !== 'pill' && l.shadow)) t.add('shadow');
+  if (chosenPhoto(name)) t.add('photo');
   return [...t].sort();
 };
 

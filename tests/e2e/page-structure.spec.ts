@@ -277,7 +277,7 @@ test.describe('primer pantallazo', () => {
 });
 
 test.describe('collage del hero', () => {
-  test('collage decorativo: raíz aria-hidden, capa svg sin title ni text, sin img y liviano', async ({ page }) => {
+  test('collage decorativo: raíz aria-hidden, capa svg sin title ni text, una sola img de foto con alt vacío y liviano', async ({ page }) => {
     await page.goto('/');
     const root = page.locator('div.hero-collage[data-collage="hero"]');
     await expect(root).toHaveCount(1);
@@ -288,9 +288,12 @@ test.describe('collage del hero', () => {
     await expect(svg).toHaveAttribute('focusable', 'false');
     await expect(svg.locator('title')).toHaveCount(0);
     await expect(svg.locator('text')).toHaveCount(0);
-    await expect(page.locator('#inicio img')).toHaveCount(0);
+    await expect(page.locator('#inicio img')).toHaveCount(1);
+    await expect(root.locator('[data-photo-frame] img')).toHaveCount(1);
+    await expect(root.locator('img')).toHaveCount(1);
+    await expect(svg.locator('image')).toHaveCount(0);
     const size = await root.evaluate((el) => el.outerHTML.length);
-    expect(size).toBeLessThan(8192);
+    expect(size).toBeLessThan(8832);
   });
 
   test('seis grupos nombrados con --i, --r y --r-from y dos pupilas', async ({ page }) => {

@@ -320,8 +320,33 @@ export function photoSlots(scenes = SCENES) {
 }
 export const PHOTO_SLOTS = Object.freeze(photoSlots());
 
+/**
+ * Marco de la foto de una escena (plan 02-11): la caja, el radio, el relleno y la sombra de la capa
+ * slot y sus porcentajes de la escena. Nulo si la escena no tiene ranura.
+ * @param {string} sceneName
+ */
+export function photoFrame(sceneName) {
+  const scene = SCENES[sceneName];
+  const slot = scene?.layers.find((l) => l.kind === 'slot');
+  if (!slot) return null;
+  return {
+    scene: scene.name,
+    slot: slot.name,
+    x: slot.x,
+    y: slot.y,
+    w: slot.w,
+    h: slot.h,
+    rx: slot.rx,
+    fill: slot.fill,
+    shadow: { dx: slot.shadow?.[0] ?? 0, dy: slot.shadow?.[1] ?? 0 },
+    sceneW: scene.w,
+    sceneH: scene.h,
+    pct: { left: (slot.x / scene.w) * 100, top: (slot.y / scene.h) * 100, width: (slot.w / scene.w) * 100, height: (slot.h / scene.h) * 100 },
+  };
+}
+
 // ---------------------------------------------------------------------------------------------
-// assertScene: reglas R1 a R11
+// assertScene: reglas R1 a R12
 // ---------------------------------------------------------------------------------------------
 
 function fail(scene, id, rule, message) {
@@ -458,6 +483,16 @@ export function assertScene(input) {
       const dotsBox = baseBox({ kind: 'dots', ...slot.dots });
       const inside = dotsBox.x >= sb.x && dotsBox.y >= sb.y && dotsBox.x + dotsBox.w <= sb.x + sb.w && dotsBox.y + dotsBox.h <= sb.y + sb.h;
       if (!inside) fail(scene, slot.id, 'R9', 'la retícula de la ranura se sale del panel.');
+    }
+  }
+
+  // R12 El marco opaco de la foto tapa lo que quede bajo la ranura: garabatos y retículas no la solapan
+  // más del 5 % de su caja (las píldoras van encima del marco y Loopy sigue la regla R9).
+  for (const slot of slots) {
+    const sb = boxOf(slot.id).box;
+    for (const l of scene.layers.filter((x) => x.kind === 'doodle' || x.kind === 'dots')) {
+      const ratio = boxOverlapRatio(boxOf(l.id).box, sb);
+      if (ratio > 0.05) fail(scene, l.id, 'R12', `el marco opaco de la foto taparía esta capa (solape ${(ratio * 100).toFixed(1)} %, máximo 5 %).`);
     }
   }
 

@@ -12,7 +12,9 @@
  * exterior de cada grupo nunca lleva transform. Sin movimiento, filtros ni degradados.
  */
 import Pill from './Pill.astro';
-import { SCENES, assertScene } from './scenes.mjs';
+import CollagePhoto from './CollagePhoto.astro';
+import { SCENES, assertScene, photoFrame } from './scenes.mjs';
+import { chosenPhoto } from './photos.mjs';
 import { SCENE_PIECES, SURFACE_OF_COLOR, fillVar } from './collage-rules.mjs';
 import { loopyGeometry, loopyScheme } from './loopy.mjs';
 
@@ -36,6 +38,9 @@ const segments = scene.groups
       .filter((g: any) => g.name !== 'pills')
       .map((g: any) => ({ group: g, layers: drawn.filter((l: any) => l.group === g.name) }))
   : [{ group: null, layers: drawn }];
+const frame = photoFrame(name);
+const photo = frame ? chosenPhoto(frame.slot) : undefined;
+const panelGroup = scene.groups?.find((g: any) => g.name === 'panel');
 const pillGroup = scene.groups?.find((g: any) => g.name === 'pills');
 const pills = scene.layers.filter((l: any) => l.kind === 'pill');
 const groupStyle = (g: any) => `--i:${g.i};--r:${g.r};--r-from:${g.rFrom}`;
@@ -158,6 +163,7 @@ const svgProps = bare
       ))
     }
   </svg>
+  {!bare && frame && photo && <CollagePhoto photo={photo.id} frame={frame} group={panelGroup ? groupStyle(panelGroup) : undefined} />}
   {
     !bare && pills.length > 0 && (
       <div class={pillGroup ? 'cw-piece cw-pills' : 'cw-pills'} data-piece={pillGroup?.name} style={pillGroup ? groupStyle(pillGroup) : undefined}>

@@ -125,7 +125,7 @@ test('los cinco archivos del mecanismo de escenas existen y están en OWNED', ()
 });
 
 // La tarea de composiciones agrega estos dos cuando existen.
-for (const extra of ['src/components/collage/AgendaCollage.astro', 'src/components/collage/Avatar.astro']) {
+for (const extra of ['src/components/collage/AgendaCollage.astro', 'src/components/collage/Avatar.astro', 'src/components/collage/CollagePhoto.astro', 'src/components/collage/photos.mjs']) {
   if (existsSync(extra)) OWNED.push(extra);
 }
 
@@ -149,8 +149,24 @@ test('los archivos propios no traen construcciones prohibidas', () => {
   for (const file of OWNED) {
     const source = readFileSync(file, 'utf8');
     for (const rule of RULES) {
+      if (rule.id === 'raster' && file.endsWith('CollagePhoto.astro')) continue; // única excepción (plan 02-11), solo para <Image e <img
       assert.ok(!rule.re.test(source), `${file} trae "${rule.id}"`);
     }
+  }
+});
+
+test('plan 02-11: CollagePhoto.astro y photos.mjs están en OWNED y solo CollagePhoto queda exceptuado de la regla de no imágenes', () => {
+  assert.ok(OWNED.includes('src/components/collage/CollagePhoto.astro'), 'CollagePhoto.astro fuera de OWNED');
+  assert.ok(OWNED.includes('src/components/collage/photos.mjs'), 'photos.mjs fuera de OWNED');
+  const raster = RULES.find((r) => r.id === 'raster');
+  assert.ok(raster.re.test('<Image src={x} />'.replace('<Image', '<img')), 'la regla sigue detectando <img');
+  assert.ok(raster.re.test('<img src="a.png">'));
+  // mutación: un <img en CollageScene.astro seguiría rechazado
+  const mutated = `${readFileSync('src/components/collage/CollageScene.astro', 'utf8')}<img src="a.png">`;
+  assert.ok(raster.re.test(mutated));
+  assert.ok(/<Image|<img/.test(readFileSync('src/components/collage/CollagePhoto.astro', 'utf8')));
+  for (const file of OWNED.filter((f) => !f.endsWith('CollagePhoto.astro'))) {
+    assert.ok(!/<Image[\s>]|<img[\s>]/.test(readFileSync(file, 'utf8')), `${file}: imagen fuera de CollagePhoto`);
   }
 });
 

@@ -511,3 +511,49 @@ test('(viii) AgendaCollage, Avatar y CollagePiece montan el mecanismo y no traen
   const scene = readFileSync('src/components/collage/CollageScene.astro', 'utf8');
   assert.match(scene, /assertScene\(/);
 });
+
+// ---------------------------------------------------------------------------------------------
+// (ix) Marco de foto y regla R12 (plan 02-11)
+// ---------------------------------------------------------------------------------------------
+
+test('marco de foto: photoFrame trae la caja de la ranura, sus porcentajes y es nulo sin ranura', async () => {
+  const { SCENES, PHOTO_SLOTS, photoFrame } = await loadScenes();
+  for (const name of ['hero', 'whynow']) {
+    const f = photoFrame(name);
+    const slot = PHOTO_SLOTS.find((s) => s.name === name);
+    const scene = SCENES[name];
+    assert.deepEqual([f.x, f.y, f.w, f.h], [slot.x, slot.y, slot.w, slot.h]);
+    assert.equal(f.slot, name);
+    assert.ok(f.rx > 0 && f.fill && Array.isArray(Object.values(f.shadow)) && f.shadow.dx > 0 && f.shadow.dy > 0);
+    assert.equal(f.sceneW, scene.w);
+    assert.equal(f.sceneH, scene.h);
+    assert.ok(Math.abs(f.pct.left - (slot.x / scene.w) * 100) < 1e-9 && Math.abs(f.pct.height - (slot.h / scene.h) * 100) < 1e-9);
+    assert.ok(Math.abs(f.pct.top - (slot.y / scene.h) * 100) < 1e-9 && Math.abs(f.pct.width - (slot.w / scene.w) * 100) < 1e-9);
+  }
+  assert.equal(photoFrame('agenda'), null);
+});
+
+test('R12: un garabato o una retícula sobre la ranura lanza; movidos fuera pasan; una píldora encima pasa', async () => {
+  const { SCENES, assertScene } = await loadScenes();
+  const copy = () => structuredClone(SCENES.hero);
+  assert.doesNotThrow(() => assertScene(copy()));
+  const slot = SCENES.hero.layers.find((l) => l.kind === 'slot');
+  const onSlot = { x: slot.x + 60, y: slot.y + 120 };
+  const doodle = copy();
+  doodle.layers.push({ id: 'hero-extra', kind: 'doodle', group: 'doodles', on: 'ground', piece: 'flecha', ...onSlot, w: 60, color: 'purple' });
+  assert.throws(() => assertScene(doodle), /Escena "hero", capa "hero-extra".*R12/);
+  const dots = copy();
+  dots.layers.push({ id: 'hero-extra', kind: 'dots', group: 'dots', on: 'ground', ...onSlot, w: 60, color: 'purple' });
+  assert.throws(() => assertScene(dots), /Escena "hero", capa "hero-extra".*R12/);
+  const away = copy();
+  away.layers.push({ id: 'hero-extra', kind: 'doodle', group: 'doodles', on: 'ground', piece: 'mas', x: 470, y: 470, w: 24, color: 'purple' });
+  assert.doesNotThrow(() => assertScene(away));
+  const pill = copy();
+  const p = pill.layers.find((l) => l.kind === 'pill');
+  Object.assign(p, { x: slot.x + slot.w - 4, anchor: 'right', y: slot.y + slot.h - 20 });
+  try {
+    assertScene(pill);
+  } catch (error) {
+    assert.ok(!/R12/.test(error.message), `una píldora sobre la ranura no debe lanzar R12: ${error.message}`);
+  }
+});

@@ -32,3 +32,6 @@ playwright-report/
 *.ai
 BrandBook*.pdf
 .planning/phases/*/brand-inventory/
+
+# originales descargados de terceros (fotos de stock): no se versionan, su sha256 queda en LICENSES.md
+photo-sources/
