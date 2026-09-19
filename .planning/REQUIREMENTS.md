@@ -9,11 +9,11 @@ Requisitos para la primera entrega. Cada uno se asigna a una fase del roadmap.
 
 ### Fundaciones
 
-- [ ] **FND-01**: El sitio corre en local con `npm run dev` en `localhost:4321` y es accesible desde la red local con `--host` para que Ari y Camila lo validen.
+- [x] **FND-01**: El sitio corre en local con `npm run dev` en `localhost:4321` y es accesible desde la red local con `--host` para que Ari y Camila lo validen.
 - [ ] **FND-02**: Todo el copy vive en un único archivo `landing.es.yaml` validado por esquema, y cada afirmación tiene `status: verified | pending`.
 - [ ] **FND-03**: Los tokens de marca (Purple #73187F, Wild Orange #fd6938, Sun Yellow #ffc602, Dark Gray #212121) y los pares texto/fondo aprobados se definen en un solo lugar, y un script de contraste falla si un par no cumple.
 - [ ] **FND-04**: La fuente de marca se consume solo mediante la variable `--font-brand`, con Outfit como respaldo, y los glifos `áéíóúüñ¿¡` se ven correctos.
-- [ ] **FND-05**: `PUBLIC_SITE_URL` y `PUBLIC_ENV` controlan canonical, sitemap y robots, y el sitio sale con `noindex` en cualquier entorno distinto de producción.
+- [x] **FND-05**: `PUBLIC_SITE_URL` y `PUBLIC_ENV` controlan canonical, sitemap y robots, y el sitio sale con `noindex` en cualquier entorno distinto de producción.
 
 ### Formulario y conversión
 
@@ -119,11 +119,11 @@ Qué fase cubre cada requisito. Completado al crear el roadmap.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| FND-01 | Phase 1 | Pending |
+| FND-01 | Phase 1 | Complete |
 | FND-02 | Phase 1 | Pending |
 | FND-03 | Phase 1 | Pending |
 | FND-04 | Phase 1 | Pending |
-| FND-05 | Phase 1 | Pending |
+| FND-05 | Phase 1 | Complete |
 | FORM-01 | Phase 1 | Pending |
 | FORM-02 | Phase 1 | Pending |
 | FORM-03 | Phase 1 | Pending |
@@ -164,6 +164,7 @@ Qué fase cubre cada requisito. Completado al crear el roadmap.
 | LNCH-04 | Phase 4 | Pending |
 
 **Coverage:**
+
 - v1 requirements: 43 total
 - Mapped to phases: 43
 - Unmapped: 0 ✓
