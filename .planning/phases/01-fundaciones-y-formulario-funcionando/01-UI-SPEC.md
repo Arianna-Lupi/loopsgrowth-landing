@@ -185,7 +185,7 @@ Reglas derivadas:
 ## Layout and Surface Contract
 
 ### Global
-- `<html lang="es">`. `e-commerce` y cualquier frase en inglés van en `<span lang="en">`. Nombres propios de marca (Google, ChatGPT, Gemini) no llevan `lang`.
+- `<html lang="es">`. `e-commerce` y cualquier frase en inglés van en `<span lang="en">`. (Aplica desde la Fase 2; ningún texto de la Fase 1 lo necesita.) Nombres propios de marca (Google, ChatGPT, Gemini) no llevan `lang`.
 - `body`: fondo `var(--surface)`, texto `var(--on-surface)`, `font-family: var(--font-brand)`, tamaño Body, interlineado 1.6.
 - Mobile first desde 320 px. Sin scroll horizontal a 320, 390, 768, 1024 y 1280 px. Los hijos de grid llevan `min-w-0`.
 - Cabecera NO sticky ni fija: evita tapar el foco (SC 2.4.11) y ahorra `scroll-padding`.
