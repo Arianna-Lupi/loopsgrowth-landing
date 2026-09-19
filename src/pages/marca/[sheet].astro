@@ -1,0 +1,89 @@
+---
+/**
+ * Hoja de revisión visual de la marca (herramienta interna, no es copy de la landing).
+ * Existe solo fuera de producción: con PUBLIC_ENV=production `getStaticPaths` devuelve una lista
+ * vacía y no se genera `/marca/hoja/`. Lleva `noindex` por BaseLayout. Los rótulos son ids de
+ * pieza en elementos `code`, nunca frases. Sirve para que Juan y Ari aprueben logo, isotipo,
+ * primitivas de collage, composiciones y avatares a varios anchos antes de que existan las
+ * secciones que los usan.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Logo from '../../components/brand/Logo.astro';
+import { isProduction } from '../../lib/site';
+import { getLanding } from '../../lib/content';
+
+export function getStaticPaths() {
+  return isProduction ? [] : [{ params: { sheet: 'hoja' } }];
+}
+
+const data = await getLanding();
+const name = data.brand.name.text;
+const TONES = ['light', 'dark'] as const;
+---
+
+<BaseLayout title="hoja de marca">
+  <div class="sheet">
+    <div class="wrap">
+      <h1><code>marca/hoja</code></h1>
+    </div>
+
+    <section aria-labelledby="sheet-identity" class="sheet-block" data-sheet="identidad">
+      <div class="wrap">
+        <h2 id="sheet-identity"><code>identidad</code></h2>
+        <div class="sheet-grid">
+          {
+            TONES.map((tone) => (
+              <div class="sheet-tone" data-tone={tone}>
+                <p><code>logo-horizontal / {tone}</code></p>
+                <Logo class="sheet-zone" name={name} variant="horizontal" />
+                <p><code>isotipo / {tone}</code></p>
+                <Logo class="sheet-zone" name={name} variant="isotipo" />
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .sheet {
+    padding-block: 2rem;
+  }
+
+  .sheet-block {
+    margin-top: 2rem;
+  }
+
+  .sheet-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+    gap: 1.5rem;
+    margin-top: 1rem;
+  }
+
+  .sheet-tone {
+    min-width: 0;
+    padding: 1rem;
+    border: 3px solid var(--color-brand-dark);
+    border-radius: var(--radius-card, 1rem);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .sheet code {
+    font-size: 0.875rem;
+    overflow-wrap: anywhere;
+  }
+
+  /* El padding del propio logo dibuja el área de salvado (1 X del BrandBook, página 7). */
+  .sheet :global(.sheet-zone) {
+    padding: var(--logo-clear);
+    border: 2px dashed currentColor;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+</style>

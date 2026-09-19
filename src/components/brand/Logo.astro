@@ -8,6 +8,10 @@
  * relleno visible: ningún elemento de contenido debe entrar en ese rectángulo ensanchado. Corrige
  * la suposición de media altura del UI-SPEC, que solo vale para el logo apilado.
  *
+ * El isotipo Loopy (mesa 13 del .ai, ojos con lupa) trae sus cuatro colores en el propio SVG y no
+ * tiene variante oscura: la mesa 17 del .ai es la versión sobre oscuro si algún día hace falta.
+ * Su X es el alto efectivo del isotipo, igual que en el logo horizontal.
+ *
  * Alturas mínimas con `max()`: 32 px el logo horizontal y 24 px el isotipo, aunque un consumidor
  * cambie `--logo-h`.
  *
@@ -16,25 +20,27 @@
  * logo); sin `href` no hay enlace (en `/` el logo no es un destino).
  */
 import LogoHorizontal from '../../assets/brand/logo-horizontal.svg';
+import Isotipo from '../../assets/brand/isotipo.svg';
 
 interface Props {
   name: string;
   href?: string;
-  variant?: 'horizontal';
+  variant?: 'horizontal' | 'isotipo';
   class?: string;
 }
 
 const { name, href, variant = 'horizontal', class: className } = Astro.props;
+const Mark = variant === 'isotipo' ? Isotipo : LogoHorizontal;
 ---
 
 <span class:list={['brand-logo', className]} data-variant={variant}>
   {
     href ? (
       <a class="brand-logo__link" href={href}>
-        <LogoHorizontal role="img" aria-label={name} focusable="false" />
+        <Mark role="img" aria-label={name} focusable="false" />
       </a>
     ) : (
-      <LogoHorizontal role="img" aria-label={name} focusable="false" />
+      <Mark role="img" aria-label={name} focusable="false" />
     )
   }
 </span>
@@ -49,10 +55,15 @@ const { name, href, variant = 'horizontal', class: className } = Astro.props;
     line-height: 0;
   }
 
-  /* Desde 640 px el header ya mide lo que el CTA (44 px), así que el logo crece a 40 px sin
-     mover la altura del header; en móvil se queda en el mínimo de 32 px. */
+  .brand-logo[data-variant='isotipo'] {
+    --logo-min: 24px;
+    --logo-h: 2.5rem;
+  }
+
+  /* Desde 640 px el header ya mide lo que el CTA (44 px), así que el logo horizontal crece a
+     40 px sin mover la altura del header; en móvil se queda en el mínimo de 32 px. */
   @media (min-width: 40em) {
-    .brand-logo {
+    .brand-logo[data-variant='horizontal'] {
       --logo-h: 2.5rem;
     }
   }
@@ -77,7 +88,8 @@ const { name, href, variant = 'horizontal', class: className } = Astro.props;
   }
 
   /* Sobre superficies oscuras o moradas el logo pasa a blanco (regla de contraste por tono). */
-  :where([data-tone='dark'], [data-tone='purple']) .brand-logo :global(svg) {
+  :global([data-tone='dark']) .brand-logo[data-variant='horizontal'] :global(svg),
+  :global([data-tone='purple']) .brand-logo[data-variant='horizontal'] :global(svg) {
     fill: var(--color-brand-white);
   }
 </style>

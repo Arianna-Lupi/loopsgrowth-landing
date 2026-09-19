@@ -105,3 +105,61 @@ test.describe('logo horizontal sin JavaScript', () => {
     expect(box!.height).toBeGreaterThan(0);
   });
 });
+
+const SHEET = '/marca/hoja/';
+const SHEET_WIDTHS = [320, 390, 768, 1024, 1280];
+
+test.describe('hoja de revisión: identidad', () => {
+  for (const width of SHEET_WIDTHS) {
+    test(`logo e isotipo a ${width}px: tamaños mínimos, blanco sobre dark y sin scroll horizontal`, async ({ page }) => {
+      await open(page, width, SHEET);
+      const sizes = await page.evaluate(() => {
+        const h = (sel: string) => Array.from(document.querySelectorAll(sel)).map((el) => el.getBoundingClientRect().height);
+        return { logo: h('.brand-logo[data-variant="horizontal"] svg'), iso: h('.brand-logo[data-variant="isotipo"] svg') };
+      });
+      expect(sizes.logo.length).toBeGreaterThan(0);
+      expect(sizes.iso.length).toBeGreaterThan(0);
+      for (const v of sizes.logo) expect(v).toBeGreaterThanOrEqual(32);
+      for (const v of sizes.iso) expect(v).toBeGreaterThanOrEqual(24);
+
+      const darkFill = await page
+        .locator('[data-tone="dark"] .brand-logo[data-variant="horizontal"] svg path')
+        .first()
+        .evaluate((el) => getComputedStyle(el).fill);
+      expect(darkFill).toBe('rgb(255, 255, 255)');
+
+      const overflow = await page.evaluate(() => document.documentElement.scrollWidth - innerWidth);
+      expect(overflow).toBeLessThanOrEqual(0);
+    });
+  }
+
+  test('la hoja lleva noindex y su rótulo no es copy', async ({ page }) => {
+    await open(page, 1280, SHEET);
+    await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex');
+  });
+});
+
+test.describe('favicon', () => {
+  test('/favicon.ico responde 200 y trae tres imágenes de 16, 32 y 48 px', async ({ request }) => {
+    const res = await request.get('/favicon.ico');
+    expect(res.status()).toBe(200);
+    const buf = await res.body();
+    expect(buf.length).toBeGreaterThan(655);
+    expect([...buf.subarray(0, 4)]).toEqual([0, 0, 1, 0]);
+    const count = buf.readUInt16LE(4);
+    expect(count).toBe(3);
+    const sizes = [0, 1, 2].map((i) => buf[6 + i * 16] || 256);
+    expect(sizes).toEqual([16, 32, 48]);
+  });
+
+  test('/favicon.svg es texto con viewBox cuadrado, sin script ni referencias http', async ({ request }) => {
+    const res = await request.get('/favicon.svg');
+    expect(res.status()).toBe(200);
+    const text = await res.text();
+    const vb = text.match(/viewBox="([^"]+)"/);
+    expect(vb).not.toBeNull();
+    const [, , w, h] = vb![1].split(/\s+/).map(Number);
+    expect(w).toBe(h);
+    expect(text).not.toMatch(/<script|href=|xlink|https?:\/\/(?!www\.w3\.org)/);
+  });
+});
