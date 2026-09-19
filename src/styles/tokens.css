@@ -49,10 +49,12 @@
   --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
   --dur-1: 150ms;
 
-  /* Reserva de altura del iframe de ClickUp. Valores iniciales; el Plan 04 los
-     reemplaza por los medidos en el navegador (FORM-04). */
-  --form-min-h-sm: 1100px;
-  --form-min-h-lg: 900px;
+  /* Reserva de altura del iframe de ClickUp, medida en el navegador (FORM-04, 2026-09-19,
+     ver 01-FORM-MEASUREMENTS.md): mayor altura natural del formulario de su rango,
+     redondeada hacia arriba al siguiente múltiplo de 8. `sm` (menos de 1024 px) cubre
+     320, 390 y 768 px; `lg` (desde 1024 px) cubre 1024 y 1280 px. */
+  --form-min-h-sm: 1664px;
+  --form-min-h-lg: 1536px;
 }
 
 @media (prefers-reduced-motion: reduce) {
