@@ -101,6 +101,14 @@ None yet.
 - [Phase 4] Dominio sin resolver: sin URL pública no hay QR. Plan B: subdominio gratuito.
 - [Phase 1] FORM-05 pendiente: Juan hace los dos envios reales de prueba (1280 y 390 px), avisa a Ari y borra las dos tareas. El auto-resize de ClickUp no sigue al contenido: Ari verifica Autosize embed height
 
+## Deferred Verification
+
+| Phase | State | Resume |
+|-------|-------|--------|
+| 1 | verification_deferred_human | /gsd-verify-work 1 |
+
+Nota (2026-09-19): Juan decidio seguir con las fases 2 a 4 y dejar los 6 items humanos de `01-UAT.md` pendientes (FORM-05 con dos envios reales, Autosize en ClickUp, revision de WR-05/WR-08/WR-14, LAN desde otro dispositivo).
+
 ## Deferred Items
 
 Items acknowledged and deferred at milestone close, most recent first:
