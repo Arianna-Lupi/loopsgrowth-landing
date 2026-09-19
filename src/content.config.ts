@@ -41,7 +41,7 @@ const landing = defineCollection({
     cta: z.strictObject({ label_template: claim }),
     skip: z.strictObject({ nav_label: claim, content: claim, form: claim }),
     meta: z.strictObject({ title_template: claim }),
-    hero: z.strictObject({ h1: claim, subtitle: claim }),
+    hero: z.strictObject({ h1: claim, subtitle: claim, description: z.array(claim).min(1) }),
     agenda: z.strictObject({
       title: claim,
       intro: claim,

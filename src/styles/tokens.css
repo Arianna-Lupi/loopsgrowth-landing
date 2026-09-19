@@ -31,6 +31,7 @@
   /* Contenedor y espaciado (escala de 4 px; solo 4, 8, 16, 24, 32, 48 y 64) */
   --container: 72rem;
   --gutter: clamp(1rem, 4vw, 2rem);
+  --space-4xl: 6rem;
   --section-y: 4rem;
 
   /* Forma */
@@ -63,6 +64,13 @@
   }
 }
 
+/* Ritmo vertical de sección: 64 px bajo 1024 px y 96 px desde 1024 px (UI-SPEC, Spacing Scale). */
+@media (min-width: 64em) {
+  :root {
+    --section-y: var(--space-4xl);
+  }
+}
+
 /* Tonos semánticos. Los componentes leen estas variables, nunca un primitivo. */
 :root,
 [data-tone="light"] {
@@ -73,6 +81,7 @@
   --cta-bg-hover: var(--color-brand-yellow);
   --on-cta: var(--color-brand-dark);
   --focus-ring: var(--color-brand-purple);
+  --heading: var(--color-brand-purple);
 }
 
 [data-tone="purple"] {
@@ -83,4 +92,5 @@
   --cta-bg-hover: var(--color-brand-orange);
   --on-cta: var(--color-brand-dark);
   --focus-ring: var(--color-brand-yellow);
+  --heading: var(--color-brand-white);
 }

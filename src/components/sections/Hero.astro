@@ -1,0 +1,71 @@
+---
+/**
+ * Hero (CONT-01). Trae el único h1 de la página. Todo el texto sale del YAML y se
+ * imprime como nodo de texto, tal cual, sea cual sea el estado de su afirmación:
+ * este componente no lee el estado (COPY-01).
+ * Orden del DOM y visual: h1, subtítulo, CTA, descripción. El CTA sube sobre la
+ * descripción por presupuesto de altura (02-01-PLAN, Supuestos, punto 1).
+ */
+import CtaLink from '../CtaLink.astro';
+import { getLanding, fill, textVars, ctaLabel } from '../../lib/content';
+
+const data = await getLanding();
+const subtitle = fill(data.hero.subtitle, textVars(data), 'hero.subtitle');
+const label = ctaLabel(data);
+---
+
+<section id="inicio" class="hero" aria-labelledby="hero-title" data-tone="light">
+  <div class="wrap">
+    <h1 id="hero-title">{data.hero.h1.text}</h1>
+    <p class="hero-sub">{subtitle}</p>
+    <div class="hero-cta">
+      <CtaLink label={label} location="hero" />
+    </div>
+    <div class="hero-desc">
+      {data.hero.description.map((line) => <p>{line.text}</p>)}
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    padding-top: 3rem;
+    padding-bottom: var(--section-y);
+    overflow-x: clip;
+    scroll-margin-top: 1.5rem;
+  }
+
+  @media (min-width: 64em) {
+    .hero {
+      padding-top: 4rem;
+    }
+  }
+
+  .hero h1,
+  .hero p {
+    overflow-wrap: anywhere;
+  }
+
+  .hero-sub,
+  .hero-desc p {
+    max-width: 55ch;
+    font-weight: 400;
+    color: var(--on-surface);
+  }
+
+  .hero-sub {
+    margin-top: 1.5rem;
+  }
+
+  .hero-cta {
+    margin-top: 2rem;
+  }
+
+  .hero-desc {
+    margin-top: 2rem;
+  }
+
+  .hero-desc p + p {
+    margin-top: 1rem;
+  }
+</style>

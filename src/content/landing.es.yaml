@@ -52,6 +52,15 @@ es:
       text: "Un equipo dedicado y especializado que ejecuta tu {term} y tu visibilidad en asistentes de IA (ChatGPT, Gemini)."
       status: pending
       reason: "Texto del Copy v2 de Ari; el término sale de brand.term, que está pending"
+    description:
+      - text: "Tu cliente te busca en Google y, cada vez más, le pregunta a un asistente de IA."
+        status: pending
+        reason: "Afirmación de mercado del Copy v2 sobre el uso de asistentes de IA; misma familia que COPY-VERIFICATION 3b, datos de EE.UU."
+      - text: "Trabajamos para que tus clientes te encuentren en el momento que te estan buscando, con contenido y optimizaciones y estrategias que terminan en ventas sin depender de ads."
+        status: verified
+      - text: "Contrata un equipo de especialistas con 8 años de experiencia, que arman tu estrategia, ejecutan, implementan y monitorean los resultados y ventas de tu web."
+        status: pending
+        reason: "Credencial del equipo (8 años de experiencia) del Copy v2; Ari la confirma"
   agenda:
     title:
       text: "Agenda tu llamada"

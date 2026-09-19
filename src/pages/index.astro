@@ -1,14 +1,18 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import HeroSkeleton from '../components/HeroSkeleton.astro';
+import Hero from '../components/sections/Hero.astro';
 import AgendaSection from '../components/AgendaSection.astro';
 import { getLanding, fill, textVars } from '../lib/content';
 
 const data = await getLanding();
+// Orden canónico de las 12 secciones (id, tono). Cada plan de la fase 2 suma la suya en este orden;
+// `tests/e2e/page-structure.spec.ts` fija el mismo orden en PAGE_ORDER.
+//   inicio light, problema dark, por-que-ahora yellow, solucion light, resultados dark, casos light,
+//   nosotros yellow, incluye light, como-funciona dark, para-quien light, faq yellow, agenda purple.
 const title = fill(data.meta.title_template, textVars(data), 'meta.title_template');
 ---
 
 <BaseLayout title={title}>
-  <HeroSkeleton />
+  <Hero />
   <AgendaSection />
 </BaseLayout>
