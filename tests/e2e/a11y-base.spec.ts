@@ -1,4 +1,5 @@
 import { test, expect, type Page } from '@playwright/test';
+import { readFileSync } from 'node:fs';
 
 const FORM_URL = 'https://forms.clickup.com/90131720021/f/2ky49tun-19253/DATFKMESVSMXZY5CO5';
 
@@ -295,11 +296,14 @@ test.describe('sección #agenda: estructura', () => {
         const cs = getComputedStyle(el);
         return { minHeight: cs.minHeight, inline: el.getAttribute('height'), styleHeight: (el as HTMLElement).style.height };
       });
+    // Los valores los mide el Plan 04 (FORM-04) y viven en tokens.css: el test los lee de ahí.
+    const tokens = readFileSync('src/styles/tokens.css', 'utf8');
+    const token = (name: string) => `${tokens.match(new RegExp(`--form-min-h-${name}:\\s*(\\d+)px`))?.[1]}px`;
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto('/');
-    expect((await iframeHeights()).minHeight).toBe('1100px');
+    expect((await iframeHeights()).minHeight).toBe(token('sm'));
     await page.setViewportSize({ width: 1024, height: 800 });
-    expect((await iframeHeights()).minHeight).toBe('900px');
+    expect((await iframeHeights()).minHeight).toBe(token('lg'));
     expect((await iframeHeights()).inline).toBeNull();
   });
 

@@ -52,6 +52,52 @@ A 390 px el sobrante es de 109 px, más los 80 px de relleno que ClickUp deja ba
 4. **Campos ocultos `utm_*` (MEAS-02).** No se ven en el formulario y los crea Ari en ClickUp. Sin ellos, la medición se limita al conteo de tareas y al UTM del QR.
 5. **Campos visibles.** 5 campos (`input`, `textarea` o `select`) visibles a todos los anchos medidos. La lista completa está en "Campos visibles del formulario".
 
+## Campos visibles del formulario
+
+Leído en solo lectura por `tests/e2e/form-live.spec.ts` a 1280 y 390 px (misma lista en ambos anchos). Evidencia no versionada: `test-results/form-fields.json` y capturas `test-results/agenda-1280.png` y `agenda-390.png`. Sin botón de envío ni interacción alguna: solo se leyó el marco.
+
+Título del formulario: "Servicios de SEO/AIO". Texto de introducción: "Llena este formulario para entender mejor tu negocio y que uno de nuestros especialistas te atienda en una llamada."
+
+| # | Etiqueta | Tipo | Obligatorio | Nota |
+|---|---|---|---|---|
+| 1 | Nombre | campo de texto | sí | Texto de ayuda en inglés: "Apply with your full legal name."; placeholder "Tu nombre completo" |
+| 2 | Correo electrónico | campo de texto (`type=text`, no `type=email`) | sí | placeholder "tu@email.com" |
+| 3 | Nombre de la compañía | campo de texto | sí | placeholder "Tu empresa o nombre de negocio" |
+| 4 | Sitio web | campo de texto | sí | placeholder "www.ejemplo.com" |
+| 5 | País | lista desplegable | sí | botón "Select option..." (en inglés) |
+| 6 | Tipo de estructura | lista desplegable | sí | "Select option..." |
+| 7 | Sector / Industria | campo de texto | sí | placeholder "Especifica tu sector" |
+| 8 | Facturación anual de tu empresa | lista desplegable | sí | "Select option..." |
+| 9 | ¿Actualmente están haciendo SEO? | lista desplegable | sí | "Select option..." |
+| 10 | ¿Cuánto podrías destinar específicamente a SEO y GEO al mes? (USD) | lista desplegable | sí | "Select option..." |
+| 11 | ¿De dónde nos conoces? | lista desplegable | sí | "Select option..." |
+
+Botón de envío: "Submit" (en inglés). Pie del formulario: "Productivity by ClickUp · Report Abuse" (marca de ClickUp visible; el plan de ClickUp de Ari lo completa Juan tras el envío humano).
+
+Notas para Ari y para `EXCEPTIONS.md` de la Fase 3:
+
+- **Campos ocultos `utm_*`:** no hay ninguno (0 `input[type=hidden]` en el marco). Sin ellos no se puede medir el origen del lead (MEAS-02); los crea Ari en el formulario.
+- **Idioma mezclado:** etiquetas en español; "Submit", "Select option..." y "Apply with your full legal name." en inglés; `lang="en-US"` en el documento del formulario.
+- **Listas desplegables:** las seis son botones personalizados de ClickUp ("Select option..."), no `select` nativos. Su accesibilidad interna es de ClickUp.
+- **Correo:** el campo es `type=text`; el navegador no ofrece teclado de correo en el móvil. También es de ClickUp.
+- **Terminología:** el título dice SEO/AIO y la pregunta de presupuesto dice SEO y GEO.
+- **Alto de la reserva:** en la captura a 390 px, el formulario cabe entero en la tarjeta sin scroll interno; queda un espacio en blanco bajo el pie de ClickUp de unos 100 px.
+
+## Resultado de FORM-05
+
+Los dos envíos son humanos (Juan) y NO se hicieron desde ninguna prueba automática. Se completa después de los `human-check` de `01-04-PLAN.md` (que el verificador de fin de fase consolida en `01-UAT.md`). Cada envío usa datos ficticios del equipo con "PRUEBA" y la fecha en el nombre; las tareas creadas las borra Juan.
+
+| Ancho | Fecha | Confirmación vista | Idioma de la confirmación | Tarea creada | Borrada |
+|---|---|---|---|---|---|
+| 1280 px | pendiente | pendiente | pendiente | pendiente | pendiente |
+| 390 px | pendiente | pendiente | pendiente | pendiente | pendiente |
+
+Datos por completar por Juan tras los envíos: plan de ClickUp que tiene el formulario y si aparecen campos ocultos `utm_*` (Ari los crea para MEAS-02).
+
+## Decisión sobre el hueco en blanco tras enviar
+
+Decisión provisional: se mantienen `--form-min-h-sm: 1664px` y `--form-min-h-lg: 1536px`. La confirmación de ClickUp es más corta que el formulario, así que bajo ella puede quedar espacio en blanco dentro de la tarjeta. No se puede observar sin un envío real, y los envíos son humanos. Motivo para no acortar la reserva por adelantado: un `min-height` menor que el formulario deja scroll interno (visto con los valores iniciales), que es peor que un espacio en blanco. Juan confirma o ajusta esta decisión al observar la confirmación en los envíos a 1280 y 390 px y la deja escrita aquí ("aceptado" o el nuevo valor): pendiente.
+
 ## Desviación respecto al plan
 
 El plan pedía medir la altura con el `style.height` que fija el script. Con este formulario esa lectura es circular (devuelve el `min-height` vigente: 1100/900 px al inicio, 1664/1536 px al final), así que no mide el formulario. Se corrigió midiendo el `scrollHeight` de `cu-form` con el iframe sin reserva y se agregó una aserción de que la reserva publicada no deja scroll interno. La aserción del plan de que el script fija un `style.height` no vacío se conserva (prueba que el script se engancha con carga diferida). Sobre la nota "el auto-resize funciona": se registra que el script se engancha pero que no sigue al contenido (hallazgo 1).
