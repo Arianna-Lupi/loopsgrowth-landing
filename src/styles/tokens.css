@@ -1,0 +1,84 @@
+/*
+ * Tokens de marca (FND-03). Fuente única de color, tipografía, forma y movimiento.
+ * Tres niveles: primitivos de marca en @theme, semánticos por tono fuera de @theme,
+ * y componentes que solo consumen los semánticos. Los cuatro colores del brandbook
+ * más el blanco existen una sola vez, aquí. `scripts/check-contrast.mjs` lee este
+ * archivo en cada build y falla si un par baja de su umbral de contraste.
+ * No agregar neutrales: el brandbook no define crema ni grises.
+ */
+
+/* `static` hace que Tailwind emita siempre todas las variables, aunque un
+   componente solo las use desde su propio bloque de estilo. */
+@theme static {
+  /* Primitivos de marca */
+  --color-brand-purple: #73187f;
+  --color-brand-orange: #fd6938;
+  --color-brand-yellow: #ffc602;
+  --color-brand-dark: #212121;
+  --color-brand-white: #ffffff;
+
+  /* Escala tipográfica: 4 roles. Pesos del brandbook: 400 párrafos, 600 texto
+     secundario y Label, 700 títulos, botones y wordmark. */
+  --text-body: clamp(1rem, 0.96rem + 0.2vw, 1.125rem);
+  --text-body--line-height: 1.6;
+  --text-label: 0.875rem;
+  --text-label--line-height: 1.5;
+  --text-heading: clamp(1.75rem, 1.4rem + 1.7vw, 2.75rem);
+  --text-heading--line-height: 1.2;
+  --text-display: clamp(2.25rem, 1.6rem + 3vw, 4rem);
+  --text-display--line-height: 1.2;
+
+  /* Contenedor y espaciado (escala de 4 px; solo 4, 8, 16, 24, 32, 48 y 64) */
+  --container: 72rem;
+  --gutter: clamp(1rem, 4vw, 2rem);
+  --section-y: 4rem;
+
+  /* Forma */
+  --radius-s: 0.5rem;
+  --radius-m: 1rem;
+  --radius-pill: 999px;
+  --border-pop: 3px solid var(--color-brand-dark);
+  --shadow-pop: 4px 4px 0 var(--color-brand-dark);
+
+  /* Foco y objetivo táctil */
+  --focus-width: 3px;
+  --focus-offset: 2px;
+  --target-min: 2.75rem;
+
+  /* Movimiento */
+  --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --dur-1: 150ms;
+
+  /* Reserva de altura del iframe de ClickUp. Valores iniciales; el Plan 04 los
+     reemplaza por los medidos en el navegador (FORM-04). */
+  --form-min-h-sm: 1100px;
+  --form-min-h-lg: 900px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-1: 0ms;
+  }
+}
+
+/* Tonos semánticos. Los componentes leen estas variables, nunca un primitivo. */
+:root,
+[data-tone="light"] {
+  --surface: var(--color-brand-white);
+  --on-surface: var(--color-brand-dark);
+  --link: var(--color-brand-purple);
+  --cta-bg: var(--color-brand-orange);
+  --cta-bg-hover: var(--color-brand-yellow);
+  --on-cta: var(--color-brand-dark);
+  --focus-ring: var(--color-brand-purple);
+}
+
+[data-tone="purple"] {
+  --surface: var(--color-brand-purple);
+  --on-surface: var(--color-brand-white);
+  --link: var(--color-brand-white);
+  --cta-bg: var(--color-brand-yellow);
+  --cta-bg-hover: var(--color-brand-orange);
+  --on-cta: var(--color-brand-dark);
+  --focus-ring: var(--color-brand-yellow);
+}

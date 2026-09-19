@@ -10,7 +10,10 @@
     "dev:lan": "astro dev --host",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "check:contrast": "node scripts/check-contrast.mjs",
+    "test:guards": "node --test tests/guards/*.test.mjs",
+    "prebuild": "node scripts/check-contrast.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "3.7.4",
