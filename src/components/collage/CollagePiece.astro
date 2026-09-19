@@ -1,0 +1,65 @@
+---
+/**
+ * Una pieza del collage pop: un gráfico SVG decorativo en línea que invoca un símbolo del sprite
+ * (`CollageSprite`, montado una vez por página). Sin título, sin texto, sin imágenes.
+ *
+ * `tone` es obligatoria y valida el build: `assertToneSafe` rechaza un color de relleno que no se
+ * permite sobre esa superficie (por ejemplo morado sobre dark o amarillo sobre yellow) y el build
+ * falla con un mensaje que nombra pieza, tono y color. Los colores llegan como nombres de marca y
+ * se traducen a `var(--color-brand-*)` con `fillVar`; nunca hay un valor literal.
+ *
+ * `rotate` fija una rotación estática (`--r`). El atributo `data-collage-piece` identifica la
+ * pieza; los ganchos `data-piece` pertenecen a la composición del hero.
+ */
+import { PIECES, assertToneSafe, fillVar } from './collage-rules.mjs';
+
+interface Props {
+  name: keyof typeof PIECES | (string & {});
+  tone: 'light' | 'yellow' | 'dark' | 'purple';
+  a?: 'yellow' | 'orange' | 'purple' | 'white' | 'dark';
+  b?: 'yellow' | 'orange' | 'purple' | 'white' | 'dark';
+  c?: 'yellow' | 'orange' | 'purple' | 'white' | 'dark';
+  size?: string;
+  rotate?: number;
+  class?: string;
+}
+
+const { name, tone, a, b, c, size, rotate, class: className } = Astro.props;
+const piece = PIECES[name];
+if (!piece) {
+  throw new Error(`CollagePiece: pieza desconocida "${name}". Usa una de: ${Object.keys(PIECES).join(', ')}.`);
+}
+assertToneSafe(tone, [a, b, c, piece.fixed], `CollagePiece "${name}"`);
+
+const vars: string[] = [];
+if (a) vars.push(`--cf-a:${fillVar(a)}`);
+if (b) vars.push(`--cf-b:${fillVar(b)}`);
+if (c) vars.push(`--cf-c:${fillVar(c)}`);
+if (rotate !== undefined) vars.push(`--r:${rotate}deg`);
+if (size) vars.push(`width:${size}`);
+---
+
+<svg
+  class:list={['collage-piece', className]}
+  data-collage
+  data-collage-piece={name}
+  data-collage-tone={tone}
+  viewBox={`0 0 ${piece.w} ${piece.h}`}
+  width={piece.w}
+  height={piece.h}
+  aria-hidden="true"
+  focusable="false"
+  style={vars.length ? vars.join(';') : undefined}
+>
+  <use href={`#${piece.symbol}`}></use>
+</svg>
+
+<style>
+  .collage-piece {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    overflow: visible;
+    transform: rotate(var(--r, 0deg));
+  }
+</style>

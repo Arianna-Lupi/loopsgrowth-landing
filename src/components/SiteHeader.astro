@@ -3,17 +3,22 @@
  * Header mínimo, en el flujo normal (ni fijo ni pegado arriba) para no tapar el foco
  * (SC 2.4.11). El logo es el SVG del vectorial de Ari (DSGN-02): sin enlace en `/` y con
  * enlace a `/` en cualquier otra ruta. Se conserva la clase `.wordmark` en el contenedor.
+ * Monta el sprite del collage una sola vez por página, fuera del landmark (si BaseLayout lo
+ * asume después, basta mover esa línea).
  * El CTA se oculta con `display: none` por debajo de 640 px: así sale también del
  * orden de tabulación y el CTA del hero queda como único acceso en móvil.
  */
 import CtaLink from './CtaLink.astro';
 import Logo from './brand/Logo.astro';
+import CollageSprite from './collage/CollageSprite.astro';
 import { getLanding, ctaLabel } from '../lib/content';
 
 const data = await getLanding();
 const label = ctaLabel(data);
 const homeHref = Astro.url.pathname === '/' ? undefined : '/';
 ---
+
+<CollageSprite />
 
 <header class="site-header" data-tone="light">
   <div class="wrap bar">

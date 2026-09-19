@@ -9,6 +9,8 @@
  */
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Logo from '../../components/brand/Logo.astro';
+import CollagePiece from '../../components/collage/CollagePiece.astro';
+import { PIECES, ALLOWED_FILLS } from '../../components/collage/collage-rules.mjs';
 import { isProduction } from '../../lib/site';
 import { getLanding } from '../../lib/content';
 
@@ -19,6 +21,16 @@ export function getStaticPaths() {
 const data = await getLanding();
 const name = data.brand.name.text;
 const TONES = ['light', 'dark'] as const;
+const PIECE_TONES = ['light', 'yellow', 'dark', 'purple'] as const;
+// Combinación de colores por tono: siempre dentro de ALLOWED_FILLS y sin repetir el color del fondo.
+const COMBOS = {
+  light: { a: 'yellow', b: 'purple', c: 'orange' },
+  yellow: { a: 'white', b: 'purple', c: 'orange' },
+  dark: { a: 'yellow', b: 'orange', c: 'white' },
+  purple: { a: 'yellow', b: 'orange', c: 'white' },
+} as const;
+const pieceNames = Object.keys(PIECES);
+const SIZES: Record<string, string> = { lupa: '10rem', loop: '8rem', puntos: '6rem', 'ojos-izq': '7.5rem', 'ojos-der': '7.5rem', 'ojos-abajo': '7.5rem' };
 ---
 
 <BaseLayout title="hoja de marca">
@@ -44,6 +56,31 @@ const TONES = ['light', 'dark'] as const;
         </div>
       </div>
     </section>
+
+    {
+      PIECE_TONES.map((tone) => (
+        <section class="sheet-band" data-tone={tone} data-sheet="primitivas" aria-labelledby={`sheet-prim-${tone}`}>
+          <div class="wrap">
+            <h2 id={`sheet-prim-${tone}`}>
+              <code>primitivas / {tone}</code>
+            </h2>
+            <ul class="sheet-pieces">
+              {pieceNames
+                .filter((piece) => {
+                  const fixed = PIECES[piece].fixed;
+                  return !fixed || ALLOWED_FILLS[tone].includes(fixed);
+                })
+                .map((piece) => (
+                  <li>
+                    <CollagePiece name={piece} tone={tone} size={SIZES[piece]} {...COMBOS[tone]} />
+                    <code>{piece}</code>
+                  </li>
+                ))}
+            </ul>
+          </div>
+        </section>
+      ))
+    }
   </div>
 </BaseLayout>
 
@@ -72,6 +109,30 @@ const TONES = ['light', 'dark'] as const;
     flex-direction: column;
     align-items: flex-start;
     gap: 0.75rem;
+  }
+
+  .sheet-band {
+    margin-top: 2rem;
+    padding-block: 2rem;
+  }
+
+  .sheet-pieces {
+    list-style: none;
+    margin: 1rem 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 10rem), 1fr));
+    gap: 1.5rem;
+  }
+
+  .sheet-pieces li {
+    min-width: 0;
+    min-height: 12.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-start;
+    gap: 0.5rem;
   }
 
   .sheet code {

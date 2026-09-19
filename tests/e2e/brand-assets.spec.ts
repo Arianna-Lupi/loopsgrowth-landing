@@ -163,3 +163,110 @@ test.describe('favicon', () => {
     expect(text).not.toMatch(/<script|href=|xlink|https?:\/\/(?!www\.w3\.org)/);
   });
 });
+
+test.describe('hoja de revisión: primitivas del collage', () => {
+  test('(a) toda pieza y el sprite son decorativos: aria-hidden true y focusable false', async ({ page }) => {
+    await open(page, 1280, SHEET);
+    const bad = await page.evaluate(() =>
+      Array.from(document.querySelectorAll('svg[data-collage], .collage-sprite'))
+        .filter((el) => el.getAttribute('aria-hidden') !== 'true' || el.getAttribute('focusable') !== 'false')
+        .map((el) => el.getAttribute('data-collage-piece') ?? el.getAttribute('class')),
+    );
+    expect(bad).toEqual([]);
+    expect(await page.locator('svg[data-collage]').count()).toBeGreaterThan(40);
+  });
+
+  test('(b) dentro de las piezas y del sprite no hay título, texto, raster, degradados, filtros ni movimiento', async ({ page }) => {
+    await open(page, 1280, SHEET);
+    const found = await page.evaluate(() => {
+      const forbidden = 'title, text, image, foreignObject, animate, animateTransform, animateMotion, set, linearGradient, radialGradient, filter, script';
+      return Array.from(document.querySelectorAll('svg[data-collage], .collage-sprite'))
+        .flatMap((el) => Array.from(el.querySelectorAll(forbidden)).map((n) => n.tagName));
+    });
+    expect(found).toEqual([]);
+  });
+
+  test('(c) cada pieza tiene caja no vacía y su <use> resuelve a un símbolo', async ({ page }) => {
+    await open(page, 1280, SHEET);
+    const problems = await page.evaluate(() =>
+      Array.from(document.querySelectorAll('svg[data-collage]')).flatMap((svg) => {
+        const box = svg.getBoundingClientRect();
+        const use = svg.querySelector('use');
+        const target = use ? document.querySelector(use.getAttribute('href') ?? '') : null;
+        const out: string[] = [];
+        if (box.width < 2 || box.height < 2) out.push(`${svg.getAttribute('data-collage-piece')}: caja vacía`);
+        if (!target || target.tagName.toLowerCase() !== 'symbol') out.push(`${svg.getAttribute('data-collage-piece')}: use sin símbolo`);
+        return out;
+      }),
+    );
+    expect(problems).toEqual([]);
+  });
+
+  test('(d) contorno de 3 px y color por tono: oscuro en light y yellow, blanco en dark y purple', async ({ page }) => {
+    await open(page, 1280, SHEET);
+    const width = await page.evaluate(() => getComputedStyle(document.querySelector('#cs-lupa .cs-o')!).strokeWidth);
+    expect(width).toBe('3px');
+    const expected: Record<string, string> = {
+      light: 'rgb(33, 33, 33)',
+      yellow: 'rgb(33, 33, 33)',
+      dark: 'rgb(255, 255, 255)',
+      purple: 'rgb(255, 255, 255)',
+    };
+    for (const [tone, color] of Object.entries(expected)) {
+      const got = await page.evaluate((t) => {
+        const section = document.querySelector(`section[data-sheet="primitivas"][data-tone="${t}"]`)!;
+        const probe = document.createElement('span');
+        probe.style.color = 'var(--collage-stroke)';
+        section.appendChild(probe);
+        const value = getComputedStyle(probe).color;
+        probe.remove();
+        return value;
+      }, tone);
+      expect(got, `contorno sobre ${tone}`).toBe(color);
+    }
+  });
+
+  test('(d2) el relleno de la lupa cambia con el tono: las variables atraviesan el <use>', async ({ page }) => {
+    await open(page, 1280, SHEET);
+    const result = await page.evaluate(() => {
+      const token = (name: string) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+      const fills = ['light', 'yellow', 'dark', 'purple'].map((t) => {
+        const svg = document.querySelector(`section[data-sheet="primitivas"][data-tone="${t}"] svg[data-collage-piece="lupa"]`)!;
+        return getComputedStyle(svg).getPropertyValue('--cf-a').trim();
+      });
+      return { fills, yellow: token('--color-brand-yellow'), white: token('--color-brand-white') };
+    });
+    expect(result.fills).toEqual([result.yellow, result.white, result.yellow, result.yellow]);
+  });
+
+  for (const motion of ['reduce', 'no-preference'] as const) {
+    test(`(e) cero animaciones con prefers-reduced-motion ${motion}`, async ({ page }) => {
+      await page.emulateMedia({ reducedMotion: motion });
+      await open(page, 1280, SHEET);
+      expect(await page.evaluate(() => document.getAnimations().length)).toBe(0);
+    });
+  }
+
+  for (const width of SHEET_WIDTHS) {
+    test(`(f) sin scroll horizontal en la hoja a ${width}px`, async ({ page }) => {
+      await open(page, width, SHEET);
+      expect(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth)).toBeLessThanOrEqual(0);
+    });
+  }
+
+  test.describe('sin JavaScript', () => {
+    test.use({ javaScriptEnabled: false });
+
+    test('(g) todas las piezas se pintan con caja no vacía', async ({ page }) => {
+      await open(page, 1280, SHEET);
+      const pieces = await page.locator('svg[data-collage]').all();
+      expect(pieces.length).toBeGreaterThan(40);
+      for (const piece of pieces) {
+        const box = await piece.boundingBox();
+        expect(box, 'pieza sin caja').not.toBeNull();
+        expect(box!.width).toBeGreaterThan(1);
+        expect(box!.height).toBeGreaterThan(1);
+      }
+    });
+  });
+});
