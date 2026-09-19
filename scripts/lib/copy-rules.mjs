@@ -10,19 +10,50 @@ export const CLAIM_KEYS = ['text', 'status', 'confirm_by', 'reason'];
 const META_KEYS = ['confirm_by', 'reason'];
 export const STATUSES = ['verified', 'pending'];
 
-// Lista de PITFALLS.md ampliada con las formas de "vos" más comunes en imperativo y en trato directo.
+// Lista de PITFALLS.md ampliada con las formas de "vos" más comunes en imperativo, en trato directo
+// y en presente de indicativo, con y sin pronombre enclítico (llamanos, hablanos, dejanos).
+// Es una lista cerrada: una forma que no esté aquí no se detecta. Ampliarla cuando aparezca una nueva.
 export const VOSEO_WORDS = [
   'vos', 'tenés', 'querés', 'podés', 'sabés', 'sos', 'hacé', 'agendá', 'escribí', 'contanos',
   'llená', 'descubrí', 'empezá', 'mirá', 'necesitás', 'contactanos', 'escribinos', 'reservá',
   'descargá', 'registrate', 'sumate',
+  // Imperativos
+  'conocé', 'completá', 'solicitá', 'pedí', 'consultá', 'elegí', 'probá', 'comenzá', 'aprovechá',
+  'ingresá', 'seleccioná', 'enviá', 'dejá', 'vení', 'andá', 'poné', 'mandá', 'resolvé', 'comprá',
+  'vendé', 'pagá', 'activá', 'encontrá', 'aprendé', 'creá', 'mejorá', 'potenciá', 'contá',
+  'cotizá', 'decime', 'avisame', 'mostrame',
+  // Con pronombre enclítico
+  'llamanos', 'hablanos', 'dejanos', 'avisanos', 'ayudanos', 'mostranos', 'seguinos', 'visitanos',
+  'cotizanos', 'unite', 'animate', 'anotate', 'inscribite', 'quedate', 'fijate', 'acordate',
+  'olvidate',
+  // Presente de indicativo
+  'hacés', 'pensás', 'buscás', 'vendés', 'decís', 'preferís', 'elegís', 'vivís', 'sentís', 'creés',
+  'pagás', 'ganás', 'gastás', 'conocés', 'encontrás', 'obtenés', 'recibís', 'lográs',
 ];
+
+// `SOS` en mayúsculas es una sigla ("Llamada SOS"), no el verbo: estas formas solo se marcan
+// en minúscula y sin la bandera `i`.
+const CASE_SENSITIVE_VOSEO = ['sos'];
+
+/**
+ * Texto que las reglas de contenido evalúan: NFC (un pegado desde macOS o Google Docs puede traer
+ * la vocal acentuada descompuesta) y sin caracteres invisibles (espacio de ancho cero, guion
+ * blando, unión de palabra) que partirían una palabra sin que se vea.
+ * @param {string} text
+ */
+export const cleanText = (text) => text.normalize('NFC').replace(/[\u00AD\u200B-\u200D\u2060\uFEFF]/gu, '');
 
 // Límites Unicode con lookarounds de largo fijo. `\b` de JavaScript es ASCII: no ve el límite
 // tras una vocal acentuada final (agendá, llená, tenés). Alternación simple de palabras: sin
 // retroceso catastrófico.
 const NOT_WORD_BEFORE = '(?<![\\p{L}\\p{N}_])';
 const NOT_WORD_AFTER = '(?![\\p{L}\\p{N}_])';
-const VOSEO_RE = new RegExp(`${NOT_WORD_BEFORE}(?:${VOSEO_WORDS.join('|')})${NOT_WORD_AFTER}`, 'giu');
+const voseoPattern = (words) => `${NOT_WORD_BEFORE}(?:${words.join('|')})${NOT_WORD_AFTER}`;
+const VOSEO_RE = new RegExp(
+  voseoPattern(VOSEO_WORDS.filter((w) => !CASE_SENSITIVE_VOSEO.includes(w))),
+  'giu',
+);
+const VOSEO_CASE_RE = new RegExp(voseoPattern(CASE_SENSITIVE_VOSEO), 'gu');
 const AEO_RE = new RegExp(`${NOT_WORD_BEFORE}AEO${NOT_WORD_AFTER}`, 'giu');
 const VERIFICAR_RE = /\[VERIFICAR\]/gi;
 const DASH_RE = /[—–]/g;
@@ -150,13 +181,14 @@ export function checkCopy(doc) {
       continue;
     }
 
-    const text = claim.text;
+    const text = cleanText(claim.text);
     if (claim.status === 'pending') {
       content.push({ rule: 'PENDING', path, excerpt: text.length > 60 ? `${text.slice(0, 60)}...` : text });
     }
     for (const ex of findMissingMark(text)) content.push({ rule: 'MISSING', path, excerpt: ex });
     for (const ex of matchesOf(VERIFICAR_RE, text)) content.push({ rule: 'VERIFICAR', path, excerpt: ex });
     for (const ex of matchesOf(VOSEO_RE, text)) content.push({ rule: 'VOSEO', path, excerpt: ex });
+    for (const ex of matchesOf(VOSEO_CASE_RE, text)) content.push({ rule: 'VOSEO', path, excerpt: ex });
     for (const ex of matchesOf(DASH_RE, text)) content.push({ rule: 'DASH', path, excerpt: ex });
     for (const ex of matchesOf(AEO_RE, text)) content.push({ rule: 'AEO', path, excerpt: ex });
   }

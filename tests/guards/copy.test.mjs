@@ -135,6 +135,38 @@ test('4c. "tú" y las formas no voseantes no se marcan', () => {
   assert.ok(!rules(res.json).includes('VOSEO'), res.out);
 });
 
+test('4d. voseo con formas fuera de la lista original (conocé, completá, llamanos) también se detecta', () => {
+  const file = tmpYaml(docWith(claimYaml('Conocé cómo, completá el formulario y llamanos.')));
+  const res = run(['--file', file, '--json'], { env: PROD });
+  assert.equal(res.status, 1, res.out);
+  const excerpts = (res.json?.content ?? []).filter((v) => v.rule === 'VOSEO').map((v) => v.excerpt).join(' ');
+  assert.match(excerpts, /Conocé/);
+  assert.match(excerpts, /completá/);
+  assert.match(excerpts, /llamanos/);
+});
+
+test('4e. voseo en Unicode descompuesto (NFD) o con espacio de ancho cero no evade la guarda', () => {
+  const nfd = 'Tene\u0301s dudas'; // "Tenés" con la tilde como carácter combinante
+  const zw = 'Agen\u200bdá una llamada'; // espacio de ancho cero dentro de la palabra
+  for (const text of [nfd, zw]) {
+    const file = tmpYaml(docWith(claimYaml(text)));
+    const res = run(['--file', file, '--json'], { env: PROD });
+    assert.equal(res.status, 1, `${JSON.stringify(text)}: ${res.out}`);
+    assert.ok(rules(res.json).includes('VOSEO'), `${JSON.stringify(text)}: ${res.out}`);
+  }
+});
+
+test('4f. la sigla SOS no se marca como voseo, pero el verbo "sos" en minúscula sí', () => {
+  const ok = tmpYaml(docWith(claimYaml('Una llamada SOS para tu tienda.')));
+  const resOk = run(['--file', ok, '--json'], { env: PROD });
+  assert.equal(resOk.status, 0, resOk.out);
+  assert.ok(!rules(resOk.json).includes('VOSEO'), resOk.out);
+  const bad = tmpYaml(docWith(claimYaml('Si sos dueño de una tienda, escríbenos.')));
+  const resBad = run(['--file', bad, '--json'], { env: PROD });
+  assert.equal(resBad.status, 1, resBad.out);
+  assert.ok(rules(resBad.json).includes('VOSEO'), resBad.out);
+});
+
 test('5a. guion largo U+2014 bloquea producción', () => {
   const res = run(['--file', fixture('em-dash'), '--json'], { env: PROD });
   assert.equal(res.status, 1, res.out);
