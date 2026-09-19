@@ -46,6 +46,20 @@ for (const vp of viewports) {
   });
 }
 
+// Con ClickUp bloqueado (bloqueador de terceros o red caída) el salto de ancla termina más tarde y
+// puede vaciar el foco después de que el script lo puso. No usa la red real: las rutas se abortan.
+test('(d2) cargar /#agenda con ClickUp bloqueado enfoca el h2 y lo mantiene tras la ventana de reintento', async ({ browser }) => {
+  for (let run = 0; run < 3; run += 1) {
+    const context = await browser.newContext();
+    const page = await context.newPage();
+    await page.route(/^https:\/\/(forms|app-cdn)\.clickup\.com\//, (route) => route.abort());
+    await page.goto('/#agenda');
+    await page.waitForTimeout(2000);
+    await expect(page.locator('#agenda-title'), `corrida ${run + 1}`).toBeFocused();
+    await context.close();
+  }
+});
+
 function listJs(dir: string): string[] {
   const out: string[] = [];
   for (const name of readdirSync(dir)) {

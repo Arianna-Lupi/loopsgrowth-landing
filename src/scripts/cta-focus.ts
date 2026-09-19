@@ -28,16 +28,23 @@ window.addEventListener('hashchange', () => {
   if (location.hash === HASH) focusAfterNavigation();
 });
 
-// Carga directa con #agenda: el navegador termina el salto de ancla más tarde y
-// puede vaciar el foco. Se enfoca ya y se reintenta al cargar solo si el foco quedó vacío.
+// Carga directa con #agenda: el navegador termina el salto de ancla más tarde (con ClickUp
+// bloqueado o lento, después de `load`) y puede vaciar el foco que ya se había puesto. Se
+// reintenta cada 150 ms durante 1,5 s, solo mientras el foco esté vacío, y se detiene si la
+// persona empieza a usar el teclado o el puntero para no robarle el foco.
 if (location.hash === HASH) {
-  focusAfterNavigation();
-  window.addEventListener(
-    'load',
-    () =>
-      setTimeout(() => {
-        if (!document.activeElement || document.activeElement === document.body) focusTitle();
-      }, 0),
-    { once: true },
-  );
+  const deadline = performance.now() + 1500;
+  let userActed = false;
+  const stop = () => {
+    userActed = true;
+  };
+  window.addEventListener('keydown', stop, { once: true });
+  window.addEventListener('pointerdown', stop, { once: true });
+  const tick = () => {
+    if (userActed) return;
+    const active = document.activeElement;
+    if (!active || active === document.body) focusTitle();
+    if (performance.now() < deadline) setTimeout(tick, 150);
+  };
+  setTimeout(tick, 0);
 }
