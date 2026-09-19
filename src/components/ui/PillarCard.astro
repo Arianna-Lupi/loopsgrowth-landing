@@ -1,0 +1,71 @@
+---
+/**
+ * Tarjeta de pilar (CONT-04): chip de collage, h3, cuerpo y, si existe, lista del equipo. Imprime solo
+ * los textos recibidos (nunca `status`, `reason` ni `confirm_by`). El chip es decorativo y lleva el
+ * tono `light` porque va sobre la tarjeta blanca. Sombra dura, sin hover, cursor, transform ni
+ * transición: la tarjeta no es interactiva.
+ */
+import CollagePiece from '../collage/CollagePiece.astro';
+
+interface Props {
+  chip: 'lupa' | 'ojos' | 'loop' | 'clic';
+  title: string;
+  body: string;
+  list?: string[];
+}
+
+const { chip, title, body, list } = Astro.props;
+---
+
+<li class="pillar-card">
+  <CollagePiece name={`chip-${chip}`} tone="light" size="4rem" />
+  <h3>{title}</h3>
+  <p class="pillar-body">{body}</p>
+  {
+    list && (
+      <ul role="list" class="pillar-team">
+        {list.map((text) => (
+          <li>{text}</li>
+        ))}
+      </ul>
+    )
+  }
+</li>
+
+<style>
+  .pillar-card {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    padding: var(--card-pad);
+    border: var(--border-pop);
+    border-radius: var(--radius-card);
+    background: var(--color-brand-white);
+    color: var(--on-surface);
+    box-shadow: var(--shadow-pop);
+    overflow-wrap: anywhere;
+  }
+
+  .pillar-card h3 {
+    margin-top: 1rem;
+  }
+
+  .pillar-body {
+    margin-top: 0.5rem;
+    color: var(--on-surface);
+  }
+
+  .pillar-team {
+    display: grid;
+    gap: 0.75rem;
+    margin: 1rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .pillar-team li {
+    min-width: 0;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+  }
+</style>

@@ -316,3 +316,150 @@ for (const viewport of [
     });
   });
 }
+
+const SOFT_SHADOW = 'rgb(33, 33, 33) 4px 4px 0px 0px';
+
+for (const viewport of [
+  { width: 1280, height: 800 },
+  { width: 390, height: 844 },
+]) {
+  test.describe(`La solución a ${viewport.width} px`, () => {
+    test.use({ viewport });
+    const wide = viewport.width >= 1024;
+
+    test('cuatro pilares en orden con h3, cuerpo y lista del equipo solo en el tercero', async ({ page }) => {
+      await page.goto('/');
+      const cards = page.locator('#solucion .pillar-card');
+      await expect(cards).toHaveCount(4);
+      for (let i = 0; i < 4; i++) {
+        const item = es.solution.items[i];
+        const card = cards.nth(i);
+        expect(norm((await card.locator('h3').textContent()) ?? '')).toBe(norm(item.title.text));
+        expect(norm((await card.locator(':scope > p').textContent()) ?? '')).toBe(norm(item.body.text));
+        const team = card.locator('ul.pillar-team');
+        if (item.list) {
+          await expect(team).toHaveCount(1);
+          const rows = team.locator(':scope > li');
+          await expect(rows).toHaveCount(item.list.length);
+          for (let j = 0; j < item.list.length; j++) {
+            expect(norm((await rows.nth(j).textContent()) ?? '')).toBe(norm(item.list[j].text));
+          }
+        } else {
+          await expect(team).toHaveCount(0);
+        }
+      }
+      // La errata "direcciôn" del doc se muestra tal cual.
+      await expect(page.locator('#solucion .pillar-team')).toContainText('direcciôn');
+      // El conteo de marcas bajo `solution` sale del YAML (el h2 y el cuerpo del Pilar 4).
+      const shown = await page.evaluate(
+        (mark) => (document.getElementById('solucion')?.innerText ?? '').split(mark).length - 1,
+        MISSING_MARK,
+      );
+      expect(shown).toBe(marksUnder('solution'));
+    });
+
+    test('cuatro chips distintos, decorativos y de 64 px; h3 a 16 px y cuerpo a 8 px', async ({ page }) => {
+      await page.goto('/');
+      const chips = page.locator('#solucion svg[data-collage-piece^="chip-"]');
+      await expect(chips).toHaveCount(4);
+      const info = await chips.evaluateAll((els) =>
+        els.map((el) => {
+          const r = el.getBoundingClientRect();
+          return {
+            piece: el.getAttribute('data-collage-piece'),
+            aria: el.getAttribute('aria-hidden'),
+            focusable: el.getAttribute('focusable'),
+            w: r.width,
+            h: r.height,
+            bottom: r.bottom,
+            extra: el.querySelectorAll('title, text').length,
+          };
+        }),
+      );
+      expect(info.map((i) => i.piece)).toEqual(['chip-lupa', 'chip-ojos', 'chip-loop', 'chip-clic']);
+      for (const i of info) {
+        expect(i.aria).toBe('true');
+        expect(i.focusable).toBe('false');
+        expect(i.extra).toBe(0);
+        expect(Math.abs(i.w - 64)).toBeLessThanOrEqual(1);
+        expect(Math.abs(i.h - 64)).toBeLessThanOrEqual(1);
+      }
+      const gaps = await page.locator('#solucion .pillar-card').evaluateAll((els) =>
+        els.map((el) => {
+          const chip = el.querySelector('svg')!.getBoundingClientRect();
+          const h3 = el.querySelector('h3')!.getBoundingClientRect();
+          const p = el.querySelector(':scope > p')!.getBoundingClientRect();
+          return { chipToH3: h3.top - chip.bottom, h3ToP: p.top - h3.bottom };
+        }),
+      );
+      for (const g of gaps) {
+        expect(Math.abs(g.chipToH3 - 16)).toBeLessThanOrEqual(2);
+        expect(Math.abs(g.h3ToP - 8)).toBeLessThanOrEqual(2);
+      }
+    });
+
+    test('cada tarjeta: fondo blanco, borde 3 px, radio 16, sombra dura, padding y h3 en Title 700', async ({ page }) => {
+      await page.goto('/');
+      const styles = await page.locator('#solucion .pillar-card').evaluateAll((els) =>
+        els.map((el) => {
+          const cs = getComputedStyle(el);
+          const h3 = getComputedStyle(el.querySelector('h3')!);
+          return {
+            bg: cs.backgroundColor,
+            bw: cs.borderTopWidth,
+            bc: cs.borderTopColor,
+            radius: cs.borderTopLeftRadius,
+            shadow: cs.boxShadow,
+            pad: cs.paddingTop,
+            display: cs.display,
+            dir: cs.flexDirection,
+            cursor: cs.cursor,
+            transform: cs.transform,
+            h3Weight: h3.fontWeight,
+            h3Color: h3.color,
+            h3Size: parseFloat(h3.fontSize),
+          };
+        }),
+      );
+      expect(styles).toHaveLength(4);
+      for (const s of styles) {
+        expect(s.bg).toBe(WHITE);
+        expect(s.bw).toBe('3px');
+        expect(s.bc).toBe(DARK);
+        expect(s.radius).toBe('16px');
+        expect(s.shadow).toBe(SOFT_SHADOW);
+        expect(s.pad).toBe(viewport.width >= 640 ? '32px' : '24px');
+        expect(s.display).toBe('flex');
+        expect(s.dir).toBe('column');
+        expect(s.cursor).not.toBe('pointer');
+        expect(s.transform).toBe('none');
+        expect(s.h3Weight).toBe('700');
+        expect(s.h3Color).toBe(DARK);
+        expect(s.h3Size).toBeGreaterThanOrEqual(20);
+        expect(s.h3Size).toBeLessThanOrEqual(24);
+      }
+    });
+
+    test('rejilla de pilares: una columna en móvil y dos en escritorio con alto parejo por fila', async ({ page }) => {
+      await page.goto('/');
+      const b = await boxes(page, '#solucion .pillar-card');
+      if (wide) {
+        expect(Math.abs(b[0].y - b[1].y)).toBeLessThanOrEqual(1);
+        expect(Math.abs(b[2].y - b[3].y)).toBeLessThanOrEqual(1);
+        expect(Math.abs(b[0].height - b[1].height)).toBeLessThanOrEqual(1);
+        expect(Math.abs(b[2].height - b[3].height)).toBeLessThanOrEqual(1);
+        expect(b[1].x).toBeGreaterThan(b[0].x + b[0].width - 1);
+      } else {
+        for (const box of b) expect(Math.abs(box.x - b[0].x)).toBeLessThanOrEqual(1);
+      }
+    });
+
+    test('el CTA queda a 48 px bajo la rejilla y alineado a su izquierda', async ({ page }) => {
+      await page.goto('/');
+      const grid = (await boxes(page, '#solucion .pillar-grid'))[0];
+      const cta = (await boxes(page, '#solucion a[data-cta="solucion"]'))[0];
+      expect(Math.abs(cta.y - (grid.y + grid.height) - 48)).toBeLessThanOrEqual(2);
+      expect(Math.abs(cta.x - grid.x)).toBeLessThanOrEqual(1);
+    });
+  });
+}
