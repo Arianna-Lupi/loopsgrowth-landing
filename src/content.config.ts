@@ -15,6 +15,21 @@ const claim = z.strictObject({
   reason: z.string().min(1).optional(),
 });
 
+/**
+ * URL https cuyo host es exactamente `host`. `form_script_src` se emite como `<script src>` y el
+ * YAML lo edita el equipo (incluso desde la web de GitHub): `z.url()` solo aceptaría también
+ * `javascript:`, `data:` o `http:`. Origen fijo por 01-UI-SPEC (ClickUp); si cambia de proveedor,
+ * se actualiza aquí a propósito.
+ */
+const httpsUrlFrom = (host: string) =>
+  z.url().refine(
+    (value) => {
+      const url = new URL(value);
+      return url.protocol === 'https:' && url.hostname === host;
+    },
+    { message: `debe ser una URL https://${host}/...` },
+  );
+
 const landing = defineCollection({
   // El `file()` de Astro 7 detecta YAML por la extensión. La clave superior
   // `es` es el id de la entrada (formato de objeto con id como clave).
@@ -35,8 +50,8 @@ const landing = defineCollection({
       noscript: claim,
     }),
     config: z.strictObject({
-      form_url: z.url(),
-      form_script_src: z.url(),
+      form_url: httpsUrlFrom('forms.clickup.com'),
+      form_script_src: httpsUrlFrom('app-cdn.clickup.com'),
     }),
   }),
 });
