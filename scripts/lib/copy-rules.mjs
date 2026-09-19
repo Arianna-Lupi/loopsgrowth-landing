@@ -75,17 +75,16 @@ function matchesOf(re, text) {
   return out;
 }
 
-/** Extractos donde aparece `MISSING_MARK`. Lo reutiliza el modo `--dist`. @param {string} text */
+// Sin distinguir mayúsculas y con cualquier espacio (varios, NBSP, U+2009...) entre las dos palabras.
+const MISSING_RE = /falta\s+confirmar/giu;
+
+/**
+ * Extractos donde aparece `MISSING_MARK`, sin importar mayúsculas ni el tipo o la cantidad de
+ * espacios (también `&nbsp;` en HTML). Lo reutiliza el modo `--dist`. @param {string} text
+ */
 export function findMissingMark(text) {
-  const out = [];
-  let from = 0;
-  for (;;) {
-    const i = text.indexOf(MISSING_MARK, from);
-    if (i === -1) break;
-    out.push(excerpt(text, i, MISSING_MARK.length));
-    from = i + MISSING_MARK.length;
-  }
-  return out;
+  const normalized = cleanText(text).replace(/&(?:nbsp|#160|#xa0);/gi, ' ');
+  return matchesOf(MISSING_RE, normalized);
 }
 
 const isClaimObject = (node) => isPlainObject(node) && ('text' in node || 'status' in node);

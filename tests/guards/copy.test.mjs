@@ -274,6 +274,16 @@ test('10. FALTA CONFIRMAR en text bloquea producción con cualquier status (regl
   }
 });
 
+test('10b. FALTA CONFIRMAR con otras mayúsculas o espacios distintos también bloquea producción', () => {
+  const variants = ['Falta confirmar', 'falta  confirmar', 'FALTA\u00a0CONFIRMAR', 'FALTA\u2009CONFIRMAR', 'FALTA \u200bCONFIRMAR', 'FAL\u200bTA CONFIRMAR'];
+  for (const text of variants) {
+    const file = tmpYaml(docWith(claimYaml(`Dato: ${text}`, 'verified')));
+    const res = run(['--file', file, '--json'], { env: PROD });
+    assert.equal(res.status, 1, `${JSON.stringify(text)}: ${res.out}`);
+    assert.ok(rules(res.json).includes('MISSING'), `${JSON.stringify(text)}: ${res.out}`);
+  }
+});
+
 function makeDist(files) {
   const dir = mkdtempSync(join(tmpdir(), 'copy-dist-'));
   for (const [rel, content] of Object.entries(files)) {
@@ -296,6 +306,15 @@ test('11a. --dist con FALTA CONFIRMAR en un archivo sale con 1 en producción y 
   assert.match(hit.file, /index\.html$/);
   const text = run(['--dist', dist], { env: PROD });
   assert.match(text.out, /index\.html/);
+});
+
+test('11a-bis. --dist detecta FALTA CONFIRMAR con mayúsculas, espacios distintos o &nbsp;', () => {
+  for (const html of ['<p>Falta confirmar</p>', '<p>FALTA  CONFIRMAR</p>', '<p>FALTA&nbsp;CONFIRMAR</p>', '<p>FALTA\u00a0CONFIRMAR</p>']) {
+    const dist = makeDist({ 'index.html': html });
+    const res = run(['--dist', dist, '--json'], { env: PROD });
+    assert.equal(res.status, 1, `${JSON.stringify(html)}: ${res.out}`);
+    assert.ok(rules(res.json).includes('MISSING'), `${JSON.stringify(html)}: ${res.out}`);
+  }
 });
 
 test('11b. --dist con FALTA CONFIRMAR fuera de producción imprime WARN y sale con 0', () => {
