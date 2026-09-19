@@ -69,7 +69,7 @@ Generado por `impeccable document` en modo scan desde `src/styles/tokens.css`, `
 
 ## Overview
 
-Collage pop de línea gruesa: formas planas de color de marca, contorno de 3 px, sombra dura y ningún degradado. La página alterna superficies de color completo (blanco, amarillo, oscuro) y cierra con morado. La accesibilidad es una restricción de diseño: el contraste se mide en cada build (`scripts/check-contrast.mjs`) y los pares prohibidos rompen la guarda.
+Collage pop de marca: Loopy oficial (mesas 13 y 18 del `.ai`) sobre formas planas de color sin contorno, con sombra dura, garabatos de trazo de 3 px, píldoras con palabra en negrita y retícula de puntos; ningún degradado. La página alterna superficies de color completo (blanco, amarillo, oscuro) y cierra con morado. La accesibilidad es una restricción de diseño: el contraste se mide en cada build (`scripts/check-contrast.mjs`) y los pares prohibidos rompen la guarda.
 
 ## Colors
 
@@ -82,7 +82,7 @@ Cuatro colores de marca más blanco y el crema del logo (que no es un tono), def
 | `dark` | oscuro | blanco | blanco | amarillo | amarillo (naranja) | amarillo | naranja |
 | `purple` | morado | blanco | blanco | blanco | amarillo (naranja) | amarillo | amarillo |
 
-`--on-cta` es siempre oscuro. `--pop-shadow-color` es oscuro salvo en `dark`, donde es naranja (decorativa). `--collage-stroke` es oscuro sobre `light` y `yellow`, y blanco sobre `dark` y `purple`. `--mark` (amarillo) existe solo en `light`.
+`--on-cta` es siempre oscuro. `--pop-shadow-color` es oscuro salvo en `dark`, donde es naranja (decorativa). `--collage-stroke` es oscuro sobre `light` y `yellow`, y blanco sobre `dark` y `purple`; hoy ningún elemento de las composiciones lo usa (las formas no llevan contorno y los garabatos toman su color de la pieza). `--mark` (amarillo) existe solo en `light`.
 
 Pares medidos (14 aprobados, umbral 4.5 en texto y 3 en UI): oscuro sobre blanco 16.10, morado sobre blanco 8.55, blanco sobre morado 8.55, morado sobre amarillo 5.43, amarillo sobre morado 5.43, oscuro sobre amarillo 10.22, oscuro sobre naranja 5.56, amarillo sobre oscuro 10.22, naranja sobre oscuro 5.56, blanco sobre oscuro 16.10, crema sobre morado 7.63, morado sobre crema 7.63, oscuro sobre crema 14.37 y crema sobre oscuro 14.37. El morado es #4228D1 (Purblue): el BrandBook rotula su página 8 con #73187F, un valor erróneo que ya no se usa en ningún archivo.
 

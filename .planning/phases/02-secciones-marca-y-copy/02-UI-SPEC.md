@@ -294,6 +294,13 @@ Reglas derivadas de los tonos nuevos:
 
 ## Collage and Brand Assets Contract
 
+**Fe de erratas del collage (2026-09-19).** El lenguaje vigente lo fija el plan 02-10 y reemplaza al de esta sección donde choquen:
+- Loopy oficial de las mesas 13 (dos ojos) y 18 (un ojo) con su esquema por fondo; formas planas sin contorno con sombra dura; garabatos de trazo de 3 px; píldoras de texto real con `aria-hidden` y lista cerrada de palabras (`CHIP_WORDS`); retícula de puntos; el crema como superficie.
+- Tamaños: pegatinas y chips de 96 x 80 px; Por qué ahora de 224 px (320 px desde 64em); avatares como Loopy sobre disco (`avatar-ojo-morado`, `avatar-ojo-amarillo`, `avatar-ojos-morado`, `avatar-ojos-amarillo`).
+- Dos ranuras de foto (`PHOTO_SLOTS`): hero (344, 22, 192 x 250) y whynow (204, 14, 104 x 128), vacías hasta el plan 02-11.
+- Peso: sprite de 8 símbolos de 10 KB o menos (hoy 6135 bytes) y `dist/index.html` de 40960 bytes o menos.
+- Las filas de la tabla para lupa, ojos, clic, loop, pegatinas, chips y avatares quedan reemplazadas. La tabla no se reescribe.
+
 Estilo: **collage pop de línea gruesa**. Formas planas de color de marca, contorno de 3 px (`var(--collage-stroke)`), sin degradados, sin sombras suaves, sin texto dentro. Todo es SVG estático en línea con `aria-hidden="true"` y `focusable="false"`; ninguna imagen raster. Los colores salen de `var(--color-brand-*)` y `var(--collage-stroke)`, nunca de un hex en el componente (regla de la Fase 1: sin hex en `src/components`).
 
 | Pieza | viewBox | Composición | Uso |
