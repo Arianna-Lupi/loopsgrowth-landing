@@ -20,10 +20,10 @@ La landing completa con las secciones del Copy v2 (Hero, El problema, Por qué a
 - Mismo texto de CTA "Agenda tu llamada de 30 minutos" en hero, tras La solución, tras Casos de éxito y en el CTA final, todos con `href="#agenda"`.
 
 ### Prueba social
-- Las cifras `[VERIFICAR]` (rango 30% a 50% menos de presupuesto de ads, split Google vs IA en reportes) no se publican: se suavizan a texto cualitativo y quedan `pending` en el YAML hasta que Ari las respalde. El build de producción las bloquea (COPY-02).
+- Las cifras `[VERIFICAR]` (rango 30% a 50% menos de presupuesto de ads, split Google vs IA en reportes) no se publican: quedan `pending` en el YAML con la lista en `PENDING-COPY.md` hasta que Ari las respalde, y en la página se muestra el relleno visible "FALTA CONFIRMAR" (sin cifras inventadas ni texto suavizado de nuestra cosecha). El build de producción las bloquea (COPY-02).
 - Casos de éxito como tarjetas de métrica (cifra grande, sector anonimizado, plazo y canal), sin logos ni fotos. El caso de Meta Ads (+500% tráfico, marca personal) va en su propia tarjeta.
 - Equipo con avatar ilustrado SVG estático en estilo collage, nombre y cargo en texto real: Arianna Lupi (fundadora), Verónica Romero (directora de proyectos), Juan Angulo (director técnico), Miguel Pacheco (especialista SEO). Avatar con `aria-hidden="true"`.
-- Si falta sector o plazo de un caso, se marca `pending`: en local se muestra con etiqueta visible de borrador y en producción no se muestra hasta que Ari confirme.
+- Si falta sector o plazo de un caso, se marca `pending`, se lista en `PENDING-COPY.md` y en la página se muestra "FALTA CONFIRMAR" en ese dato. Sin etiquetas de borrador, sin espacios vacíos y sin ocultar la tarjeta. El build de producción falla mientras quede cualquiera.
 
 ### Estilo visual, collage y movimiento
 - Las referencias de Ari (m8l.com, skale.so, rankingonai.com) son la guía de layout y vibra (cambio de Juan, 2026-09-18). Se estudian a fondo para entender cómo arman cada sección (estructura, ritmo, jerarquía, composición del hero, tarjetas, prueba social, CTA) y se hace un combinado propio para Loops Growth, no una copia de una sola página. La identidad visual (logo, paleta, tipografía, collage) sigue siendo la de Loops Growth.
@@ -35,9 +35,14 @@ La landing completa con las secciones del Copy v2 (Hero, El problema, Por qué a
 
 ### Secciones informativas
 - "Para quién es / para quién no": dos columnas. Comunica el perfil de USD 200k o más al año sin publicar rangos de inversión mensual que Ari no haya aprobado.
-- "Cómo funciona": cuatro fases en lista ordenada `<ol>`, cada una con plazo. Plazos `pending` hasta que Ari confirme.
+- "Cómo funciona": cuatro fases en lista ordenada `<ol>`, cada una con plazo. Plazos `pending` hasta que Ari confirme: se listan en `PENDING-COPY.md` y en la página se muestra "FALTA CONFIRMAR" donde falte el plazo.
 - FAQ de 5 a 6 preguntas con `<details>` nativo: qué es GEO, duración de la llamada, qué preparar, inversión, tiempos de resultados y si aplica a mi negocio. Preguntas y respuestas tomadas tal cual del doc de Ari; si el doc no trae alguna, se pide a Ari en vez de redactarla. Sin pregunta de garantía.
-- Footer con contacto, redes y enlace a "Política de privacidad", que apunta a una página simple con texto de plantilla marcado `pending` para revisión de Ari.
+- Footer con contacto, redes y enlace a "Política de privacidad", que apunta a una página simple cuyo cuerpo es "FALTA CONFIRMAR" (`pending`, listado en `PENDING-COPY.md`) hasta que Ari entregue el texto legal.
+
+### Textos pending (cambio de Juan, 2026-09-18)
+- Regla general del proyecto: los textos `pending` viven en una lista dentro del repo (`PENDING-COPY.md`, generada por `npm run pending` desde `landing.es.yaml`, con clave, texto actual y quién debe confirmar). En la página nunca hay placeholders vacíos, etiquetas de borrador ni contenido oculto: donde falta el dato se muestra el relleno visible "FALTA CONFIRMAR".
+- El relleno aplica solo donde falta el dato (cifras sin respaldo, plazos, sector de casos, cuerpo de privacidad). Lo que ya viene en el doc de Ari ("30 minutos", "SEO/GEO", H1 del Copy v2) se muestra tal cual y solo se lista para que Ari lo confirme.
+- El build de producción sigue fallando (COPY-02) mientras haya `pending` o "FALTA CONFIRMAR" en la página.
 
 ### Claude's Discretion
 Estructura de componentes, nombres de archivos, esquema exacto de las secciones en `landing.es.yaml`, composición de cada collage y detalles de espaciado y tipografía dentro de los tokens. Reglas de proyecto que aplican: diseño web por `impeccable` y `design-taste-frontend`; todo el texto sale tal cual del doc de Ari (fuente de verdad, sin humanizar ni reescribir; si falta un texto se pide a Ari, no se inventa); A11Y.md estricto.
