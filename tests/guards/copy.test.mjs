@@ -377,3 +377,31 @@ test('12c. un text vacío o de solo espacios falla en cualquier entorno (EMPTY_T
     }
   }
 });
+
+test('13a. una llave {term} en un texto que la página imprime en bruto (hero.h1) falla en cualquier entorno', () => {
+  const body = docWith(claimYaml('Un equipo dedicado.')).replace('"Crecemos tu tienda."', '"Crecemos tu {term} con Google."');
+  const file = tmpYaml(body);
+  for (const env of [PROD, LOCAL]) {
+    const res = run(['--file', file, '--json'], { env });
+    assert.equal(res.status, 1, res.out);
+    const hit = (res.json?.structural ?? []).find((v) => v.rule === 'PLACEHOLDER');
+    assert.ok(hit, res.out);
+    assert.equal(hit.path, 'hero.h1');
+  }
+});
+
+test('13b. {term} y {duration} siguen permitidos donde la página usa fill() (subtitle, intro, *_template)', () => {
+  const file = tmpYaml(docWith(claimYaml('Ejecutamos tu {term} en {duration}.')));
+  const res = run(['--file', file, '--json'], { env: LOCAL });
+  assert.equal(res.status, 0, res.out);
+  assert.deepEqual(res.json?.structural, []);
+});
+
+test('13c. una variable desconocida o una llave sin pareja falla aunque la ruta admita placeholders', () => {
+  for (const text of ['Ejecutamos tu {foo}.', 'Ejecutamos tu {term.', 'Ejecutamos tu term}.']) {
+    const file = tmpYaml(docWith(claimYaml(text)));
+    const res = run(['--file', file, '--json'], { env: LOCAL });
+    assert.equal(res.status, 1, `${text}: ${res.out}`);
+    assert.ok(structuralRules(res.json).includes('PLACEHOLDER'), `${text}: ${res.out}`);
+  }
+});

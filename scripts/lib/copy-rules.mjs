@@ -87,6 +87,39 @@ export function findMissingMark(text) {
   return matchesOf(MISSING_RE, normalized);
 }
 
+/** Únicas variables que `fill()` de `src/lib/content.ts` sabe sustituir. */
+export const PLACEHOLDER_VARS = ['term', 'duration'];
+
+/**
+ * Rutas cuyo texto puede llevar `{term}` o `{duration}` porque la página lo pasa por `fill()`.
+ * Además, toda clave que termina en `_template`. Un componente que imprima un texto en bruto
+ * (`.text` directo) nunca debe recibir una llave: al añadir una ruta aquí, hay que rellenarla
+ * con `fill()` en el componente que la usa.
+ */
+export const PLACEHOLDER_PATHS = ['hero.subtitle', 'agenda.intro'];
+
+const allowsPlaceholders = (path) => path.endsWith('_template') || PLACEHOLDER_PATHS.includes(path);
+
+/**
+ * Problemas de llaves en un texto: llaves sin pareja, variables que `fill()` no conoce y
+ * cualquier llave en una ruta que no pasa por `fill()`. @param {string} text @param {string} path
+ * @returns {string[]}
+ */
+function placeholderProblems(text, path) {
+  const problems = [];
+  const stripped = text.replace(/\{[^{}]*\}/g, (m) => {
+    const name = m.slice(1, -1);
+    if (!PLACEHOLDER_VARS.includes(name)) {
+      problems.push(`Variable desconocida ${m}: las únicas válidas son ${PLACEHOLDER_VARS.map((v) => `{${v}}`).join(' y ')}`);
+    } else if (!allowsPlaceholders(path)) {
+      problems.push(`Placeholder ${m} en un texto que la página imprime sin fill(): llegaría literal al visitante`);
+    }
+    return '';
+  });
+  if (/[{}]/.test(stripped)) problems.push('Llave { o } sin pareja en el texto');
+  return problems;
+}
+
 const isClaimObject = (node) => isPlainObject(node) && ('text' in node || 'status' in node);
 
 /**
@@ -129,7 +162,7 @@ export function walkClaims(doc) {
 const nonEmptyString = (v) => typeof v === 'string' && v.trim() !== '';
 
 /**
- * Valida el YAML. `structural` (BARE_STRING, BAD_STATUS, EMPTY_TEXT, BAD_KEY, BAD_META, INVALID_DOC)
+ * Valida el YAML. `structural` (BARE_STRING, BAD_STATUS, EMPTY_TEXT, BAD_KEY, BAD_META, PLACEHOLDER, INVALID_DOC)
  * es el contrato de FND-02 y falla en cualquier entorno. `content` (PENDING, MISSING, VERIFICAR,
  * VOSEO, DASH, AEO) solo bloquea en producción. `confirm_by` y `reason` son metadatos: no se
  * escanean con las reglas de contenido.
@@ -181,6 +214,9 @@ export function checkCopy(doc) {
     }
 
     const text = cleanText(claim.text);
+    for (const problem of placeholderProblems(text, path)) {
+      structural.push({ rule: 'PLACEHOLDER', path, excerpt: problem });
+    }
     if (claim.status === 'pending') {
       content.push({ rule: 'PENDING', path, excerpt: text.length > 60 ? `${text.slice(0, 60)}...` : text });
     }
