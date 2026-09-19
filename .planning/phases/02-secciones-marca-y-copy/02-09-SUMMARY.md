@@ -3,7 +3,7 @@ phase: 02-secciones-marca-y-copy
 plan: 09
 subsystem: ui
 tags: [brand, tokens, contrast, purple, cream, guards, playwright, logo, svg, artboards]
-status: partial
+status: complete
 plan_head_before: 34585692b8f281880085ee4356b5756162e841b6
 
 requires:
@@ -23,13 +23,13 @@ provides:
   - "DESIGN.md, PRODUCT.md, .claude/CLAUDE.md (tabla de contraste), REQUIREMENTS.md, PROJECT.md y la fe de erratas de color de 02-UI-SPEC.md al morado oficial #4228D1"
 affects: [02-03, 02-04, 02-05, 02-06, 02-07, 02-08, 02-10, 02-11]
 
-requirements-completed: []
+requirements-completed: [DSGN-01, DSGN-02, DSGN-03, DSGN-04, FND-03]
 
-commits: 5
+commits: 8
 actuals:
-  tokens: 75000
-  tasks: 3
-  commits: 5
+  tokens: 52700
+  tasks: 4
+  commits: 8
 
 key-files:
   created:
@@ -71,14 +71,15 @@ key-decisions:
   - "El crema #F4F3E0 es token primitivo, no un quinto tono: REQUIRED_TONES sigue en cuatro."
   - "Las 17 mesas se extraen con pdftocairo, cleanArtboard, SVGO y el viewBox medido con getBBox en Chromium; un archivo por mesa aunque varias traigan el mismo arte (13, 16 y 17; 18, 21 y 22; 1 y 5; 3 y 8; 10 y 24), para auditar cada una contra el .ai."
   - "Naranja sobre morado (2.95) pasa a par prohibido; solo sobrevive como relleno decorativo del collage (ALLOWED_FILLS.purple), con una guarda que exige ambos lugares a la vez."
+  - "Ciclo visual del lote M (impeccable y design-taste-frontend a cinco anchos): sin correcciones; el respaldo del naranja decorativo sobre morado NO se aplicó porque el contorno blanco lo separa del fondo."
 
 duration: n/a
 completed: 2026-09-19
 ---
 
-# Phase 2 Plan 09: Marca oficial (PARCIAL, tareas 1 a 3 de 4) Summary
+# Phase 2 Plan 09: Marca oficial Summary
 
-**Morado oficial #4228D1 y crema #F4F3E0 como tokens únicos con 14 pares aprobados y 11 prohibidos medidos, y las 17 mesas oficiales del .ai como SVG limpios con catálogo de 32 mesas probado por mutación, `Logo` por variante y tono sin recolor, hoja de revisión con identidad y paleta, favicon de la mesa 18 con evidencia medida y documentos vivos al día con el morado oficial. Falta la tarea 4 (ciclo visual y cierre).**
+**Morado oficial #4228D1 y crema #F4F3E0 como tokens únicos con 14 pares aprobados y 11 prohibidos medidos, las 17 mesas oficiales del .ai como SVG limpios con catálogo de 32 mesas probado por mutación, `Logo` por variante y tono sin recolor, hoja de revisión con identidad y paleta, favicon de la mesa 18 con evidencia medida, documentos vivos al día y ciclo visual del lote M registrado a 320, 390, 768, 1024 y 1280 px sin correcciones pendientes.**
 
 ## Estado del plan
 
@@ -87,9 +88,9 @@ completed: 2026-09-19
 | 1. Morado oficial de punta a punta (token, pares, guardas, logo del header) | Hecha | 973eb1b |
 | 2. Las 17 mesas oficiales como SVG limpios, catálogo, Logo por tono y hoja | Hecha | b0f139b |
 | 3. Favicon de la mesa 18, documentos (DESIGN.md, PRODUCT.md, CLAUDE.md, UI-SPEC, REQUIREMENTS, PROJECT) | Hecha | 3888a4b |
-| 4. Ciclo visual con `impeccable` y `design-taste-frontend` a 320, 390, 768, 1024 y 1280 px en 02-VISUAL-LOG.md | PENDIENTE | |
+| 4. Ciclo visual con `impeccable` y `design-taste-frontend` a 320, 390, 768, 1024 y 1280 px en 02-VISUAL-LOG.md, suite completa y barridos | Hecha | 381573a (registro) y el commit de este resumen |
 
-Corte tomado tras la tarea 3 por presupuesto de contexto: la tarea 4 (ciclo visual con `impeccable` y `design-taste-frontend`, registro, suite completa y barridos) queda para un ejecutor nuevo.
+La tarea 4 no produjo cambios de código: el crítico no encontró nada dentro del alcance de 02-09, así que no hay commit `fix(02-09)`.
 
 ## Tarea 1: qué se hizo
 
@@ -154,18 +155,33 @@ Corte tomado tras la tarea 3 por presupuesto de contexto: la tarea 4 (ciclo visu
 - Verde: `npx astro build` limpio; `node --test tests/guards/*.test.mjs` 113 de 113; `check-contrast` 14/14 aprobados y 11 prohibidos; Playwright `brand-assets.spec.ts` con `E2E_BLOCK_CLICKUP=1` 56 pasadas y 5 omitidas, 0 fallos (incluye las cinco pruebas nuevas del favicon en la hoja y las de `/favicon.ico` y `/favicon.svg`); `package.json` y `package-lock.json` sin cambios desde `plan_head_before`; cero apariciones del morado anterior en `src`, `public`, `tests` y `scripts` (la constante hexadecimal `[0x73, 0x18, 0x7f]` de la guarda no coincide con el literal); cero hex en `src/components`, `src/pages` y `src/layouts`. Servidor de vista previa detenido; `astro dev` (pid 86100) del usuario intacto.
 - Nota de alcance: `BaseLayout.astro` no declara `<link rel="icon">` (ningún archivo de `src` referencia el favicon). No se tocó porque el plan prohíbe cambios en `src/layouts`; los navegadores piden `/favicon.ico` por defecto y `/favicon.svg` queda servido. Si Ari quiere el enlace explícito, es un cambio de una línea fuera de este plan.
 
-## Para retomar (solo tarea 4)
+## Tarea 4: qué se hizo
 
-- `plan_head_before` = 34585692b8f281880085ee4356b5756162e841b6 (ledger local `.git/gsd-plan-head-before-02-09`). Al terminar, `commits:` se mide con `git rev-list --count 34585692b8f281880085ee4356b5756162e841b6..HEAD` (al escribir esto: 5, sin contar el commit de este resumen) y se pasa `status: complete`.
-- Tarea 3: hecha (commit 3888a4b). El favicon ya sale de la mesa 18; la hoja trae el bloque `[data-sheet="favicon"]` para el punto (f) del ciclo visual.
-- Tarea 4 (plan, líneas 346 a 381): ciclo visual con `impeccable` y `design-taste-frontend` a 320, 390, 768, 1024 y 1280 px, registro en `02-VISUAL-LOG.md`, exclusión de producción de la hoja. `PHASE2_BATCH=<lote> E2E_BLOCK_CLICKUP=1 npx playwright test --project=chromium tests/e2e/brand-assets.spec.ts -g "captura de la hoja"` ya guarda `test-results/phase2/<lote>-hoja-<ancho>.png`.
-- Protocolo de navegador: `npm run build`, `npx astro preview --port 4322` (si un agente lo lanza queda en segundo plano), correr el spec con `E2E_BLOCK_CLICKUP=1` y `npx astro preview stop` al final. `astro dev` (pid 86100) es del usuario: no matarlo.
-- Al cerrar todo: `state.advance-plan`, `state.update-progress`, `roadmap.update-plan-progress 02` y `requirements.mark-complete DSGN-01 DSGN-02 DSGN-03 DSGN-04 FND-03`. Con la ejecución parcial NO se corrieron. Con la tarea 4 hecha, `REQUIREMENTS.md` ya dice `#4228D1` en FND-03; `requirements.mark-complete` solo marca casillas.
-- Para el `EXCEPTIONS.md` de la fase 3: isotipo y ojo sobre oscuro (mesas 17 y 22), aro morado 1.88 contra #212121, figura legible por el anillo crema. Para Ari: no hay emblema sobre oscuro (mesa 25 con texto morado); horizontal e imagotipo solo existen sobre claro.
+- Skills: `impeccable` (context y `critique`, con `colorize` y `polish` como lente) y `design-taste-frontend` (diales 7, 3 y 4), invocadas con la herramienta Skill en esta tarea. Conflicto resuelto a favor de la marca: la regla LILA de la skill de gusto contra el azul violeta #4228D1 del BrandBook, que no se cambia.
+- Capturas: `PHASE2_BATCH=M E2E_BLOCK_CLICKUP=1 npx playwright test --project=chromium tests/e2e/page-structure.spec.ts tests/e2e/brand-assets.spec.ts -g captura` sobre el build servido con `astro preview` en 4322; 20 pruebas, 20 pasadas. Existen `M-{320,390,768,1024,1280}.png` con sus variantes `-reduce` y `-nojs`, y `M-hoja-{320,390,768,1024,1280}.png` en `test-results/phase2/` (no versionadas). Se compararon con `ai_a.png`, `ai_b.png` y `moodboard.png` del inventario, con recortes a escala real del hero, el header a 320 y 390 px (2x), la identidad `light` y `dark`, el favicon y el collage de `#agenda` de la hoja.
+- Veredicto de los seis puntos (detalle en `02-VISUAL-LOG.md`, "Lote M, ronda 1"): (a) una sola familia de azul violeta, logo del header y h1 medidos en `rgb(66, 40, 209)` a 320 y 390 px, un solo morado en el header, cumple; (b) lupa y aros del hero se leen como lupa con el morado nuevo, cumple; (c) amarillo y blanco sobre morado se leen y el aro naranja y el mango se distinguen por el contorno blanco, cumple sin aplicar el respaldo; (d) logo del header a 32 px (182 x 32 px) nítido a 320 y 390 px, cumple; (e) cada logo de la hoja coincide en dibujo y color con su mesa de `ai_a.png` o `ai_b.png` y se lee sobre su tono, incluidos los isotipos 17 y 22 sobre oscuro, cumple; (f) favicon a 16 px sobre claro y oscuro se lee como un ojo con lupa (el brillo de la pupila se pierde a 16 px, esperable), cumple con reserva.
+- Correcciones: ninguna. Ronda de confirmación: no hizo falta (un ciclo de tres posibles). Rasgos de la lista de vibra: 1 cumplido en el hero a 1280 x 800; 7 cumplido en hero, El problema, Por qué ahora y La solución, con `#agenda` pendiente del montaje de `AgendaCollage` (02-06 y 02-10).
+- Verde (todo corrido tras el último cambio de código, que fue el de la tarea 3; la tarea 4 solo agrega documentos): `node --test tests/guards/*.test.mjs` 113 de 113; `check-contrast` 14/14 aprobados y 11 prohibidos; `list-pending.mjs --check` OK (11 pendientes, `PENDING-COPY.md` sin cambios); `E2E_BLOCK_CLICKUP=1 npx playwright test --project=chromium` 166 pasadas y 20 omitidas (las 20 son las capturas por lote y no corren sin `PHASE2_BATCH`), 0 fallos; `npm run build` con sus hooks sale 0 (`check-copy` advierte 2 `FALTA CONFIRMAR` de contenido en entorno no productivo, esperado); con `PUBLIC_ENV=production PUBLIC_SITE_URL=https://example.com npx astro build` no existe `dist/marca`, y el build normal sí genera `dist/marca/hoja/index.html`.
+- Barridos: cero apariciones del morado anterior en `src`, `public`, `tests` y `scripts`; cero hex en `src/components`, `src/pages` y `src/layouts`; cero `outline: none` en `src`; cero inserción de HTML crudo en `src` (`set:html`, `innerHTML`); el diff de `34585692b8f281880085ee4356b5756162e841b6..HEAD` no toca `src/content`, `PENDING-COPY.md`, `src/components/sections`, `src/components/ui`, `src/layouts`, `package.json` ni `package-lock.json`; ningún `.ai`, `.pdf` ni ruta `brand-inventory/` versionados. Servidor de vista previa detenido con `npx astro preview stop`; `astro dev` (pid 86100) del usuario intacto.
+- DSGN-03 (se vuelve a verificar): `page-structure` y la hoja pasan sin scroll horizontal a 320, 390, 768, 1024 y 1280 px dentro de la suite completa.
+
+## Efectos sobre los planes pendientes
+
+- **02-03 a 02-08:** consumen `--color-brand-purple` (#4228D1) y `--color-brand-cream` desde `tokens.css`, los 14 pares aprobados y `resolveLogo`/`availableTones` para cualquier logo; nada de hex en componentes (una guarda lo impide) ni de morado anterior.
+- **02-06 y 02-10:** `#agenda` sobre morado admite amarillo y blanco como texto y relleno; el naranja solo como relleno decorativo con contorno blanco (2.95, par prohibido como texto). `AgendaCollage` se monta en 02-06 con la pieza de 02-10.
+- **02-07:** debe enlazar el favicon en `BaseLayout.astro` (`<link rel="icon" href="/favicon.svg" type="image/svg+xml">` y `/favicon.ico`); en 02-09 `src/layouts` estaba vetado y hoy ninguna etiqueta lo referencia (los navegadores piden `/favicon.ico` por defecto).
+- **02-10 y 02-11:** rasgos 2 y 3 del moodboard (recortes en blanco y negro de media tinta y formas planas de color detrás del recorte) siguen sin existir en la página; son de esos planes.
+- **Fase 3:** el `EXCEPTIONS.md` debe registrar isotipo y ojo sobre oscuro (mesas 17 y 22): aro morado 1.88 contra #212121, figura legible por el anillo crema.
+
+## Decisiones para Ari
+
+- Confirmar el morado #4228D1 (etiqueta errónea de la página 8 del BrandBook contra las mesas del .ai); si Ari confirma otro, se cambia el token, las razones de `scripts/lib/contrast.mjs` y se vuelve a correr `scripts/brand/extract-artboards.mjs`.
+- No hay emblema sobre oscuro (mesa 25 con texto morado); horizontal e imagotipo solo existen sobre claro.
+- Revisión humana de `/marca/hoja/` (paleta, cada logo sobre su tono, excepción de los dos isotipos sobre oscuro y favicon a 16 px). No bloquea el cierre del plan.
 
 ## Deviations from Plan
 
-None - las tareas 1, 2 y 3 se ejecutaron como el plan las escribió. Notas menores: (tarea 2) los dos archivos viejos `logo-horizontal.svg` e `isotipo.svg` se eliminaron a propósito (son las mesas 06 y 13 con nombre anterior); (tarea 1) la constante del morado anterior en `brand-palette.test.mjs` se arma en hexadecimal (`[0x73, 0x18, 0x7f]`) para que el archivo no contenga el literal decimal que la propia guarda busca.
+Una desviación de proceso en la tarea 4: el plan dice "no marques requisitos ni avances contadores", pero el orquestador pidió expresamente correr `state.advance-plan`, `state.update-progress`, `roadmap.update-plan-progress 02` y `requirements.mark-complete` al cerrar, y así se hizo. Las tareas 1 a 4 se ejecutaron como el plan las escribió. Notas menores: (tarea 2) los dos archivos viejos `logo-horizontal.svg` e `isotipo.svg` se eliminaron a propósito (son las mesas 06 y 13 con nombre anterior); (tarea 1) la constante del morado anterior en `brand-palette.test.mjs` se arma en hexadecimal (`[0x73, 0x18, 0x7f]`) para que el archivo no contenga el literal decimal que la propia guarda busca.
 
 ## Known Stubs
 
@@ -175,9 +191,16 @@ None.
 
 None.
 
+## Convención de `commits:`
+
+`commits: 8` cuenta los commits del plan desde `plan_head_before` hasta este resumen incluido (tres de tareas, tres de resúmenes parciales, uno del registro visual y el de este resumen final); el commit posterior de metadatos (STATE, ROADMAP y REQUIREMENTS) no se cuenta, igual que en los resúmenes parciales.
+
 ## Self-Check: PASSED
 
 - FOUND: tests/e2e/lib/brand.ts, tests/guards/brand-palette.test.mjs
 - FOUND: commit 973eb1b
 - FOUND: commit b0f139b, src/components/brand/logo-variants.mjs, scripts/lib/brand-svg.mjs, scripts/brand/extract-artboards.mjs y los 17 SVG de src/assets/brand
 - FOUND: commit 3888a4b, public/favicon.svg (1526 bytes), public/favicon.ico (4542 bytes)
+- FOUND: commit 381573a y las secciones "Lote M, ronda 0" y "Lote M, ronda 1" en 02-VISUAL-LOG.md
+- FOUND: `test-results/phase2/M-{320,390,768,1024,1280}.png` y `M-hoja-{320,390,768,1024,1280}.png` (la suite completa de Playwright borra `test-results/`, por eso las capturas se regeneraron después de ella con el mismo build)
+- FOUND: ningún servidor de vista previa en el puerto 4322 al cerrar
