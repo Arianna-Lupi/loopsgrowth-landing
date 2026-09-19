@@ -19,15 +19,17 @@ provides:
   - "17 SVG oficiales en src/assets/brand (una mesa del .ai por variante y fondo), catálogo de las 32 mesas en logo-variants.mjs con resolveLogo, availableTones, MIN_HEIGHT_PX, y Logo.astro por variante y tono sin recolor"
   - "scripts/brand/extract-artboards.mjs y scripts/lib/brand-svg.mjs (cleanArtboard) para regenerar las mesas desde un .ai nuevo"
   - "Hoja /marca/hoja/ con identidad por tono (6, 4, 3 y 4 mesas) y paleta leída de tokens.css; .gitignore de *.ai, BrandBook*.pdf y brand-inventory"
+  - "public/favicon.svg y public/favicon.ico salen de la mesa 18 (ojo con lupa) con `extract-artboards.mjs --favicon`; `--favicon-evidence` mide las mesas 13 y 18 a 16 y 32 px; buildFaviconSvg y packIco en scripts/lib/brand-svg.mjs; bloque [data-sheet=favicon] en la hoja"
+  - "DESIGN.md, PRODUCT.md, .claude/CLAUDE.md (tabla de contraste), REQUIREMENTS.md, PROJECT.md y la fe de erratas de color de 02-UI-SPEC.md al morado oficial #4228D1"
 affects: [02-03, 02-04, 02-05, 02-06, 02-07, 02-08, 02-10, 02-11]
 
 requirements-completed: []
 
-commits: 3
+commits: 5
 actuals:
-  tokens: 60000
-  tasks: 2
-  commits: 3
+  tokens: 75000
+  tasks: 3
+  commits: 5
 
 key-files:
   created:
@@ -38,6 +40,14 @@ key-files:
     - scripts/brand/extract-artboards.mjs
     - "src/assets/brand/*.svg (17 mesas: apilado 01, 03, 05, 08; horizontal 06; imagotipo 07; emblema 10, 12, 24; isotipo 13, 14, 16, 17; ojo 18, 19, 21, 22)"
   modified:
+    - public/favicon.svg
+    - public/favicon.ico
+    - DESIGN.md
+    - PRODUCT.md
+    - .claude/CLAUDE.md
+    - .planning/REQUIREMENTS.md
+    - .planning/PROJECT.md
+    - .planning/phases/02-secciones-marca-y-copy/02-UI-SPEC.md
     - src/styles/tokens.css
     - scripts/lib/contrast.mjs
     - src/components/collage/collage-rules.mjs
@@ -66,9 +76,9 @@ duration: n/a
 completed: 2026-09-19
 ---
 
-# Phase 2 Plan 09: Marca oficial (PARCIAL, tareas 1 y 2 de 4) Summary
+# Phase 2 Plan 09: Marca oficial (PARCIAL, tareas 1 a 3 de 4) Summary
 
-**Morado oficial #4228D1 y crema #F4F3E0 como tokens únicos con 14 pares aprobados y 11 prohibidos medidos, y las 17 mesas oficiales del .ai como SVG limpios con catálogo de 32 mesas probado por mutación, `Logo` por variante y tono sin recolor y hoja de revisión con identidad y paleta. Faltan las tareas 3 y 4.**
+**Morado oficial #4228D1 y crema #F4F3E0 como tokens únicos con 14 pares aprobados y 11 prohibidos medidos, y las 17 mesas oficiales del .ai como SVG limpios con catálogo de 32 mesas probado por mutación, `Logo` por variante y tono sin recolor, hoja de revisión con identidad y paleta, favicon de la mesa 18 con evidencia medida y documentos vivos al día con el morado oficial. Falta la tarea 4 (ciclo visual y cierre).**
 
 ## Estado del plan
 
@@ -76,10 +86,10 @@ completed: 2026-09-19
 |-------|--------|--------|
 | 1. Morado oficial de punta a punta (token, pares, guardas, logo del header) | Hecha | 973eb1b |
 | 2. Las 17 mesas oficiales como SVG limpios, catálogo, Logo por tono y hoja | Hecha | b0f139b |
-| 3. Favicon de la mesa 18, documentos (DESIGN.md, PRODUCT.md, CLAUDE.md, UI-SPEC, REQUIREMENTS, PROJECT) | PENDIENTE | |
+| 3. Favicon de la mesa 18, documentos (DESIGN.md, PRODUCT.md, CLAUDE.md, UI-SPEC, REQUIREMENTS, PROJECT) | Hecha | 3888a4b |
 | 4. Ciclo visual con `impeccable` y `design-taste-frontend` a 320, 390, 768, 1024 y 1280 px en 02-VISUAL-LOG.md | PENDIENTE | |
 
-Corte tomado en el punto de corte 2 del plan (identidad completa) por presupuesto de contexto. La tarea 3 (favicon y documentos) y la tarea 4 (ciclo visual) quedan para un ejecutor nuevo.
+Corte tomado tras la tarea 3 por presupuesto de contexto: la tarea 4 (ciclo visual con `impeccable` y `design-taste-frontend`, registro, suite completa y barridos) queda para un ejecutor nuevo.
 
 ## Tarea 1: qué se hizo
 
@@ -124,18 +134,38 @@ Corte tomado en el punto de corte 2 del plan (identidad completa) por presupuest
 - Hoja `/marca/hoja/`: una sección de identidad por tono (light 6, yellow 4, dark 3, purple 4) con zona de borde punteado y padding `--logo-clear` (limitado a 1.5 rem bajo 64em), rótulo `<variante> / mesa NN`, y franja de paleta con seis muestras cuyo hex se lee de `tokens.css`. Se revisó una captura a 1280 px por inspección visual (`test-results/phase2/M-hoja-*.png`, ignorada por git): las 17 mesas se ven con sus colores de marca sobre cada superficie.
 - Verde: `npm run build` limpio; `node --test tests/guards/*.test.mjs` 108 de 108; `check-contrast` 14/14 aprobados y 11 prohibidos; Playwright (`brand-assets`, `a11y-base`, `page-structure`, con `E2E_BLOCK_CLICKUP=1`) 117 pasadas y 20 omitidas, 0 fallos; el build con `PUBLIC_ENV=production` no genera `dist/marca` y el normal sí genera `dist/marca/hoja/index.html`; `dist/index.html` pesa 30362 bytes (límite 61440); `package.json` y `package-lock.json` sin cambios; sin hex en `src/components`, `src/pages` ni `src/layouts`; ningún `.ai`, `.pdf` ni ruta `brand-inventory/` versionados.
 
-## Para retomar (tareas 3 y 4)
+## Tarea 3: qué se hizo
 
-- `plan_head_before` = 34585692b8f281880085ee4356b5756162e841b6 (ledger local `.git/gsd-plan-head-before-02-09`). Al terminar, `commits:` se mide con `git rev-list --count 34585692b8f281880085ee4356b5756162e841b6..HEAD` (al escribir esto: 3 commits de código y documento más el de este resumen) y se pasa `status: complete`.
-- Tarea 3 (plan, líneas 305 a 344): favicon de la mesa 18 con evidencia medida a 16 px, y documentos (DESIGN.md, PRODUCT.md, `.claude/CLAUDE.md`, UI-SPEC con fe de erratas, REQUIREMENTS, PROJECT) al día con el morado oficial. El script `scripts/brand/extract-artboards.mjs` hoy solo implementa `--source`, `--only` y `--out`; el plan pide agregar `--favicon` y `--favicon-evidence` en esta tarea. Lo que ya existe y sirve: `src/assets/brand/ojo-18-blanco.svg` (mesa 18), `logo-variants.mjs`, `cleanArtboard`. `public/favicon.svg` y `public/favicon.ico` siguen siendo los de la 02-02 y `favicon` tiene su prueba en `brand-assets.spec.ts` (ICO con 16, 32 y 48 px, SVG cuadrado sin script ni http).
+- `scripts/brand/extract-artboards.mjs` gana `--favicon-evidence` y `--favicon [archivo]` (por defecto `ojo-18-blanco`); ambas parten de los SVG ya extraídos y no piden `--source`. Los ayudantes puros viven en `scripts/lib/brand-svg.mjs` (`readViewBox`, `buildFaviconSvg`, `packIco`, `FAVICON_MARGIN`), sin dependencias nuevas.
+- Evidencia medida en Chromium (lienzo transparente, 4 % de margen por lado, caja de píxeles con alfa >= 128, pupila = mayor componente conexa de píxeles con canal máximo <= 60, diámetro equivalente). `pupila_vector_px` repite la medida a 16 veces la resolución y divide entre 16, sin antialiasing:
+
+| Mesa | Lado | Ancho px | Alto px | Pupila px (ráster) | Pupila px (vector) |
+|------|-----:|---------:|--------:|-------------------:|-------------------:|
+| 13 (isotipo, dos ojos) | 16 | 14 | 8 | 1.1 | 2.2 |
+| 13 | 32 | 28 | 18 | 3.9 | 4.5 |
+| 18 (ojo con lupa) | 16 | 14 | 14 | 3.0 | 3.7 |
+| 18 | 32 | 28 | 29 | 6.4 | 7.4 |
+
+- Decisión con la regla del plan (a 16 px: alto de la marca >= 12 y pupila >= 3): la mesa 13 no cumple (alto 8, pupila 1.1 ráster y 2.2 vector) y la mesa 18 sí (alto 14, pupila 3.0 ráster y 3.7 vector). Gana la mesa 18, como esperaba la planificación; el vector coincide con sus cifras (2.2 y 3.7). La pupila ráster de la 18 queda justo en el umbral, y por eso se registró también la medida del vector.
+- `--favicon` escribió `public/favicon.svg` (1526 bytes, `viewBox="151.25 168.59 488.15 488.15"`, cuadrado, con `xmlns`, mismos 6 `path` y rellenos que `ojo-18-blanco.svg`) y `public/favicon.ico` (4542 bytes, cabecera 00 00 01 00, tres PNG de 16, 32 y 48 px de 695, 1493 y 2300 bytes).
+- Rojo primero: la evidencia se corrió antes de escribir las pruebas; las guardas nuevas (vii-i a vii-v) validan el archivo generado, su reproducibilidad (`buildFaviconSvg(mesa 18)` es exactamente el archivo publicado, centrado y con el lado igual al mayor lado del arte entre 0.92), las mutaciones (un trazo cambiado, un `script`, un viewBox no cuadrado y una referencia externa se detectan), el `.ico` (tres entradas de 16, 32 y 48, cada una un PNG completo cuyo ancho y alto coinciden con su entrada) y `packIco`.
+- En la hoja, bloque `[data-sheet="favicon"]` con `favicon.svg` a 16, 32 y 48 px sobre muestra `light` y `dark`, imágenes con `alt` que dice el tamaño; una prueba por ancho (320, 390, 768, 1024, 1280) comprueba las seis imágenes con `naturalWidth` mayor que 0, el tamaño renderizado y que no hay scroll horizontal.
+- Documentos vivos, todos con `Edit`: `DESIGN.md` (`purple: "#4228d1"` y `cream: "#f4f3e0"`, los 14 pares con ratios nuevos, morado sobre oscuro 1.88, crema como superficie y no tono, naranja sobre morado 2.95 solo decorativo, logos por tono sin recolorear); `PRODUCT.md` (Purblue #4228D1, la etiqueta errónea de la página 8 y el crema); `.claude/CLAUDE.md` (solo las cinco filas del morado anterior más seis filas del crema); `REQUIREMENTS.md` (FND-03) y `PROJECT.md` (línea 28); `02-UI-SPEC.md` (bloque "Fe de erratas de color (2026-09-19)" bajo el párrafo "Sin neutrales inventados", sin tocar la tabla). Ningún documento vivo cita ya el morado anterior como vigente (solo se nombra como la etiqueta errónea).
+- Verde: `npx astro build` limpio; `node --test tests/guards/*.test.mjs` 113 de 113; `check-contrast` 14/14 aprobados y 11 prohibidos; Playwright `brand-assets.spec.ts` con `E2E_BLOCK_CLICKUP=1` 56 pasadas y 5 omitidas, 0 fallos (incluye las cinco pruebas nuevas del favicon en la hoja y las de `/favicon.ico` y `/favicon.svg`); `package.json` y `package-lock.json` sin cambios desde `plan_head_before`; cero apariciones del morado anterior en `src`, `public`, `tests` y `scripts` (la constante hexadecimal `[0x73, 0x18, 0x7f]` de la guarda no coincide con el literal); cero hex en `src/components`, `src/pages` y `src/layouts`. Servidor de vista previa detenido; `astro dev` (pid 86100) del usuario intacto.
+- Nota de alcance: `BaseLayout.astro` no declara `<link rel="icon">` (ningún archivo de `src` referencia el favicon). No se tocó porque el plan prohíbe cambios en `src/layouts`; los navegadores piden `/favicon.ico` por defecto y `/favicon.svg` queda servido. Si Ari quiere el enlace explícito, es un cambio de una línea fuera de este plan.
+
+## Para retomar (solo tarea 4)
+
+- `plan_head_before` = 34585692b8f281880085ee4356b5756162e841b6 (ledger local `.git/gsd-plan-head-before-02-09`). Al terminar, `commits:` se mide con `git rev-list --count 34585692b8f281880085ee4356b5756162e841b6..HEAD` (al escribir esto: 5, sin contar el commit de este resumen) y se pasa `status: complete`.
+- Tarea 3: hecha (commit 3888a4b). El favicon ya sale de la mesa 18; la hoja trae el bloque `[data-sheet="favicon"]` para el punto (f) del ciclo visual.
 - Tarea 4 (plan, líneas 346 a 381): ciclo visual con `impeccable` y `design-taste-frontend` a 320, 390, 768, 1024 y 1280 px, registro en `02-VISUAL-LOG.md`, exclusión de producción de la hoja. `PHASE2_BATCH=<lote> E2E_BLOCK_CLICKUP=1 npx playwright test --project=chromium tests/e2e/brand-assets.spec.ts -g "captura de la hoja"` ya guarda `test-results/phase2/<lote>-hoja-<ancho>.png`.
 - Protocolo de navegador: `npm run build`, `npx astro preview --port 4322` (si un agente lo lanza queda en segundo plano), correr el spec con `E2E_BLOCK_CLICKUP=1` y `npx astro preview stop` al final. `astro dev` (pid 86100) es del usuario: no matarlo.
-- Al cerrar todo: `state.advance-plan`, `state.update-progress`, `roadmap.update-plan-progress 02` y `requirements.mark-complete DSGN-01 DSGN-02 DSGN-03 DSGN-04 FND-03`. Con la ejecución parcial NO se corrieron.
+- Al cerrar todo: `state.advance-plan`, `state.update-progress`, `roadmap.update-plan-progress 02` y `requirements.mark-complete DSGN-01 DSGN-02 DSGN-03 DSGN-04 FND-03`. Con la ejecución parcial NO se corrieron. Con la tarea 4 hecha, `REQUIREMENTS.md` ya dice `#4228D1` en FND-03; `requirements.mark-complete` solo marca casillas.
 - Para el `EXCEPTIONS.md` de la fase 3: isotipo y ojo sobre oscuro (mesas 17 y 22), aro morado 1.88 contra #212121, figura legible por el anillo crema. Para Ari: no hay emblema sobre oscuro (mesa 25 con texto morado); horizontal e imagotipo solo existen sobre claro.
 
 ## Deviations from Plan
 
-None - las tareas 1 y 2 se ejecutaron como el plan las escribió. Notas menores: (tarea 2) los dos archivos viejos `logo-horizontal.svg` e `isotipo.svg` se eliminaron a propósito (son las mesas 06 y 13 con nombre anterior); el script de extracción todavía no trae `--favicon` ni `--favicon-evidence`, que el plan asigna a la tarea 3; (tarea 1) la constante del morado anterior en `brand-palette.test.mjs` se arma en hexadecimal (`[0x73, 0x18, 0x7f]`) para que el archivo no contenga el literal decimal que la propia guarda busca.
+None - las tareas 1, 2 y 3 se ejecutaron como el plan las escribió. Notas menores: (tarea 2) los dos archivos viejos `logo-horizontal.svg` e `isotipo.svg` se eliminaron a propósito (son las mesas 06 y 13 con nombre anterior); (tarea 1) la constante del morado anterior en `brand-palette.test.mjs` se arma en hexadecimal (`[0x73, 0x18, 0x7f]`) para que el archivo no contenga el literal decimal que la propia guarda busca.
 
 ## Known Stubs
 
@@ -150,3 +180,4 @@ None.
 - FOUND: tests/e2e/lib/brand.ts, tests/guards/brand-palette.test.mjs
 - FOUND: commit 973eb1b
 - FOUND: commit b0f139b, src/components/brand/logo-variants.mjs, scripts/lib/brand-svg.mjs, scripts/brand/extract-artboards.mjs y los 17 SVG de src/assets/brand
+- FOUND: commit 3888a4b, public/favicon.svg (1526 bytes), public/favicon.ico (4542 bytes)
