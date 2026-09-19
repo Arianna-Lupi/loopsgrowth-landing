@@ -305,12 +305,13 @@ test.describe('sección #agenda: estructura', () => {
 
   test('(e) la tarjeta vence el overflow del script de ClickUp y lleva borde de 3 px', async ({ page }) => {
     await page.goto('/');
-    // El script de ClickUp ejecuta `parentElement.style.overflow = 'auto'` sobre .form-embed.
-    await page.waitForFunction(
-      () => (document.querySelector('.form-embed') as HTMLElement).style.overflow === 'auto',
-      null,
-      { timeout: 20000 },
-    );
+    // El script de ClickUp ejecuta `parentElement.style.overflow = 'auto'` sobre .form-embed. Se
+    // reproduce aquí a mano en vez de esperar al script de app-cdn.clickup.com: la prueba mide
+    // nuestro CSS (`overflow: visible !important`) y no debe depender de la red ni de ClickUp.
+    await page.locator('.form-embed').evaluate((el) => {
+      (el as HTMLElement).style.overflow = 'auto';
+    });
+    expect(await page.locator('.form-embed').evaluate((el) => (el as HTMLElement).style.overflow)).toBe('auto');
     const card = await page.locator('.form-embed').evaluate((el) => {
       const cs = getComputedStyle(el);
       return {
