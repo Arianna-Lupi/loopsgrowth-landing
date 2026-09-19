@@ -3,7 +3,7 @@ phase: 02-secciones-marca-y-copy
 plan: 10
 subsystem: ui
 tags: [collage, loopy, brand, moodboard, scenes, guards, playwright, svg, astro]
-status: partial
+status: complete
 plan_head_before: 7d84e0894bc620eb66a21d8cf501f773e2fa45e1
 
 requires:
@@ -19,16 +19,17 @@ provides:
   - "Sprite de ocho simbolos lg (6135 bytes), sin PIECES ni simbolos cs-*; hoja /marca/hoja/ con piezas, pildoras, composiciones y avatares y bloque 'captura de composiciones'"
 affects: [02-03, 02-04, 02-05, 02-06, 02-07, 02-08, 02-11]
 
-commits: 6
+commits: 9
+requirements-completed: [DSGN-01, DSGN-03, DSGN-04]
 actuals:
-  tokens: 68000
-  tasks: 3
-  commits: 6
+  tokens: 35100
+  tasks: 4
+  commits: 9
 ---
 
-# Phase 2 Plan 10: Collage de marca Summary (PARCIAL, tareas 1 a 3 de 4)
+# Phase 2 Plan 10: Collage de marca Summary
 
-**Loopy oficial de las mesas 13 y 14 de punta a punta en el hero (tarea 1) y el mismo mecanismo de escenas en Por que ahora, las tres pegatinas de dolor y los cuatro chips de pilar (tarea 2): assertScene R1 a R11 en el build, renderizador unico, sprite lg y guardas con mutacion; agenda y los cuatro avatares con el mismo mecanismo y la hoja al dia (tarea 3), con el collage viejo (PIECES, quince simbolos cs-*) retirado y el sprite en ocho simbolos lg de 6135 bytes.**
+**Loopy oficial de las mesas 13, 14, 18 y 19 del `.ai` como unico mecanismo de escenas (`scenes.mjs` con `assertScene` R1 a R11, `CollageScene`, `Pill`) en hero, Por que ahora, siete minis, agenda y cuatro avatares, con el collage viejo retirado, un sprite de ocho simbolos de 6135 bytes y el ciclo visual del Lote C (collage de marca) registrado con siete recortes lado a lado contra las mesas y el moodboard de Ari.**
 
 ## Estado del plan
 
@@ -37,9 +38,9 @@ actuals:
 | 1. Loopy oficial de punta a punta en el hero (tracer) | Hecha | 37c3a0c |
 | 2. Por que ahora, pegatinas y chips (PainCard, PillarCard, WhyNow) | Hecha | bc5e28f |
 | 3. Agenda, avatares, hoja al dia y retiro del collage viejo | Hecha | ec450b4 |
-| 4. Ciclo visual (Lote C (collage de marca)), documentos y cierre | Pendiente | |
+| 4. Ciclo visual (Lote C (collage de marca)), documentos y cierre | Hecha | 6368e97 (correccion) y 890d8cc (registro y documentos) |
 
-Se detuvo tras la tarea 3 por presupuesto de contexto (el contexto pasaba del 35 % fijado para seguir con la tarea 4). STATE.md, ROADMAP.md y REQUIREMENTS.md NO se tocaron: no se corrio state.advance-plan, update-progress, roadmap.update-plan-progress ni requirements.mark-complete (solo al completar el plan).
+`commits: 9` es lo medido con `git rev-list --count 7d84e0894bc620eb66a21d8cf501f773e2fa45e1..HEAD` despues del commit de este SUMMARY (los siete anteriores: tareas 1 a 3, resumenes parciales y la correccion; el de documentos de la tarea 4; y este). El commit de metadatos de estado que sigue (STATE.md, ROADMAP.md, REQUIREMENTS.md) queda fuera de esa cuenta. `actuals.tokens` es `chars/4` sobre las lineas agregadas fuera de `.planning/` (`git diff` desde `plan_head_before`); la cifra de 68000 del resumen parcial no usaba esa escala y se sustituye.
 
 ## Tarea 1: que se hizo
 
@@ -146,10 +147,58 @@ Al retirar el sprite viejo `dist/index.html` bajo de 44069 a 38627 bytes: el obj
 - En collage-language.spec.ts, para la paleta de `agenda` en la hoja se suma el fondo de la banda (`closest('[data-tone]')`): el morado de esa escena es el fondo de la seccion y no un relleno del svg.
 - `PHOTO_SLOTS` sigue con dos entradas: hero (344, 22, 192 x 250) y whynow (204, 14, 104 x 128).
 
-## Trabajo restante exacto (solo la tarea 4 del plan)
+## Tarea 4: que se hizo
 
-1. Tarea 4: ciclo visual con `PHASE2_BATCH=C-collage` (las capturas de composiciones y de la hoja ya funcionan; falta correr tambien `page-structure.spec.ts -g captura` para las de la pagina `C-collage-{320,390,768,1024,1280}` con sus variantes reduce y nojs, y armar los siete recortes lado a lado con Pillow), critica con `impeccable` y `design-taste-frontend`, correcciones solo del collage, "Lote C (collage de marca)" rondas 0 y 1 en 02-VISUAL-LOG.md, fe de erratas en 02-UI-SPEC.md y DESIGN.md, suite completa (`E2E_BLOCK_CLICKUP=1 npx playwright test --project=chromium`, `npm run build` con sus hooks, `node scripts/list-pending.mjs --check`), confirmar `dist/index.html` de 40960 bytes o menos (hoy 38627), y SUMMARY completo (efectos sobre 02-04 a 02-08, preguntas para Juan y Ari, pesos finales y `PHOTO_SLOTS` para 02-11).
-2. Solo entonces: `state.advance-plan` una vez, `state.update-progress`, `roadmap.update-plan-progress 02` y `requirements.mark-complete DSGN-01 DSGN-03 DSGN-04` (revisar despues que 02-03 siga sin marcar y que `Plan:` de STATE.md no salte).
+- Skills invocadas con la herramienta Skill: `impeccable` (context sin entrevista, luego `critique`, con `colorize` y `polish` como lente) y `design-taste-frontend` (diales 7, 3 y 4). No se reutilizo nada de las tareas anteriores. Conflictos resueltos a favor de la marca y del contrato: SVG dibujados a mano (la pieza principal es arte oficial), morado de IA (es el color de marca), tarjetas iguales (varian por escena y palabra) y contorno grueso (las formas no llevan contorno).
+- Capturas: `PHASE2_BATCH=C-collage E2E_BLOCK_CLICKUP=1 npx playwright test --project=chromium tests/e2e/page-structure.spec.ts tests/e2e/brand-assets.spec.ts -g captura` (55 pruebas, dos corridas: antes y despues de las correcciones) genera `C-collage-{320,390,768,1024,1280}` con `-reduce` y `-nojs`, `C-collage-hoja-{320,...,1280}` y las de elemento. Los siete recortes `C-collage-compare-1..7.png` salen de un script de Pillow fuera del repositorio (comando y cajas en 02-VISUAL-LOG.md, ronda 1). Nada de `test-results/` se versiona.
+- Veredicto de la critica (detalle en 02-VISUAL-LOG.md): (a) fidelidad de los Loopy: cumple en los cinco pares (mismo dibujo y colores que las mesas 13, 14, 16, 18, 19 y 21, sin fondo); (b) lenguaje: cumple con los rasgos 1, 3, 4, 6 y 7, falta el rasgo 2 (foto en media tinta, plan 02-11); (c) hero: cumple tras la correccion; (d) pildoras: cumple con reserva, las del moodboard son mucho mas grandes; (e) pegatinas y chips: cumplen; (f) avatares: cumplen; (g) 11 pildoras en `/`, no se quito ninguna.
+- Hallazgos y correcciones (un solo lote, commit `6368e97`): la pildora `geo` del hero era morada sobre el disco morado y se fundia con el; las dos pildoras del hero eran pequenas (13.8 px a 320 px). Se pasaron a fs 36 (16.6 px a 320 y 390 px, 27.9 px a 1280), `geo` a crema con texto morado (7.63) y y 394 (con y 350 el crema de la pildora se fundia con el mango crema de la lupa; se detecto en la ronda de confirmacion), `seo` a y 164. Una ronda de confirmacion de las tres permitidas.
+- Documentos: fe de erratas del collage en 02-UI-SPEC.md (siete lineas bajo el encabezado del contrato), DESIGN.md con la descripcion vigente del collage y la nota de que `--collage-stroke` ya no lo usa ningun elemento, y "Lote C (collage de marca)" rondas 0 y 1 en 02-VISUAL-LOG.md (commit `890d8cc`).
+- Comprobacion por mutacion (pendiente de la tarea 3): quitar `aria-hidden` de `Pill.astro` y de la raiz de `CollageScene.astro` hizo fallar 6 pruebas de collage-language y brand-assets; ambos archivos se restauraron sin diff.
+- Verificacion final: `node --test tests/guards/*.test.mjs` 139 de 139; `node scripts/check-contrast.mjs` sale 0; `node scripts/list-pending.mjs --check` sale 0; `E2E_BLOCK_CLICKUP=1 npx playwright test --project=chromium` 234 pasadas, 55 omitidas (capturas), 0 fallos; `npm run build` sale 0 con sus hooks; `PUBLIC_ENV=production PUBLIC_SITE_URL=https://example.com npx astro build` no genera `dist/marca` y el build normal si genera `dist/marca/hoja/index.html`; `dist/index.html` mide 38627 bytes (tope 40960). DSGN-03: `page-structure`, `collage-language` y la hoja pasan a los cinco anchos sin scroll horizontal (`scrollWidth` igual al ancho a 320, 390 y 1280 medido a mano).
+- Barridos: sin hex en `src/components`, `src/pages` ni `src/layouts`; sin `set:html`; sin `outline: none`; sin `73187f` en `src`, `public`, `tests` ni `scripts`; sin `cs-` ni `.cs-` en `src`; `git diff --name-only 7d84e08..HEAD -- src/content PENDING-COPY.md src/layouts src/styles package.json package-lock.json` vacio; ningun `.ai`, `.pdf` ni `brand-inventory/` versionado; ningun archivo de imagen agregado.
+
+## Pesos finales
+
+| Pieza | Bytes | Tope |
+|-------|------:|-----:|
+| Sprite (8 simbolos lg) | 6135 | 10240 |
+| hero, agenda, whynow | 5028 / 1659 / 1828 (tarea 3; la correccion solo cambio valores de dos capas del hero, dentro del tope de 8192 que vigila la guarda) | 8192 / 4096 / 3072 |
+| sticker-* y chip-* | 902 a 940 | 1536 |
+| avatares | 517 a 526 | 2560 |
+| dist/index.html | 38627 | 40960 (objetivo final cumplido) |
+| dist/marca/hoja/index.html | 150237 | sin tope, no sale en produccion |
+
+## Ranuras de foto para 02-11 (`PHOTO_SLOTS`)
+
+`hero`: x 344, y 22, 192 x 250 (aspect 0.768), panel crema con sombra dura y retícula morada. `whynow`: x 204, y 14, 104 x 128, panel blanco con sombra dura y retícula morada. Ambas vacias e intencionales; el recorte puede sobresalir del panel pero respeta R6 (dentro del viewBox). Si 02-11 necesita espacio, mover pildoras es solo cambiar `x` e `y` en `scenes.mjs` (pasan por `assertScene`).
+
+## Efectos sobre planes pendientes
+
+- **02-03 (tarea 4, despues de 02-11):** su Lote B queda con el collage nuevo en Por que ahora, pegatinas y chips; su SUMMARY sigue parcial y no se marca aqui.
+- **02-04:** `MetricCard` con `CollagePiece name='lupa' tone='light'` sigue valido; la pieza es el Loopy oficial de un ojo (esquema A, sin colores por props). El criterio visual "la lupa no cruza la cifra" se reevalua con el arte nuevo. Sin cambios obligatorios en su codigo ni pruebas.
+- **02-05:** `Team` usa `<Avatar variant="ojo-morado" | "ojo-amarillo" | "ojos-morado" | "ojos-amarillo" />` (asignacion sugerida: Arianna ojo-morado, Veronica ojo-amarillo, Juan ojos-morado, Miguel ojos-amarillo); las variantes viejas ya no existen; tope de 2560 bytes por avatar; no hay caras ni accesorios, la asignacion es solo de color.
+- **02-06:** `AgendaCollage` se importa igual (prop `class`), pero su raiz es `div[data-collage="agenda"]`, no un svg: la prueba de no superposicion con `.form-embed` mide esa raiz; oculto bajo 64em; suma dos pildoras a `/` (13 en total, unos 2 KB de HTML). El montaje en `#agenda` se revisa visualmente alli (pendiente del Lote M, punto c).
+- **02-07:** `HeroCollage.astro` ya no es un svg: `div.hero-collage[data-collage="hero"]` con una capa svg y un grupo HTML `pills`. Los seis `[data-piece]` son stage, panel, loopy, pills, doodles y dots (antes loops, lupa, ojos, clic-a, clic-b y destellos), con `--i`, `--r` y `--r-from` y el elemento exterior sin transform. Pupilas: `.hc-pupil` y `[data-pupil]` sobre los dos paths de pupila del Loopy oficial (el brillo no se mueve). `transform-box: fill-box` vale para los `<g>`, no para el grupo HTML (usa `transform-origin: center`). El tope de 8192 mide el `outerHTML` de `.hero-collage`. Los selectores `svg.hero-collage` pasan a `.hero-collage` y `data-collage="hero"`. Tambien: 02-07 debe enlazar `/favicon.svg` y `/favicon.ico` en `BaseLayout` (nota heredada de 02-09).
+- **02-08:** la suma de `svg[data-collage]` pasa a las raices `[data-collage]` mas el sprite; la verificacion visual del hero a 320 px sigue. `02-ARI-FINDINGS.md` suma: palabras de las pildoras (seo, geo y ads del copy; spy y team work del moodboard), avatares con el Loopy oficial y no con caras, fotos de stock pendientes para las ranuras hero y whynow, crema como superficie de paneles y pildoras, excepcion del naranja sobre morado sin uso.
+- **02-11:** consume `PHOTO_SLOTS`, `assertScene`, las pildoras y el sprite; monta el recorte sobre cada ranura sin cambiar el resto de la escena (ver arriba).
+
+## Preguntas abiertas
+
+Para Juan:
+1. Nombre del lote: se uso "Lote C (collage de marca)" para no confundirlo con el Lote C1 de 02-04 ni el Lote C (equipo) de 02-05. Confirmar o pedir otro.
+2. Pildoras: son 11 en `/` y 13 con la agenda. Las del moodboard de Ari son mucho mas grandes y aqui se mantienen pequenas para que el Loopy sea el foco. Si quieres el rasgo 4 mas fuerte (pildoras mayores en el hero), es cambiar `fs` en `scenes.mjs`; si las ves demasiadas, se anota aqui con las capturas `C-collage-hero-*`, pero no se quitaron porque el encargo pide el rasgo 4 en cada composicion.
+3. En movil (una columna) el collage del hero queda debajo de la copia, no en el primer pantallazo de 390 x 844; el primer pantallazo trae h1, subtitulo y CTA como manda el contrato. Confirmar que esta bien.
+4. Presion sobre el tope de 60 KB: `dist/index.html` mide 38627 bytes; 02-04 a 02-06 suman contenido. Si no caben, decidir entre subir el tope, recortar pildoras o mover el sprite a un archivo estatico.
+
+Para Ari:
+1. ¿Acepta las palabras de las pildoras `seo`, `geo`, `ads`, `spy` y `team work`, o entrega su lista? `spy` y `team work` vienen del moodboard (podria ser arte de terceros); solo se usan las palabras, no su arte. Cambiar la lista es editar `CHIP_WORDS` en un solo lugar.
+2. ¿Quien elige las fotos de stock y que forma de recorte quiere sobre cada ranura (hero 192 x 250 y whynow 104 x 128)?
+3. ¿El naranja sobre morado (2.95) sigue sin uso como excepcion de 02-09? Hoy ningun elemento lo usa.
+
+## Verificacion humana pendiente (no bloquea)
+
+Juan y Ari abren `/` y `/marca/hoja/` (con `npm run dev` o el preview) y aprueban de un vistazo: el Loopy oficial en el hero, las pildoras y sus palabras, los avatares con Loopy y el panel vacio que espera la foto.
 
 ## Deviations from Plan
 
@@ -159,7 +208,11 @@ Al retirar el sprite viejo `dist/index.html` bajo de 44069 a 38627 bytes: el obj
 
 **[Rule 2 - Regla faltante] R10 ahora tambien prohibe rasgos** (tarea 3). El plan pedia que 'una pildora en un avatar' lanzara, pero R10 solo exigia rasgos y no prohibia ninguno. Se agrego `FORBIDDEN_TRAITS` (avatar: pill, doodle, dots, slot) en `scenes.mjs`; sin cambio de contrato para las demas escenas.
 
-**[Orden del rojo] Los specs de Playwright de la tarea 3 se escribieron despues de los componentes** (las guardas de `node --test` si se corrieron en rojo antes del codigo). No se hizo el rojo ni mutacion de esos specs; la primera corrida contra el DOM real solo detecto dos errores de los propios specs (el orden alfabetico de `data-sheet` y el fondo de la banda en la paleta de agenda). Queda como pendiente de la tarea 4 mutar a mano un par de comprobaciones de la hoja (por ejemplo quitar `aria-hidden` a una raiz o pintar una pildora fuera de la lista) para confirmar que no son vacias.
+**[Orden del rojo] Los specs de Playwright de la tarea 3 se escribieron despues de los componentes** (las guardas de `node --test` si se corrieron en rojo antes del codigo). No se hizo el rojo ni mutacion de esos specs; la primera corrida contra el DOM real solo detecto dos errores de los propios specs (el orden alfabetico de `data-sheet` y el fondo de la banda en la paleta de agenda). Cerrado en la tarea 4: se quito `aria-hidden` a `Pill.astro` y a la raiz de `CollageScene.astro` y 6 pruebas fallaron (ver "Tarea 4"); archivos restaurados. No se mutaron por separado las comprobaciones de palabras fuera de la lista (las cubre `assertChipWord` en el build, con guarda por mutacion).
+
+**[Rule 1 - Bug de diseno] Pildoras del hero** (tarea 4, commit `6368e97`). La critica encontro `geo` morado sobre el disco morado (borde fundido) y pildoras pequenas; se corrigio como se describe en "Tarea 4". Cambio en datos de `scenes.mjs`, dentro del alcance del plan.
+
+**[Guarda] La mutacion R7 del hero usa `hoy` en lugar de `hola`** (tarea 4). Con la pildora en fs 36, `hola` (cuatro letras) chocaba con el destello y lanzaba R5 antes que R7 (las reglas se evaluan en orden). Se ajusto el dato de la prueba, no la regla.
 
 Tarea 1: None - la tarea 1 se ejecuto como esta escrita. Observaciones menores: la extraccion de las fuentes se hizo despues de escribir las guardas (el rojo de las guardas fue por modulo inexistente, como pide el plan); el orden de R11 antes de R10 en `assertScene` es una eleccion de implementacion.
 
@@ -176,3 +229,5 @@ Ninguno: no hay endpoints, rutas de autenticacion ni acceso a archivos nuevos en
 - FOUND: src/assets/loopy/*.svg (4), src/components/collage/{loopy.mjs,scenes.mjs,CollageScene.astro,Pill.astro}, tests/guards/collage-scenes.test.mjs, tests/e2e/collage-language.spec.ts
 - FOUND commits 37c3a0c, bc5e28f y ec450b4 (tareas 1, 2 y 3); 4a60a2d y b8d2a32 (resumenes parciales)
 - FOUND (tarea 3): `src/components/collage/{AgendaCollage,Avatar,CollagePiece}.astro` con la firma nueva, `dist/marca/hoja/index.html` en el build normal y ausente en el build de produccion
+- FOUND (tarea 4): commits 6368e97 (correccion) y 890d8cc (registro, fe de erratas y DESIGN.md); `test-results/phase2/C-collage-{320,390,768,1024,1280}.png`, `C-collage-hoja-{320,390,768,1024,1280}.png` y `C-collage-compare-{1..7}.png`; `grep 'Fe de erratas del collage'` en 02-UI-SPEC.md y ausencia de 'Collage pop de línea gruesa' en DESIGN.md; "Lote C (collage de marca)" rondas 0 y 1 en 02-VISUAL-LOG.md
+- Ningun servidor levantado por esta corrida sigue vivo (`astro preview stop`); el `astro dev` del usuario (pid 86100) no se toco
