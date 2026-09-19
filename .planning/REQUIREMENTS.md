@@ -20,7 +20,7 @@ Requisitos para la primera entrega. Cada uno se asigna a una fase del roadmap.
 - [x] **FORM-01**: El formulario de ClickUp aparece embebido por iframe en la sección `#agenda`, con un `title` descriptivo en español.
 - [x] **FORM-02**: Cada CTA "Agenda tu llamada" lleva a `#agenda` y mueve el foco al encabezado de esa sección.
 - [x] **FORM-03**: El visitante ve siempre un enlace de respaldo que abre el formulario de ClickUp en pestaña nueva, y un `noscript` con el mismo enlace.
-- [ ] **FORM-04**: El iframe reserva una altura mínima medida en 390 px y 1280 px, sin recortes ni saltos de layout, y el auto-resize de ClickUp funciona.
+- [x] **FORM-04**: El iframe reserva una altura mínima medida en 390 px y 1280 px, sin recortes ni saltos de layout, y el auto-resize de ClickUp funciona.
 - [ ] **FORM-05**: Un envío real de prueba, en móvil y en escritorio, muestra la confirmación al visitante y crea la tarea en la Lista de ClickUp.
 
 ### Contenido y secciones
@@ -127,7 +127,7 @@ Qué fase cubre cada requisito. Completado al crear el roadmap.
 | FORM-01 | Phase 1 | Complete |
 | FORM-02 | Phase 1 | Complete |
 | FORM-03 | Phase 1 | Complete |
-| FORM-04 | Phase 1 | Pending |
+| FORM-04 | Phase 1 | Complete |
 | FORM-05 | Phase 1 | Pending |
 | COPY-02 | Phase 1 | Complete |
 | A11Y-03 | Phase 1 | Complete |

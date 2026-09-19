@@ -35,14 +35,14 @@ Las fases decimales aparecen entre sus enteras vecinas en orden numérico.
   4. Con solo el teclado, el visitante usa el skip link y ve el foco (2 px, contraste 3:1) sobre cada superficie. Los botones y enlaces miden al menos 44 px, el documento declara `lang="es"` y todo el contenido se ve sin JavaScript.
   5. Los tokens de marca y los pares texto/fondo aprobados viven en un solo lugar, y un par sin contraste suficiente rompe el script de contraste. El copy vive en `landing.es.yaml` con `status: verified | pending`: un build con `PUBLIC_ENV=production` falla si queda `[VERIFICAR]`, una afirmación `pending`, voseo, guion largo o "AEO", y cualquier otro entorno sale con `noindex`. El texto con `áéíóúüñ¿¡` se ve bien con Outfit como respaldo detrás de `--font-brand`.
 
-**Plans:** 3/4 plans executed
+**Plans:** 4/4 plans executed
 
 Plans:
 
 - [x] 01-01-PLAN.md: Esqueleto caminable (Astro 7 y Tailwind 4, copy en `landing.es.yaml` con esquema, formulario real de ClickUp en `#agenda`, entorno con `noindex` y Outfit tras `--font-brand`)
 - [x] 01-02-PLAN.md: Guardas de build (`tokens.css` con `check-contrast.mjs` y `check-copy.mjs` en `prebuild`)
 - [x] 01-03-PLAN.md: Superficies UI y accesibilidad base (CTA con foco al h2, skip links, header, enlace de respaldo con `noscript`, verificación con Playwright)
-- [ ] 01-04-PLAN.md: Medición del iframe (FORM-04) y envío real de prueba en escritorio y móvil (FORM-05)
+- [x] 01-04-PLAN.md: Medición del iframe (FORM-04) y envío real de prueba en escritorio y móvil (FORM-05)
 
 **UI hint**: yes
 
@@ -105,7 +105,7 @@ Las fases se ejecutan en orden numérico: 1 → 2 → 3 → 4. Las fases 1 a 3 c
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Fundaciones y formulario funcionando | 3/4 | In Progress|  |
+| 1. Fundaciones y formulario funcionando | 4/4 | In Progress|  |
 | 2. Secciones, marca y copy | 0/TBD | Not started | - |
 | 3. SEO, medición mínima y QA | 0/TBD | Not started | - |
 | 4. Salida al evento | 0/TBD | Not started | - |

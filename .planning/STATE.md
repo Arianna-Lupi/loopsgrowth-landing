@@ -2,17 +2,17 @@
 gsd_state_version: "1.0"
 current_phase: 01
 current_phase_name: Fundaciones y formulario funcionando
-status: executing
-stopped_at: Completed 01-03-PLAN.md
-last_updated: "2026-09-19T02:51:00.728Z"
+status: verifying
+stopped_at: Completed 01-04-PLAN.md (envios humanos de FORM-05 pendientes)
+last_updated: "2026-09-19T03:09:04.795Z"
 last_activity: 2026-09-18
 last_activity_desc: Phase 01 execution started
-state_head: abbc0be26e4de04e7c10f3cadd085233de8f2df6
+state_head: 408b41fd926104062664c821e4a2f7cea65a6f12
 progress:
   total_phases: 4
   completed_phases: 0
   total_plans: 4
-  completed_plans: 3
+  completed_plans: 4
   percent: 0
 ---
 
@@ -29,7 +29,7 @@ See: .planning/PROJECT.md (updated 2026-09-18)
 
 Phase: 01 (Fundaciones y formulario funcionando) — EXECUTING
 Plan: 4 of 4
-Status: Ready to execute
+Status: Phase complete — ready for verification
 Last activity: 2026-09-18 — Phase 01 execution started
 
 Progress: [░░░░░░░░░░] 0%
@@ -61,6 +61,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 01 P01 | 7 min | 3 tasks | 20 files |
 | Phase 01 P02 | 37 min | 3 tasks | 22 files |
 | Phase 01 P03 | 30min | 3 tasks | 13 files |
+| Phase 01 P04 | 15min | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -81,6 +82,8 @@ Recent decisions affecting current work:
 - [Phase 01]: Plan 01-02: PENDING-COPY.md se genera con walkClaims, sin fecha ni rutas absolutas; --check no se encadena en el build — Salida determinista y editar copy en desarrollo no debe bloquear el build; LNCH-03 puede exigir --check
 - [Phase 01]: La rejilla de #agenda vive en .wrap.agenda-grid (dentro de la seccion morada de ancho completo), con minmax(0,5fr)/minmax(0,7fr) desde 1024 px — El contenedor de 72rem con gutter es .wrap; evita duplicar su calculo en la seccion
 - [Phase 01]: El enlace de respaldo y el noscript usan la geometria Tabler external-link inline (16 px, aria-hidden), sin sumar libreria de iconos — UI-SPEC pide un SVG en linea; el hueco de dependencias se cierra en Fase 2 si hace falta mas iconografia
+- [Phase 01]: Plan 01-04: la reserva del iframe de ClickUp se mide con el scrollHeight de cu-form (fase natural, min-height 0), no con style.height — El formulario usa height 100% y iframe-resizer solo reporta la altura del propio iframe; style.height devuelve el min-height vigente (medicion circular). Tokens: sm 1664px y lg 1536px
+- [Phase 01]: Plan 01-04: FORM-05 sigue pendiente; los dos envios reales son humanos (Juan) y ninguna prueba automatica llena ni envia el formulario — Un envio crea una tarea real en la Lista de ClickUp de Ari; los bloques human-check se consolidan en 01-UAT.md
 
 ### Pending Todos
 
@@ -96,6 +99,7 @@ None yet.
 - [Phase 3] Lighthouse SEO 100 exige `PUBLIC_ENV=production` (sin `noindex`), y el build de producción exige cero afirmaciones `pending`. Definir en plan-phase 3 cómo se audita mientras Ari no responda.
 - [Phase 3] MEAS-02 necesita que Ari cree campos ocultos `utm_*` en el formulario de ClickUp. Sin ellos queda solo el conteo de tareas más el UTM del QR.
 - [Phase 4] Dominio sin resolver: sin URL pública no hay QR. Plan B: subdominio gratuito.
+- [Phase 1] FORM-05 pendiente: Juan hace los dos envios reales de prueba (1280 y 390 px), avisa a Ari y borra las dos tareas. El auto-resize de ClickUp no sigue al contenido: Ari verifica Autosize embed height
 
 ## Deferred Items
 
@@ -107,6 +111,6 @@ Items acknowledged and deferred at milestone close, most recent first:
 
 ## Session Continuity
 
-Last session: 2026-09-19T02:51:00.713Z
-Stopped at: Completed 01-03-PLAN.md
+Last session: 2026-09-19T03:09:04.774Z
+Stopped at: Completed 01-04-PLAN.md (envios humanos de FORM-05 pendientes)
 Resume file: None
