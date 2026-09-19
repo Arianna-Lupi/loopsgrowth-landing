@@ -1,0 +1,37 @@
+---
+import { getLanding, fill, textVars } from '../lib/content';
+
+const data = await getLanding();
+const { agenda, config } = data;
+const intro = fill(agenda.intro, textVars(data), 'agenda.intro');
+---
+
+<section id="agenda" aria-labelledby="agenda-title">
+  <h2 id="agenda-title">{agenda.title.text}</h2>
+  <p>{intro}</p>
+  <div class="form-embed">
+    <iframe
+      class="clickup-embed clickup-dynamic-height"
+      src={config.form_url}
+      title={agenda.iframe_title.text}
+      width="100%"
+      loading="lazy"
+      referrerpolicy="strict-origin-when-cross-origin"></iframe>
+    <script is:inline async src={config.form_script_src}></script>
+  </div>
+</section>
+
+<style>
+  .form-embed iframe {
+    display: block;
+    width: 100%;
+    border: 0;
+    min-height: var(--form-min-h-sm, 1100px);
+  }
+
+  @media (min-width: 64em) {
+    .form-embed iframe {
+      min-height: var(--form-min-h-lg, 900px);
+    }
+  }
+</style>

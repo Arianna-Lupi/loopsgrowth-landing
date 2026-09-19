@@ -1,0 +1,15 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import AgendaSection from '../components/AgendaSection.astro';
+import { getLanding, fill, textVars, ctaLabel } from '../lib/content';
+
+const data = await getLanding();
+const title = fill(data.meta.title_template, textVars(data), 'meta.title_template');
+---
+
+<BaseLayout title={title}>
+  <main>
+    <a href="#agenda">{ctaLabel(data)}</a>
+    <AgendaSection />
+  </main>
+</BaseLayout>

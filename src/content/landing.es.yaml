@@ -1,0 +1,77 @@
+# REGLA DE STATUS AL NACER (para Ari y Camila)
+# Cada texto es { text, status }. status es "verified" o "pending".
+# Nace "verified" solo en dos casos:
+#   (a) el texto ya existe en el doc de Ari o en los documentos del proyecto;
+#   (b) es microcopy estructural: nombra un control de la interfaz y no afirma
+#       nada del servicio, del proceso, de los plazos, de los resultados ni del equipo.
+# Todo lo demás nace "pending". Un "pending" con texto real se muestra tal cual
+# en la página; solo donde falta el dato el texto visible es "FALTA CONFIRMAR".
+# Nunca hay campos vacíos, etiquetas de borrador ni contenido oculto.
+# "reason" y "confirm_by" son metadatos para la lista de pendientes: no se muestran.
+# Ante la duda: "pending" y se le pide a Ari.
+# La duración y el término viven solo en call.duration y brand.term; las llaves
+# {term} y {duration} de las plantillas los inyectan.
+es:
+  brand:
+    name:
+      text: "Loops Growth"
+      status: verified
+    term:
+      text: "SEO/GEO"
+      status: pending
+      reason: "Terminología por confirmar con Ari"
+  call:
+    duration:
+      text: "30 minutos"
+      status: pending
+      reason: "Duración de la llamada por confirmar"
+  cta:
+    label_template:
+      text: "Agenda tu llamada de {duration}"
+      status: verified
+  skip:
+    nav_label:
+      text: "Saltos de página"
+      status: verified
+    content:
+      text: "Saltar al contenido"
+      status: verified
+    form:
+      text: "Saltar al formulario"
+      status: verified
+  meta:
+    title_template:
+      text: "Loops Growth: agencia de {term}"
+      status: pending
+      reason: "Título provisional derivado de brand.term; la Fase 3 lo reemplaza"
+  hero:
+    h1:
+      text: "Crecemos tu tienda a través de Google, ChatGPT y Gemini."
+      status: verified
+    subtitle:
+      text: "Un equipo dedicado y especializado que ejecuta tu {term} y tu visibilidad en asistentes de IA (ChatGPT, Gemini)."
+      status: pending
+      reason: "Texto del Copy v2 de Ari; el término sale de brand.term, que está pending"
+  agenda:
+    title:
+      text: "Agenda tu llamada"
+      status: verified
+    intro:
+      text: "Agenda una llamada de {duration}. Sin costo y sin compromiso. Entendemos tu negocio y te decimos con honestidad si podemos ayudarte. Si no somos el equipo correcto, también te lo decimos."
+      status: pending
+      reason: "Cuerpo del CTA final del Copy v2 de Ari; la duración sale de call.duration, que está pending"
+    fallback_lead:
+      text: "¿El formulario no carga o prefieres abrirlo aparte?"
+      status: verified
+    fallback_link:
+      text: "Abre el formulario en una pestaña nueva"
+      status: verified
+    iframe_title:
+      text: "Formulario para agendar tu llamada con Loops Growth"
+      status: verified
+    noscript:
+      text: "Para ver el formulario aquí necesitas activar JavaScript."
+      status: verified
+  config:
+    form_url: "https://forms.clickup.com/90131720021/f/2ky49tun-19253/DATFKMESVSMXZY5CO5"
+    form_script_src: "https://app-cdn.clickup.com/assets/js/forms-embed/v1.js"
