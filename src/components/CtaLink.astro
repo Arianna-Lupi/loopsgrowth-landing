@@ -1,0 +1,66 @@
+---
+/**
+ * Único punto donde existe el CTA. Es un ancla a #agenda (nunca button ni div) con
+ * el texto visible como nombre accesible: sin aria-label (SC 2.5.3). Todo el color
+ * sale de los tokens semánticos del tono donde se coloque (light o purple).
+ */
+interface Props {
+  label: string;
+  location: 'header' | 'hero';
+}
+
+const { label, location } = Astro.props;
+---
+
+<a class="cta" href="#agenda" data-cta={location}>{label}</a>
+
+<style>
+  .cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 3rem;
+    min-width: var(--target-min);
+    padding: 0.5rem 1.5rem;
+    border: var(--border-pop);
+    border-radius: var(--radius-pill);
+    background: var(--cta-bg);
+    color: var(--on-cta);
+    box-shadow: var(--shadow-pop);
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+    font-weight: 700;
+    text-align: center;
+    text-decoration: none;
+  }
+
+  .cta:hover {
+    background: var(--cta-bg-hover);
+  }
+
+  .cta:focus-visible {
+    outline: var(--focus-width) solid var(--focus-ring);
+    outline-offset: var(--focus-offset);
+  }
+
+  /* Movimiento solo con preferencia explícita de "sin restricción". Bajo
+     `reduce` el hover y el active solo cambian el relleno. */
+  @media (prefers-reduced-motion: no-preference) {
+    .cta {
+      transition:
+        transform var(--dur-1) var(--ease-out),
+        box-shadow var(--dur-1) var(--ease-out),
+        background-color var(--dur-1) var(--ease-out);
+    }
+
+    .cta:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 6px 6px 0 var(--color-brand-dark);
+    }
+
+    .cta:active {
+      transform: translate(2px, 2px);
+      box-shadow: 2px 2px 0 var(--color-brand-dark);
+    }
+  }
+</style>

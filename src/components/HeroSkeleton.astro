@@ -1,0 +1,37 @@
+---
+/**
+ * Hero provisional (la Fase 2 lo reemplaza por el Hero completo, CONT-01).
+ * Trae el único h1 de la página. Todo el texto sale del YAML y se muestra tal cual,
+ * sea cual sea el estado de su afirmación: este componente no lee el estado.
+ */
+import CtaLink from './CtaLink.astro';
+import { getLanding, fill, textVars, ctaLabel } from '../lib/content';
+
+const data = await getLanding();
+const subtitle = fill(data.hero.subtitle, textVars(data), 'hero.subtitle');
+const label = ctaLabel(data);
+---
+
+<section class="hero" aria-labelledby="hero-title" data-tone="light">
+  <div class="wrap">
+    <h1 id="hero-title">{data.hero.h1.text}</h1>
+    <p class="hero-sub">{subtitle}</p>
+    <div class="hero-cta">
+      <CtaLink label={label} location="hero" />
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    padding-block: var(--section-y);
+  }
+
+  .hero-sub {
+    margin-top: 1.5rem;
+  }
+
+  .hero-cta {
+    margin-top: 2rem;
+  }
+</style>

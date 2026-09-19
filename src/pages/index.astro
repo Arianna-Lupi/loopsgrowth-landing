@@ -1,7 +1,8 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import HeroSkeleton from '../components/HeroSkeleton.astro';
 import AgendaSection from '../components/AgendaSection.astro';
-import { getLanding, fill, textVars, ctaLabel } from '../lib/content';
+import { getLanding, fill, textVars } from '../lib/content';
 
 const data = await getLanding();
 const title = fill(data.meta.title_template, textVars(data), 'meta.title_template');
@@ -9,7 +10,7 @@ const title = fill(data.meta.title_template, textVars(data), 'meta.title_templat
 
 <BaseLayout title={title}>
   <main>
-    <a href="#agenda">{ctaLabel(data)}</a>
+    <HeroSkeleton />
     <AgendaSection />
   </main>
 </BaseLayout>

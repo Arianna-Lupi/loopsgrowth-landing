@@ -16,7 +16,8 @@
     "prebuild": "node scripts/check-contrast.mjs && node scripts/check-copy.mjs",
     "check:copy": "node scripts/check-copy.mjs",
     "postbuild": "node scripts/check-copy.mjs --dist dist",
-    "pending": "node scripts/list-pending.mjs"
+    "pending": "node scripts/list-pending.mjs",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@astrojs/sitemap": "3.7.4",

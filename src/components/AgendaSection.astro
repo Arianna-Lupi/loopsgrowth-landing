@@ -6,8 +6,8 @@ const { agenda, config } = data;
 const intro = fill(agenda.intro, textVars(data), 'agenda.intro');
 ---
 
-<section id="agenda" aria-labelledby="agenda-title">
-  <h2 id="agenda-title">{agenda.title.text}</h2>
+<section id="agenda" aria-labelledby="agenda-title" data-tone="purple">
+  <h2 id="agenda-title" tabindex="-1">{agenda.title.text}</h2>
   <p>{intro}</p>
   <div class="form-embed">
     <iframe
@@ -21,7 +21,15 @@ const intro = fill(agenda.intro, textVars(data), 'agenda.intro');
   </div>
 </section>
 
+<script>
+  import '../scripts/cta-focus';
+</script>
+
 <style>
+  #agenda {
+    scroll-margin-top: 1.5rem;
+  }
+
   .form-embed iframe {
     display: block;
     width: 100%;
