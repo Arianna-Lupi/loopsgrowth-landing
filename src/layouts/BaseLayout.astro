@@ -1,6 +1,8 @@
 ---
 import '../styles/global.css';
 import { Font } from 'astro:assets';
+import SkipLinks from '../components/SkipLinks.astro';
+import SiteHeader from '../components/SiteHeader.astro';
 import { isProduction, canonicalUrl } from '../lib/site';
 
 interface Props {
@@ -22,6 +24,10 @@ const canonical = canonicalUrl('/');
     <Font cssVariable="--font-brand" preload={[{ subset: "latin", style: "normal" }]} />
   </head>
   <body>
-    <slot />
+    <SkipLinks />
+    <SiteHeader />
+    <main id="main" tabindex="-1">
+      <slot />
+    </main>
   </body>
 </html>

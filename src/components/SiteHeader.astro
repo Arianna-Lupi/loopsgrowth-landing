@@ -1,0 +1,49 @@
+---
+/**
+ * Header mínimo, en el flujo normal (ni fijo ni pegado arriba) para no tapar el foco
+ * (SC 2.4.11). El wordmark de texto lo reemplaza el logo SVG en la Fase 2 (DSGN-02).
+ * El CTA se oculta con `display: none` por debajo de 640 px: así sale también del
+ * orden de tabulación y el CTA del hero queda como único acceso en móvil.
+ */
+import CtaLink from './CtaLink.astro';
+import { getLanding, ctaLabel } from '../lib/content';
+
+const data = await getLanding();
+const label = ctaLabel(data);
+---
+
+<header class="site-header" data-tone="light">
+  <div class="wrap bar">
+    <span class="wordmark">{data.brand.name.text}</span>
+    <div class="header-cta">
+      <CtaLink label={label} location="header" />
+    </div>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    padding-block: 1rem;
+  }
+
+  .bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .wordmark {
+    font-weight: 700;
+  }
+
+  .header-cta {
+    display: none;
+  }
+
+  @media (min-width: 40em) {
+    .header-cta {
+      display: block;
+    }
+  }
+</style>
