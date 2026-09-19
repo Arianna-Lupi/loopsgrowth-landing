@@ -1,5 +1,14 @@
 import { test, expect, type Page } from '@playwright/test';
 
+const FORM_URL = 'https://forms.clickup.com/90131720021/f/2ky49tun-19253/DATFKMESVSMXZY5CO5';
+
+// Textos de Ari, tal cual (con el término y la duración ya resueltos desde el YAML).
+const H1_TEXT = 'Crecemos tu tienda a través de Google, ChatGPT y Gemini.';
+const SUBTITLE_TEXT =
+  'Un equipo dedicado y especializado que ejecuta tu SEO/GEO y tu visibilidad en asistentes de IA (ChatGPT, Gemini).';
+const INTRO_TEXT =
+  'Agenda una llamada de 30 minutos. Sin costo y sin compromiso. Entendemos tu negocio y te decimos con honestidad si podemos ayudarte. Si no somos el equipo correcto, también te lo decimos.';
+
 type Stop = {
   tag: string;
   href: string | null;
@@ -43,19 +52,17 @@ async function tabUntilIframe(page: Page, max = 12): Promise<Stop[]> {
 test.describe('orden de tabulación y foco a 1280 px', () => {
   test.use({ viewport: { width: 1280, height: 800 } });
 
-  test('(a) el orden es skip 1, skip 2, CTA del header, CTA del hero y el iframe', async ({ page }) => {
+  test('(a) el orden es skip 1, skip 2, CTA del header, CTA del hero, enlace de respaldo y el iframe', async ({ page }) => {
     await page.goto('/');
     const stops = await tabUntilIframe(page);
     const order = stops.map((s) => (s.cta ? `cta:${s.cta}` : s.tag === 'IFRAME' ? 'iframe' : `a:${s.href}`));
-    // La Fase 1 termina con el enlace de respaldo entre el CTA del hero y el iframe;
-    // el Task 3 lo agrega a esta lista junto con su componente.
-    expect(order).toEqual(['a:#main', 'a:#agenda', 'cta:header', 'cta:hero', 'iframe']);
+    expect(order).toEqual(['a:#main', 'a:#agenda', 'cta:header', 'cta:hero', `a:${FORM_URL}`, 'iframe']);
   });
 
   test('(c) cada parada muestra un contorno sólido de 2 px o más', async ({ page }) => {
     await page.goto('/');
     const stops = await tabUntilIframe(page);
-    expect(stops.length).toBeGreaterThanOrEqual(5);
+    expect(stops.length).toBeGreaterThanOrEqual(6);
     // Al entrar al iframe, Chromium deja `document.activeElement` en el IFRAME pero el
     // elemento no coincide con `:focus` ni `:focus-visible` (el foco vive en el documento
     // de ClickUp), así que el contorno del interior es de ClickUp y no medible desde aquí.
@@ -65,7 +72,7 @@ test.describe('orden de tabulación y foco a 1280 px', () => {
     }
   });
 
-  test('(d) los skip links y los CTA miden 44 px o más (48 px de alto el CTA del hero)', async ({ page }) => {
+  test('(d) skip links, CTA y enlace de respaldo miden 44 px o más (48 px de alto el CTA del hero)', async ({ page }) => {
     await page.goto('/');
     const stops = (await tabUntilIframe(page)).filter((s) => s.tag !== 'IFRAME');
     for (const stop of stops) {
@@ -141,7 +148,305 @@ test.describe('orden de tabulación a 390 px', () => {
       'a:#main',
       'a:#agenda',
       'cta:hero',
+      `a:${FORM_URL}`,
       'iframe',
     ]);
   });
+});
+
+test.describe('objetivos táctiles a 390 px', () => {
+  test.use({ viewport: { width: 390, height: 844 } });
+
+  test('(d) CTA del hero y enlace de respaldo miden 44 px o más', async ({ page }) => {
+    await page.goto('/');
+    const stops = (await tabUntilIframe(page)).filter((s) => s.tag !== 'IFRAME');
+    for (const stop of stops) {
+      expect(stop.width, `ancho de ${stop.href ?? stop.cta}`).toBeGreaterThanOrEqual(44);
+      expect(stop.height, `alto de ${stop.href ?? stop.cta}`).toBeGreaterThanOrEqual(44);
+    }
+    expect(stops.some((s) => s.href === FORM_URL)).toBe(true);
+  });
+});
+
+test.describe('sección #agenda: desbordes y espaciado de texto', () => {
+  for (const width of [320, 390, 768, 1024, 1280]) {
+    test(`(a) sin scroll horizontal a ${width} px`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 800 });
+      await page.goto('/');
+      const { scrollWidth, clientWidth } = await page.evaluate(() => ({
+        scrollWidth: document.documentElement.scrollWidth,
+        clientWidth: document.documentElement.clientWidth,
+      }));
+      expect(scrollWidth).toBeLessThanOrEqual(clientWidth);
+    });
+  }
+
+  for (const width of [320, 1280]) {
+    test(`(g) espaciado de texto de SC 1.4.12 a ${width} px sin recorte ni desborde`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 800 });
+      await page.goto('/');
+      await page.addStyleTag({
+        content:
+          '* { line-height: 1.5 !important; letter-spacing: 0.12em !important; word-spacing: 0.16em !important; } p { margin-bottom: 2em !important; }',
+      });
+      const { scrollWidth, clientWidth } = await page.evaluate(() => ({
+        scrollWidth: document.documentElement.scrollWidth,
+        clientWidth: document.documentElement.clientWidth,
+      }));
+      expect(scrollWidth).toBeLessThanOrEqual(clientWidth);
+      for (const selector of ['h1', 'a[data-cta="hero"]', '#agenda-title']) {
+        const clipped = await page.locator(selector).evaluate((el) => el.scrollHeight - el.clientHeight);
+        expect(clipped, `recorte vertical en ${selector}`).toBeLessThanOrEqual(1);
+      }
+    });
+  }
+});
+
+test.describe('sección #agenda: estructura', () => {
+  test('(c) enlace de respaldo con target y rel seguros; el iframe tiene título', async ({ page }) => {
+    await page.goto('/');
+    const link = page.locator('#agenda .agenda-fallback a');
+    await expect(link).toHaveAttribute('href', FORM_URL);
+    await expect(link).toHaveAttribute('target', '_blank');
+    const rel = (await link.getAttribute('rel')) ?? '';
+    expect(rel).toContain('noopener');
+    expect(rel).toContain('noreferrer');
+    const title = await page.locator('#agenda iframe').getAttribute('title');
+    expect((title ?? '').trim().length).toBeGreaterThan(0);
+    await expect(page.locator('#agenda .agenda-fallback-lead')).toHaveText(
+      '¿El formulario no carga o prefieres abrirlo aparte?',
+    );
+    await expect(link).toHaveText('Abre el formulario en una pestaña nueva');
+  });
+
+  test('(d) una columna a 390 px y dos (5fr / 7fr) a 1024 px, con el orden del DOM igual al visual', async ({ page }) => {
+    const boxes = async () =>
+      page.evaluate(() => {
+        const grid = document.querySelector('#agenda .agenda-grid') as HTMLElement;
+        const rect = (selector: string) => {
+          const r = (document.querySelector(selector) as HTMLElement).getBoundingClientRect();
+          return { top: r.top, left: r.left, width: r.width };
+        };
+        const order = ['#agenda-title', '.agenda-intro', '.agenda-fallback', '.form-embed'].map((s) => document.querySelector(s)!);
+        const domOrdered = order.every(
+          (el, i) => i === 0 || !!(order[i - 1].compareDocumentPosition(el) & Node.DOCUMENT_POSITION_FOLLOWING),
+        );
+        return {
+          columns: getComputedStyle(grid).gridTemplateColumns.split(' ').length,
+          template: getComputedStyle(grid).gridTemplateColumns,
+          gap: parseFloat(getComputedStyle(grid).columnGap),
+          h2: rect('#agenda-title'),
+          intro: rect('.agenda-intro'),
+          fallback: rect('.agenda-fallback'),
+          card: rect('.form-embed'),
+          domOrdered,
+        };
+      });
+
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto('/');
+    const narrow = await boxes();
+    expect(narrow.columns).toBe(1);
+    expect(narrow.domOrdered).toBe(true);
+    expect(narrow.h2.top).toBeLessThan(narrow.intro.top);
+    expect(narrow.intro.top).toBeLessThan(narrow.fallback.top);
+    expect(narrow.fallback.top).toBeLessThan(narrow.card.top);
+
+    await page.setViewportSize({ width: 1024, height: 800 });
+    const wide = await boxes();
+    expect(wide.columns).toBe(2);
+    expect(wide.domOrdered).toBe(true);
+    expect(wide.gap).toBe(48);
+    // La tarjeta va a la derecha y es más ancha que la columna de texto (7fr contra 5fr).
+    expect(wide.card.left).toBeGreaterThan(wide.h2.left);
+    expect(wide.card.width).toBeGreaterThan(wide.h2.width);
+    expect(wide.h2.top).toBeLessThan(wide.intro.top);
+    expect(wide.intro.top).toBeLessThan(wide.fallback.top);
+  });
+
+  test('(e) la tarjeta vence el overflow del script de ClickUp y lleva borde de 3 px', async ({ page }) => {
+    await page.goto('/');
+    // El script de ClickUp ejecuta `parentElement.style.overflow = 'auto'` sobre .form-embed.
+    await page.waitForFunction(
+      () => (document.querySelector('.form-embed') as HTMLElement).style.overflow === 'auto',
+      null,
+      { timeout: 20000 },
+    );
+    const card = await page.locator('.form-embed').evaluate((el) => {
+      const cs = getComputedStyle(el);
+      return {
+        overflow: cs.overflow,
+        borderTop: cs.borderTopWidth,
+        radius: cs.borderTopLeftRadius,
+        background: cs.backgroundColor,
+        shadow: cs.boxShadow,
+      };
+    });
+    expect(card.overflow).toBe('visible');
+    expect(card.borderTop).toBe('3px');
+    expect(card.radius).toBe('16px');
+    expect(card.background).toBe('rgb(255, 255, 255)');
+    expect(card.shadow).toContain('4px 4px 0px');
+  });
+
+  test('(e2) el iframe reserva min-height por breakpoint y no fija height', async ({ page }) => {
+    const iframeHeights = () =>
+      page.locator('#agenda iframe').evaluate((el) => {
+        const cs = getComputedStyle(el);
+        return { minHeight: cs.minHeight, inline: el.getAttribute('height'), styleHeight: (el as HTMLElement).style.height };
+      });
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto('/');
+    expect((await iframeHeights()).minHeight).toBe('1100px');
+    await page.setViewportSize({ width: 1024, height: 800 });
+    expect((await iframeHeights()).minHeight).toBe('900px');
+    expect((await iframeHeights()).inline).toBeNull();
+  });
+
+  test('(j) pesos de la sección: enlace de respaldo 700; intro y frase de respaldo 400', async ({ page }) => {
+    await page.goto('/');
+    const weight = (selector: string) =>
+      page.locator(selector).first().evaluate((el) => getComputedStyle(el).fontWeight);
+    expect(await weight('#agenda .agenda-fallback a')).toBe('700');
+    expect(await weight('#agenda .agenda-intro')).toBe('400');
+    expect(await weight('#agenda .agenda-fallback-lead')).toBe('400');
+  });
+});
+
+test.describe('movimiento reducido', () => {
+  test.describe('reduce', () => {
+    test.use({ reducedMotion: 'reduce' });
+
+    test('(f) scroll-behavior auto y el hover del CTA no produce transform', async ({ page }) => {
+      await page.goto('/');
+      expect(await page.locator('html').evaluate((el) => getComputedStyle(el).scrollBehavior)).toBe('auto');
+      const cta = page.locator('a[data-cta="hero"]');
+      await cta.hover();
+      await page.waitForTimeout(300);
+      expect(await cta.evaluate((el) => getComputedStyle(el).transform)).toBe('none');
+    });
+  });
+
+  test.describe('no-preference', () => {
+    test.use({ reducedMotion: 'no-preference' });
+
+    test('(f) scroll-behavior smooth y el hover del CTA sí se desplaza', async ({ page }) => {
+      await page.goto('/');
+      expect(await page.locator('html').evaluate((el) => getComputedStyle(el).scrollBehavior)).toBe('smooth');
+      const cta = page.locator('a[data-cta="hero"]');
+      await cta.hover();
+      await expect
+        .poll(() => cta.evaluate((el) => getComputedStyle(el).transform), { timeout: 3000 })
+        .not.toBe('none');
+    });
+  });
+});
+
+test.describe('glifos españoles y caras de Outfit', () => {
+  const GLYPHS = 'Ñandú, ¿qué tal? ¡Sí! Pingüino, árbol, éxito, índice, ópera, único.';
+
+  test('(h) la cadena usa solo Outfit descargada y hay caras 400, 600 y 700', async ({ page, context }) => {
+    await page.goto('/');
+    await page.evaluate((text) => {
+      const p = document.createElement('p');
+      p.id = 'glyph-probe';
+      p.textContent = text;
+      p.style.cssText = 'font-family: var(--font-brand); font-size: 2rem; font-weight: 400; max-width: none;';
+      document.querySelector('main')!.prepend(p);
+    }, GLYPHS);
+    await page.evaluate(async (text) => {
+      const family = getComputedStyle(document.getElementById('glyph-probe')!).fontFamily;
+      await document.fonts.load(`400 32px ${family}`, text);
+      await document.fonts.ready;
+    }, GLYPHS);
+
+    const cdp = await context.newCDPSession(page);
+    await cdp.send('DOM.enable');
+    await cdp.send('CSS.enable');
+    const { root } = await cdp.send('DOM.getDocument', { depth: 0 });
+    const { nodeId } = await cdp.send('DOM.querySelector', { nodeId: root.nodeId, selector: '#glyph-probe' });
+    const { fonts } = await cdp.send('CSS.getPlatformFontsForNode', { nodeId });
+    const used = fonts.map((f) => `${f.familyName} custom=${f.isCustomFont} glyphs=${f.glyphCount}`);
+    expect(fonts.length, `sin fuentes: ${used.join(' | ')}`).toBeGreaterThan(0);
+    for (const f of fonts) {
+      expect(f.isCustomFont, `fuente del sistema en uso: ${used.join(' | ')}`).toBe(true);
+      expect(f.familyName, `familia distinta de Outfit: ${used.join(' | ')}`).toMatch(/Outfit/i);
+    }
+    const total = fonts.reduce((sum, f) => sum + f.glyphCount, 0);
+    expect(total).toBeGreaterThanOrEqual(GLYPHS.replace(/\s/g, '').length - 2);
+
+    await page.locator('#glyph-probe').screenshot({ path: 'test-results/glyphs-outfit.png' });
+
+    const covered = await page.evaluate(() => {
+      const ranges = [...document.fonts]
+        .filter((face) => /outfit/i.test(face.family))
+        .map((face) => face.weight.split(/\s+/).map(Number))
+        .map(([lo, hi]) => [lo, hi ?? lo]);
+      return [400, 600, 700].map((w) => ranges.some(([lo, hi]) => lo <= w && w <= hi));
+    });
+    expect(covered, 'caras de Outfit para 400, 600 y 700').toEqual([true, true, true]);
+  });
+});
+
+test.describe('textos de Ari visibles', () => {
+  const checkTexts = async (page: Page) => {
+    await expect(page.locator('h1')).toBeVisible();
+    await expect(page.locator('h1')).toHaveText(H1_TEXT);
+    await expect(page.locator('.hero-sub')).toBeVisible();
+    await expect(page.locator('.hero-sub')).toHaveText(SUBTITLE_TEXT);
+    await expect(page.locator('.agenda-intro')).toBeVisible();
+    await expect(page.locator('.agenda-intro')).toHaveText(INTRO_TEXT);
+    const body = await page.evaluate(() => document.body.innerText);
+    expect(body).not.toContain('FALTA CONFIRMAR');
+    expect(body).not.toMatch(/[{}]/);
+    expect(body).not.toMatch(/borrador|TBD|lorem/i);
+  };
+
+  test('(k) con JavaScript activado', async ({ page }) => {
+    await page.goto('/');
+    await checkTexts(page);
+  });
+
+  test.describe('sin JavaScript', () => {
+    test.use({ javaScriptEnabled: false });
+
+    test('(k) los tres textos se ven tal cual', async ({ page }) => {
+      await page.goto('/');
+      await checkTexts(page);
+    });
+
+    test('(b) h1, CTA, h2, enlace de respaldo y noscript visibles; el CTA salta a #agenda', async ({ page }) => {
+      await page.goto('/');
+      await expect(page.locator('h1')).toBeVisible();
+      await expect(page.locator('a[data-cta="hero"]')).toBeVisible();
+      await expect(page.locator('#agenda-title')).toBeVisible();
+      await expect(page.locator('#agenda .agenda-fallback a')).toBeVisible();
+      await expect(page.locator('#agenda noscript a')).toBeVisible();
+      await expect(page.locator('#agenda .agenda-noscript p')).toHaveText(
+        'Para ver el formulario aquí necesitas activar JavaScript.',
+      );
+      await page.locator('a[data-cta="hero"]').click();
+      await expect(page).toHaveURL(/#agenda$/);
+    });
+
+    test('(c) el enlace del noscript lleva target y rel seguros', async ({ page }) => {
+      await page.goto('/');
+      const link = page.locator('#agenda noscript a');
+      await expect(link).toHaveAttribute('href', FORM_URL);
+      await expect(link).toHaveAttribute('target', '_blank');
+      const rel = (await link.getAttribute('rel')) ?? '';
+      expect(rel).toContain('noopener');
+      expect(rel).toContain('noreferrer');
+    });
+  });
+});
+
+test.describe('capturas para revisión visual', () => {
+  for (const width of [320, 390, 1280]) {
+    test(`(i) captura a ${width} px`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto('/');
+      await page.screenshot({ path: `test-results/page-${width}.png`, fullPage: true });
+    });
+  }
 });
