@@ -1,16 +1,65 @@
 ---
 /**
  * Por qué ahora (CONT-03). Tono yellow. Una fila por afirmación de `why_now.items`; se imprime
- * solo `.text`, sin leer el estado (COPY-01). Sin CTA.
+ * solo `.text`, sin leer el estado (COPY-01). Sin CTA. El collage compacto (lupa y ojos) es
+ * decorativo y va en el slot `aside` de la variante `split` del SectionShell.
  */
 import SectionShell from '../ui/SectionShell.astro';
+import CollagePiece from '../collage/CollagePiece.astro';
 import { getLanding } from '../../lib/content';
 
 const data = await getLanding();
 ---
 
-<SectionShell id="por-que-ahora" tone="yellow" title={data.why_now.title.text}>
+<SectionShell id="por-que-ahora" tone="yellow" title={data.why_now.title.text} split>
+  <div slot="aside" class="whynow-art" aria-hidden="true">
+    <CollagePiece name="lupa" tone="yellow" a="white" b="purple" size="100%" class="whynow-lupa" />
+    <CollagePiece name="ojos-abajo" tone="yellow" size="5rem" class="whynow-ojos" />
+  </div>
   <ul role="list" class="whynow-list">
     {data.why_now.items.map((item) => <li>{item.text}</li>)}
   </ul>
 </SectionShell>
+
+<style>
+  /* Collage compacto de 160 px: la lupa ocupa la caja y los ojos se posan sobre el cristal. */
+  .whynow-art {
+    position: relative;
+    width: 10rem;
+    max-width: 100%;
+    aspect-ratio: 1;
+    margin-top: 2rem;
+  }
+
+  .whynow-art :global(.whynow-ojos) {
+    position: absolute;
+    left: 18%;
+    top: 30%;
+  }
+
+  .whynow-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .whynow-list li {
+    padding-block: 1rem;
+    border-top: var(--border-pop);
+    font-size: var(--text-title);
+    line-height: var(--text-title--line-height);
+    font-weight: 600;
+    color: var(--on-surface);
+    overflow-wrap: anywhere;
+  }
+
+  .whynow-list li:last-child {
+    border-bottom: var(--border-pop);
+  }
+
+  @media (min-width: 40em) {
+    .whynow-list li {
+      padding-block: 1.5rem;
+    }
+  }
+</style>
