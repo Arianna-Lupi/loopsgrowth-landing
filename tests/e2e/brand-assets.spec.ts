@@ -270,3 +270,86 @@ test.describe('hoja de revisión: primitivas del collage', () => {
     });
   });
 });
+
+test.describe('hoja de revisión: composiciones y avatares', () => {
+  test('(a) pesos medidos sobre el HTML: AgendaCollage 4 KB, cada Avatar 2,5 KB y colección 28 KB', async ({ page }) => {
+    await open(page, 1280, SHEET);
+    const sizes = await page.evaluate(() => {
+      const bytes = (html: string) => new TextEncoder().encode(html).length;
+      const agenda = bytes(document.querySelector('svg[data-collage="agenda"]')!.outerHTML);
+      const avatars = Array.from(document.querySelectorAll('svg[data-collage="avatar"]')).map((el) => bytes(el.outerHTML));
+      const sprite = bytes(document.querySelector('.collage-sprite')!.outerHTML);
+      const firstOfEach = new Map<string, Element>();
+      for (const el of document.querySelectorAll('svg[data-collage-piece]')) {
+        const key = el.getAttribute('data-collage-piece')!;
+        if (!firstOfEach.has(key)) firstOfEach.set(key, el);
+      }
+      const pieces = Array.from(firstOfEach.values()).reduce((sum, el) => sum + bytes(el.outerHTML), 0);
+      return { agenda, avatars, collection: sprite + agenda + avatars.reduce((a, b) => a + b, 0) + pieces };
+    });
+    expect(sizes.agenda).toBeLessThanOrEqual(4096);
+    expect(sizes.avatars).toHaveLength(4);
+    for (const bytes of sizes.avatars) expect(bytes).toBeLessThanOrEqual(2560);
+    expect(sizes.collection).toBeLessThanOrEqual(28672);
+  });
+
+  test('(b) cada elemento de AgendaCollage queda dentro de su viewBox con 4px de margen', async ({ page }) => {
+    await open(page, 1280, SHEET);
+    const outside = await page.evaluate(() =>
+      Array.from(document.querySelectorAll('svg[data-collage="agenda"] use')).flatMap((el) => {
+        const b = (el as unknown as SVGGraphicsElement).getBBox();
+        const bad = b.x < 4 || b.y < 4 || b.x + b.width > 476 || b.y + b.height > 476;
+        return bad ? [`${el.getAttribute('href')} ${JSON.stringify([b.x, b.y, b.width, b.height].map(Math.round))}`] : [];
+      }),
+    );
+    expect(outside).toEqual([]);
+  });
+
+  for (const [width, visible] of [[320, false], [390, false], [768, false], [1024, true], [1280, true]] as const) {
+    test(`(c) AgendaCollage ${visible ? 'visible' : 'oculto'} a ${width}px`, async ({ page }) => {
+      await open(page, width, SHEET);
+      const display = await page.locator('svg[data-collage="agenda"]').evaluate((el) => getComputedStyle(el).display);
+      expect(display === 'none').toBe(!visible);
+    });
+  }
+
+  test('(d) los cuatro avatares tienen variantes distintas, el mismo tamaño y alto igual a ancho', async ({ page }) => {
+    await open(page, 1280, SHEET);
+    const info = await page.evaluate(() =>
+      Array.from(document.querySelectorAll('svg[data-collage="avatar"]')).map((el) => {
+        const box = el.getBoundingClientRect();
+        return { variant: el.getAttribute('data-variant'), w: Math.round(box.width * 10) / 10, h: Math.round(box.height * 10) / 10 };
+      }),
+    );
+    expect(info).toHaveLength(4);
+    expect(new Set(info.map((i) => i.variant)).size).toBe(4);
+    expect(new Set(info.map((i) => `${i.w}x${i.h}`)).size).toBe(1);
+    for (const i of info) expect(i.w).toBe(i.h);
+  });
+
+  test('(d2) los avatares y AgendaCollage usan el contorno del tono de su sección', async ({ page }) => {
+    await open(page, 1280, SHEET);
+    const strokes = await page.evaluate(() => {
+      const read = (selector: string) => {
+        const el = document.querySelector(selector)!;
+        const probe = document.createElement('span');
+        probe.style.color = 'var(--collage-stroke)';
+        el.parentElement!.appendChild(probe);
+        const value = getComputedStyle(probe).color;
+        probe.remove();
+        return value;
+      };
+      return { agenda: read('svg[data-collage="agenda"]'), avatar: read('svg[data-collage="avatar"]') };
+    });
+    expect(strokes.agenda).toBe('rgb(255, 255, 255)');
+    expect(strokes.avatar).toBe('rgb(33, 33, 33)');
+  });
+
+  for (const motion of ['reduce', 'no-preference'] as const) {
+    test(`(e) cero animaciones con las composiciones y prefers-reduced-motion ${motion}`, async ({ page }) => {
+      await page.emulateMedia({ reducedMotion: motion });
+      await open(page, 1280, SHEET);
+      expect(await page.evaluate(() => document.getAnimations().length)).toBe(0);
+    });
+  }
+});

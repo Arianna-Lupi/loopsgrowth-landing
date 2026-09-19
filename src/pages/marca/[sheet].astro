@@ -10,6 +10,8 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Logo from '../../components/brand/Logo.astro';
 import CollagePiece from '../../components/collage/CollagePiece.astro';
+import AgendaCollage from '../../components/collage/AgendaCollage.astro';
+import Avatar from '../../components/collage/Avatar.astro';
 import { PIECES, ALLOWED_FILLS } from '../../components/collage/collage-rules.mjs';
 import { isProduction } from '../../lib/site';
 import { getLanding } from '../../lib/content';
@@ -29,6 +31,7 @@ const COMBOS = {
   dark: { a: 'yellow', b: 'orange', c: 'white' },
   purple: { a: 'yellow', b: 'orange', c: 'white' },
 } as const;
+const AVATARS = ['lupa', 'auriculares', 'gafas', 'gorro'] as const;
 const pieceNames = Object.keys(PIECES);
 const SIZES: Record<string, string> = { lupa: '10rem', loop: '8rem', puntos: '6rem', 'ojos-izq': '7.5rem', 'ojos-der': '7.5rem', 'ojos-abajo': '7.5rem' };
 ---
@@ -81,6 +84,31 @@ const SIZES: Record<string, string> = { lupa: '10rem', loop: '8rem', puntos: '6r
         </section>
       ))
     }
+
+    <section class="sheet-band" data-tone="purple" data-sheet="composiciones" aria-labelledby="sheet-agenda">
+      <div class="wrap">
+        <h2 id="sheet-agenda"><code>agenda-collage / purple</code></h2>
+        <AgendaCollage class="sheet-agenda" />
+      </div>
+    </section>
+
+    <section class="sheet-band" data-tone="yellow" data-sheet="avatares" aria-labelledby="sheet-avatars">
+      <div class="wrap">
+        <h2 id="sheet-avatars"><code>avatares / yellow</code></h2>
+        <div class="sheet-card">
+          <ul class="sheet-avatars">
+            {
+              AVATARS.map((variant) => (
+                <li>
+                  <Avatar variant={variant} />
+                  <code>{variant}</code>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </div>
+    </section>
   </div>
 </BaseLayout>
 
@@ -133,6 +161,38 @@ const SIZES: Record<string, string> = { lupa: '10rem', loop: '8rem', puntos: '6r
     justify-content: flex-end;
     align-items: flex-start;
     gap: 0.5rem;
+  }
+
+  .sheet-card {
+    margin-top: 1rem;
+    padding: 1.5rem;
+    background: var(--color-brand-white);
+    color: var(--color-brand-dark);
+    border: 3px solid var(--color-brand-dark);
+    border-radius: var(--radius-card, 1rem);
+    box-shadow: 4px 4px 0 var(--color-brand-dark);
+  }
+
+  .sheet-avatars {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 7.5rem), 1fr));
+    gap: 1.5rem;
+  }
+
+  .sheet-avatars li {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .sheet :global(.sheet-agenda) {
+    margin-top: 1rem;
+    max-width: 30rem;
   }
 
   .sheet code {
