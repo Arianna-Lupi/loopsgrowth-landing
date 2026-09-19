@@ -53,7 +53,7 @@ function resolve(value, scopes, depth = 0) {
 }
 
 /** Tonos que `tokens.css` debe declarar siempre. Si falta uno, la guarda falla. */
-export const REQUIRED_TONES = ['light', 'purple'];
+export const REQUIRED_TONES = ['light', 'purple', 'yellow', 'dark'];
 
 // Un elemento de selector que es EXACTAMENTE un atributo de tono: `[data-tone="x"]`, con comillas
 // dobles, simples o sin comillas. Cualquier otra forma que nombre `data-tone` (descendiente,
@@ -127,12 +127,12 @@ const D = '--color-brand-dark';
 const W = '--color-brand-white';
 
 /**
- * Los 9 pares aprobados de UI-SPEC, por nombre de token. `min` es el umbral (4.5 en texto,
+ * Los 11 pares aprobados de UI-SPEC (9 de la Fase 1 más 2 de la Fase 2), por nombre de token. `min` es el umbral (4.5 en texto,
  * 3 en UI o texto grande) y `ratio` el valor medido que el CSS debe seguir produciendo.
  */
 export const APPROVED_PAIRS = [
   { fg: D, bg: W, ratio: 16.1, min: 4.5, use: 'Cuerpo, h1, wordmark' },
-  { fg: P, bg: W, ratio: 9.69, min: 3, use: 'Anillo de foco sobre claro' },
+  { fg: P, bg: W, ratio: 9.69, min: 4.5, use: 'h1, h2, cifras y enlaces sobre claro; anillo de foco sobre claro' },
   { fg: W, bg: P, ratio: 9.69, min: 4.5, use: 'h2, intro y enlace de respaldo sobre morado' },
   { fg: Y, bg: P, ratio: 6.15, min: 4.5, use: 'Anillo de foco y hover de enlace sobre morado' },
   { fg: D, bg: Y, ratio: 10.22, min: 4.5, use: 'Texto del CTA sobre amarillo' },
@@ -140,6 +140,8 @@ export const APPROVED_PAIRS = [
   { fg: Y, bg: D, ratio: 10.22, min: 4.5, use: 'Texto del skip link' },
   { fg: O, bg: D, ratio: 5.56, min: 4.5, use: 'Naranja como texto solo sobre oscuro' },
   { fg: O, bg: P, ratio: 3.35, min: 3, use: 'Solo texto grande, íconos o bordes de UI' },
+  { fg: P, bg: Y, ratio: 6.15, min: 4.5, use: 'h2, enlaces y cifras sobre amarillo' },
+  { fg: W, bg: D, ratio: 16.1, min: 4.5, use: 'Cuerpo y h2 sobre oscuro' },
 ];
 
 /**
@@ -162,4 +164,7 @@ export const TONE_PAIRS = [
   ['--on-cta', '--cta-bg', 4.5, 'texto del CTA sobre su relleno'],
   ['--on-cta', '--cta-bg-hover', 4.5, 'texto del CTA sobre su relleno en hover'],
   ['--focus-ring', '--surface', 3, 'anillo de foco sobre la superficie'],
+  ['--heading', '--surface', 4.5, 'h1 y h2 sobre la superficie'],
+  ['--bar', '--surface', 3, 'barra decorativa sobre el h2, elemento de UI'],
+  ['--collage-stroke', '--surface', 3, 'contorno del collage sobre la superficie'],
 ];

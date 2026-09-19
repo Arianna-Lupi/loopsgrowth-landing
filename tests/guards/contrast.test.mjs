@@ -79,8 +79,8 @@ test('un enlace de tono con ratio real 4.4971 falla check-contrast aunque el rat
   assert.match(res.stderr, /real 4\.4971/);
 });
 
-test('las listas exportadas traen 9 pares aprobados y 6 prohibidos', () => {
-  assert.equal(APPROVED_PAIRS.length, 9);
+test('las listas exportadas traen 11 pares aprobados y 6 prohibidos', () => {
+  assert.equal(APPROVED_PAIRS.length, 11);
   assert.equal(FORBIDDEN_PAIRS.length, 6);
 });
 
@@ -89,7 +89,7 @@ test('parseTokens lee @theme static, resuelve los tonos y no toma un :root suelt
   assert.equal(theme['--color-brand-purple'], HEX.purple);
   // Comprobación de forma, no de valor: la medida del formulario cambia cada vez que se vuelve a medir.
   assert.match(theme['--form-min-h-sm'], /^\d+px$/, 'el bloque @theme static debe exponer --form-min-h-sm');
-  assert.deepEqual(Object.keys(tones).sort(), ['light', 'purple']);
+  assert.deepEqual(Object.keys(tones).sort(), ['dark', 'light', 'purple', 'yellow']);
   assert.equal(tones.light['--on-cta'], HEX.dark);
   assert.equal(tones.purple['--surface'], HEX.purple);
   assert.equal(tones.purple['--focus-ring'], HEX.yellow);
@@ -114,8 +114,8 @@ test('un tono con comillas simples sigue verificándose: check-contrast lo eval�
   assert.match(res.stderr, /tono purple: --focus-ring sobre --surface/);
 });
 
-test('si falta un tono obligatorio (light o purple) check-contrast sale con 1 y lo nombra', () => {
-  for (const tone of ['light', 'purple']) {
+test('si falta un tono obligatorio (light, purple, yellow o dark) check-contrast sale con 1 y lo nombra', () => {
+  for (const tone of ['light', 'purple', 'yellow', 'dark']) {
     const file = mutatedTokens((css) => css.replaceAll(`[data-tone="${tone}"]`, '[data-tono="x"]'));
     const res = run('--tokens', file);
     assert.equal(res.status, 1, `sin el tono ${tone} debía fallar`);
@@ -143,7 +143,7 @@ test('un selector descendiente [data-tone="x"] .card no se fusiona con el tono: 
   assert.equal(tones.purple['--surface'], HEX.purple);
 });
 
-test('ejecución por defecto: código 0 y 9 pares aprobados ok en --json', () => {
+test('ejecución por defecto: código 0 y 11 pares aprobados ok en --json', () => {
   const res = run();
   assert.equal(res.status, 0, res.stderr);
   const json = run('--json');
@@ -151,7 +151,7 @@ test('ejecución por defecto: código 0 y 9 pares aprobados ok en --json', () =>
   const results = JSON.parse(json.stdout);
   const approved = results.filter((r) => r.kind === 'approved');
   const forbidden = results.filter((r) => r.kind === 'forbidden');
-  assert.equal(approved.length, 9);
+  assert.equal(approved.length, 11);
   assert.ok(approved.every((r) => r.ok));
   assert.equal(forbidden.length, 6);
   assert.ok(forbidden.every((r) => r.ok && r.ratio < r.threshold));
@@ -205,4 +205,74 @@ test('un token de marca que falta rompe check-contrast con código 1', () => {
 test('una ruta de tokens inexistente sale con 1', () => {
   const res = run('--tokens', join(tmpdir(), 'no-existe', 'tokens.css'));
   assert.equal(res.status, 1);
+});
+
+test('los pares nuevos (morado sobre amarillo y blanco sobre oscuro) están aprobados y morado sobre blanco exige 4.5', () => {
+  assert.equal(contrastRatio(HEX.purple, HEX.yellow), 6.15);
+  assert.equal(contrastRatio(HEX.white, HEX.dark), 16.1);
+  const has = (fg, bg) => APPROVED_PAIRS.find((p) => p.fg === fg && p.bg === bg);
+  const purpleOnYellow = has('--color-brand-purple', '--color-brand-yellow');
+  const whiteOnDark = has('--color-brand-white', '--color-brand-dark');
+  assert.ok(purpleOnYellow, 'falta morado sobre amarillo');
+  assert.ok(whiteOnDark, 'falta blanco sobre oscuro');
+  assert.equal(purpleOnYellow.min, 4.5);
+  assert.equal(whiteOnDark.min, 4.5);
+  assert.equal(has('--color-brand-purple', '--color-brand-white').min, 4.5);
+});
+
+test('un tono dark con --heading morado sale con 1 y dice par prohibido', () => {
+  const file = mutatedTokens((css) => replaceInTone(css, 'dark', '--heading', 'var(--color-brand-purple)'));
+  const res = run('--tokens', file);
+  assert.equal(res.status, 1);
+  assert.match(res.stderr, /tono dark: --heading sobre --surface/);
+  assert.match(res.stderr, /par prohibido/);
+});
+
+test('un tono dark con --link morado sale con 1 y dice par prohibido', () => {
+  const file = mutatedTokens((css) => replaceInTone(css, 'dark', '--link', 'var(--color-brand-purple)'));
+  const res = run('--tokens', file);
+  assert.equal(res.status, 1);
+  assert.match(res.stderr, /tono dark: --link sobre --surface/);
+  assert.match(res.stderr, /par prohibido/);
+});
+
+test('un tono dark con --collage-stroke morado sale con 1 y dice par prohibido', () => {
+  const file = mutatedTokens((css) =>
+    replaceInTone(css, 'dark', '--collage-stroke', 'var(--color-brand-purple)'),
+  );
+  const res = run('--tokens', file);
+  assert.equal(res.status, 1);
+  assert.match(res.stderr, /tono dark: --collage-stroke sobre --surface/);
+  assert.match(res.stderr, /par prohibido/);
+});
+
+test('un tono yellow con --heading naranja sale con 1 y nombra el par', () => {
+  const file = mutatedTokens((css) => replaceInTone(css, 'yellow', '--heading', 'var(--color-brand-orange)'));
+  const res = run('--tokens', file);
+  assert.equal(res.status, 1);
+  assert.match(res.stderr, /tono yellow: --heading sobre --surface/);
+  assert.match(res.stderr, /par prohibido/);
+});
+
+test('un tono yellow con --link blanco sale con 1 y nombra el par', () => {
+  const file = mutatedTokens((css) => replaceInTone(css, 'yellow', '--link', 'var(--color-brand-white)'));
+  const res = run('--tokens', file);
+  assert.equal(res.status, 1);
+  assert.match(res.stderr, /tono yellow: --link sobre --surface/);
+  assert.match(res.stderr, /1\.58/);
+});
+
+test('un tono yellow con --on-cta blanco sale con 1 y nombra el par', () => {
+  const file = mutatedTokens((css) => replaceInTone(css, 'yellow', '--on-cta', 'var(--color-brand-white)'));
+  const res = run('--tokens', file);
+  assert.equal(res.status, 1);
+  assert.match(res.stderr, /tono yellow: --on-cta sobre --cta-bg/);
+  assert.match(res.stderr, /2\.89/);
+});
+
+test('cambiar --color-brand-yellow rompe el par morado sobre amarillo', () => {
+  const file = mutatedTokens((css) => css.replace(/(--color-brand-yellow:\s*)#ffc602/, '$1#fff000'));
+  const res = run('--tokens', file);
+  assert.equal(res.status, 1);
+  assert.match(res.stderr, /purple sobre yellow/);
 });

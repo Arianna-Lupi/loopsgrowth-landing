@@ -53,6 +53,31 @@
     overflow-wrap: anywhere;
   }
 
+  /* Title: h3 de tarjetas. Tinta del tono, no morado: el morado queda para h1, h2 y cifras. */
+  h3 {
+    font-size: var(--text-title);
+    line-height: var(--text-title--line-height);
+    font-weight: 700;
+    color: var(--on-surface);
+    overflow-wrap: anywhere;
+  }
+
+  /* Barra decorativa de 48x8 px sobre el h2 (solo relleno; no lleva información). */
+  .section-title::before {
+    content: "";
+    display: block;
+    width: 3rem;
+    aspect-ratio: 6 / 1;
+    margin-bottom: 1rem;
+    border-radius: var(--radius-pill);
+    background: var(--bar);
+  }
+
+  /* Un salto a #agenda u otra sección no deja el título pegado al borde. */
+  section[id] {
+    scroll-margin-top: 1.5rem;
+  }
+
   p {
     max-width: 65ch;
     text-align: start;
