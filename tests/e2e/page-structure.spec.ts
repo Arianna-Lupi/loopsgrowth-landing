@@ -226,7 +226,7 @@ for (const vp of WIDTHS) {
       const overlapX = Math.min(copy.right, art.right) - Math.max(copy.left, art.left);
       const overlapY = Math.min(copy.bottom, art.bottom) - Math.max(copy.top, art.top);
       expect(overlapX > 0.5 && overlapY > 0.5, 'el collage y el texto se cruzan').toBe(false);
-      const svg = await box(page, 'svg.hero-collage');
+      const svg = await box(page, '.hero-collage');
       expect(svg.left).toBeGreaterThanOrEqual(-0.5);
       expect(svg.right).toBeLessThanOrEqual(vp.width + 0.5);
     });
@@ -254,7 +254,7 @@ test.describe('primer pantallazo', () => {
       page,
     }) => {
       await page.goto('/');
-      for (const sel of [HERO_SELECTORS.h1, HERO_SELECTORS.subtitle, HERO_SELECTORS.cta, 'svg.hero-collage']) {
+      for (const sel of [HERO_SELECTORS.h1, HERO_SELECTORS.subtitle, HERO_SELECTORS.cta, '.hero-collage']) {
         const r = await box(page, sel);
         expect(r.top, `${sel} top`).toBeGreaterThanOrEqual(0);
         expect(r.bottom, `${sel} bottom`).toBeLessThanOrEqual(800);
@@ -262,7 +262,7 @@ test.describe('primer pantallazo', () => {
         expect(r.right).toBeLessThanOrEqual(1280);
       }
       const copy = await box(page, '#inicio .hero-copy');
-      const svg = await box(page, 'svg.hero-collage');
+      const svg = await box(page, '.hero-collage');
       expect(svg.left).toBeGreaterThanOrEqual(copy.right - 0.5);
     });
 
@@ -277,31 +277,37 @@ test.describe('primer pantallazo', () => {
 });
 
 test.describe('collage del hero', () => {
-  test('SVG decorativo: aria-hidden, sin title ni text, liviano y sin img en el hero', async ({ page }) => {
+  test('collage decorativo: raíz aria-hidden, capa svg sin title ni text, sin img y liviano', async ({ page }) => {
     await page.goto('/');
-    const svg = page.locator('svg.hero-collage');
+    const root = page.locator('div.hero-collage[data-collage="hero"]');
+    await expect(root).toHaveCount(1);
+    await expect(root).toHaveAttribute('aria-hidden', 'true');
+    const svg = root.locator('svg');
     await expect(svg).toHaveCount(1);
     await expect(svg).toHaveAttribute('aria-hidden', 'true');
     await expect(svg).toHaveAttribute('focusable', 'false');
     await expect(svg.locator('title')).toHaveCount(0);
     await expect(svg.locator('text')).toHaveCount(0);
     await expect(page.locator('#inicio img')).toHaveCount(0);
-    const size = await svg.evaluate((el) => el.outerHTML.length);
+    const size = await root.evaluate((el) => el.outerHTML.length);
     expect(size).toBeLessThan(8192);
   });
 
-  test('seis piezas nombradas con --i, --r y --r-from y dos pupilas', async ({ page }) => {
+  test('seis grupos nombrados con --i, --r y --r-from y dos pupilas', async ({ page }) => {
     await page.goto('/');
     const pieces = await page
-      .locator('svg.hero-collage g.hc-piece')
-      .evaluateAll((els) => els.map((el) => ({ name: el.getAttribute('data-piece'), style: el.getAttribute('style') ?? '' })));
-    expect(pieces.map((p) => p.name)).toEqual(['loops', 'lupa', 'ojos', 'clic-a', 'clic-b', 'destellos']);
+      .locator('.hero-collage [data-piece]')
+      .evaluateAll((els) => els.map((el) => ({ name: el.getAttribute('data-piece') ?? '', style: el.getAttribute('style') ?? '' })));
+    expect(pieces.map((p) => p.name).sort()).toEqual(['doodles', 'dots', 'loopy', 'panel', 'pills', 'stage']);
     for (const p of pieces) {
       expect(p.style).toMatch(/--i:\s*\d/);
       expect(p.style).toMatch(/--r:\s*-?\d/);
       expect(p.style).toMatch(/--r-from:\s*-?\d/);
     }
-    expect(await page.locator('svg.hero-collage .hc-pupil').count()).toBeGreaterThanOrEqual(2);
+    const order = pieces.map((p) => Number(p.style.match(/--i:\s*(\d)/)?.[1])).sort();
+    expect(order).toEqual([0, 1, 2, 3, 4, 5]);
+    expect(await page.locator('.hero-collage .hc-pupil').count()).toBe(2);
+    expect(await page.locator('.hero-collage [data-pupil]').count()).toBe(2);
   });
 });
 
@@ -332,7 +338,7 @@ test.describe('sin JavaScript', () => {
     await expect(page.locator('#inicio .hero-sub')).toBeVisible();
     await expect(page.locator('#inicio a[data-cta="hero"]')).toBeVisible();
     await expect(page.locator('#inicio a[data-cta="hero"]')).toHaveAttribute('href', '#agenda');
-    await expect(page.locator('svg.hero-collage')).toBeVisible();
+    await expect(page.locator('.hero-collage')).toBeVisible();
   });
 });
 

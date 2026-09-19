@@ -5,6 +5,7 @@ import {
   ALLOWED_FILLS,
   BRAND_COLORS,
   PIECES,
+  SCENE_PIECES,
   TONES,
   assertToneSafe,
   fillVar,
@@ -21,6 +22,7 @@ const FORBIDDEN = [
   ['yellow', 'yellow'],
   ['dark', 'dark'],
   ['purple', 'dark'],
+  ['yellow', 'cream'],
 ];
 
 const EXPECTED_STROKE = { light: 'dark', yellow: 'dark', dark: 'white', purple: 'white' };
@@ -87,24 +89,25 @@ test('mutación: una tabla con un par prohibido agregado es detectada', () => {
 // (iii) Símbolos del sprite y catálogo de piezas
 // ---------------------------------------------------------------------------------------------
 
-const SPRITE = readFileSync('src/components/collage/CollageSprite.astro', 'utf8');
-
-test('cada símbolo del sprite está en PIECES exactamente una vez, con su viewBox, y viceversa', () => {
-  const symbols = [...SPRITE.matchAll(/<symbol id="([^"]+)" viewBox="0 0 (\d+) (\d+)"/g)].map((m) => ({
-    id: m[1],
-    w: Number(m[2]),
-    h: Number(m[3]),
-  }));
+test('cada símbolo del sprite está en su catálogo exactamente una vez, con su viewBox, y viceversa', () => {
+  assert.ok(existsSync('dist/index.html'), 'Falta dist: ejecuta npx astro build antes de estas pruebas');
+  const sprite = readFileSync('dist/index.html', 'utf8').match(/<svg class="collage-sprite"[\s\S]*?<\/svg>/)?.[0] ?? '';
+  const symbols = [...sprite.matchAll(/<symbol id="([^"]+)" viewBox="([^"]+)"/g)].map((m) => {
+    const vb = m[2].trim().split(/\s+/).map(Number);
+    assert.equal(vb.length, 4, `${m[1]}: viewBox de cuatro números`);
+    return { id: m[1], w: vb[2], h: vb[3] };
+  });
   const ids = symbols.map((s) => s.id);
   assert.equal(new Set(ids).size, ids.length, 'ids duplicados en el sprite');
-  assert.equal(symbols.length, 15);
-  const fromPieces = Object.values(PIECES).map((p) => p.symbol);
-  assert.equal(new Set(fromPieces).size, fromPieces.length, 'símbolos repetidos en PIECES');
-  assert.deepEqual([...ids].sort(), [...fromPieces].sort());
-  for (const piece of Object.values(PIECES)) {
+  const old = Object.values(PIECES);
+  const fresh = Object.values(SCENE_PIECES);
+  assert.equal(new Set(fresh.map((p) => p.symbol)).size, fresh.length, 'símbolos repetidos en SCENE_PIECES');
+  assert.deepEqual(ids.filter((id) => id.startsWith('lg-')).sort(), fresh.map((p) => p.symbol).sort());
+  assert.deepEqual(ids.filter((id) => !id.startsWith('lg-')).sort(), old.map((p) => p.symbol).sort());
+  for (const piece of [...old, ...fresh]) {
     const symbol = symbols.find((s) => s.id === piece.symbol);
-    assert.equal(symbol.w, piece.w, `${piece.symbol}: ancho del viewBox`);
-    assert.equal(symbol.h, piece.h, `${piece.symbol}: alto del viewBox`);
+    assert.ok(Math.abs(symbol.w - piece.w) < 0.01, `${piece.symbol}: ancho del viewBox`);
+    assert.ok(Math.abs(symbol.h - piece.h) < 0.01, `${piece.symbol}: alto del viewBox`);
   }
 });
 
@@ -119,7 +122,20 @@ export const OWNED = [
   'src/components/collage/CollagePiece.astro',
   'src/components/collage/collage-rules.mjs',
   'src/components/brand/Logo.astro',
+  'src/components/collage/loopy.mjs',
+  'src/components/collage/scenes.mjs',
+  'src/components/collage/CollageScene.astro',
+  'src/components/collage/Pill.astro',
+  'src/components/collage/HeroCollage.astro',
 ];
+
+test('los cinco archivos del mecanismo de escenas existen y están en OWNED', () => {
+  for (const f of ['loopy.mjs', 'scenes.mjs', 'CollageScene.astro', 'Pill.astro', 'HeroCollage.astro']) {
+    const path = `src/components/collage/${f}`;
+    assert.ok(existsSync(path), `falta ${path}`);
+    assert.ok(OWNED.includes(path), `${path} no está en OWNED`);
+  }
+});
 
 // La tarea de composiciones agrega estos dos cuando existen.
 for (const extra of ['src/components/collage/AgendaCollage.astro', 'src/components/collage/Avatar.astro']) {
@@ -200,11 +216,12 @@ function readDist(path) {
 
 const spriteOf = (html) => html.match(/<svg class="collage-sprite"[\s\S]*?<\/svg>/)?.[0] ?? '';
 
-test('dist/index.html trae un solo sprite, pesa menos de 60 KB y el sprite menos de 10 KB', () => {
+// El sprite viejo convive con el nuevo hasta la tarea 3 del plan 02-10: tope temporal de 16384.
+test('dist/index.html trae un solo sprite, pesa menos de 60 KB y el sprite menos de 16 KB', () => {
   const html = readDist('dist/index.html');
   assert.equal((html.match(/class="collage-sprite"/g) ?? []).length, 1);
   assert.ok(Buffer.byteLength(html) < 61440, `dist/index.html pesa ${Buffer.byteLength(html)} bytes`);
-  assert.ok(Buffer.byteLength(spriteOf(html)) < 10240, 'sprite de 10 KB o más');
+  assert.ok(Buffer.byteLength(spriteOf(html)) < 16384, `sprite de ${Buffer.byteLength(spriteOf(html))} bytes`);
 });
 
 test('en la hoja, cada <use href="#cs-..."> resuelve a un <symbol id> de esa página', (t) => {

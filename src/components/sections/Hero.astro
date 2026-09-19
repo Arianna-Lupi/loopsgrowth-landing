@@ -65,15 +65,16 @@ const label = ctaLabel(data);
     justify-content: center;
   }
 
-  /* A (menos de 640 px): 240 px de alto. B (640 a 1023 px): 320 px. */
+  /* La escena da su alto por proporción (560 x 520). A (menos de 640 px): 258 px de ancho, 240 de alto.
+     B (640 a 1023 px): 344 y 320. */
   .hero-art :global(.hero-collage) {
-    width: auto;
-    height: 15rem;
+    width: 100%;
+    max-width: 16.15rem;
   }
 
   @media (min-width: 40em) {
     .hero-art :global(.hero-collage) {
-      height: 20rem;
+      max-width: 21.54rem;
     }
   }
 
@@ -85,7 +86,7 @@ const label = ctaLabel(data);
 
     .hero-art :global(.hero-collage) {
       width: min(100%, 30rem);
-      height: auto;
+      max-width: none;
     }
   }
 

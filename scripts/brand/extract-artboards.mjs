@@ -5,7 +5,7 @@
  * nuevo; el sitio no depende de este script en tiempo de build.
  *
  * Uso:
- *   node scripts/brand/extract-artboards.mjs --source <ruta al .ai> [--only 6,13] [--out <dir>]
+ *   node scripts/brand/extract-artboards.mjs --source <ruta al .ai> [--only 6,13] [--out <dir>] [--keep-paths]
  *   node scripts/brand/extract-artboards.mjs --favicon-evidence
  *   node scripts/brand/extract-artboards.mjs --favicon [archivo del catalogo, por defecto ojo-18-blanco]
  *
@@ -14,6 +14,9 @@
  * lado, mide la caja de pixeles opacos y el diametro equivalente de la pupila (#1e1e1e) y aplica la
  * regla de decision del plan. `--favicon` escribe `public/favicon.svg` (mismos trazos, viewBox
  * cuadrado) y `public/favicon.ico` (PNG de 16, 32 y 48 px empaquetados a mano, sin dependencias).
+ *
+ * `--keep-paths` (plan 02-10) usa `scripts/brand/svgo-keep-paths.config.cjs`: SVGO sin unir rutas, una ruta
+ * por elemento del arte. Se usa para las fuentes de Loopy en `src/assets/loopy` (mesas 13, 14, 18 y 19).
  *
  * Requisitos (no se instala nada aquí):
  *   - poppler: `pdftocairo` en el PATH (`brew install poppler`).
@@ -59,11 +62,12 @@ function run(cmd, args) {
 }
 
 function parseArgs(argv) {
-  const opts = { source: '', only: null, out: join(ROOT, 'src/assets/brand'), favicon: '', evidence: false };
+  const opts = { source: '', only: null, out: join(ROOT, 'src/assets/brand'), favicon: '', evidence: false, keepPaths: false };
   for (let i = 0; i < argv.length; i += 1) {
     const flag = argv[i];
     if (flag === '--favicon') opts.favicon = argv[i + 1] && !argv[i + 1].startsWith('--') ? argv[++i] : 'ojo-18-blanco';
     else if (flag === '--favicon-evidence') opts.evidence = true;
+    else if (flag === '--keep-paths') opts.keepPaths = true;
     else if (flag === '--source') opts.source = argv[++i] ?? '';
     else if (flag === '--only') opts.only = (argv[++i] ?? '').split(',').map((n) => Number(n.trim())).filter(Boolean);
     else if (flag === '--out') opts.out = resolve(argv[++i] ?? '');
@@ -268,7 +272,12 @@ async function main() {
       const min = join(work, `${board.n}-min.svg`);
       run('pdftocairo', ['-svg', '-f', String(board.n), '-l', String(board.n), opts.source, raw]);
       writeFileSync(clean, cleanArtboard(readFileSync(raw, 'utf8'), board.n));
-      run(SVGO, ['-i', clean, '-o', min, '-p', '2', '--multipass', '-q']);
+      run(
+        SVGO,
+        opts.keepPaths
+          ? ['-i', clean, '-o', min, '--config', join(ROOT, 'scripts/brand/svgo-keep-paths.config.cjs'), '-q']
+          : ['-i', clean, '-o', min, '-p', '2', '--multipass', '-q'],
+      );
       const optimized = readFileSync(min, 'utf8');
       if (/<rect\b/.test(optimized)) fail(`mesa ${board.n}: quedó un <rect> tras la limpieza`);
       await page.setContent(`<!doctype html><body style="margin:0">${optimized}</body>`);
