@@ -81,6 +81,12 @@ checkNonProduction('(a) sin PUBLIC_ENV', {});
 // (d) `Production` con mayúscula se trata como no productivo (comparación exacta)
 checkNonProduction('(d) PUBLIC_ENV=Production', { PUBLIC_ENV: 'Production' });
 
+// (e) fuera de producción pero con PUBLIC_SITE_URL definida: noindex y ningún canonical
+checkNonProduction('(e) PUBLIC_ENV=preview con PUBLIC_SITE_URL', {
+  PUBLIC_ENV: 'preview',
+  PUBLIC_SITE_URL: SITE,
+});
+
 if (failures > 0) {
   console.error(`\n${failures} comprobación(es) fallaron.`);
   process.exit(1);
