@@ -218,3 +218,189 @@ test('en la hoja, cada <use href="#cs-..."> resuelve a un <symbol id> de esa pá
   assert.ok(uses.length > 0, 'la hoja no usa ninguna pieza');
   for (const id of uses) assert.ok(ids.has(id), `<use> sin símbolo: ${id}`);
 });
+
+// ---------------------------------------------------------------------------------------------
+// (vi) Las 32 mesas oficiales del .ai (plan 02-09, tarea 2): catálogo, archivos, higiene de cada
+// SVG, contraste por mesa, resolveLogo, Logo.astro, cleanArtboard y originales fuera del repo.
+// ---------------------------------------------------------------------------------------------
+
+import { readdirSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
+import { contrastRaw, parseTokens } from '../../scripts/lib/contrast.mjs';
+
+const CATALOG_PATH = '../../src/components/brand/logo-variants.mjs';
+const BRAND_DIR = 'src/assets/brand';
+
+/** Carga el catálogo cuando la prueba corre (así cada prueba falla sola si aún no existe). */
+const loadCatalog = () => import(CATALOG_PATH);
+const loadClean = () => import('../../scripts/lib/brand-svg.mjs');
+
+const TOKENS = parseTokens(readFileSync('src/styles/tokens.css', 'utf8'));
+const svgFiles = () => readdirSync(BRAND_DIR).filter((f) => f.endsWith('.svg')).sort();
+
+// Lista de excepciones escrita aparte del catálogo que protege: ampliarla exige tocar esta prueba.
+const EXCEPTION_BOARDS = [17, 22];
+// Colores propios de los SVG oficiales: los cuatro tonos de marca que aparecen en las 17 mesas
+// (iris y pupila solo se nombran aquí; los tokens no los declaran).
+const SVG_FILLS = ['#4228d1', '#6c61db', '#f4f3e0', '#1e1e1e'];
+
+/** Devuelve los problemas de contraste de un catálogo (vacío si todo coincide con tokens.css). */
+function contrastProblems(boards, svgTextOf) {
+  const problems = [];
+  for (const b of boards.filter((x) => x.use)) {
+    const fg = TOKENS.theme[`--color-brand-${b.fg}`];
+    const surface = TOKENS.tones[b.tone]?.['--surface'];
+    if (!fg || !surface) {
+      problems.push(`mesa ${b.n}: fg o superficie sin resolver`);
+      continue;
+    }
+    const measured = contrastRaw(fg, surface);
+    if (Math.abs(measured - b.ratio) > 0.01) problems.push(`mesa ${b.n}: razón ${b.ratio} no coincide con ${measured.toFixed(2)}`);
+    if (!svgTextOf(b).includes(`fill="${fg}"`)) problems.push(`mesa ${b.n}: el SVG no trae el relleno ${fg}`);
+    if (measured < b.min !== Boolean(b.exception)) problems.push(`mesa ${b.n}: excepción inconsistente con el umbral`);
+  }
+  const listed = boards.filter((x) => x.use && x.exception).map((x) => x.n).sort((a, b) => a - b);
+  if (JSON.stringify(listed) !== JSON.stringify(EXCEPTION_BOARDS)) problems.push(`excepciones fuera de lista: ${listed}`);
+  return problems;
+}
+
+test('(vi-i) catálogo: las mesas 1 a 32 una sola vez, cada una usada o con motivo', async () => {
+  const { ARTBOARDS } = await loadCatalog();
+  assert.deepEqual(ARTBOARDS.map((b) => b.n).sort((a, b) => a - b), Array.from({ length: 32 }, (_, i) => i + 1));
+  for (const b of ARTBOARDS) {
+    if (b.use) assert.ok(b.file && b.tone && b.fg && b.ratio && b.min, `mesa ${b.n}: falta archivo, tono, fg, razón o umbral`);
+    else assert.ok(typeof b.reason === 'string' && b.reason.trim().length > 10, `mesa ${b.n}: sin motivo`);
+  }
+  assert.equal(ARTBOARDS.filter((b) => b.use).length, 17);
+});
+
+test('(vi-ii) archivos: src/assets/brand trae exactamente los 17 del catálogo', async () => {
+  const { ARTBOARDS } = await loadCatalog();
+  const expected = ARTBOARDS.filter((b) => b.use).map((b) => `${b.file}.svg`).sort();
+  assert.equal(expected.length, 17);
+  assert.deepEqual(svgFiles(), expected);
+});
+
+test('(vi-iii) higiene: cada SVG oficial es solo svg y path, acotado y con rellenos de marca', async () => {
+  const files = svgFiles();
+  assert.equal(files.length, 17);
+  for (const file of files) {
+    const text = readFileSync(`${BRAND_DIR}/${file}`, 'utf8');
+    const root = text.match(/<svg\b[^>]*>/)?.[0] ?? '';
+    const vb = root.match(/viewBox="([^"]+)"/)?.[1].trim().split(/[\s,]+/).map(Number) ?? [];
+    assert.equal(vb.length, 4, `${file}: viewBox de cuatro números`);
+    const [x, y, w, h] = vb;
+    assert.ok(x >= 0 && y >= 0 && w > 0 && h > 0, `${file}: viewBox con origen negativo (fondo sin quitar)`);
+    assert.ok(x + w <= 800 && y + h <= 800, `${file}: viewBox fuera de 0 a 800`);
+    assert.ok(!/\swidth=|\sheight=/.test(root), `${file}: width o height en la raíz`);
+    assert.ok(Buffer.byteLength(text) < 8192, `${file}: pesa ${Buffer.byteLength(text)} bytes`);
+    const elements = new Set([...text.matchAll(/<([a-zA-Z][\w:-]*)/g)].map((m) => m[1]));
+    assert.deepEqual([...elements].sort(), ['path', 'svg'], `${file}: elementos ${[...elements]}`);
+    assert.ok(!/<!--|<\?xml|<!DOCTYPE|<!\[CDATA/i.test(text), `${file}: comentario, declaración o metadato`);
+    assert.ok(!/\s(?:xlink:)?href=|\sstyle=|\son\w+=|xlink/i.test(text), `${file}: href, style, on* o xlink`);
+    assert.ok(!/https?:\/\/(?!www\.w3\.org\/2000\/svg)/.test(text), `${file}: referencia http`);
+    const fills = [...text.matchAll(/\sfill="([^"]*)"/g)].map((m) => m[1]);
+    for (const f of fills) assert.ok(SVG_FILLS.includes(f), `${file}: relleno ${f} fuera de la paleta oficial`);
+    const paths = text.match(/<path\b[^>]*>/g) ?? [];
+    assert.ok(paths.length > 0);
+    for (const p of paths) assert.match(p, /\sfill="#[0-9a-f]{6}"/, `${file}: un path sin relleno propio`);
+    assert.ok(!/\sstroke=/.test(text), `${file}: trae stroke`);
+  }
+});
+
+test('(vi-iv) contraste por mesa: fg contra la superficie del tono coincide con el catálogo', async () => {
+  const { ARTBOARDS } = await loadCatalog();
+  const svgTextOf = (b) => readFileSync(`${BRAND_DIR}/${b.file}.svg`, 'utf8');
+  assert.deepEqual(contrastProblems(ARTBOARDS, svgTextOf), []);
+  // el mínimo de cada mesa es el de su familia (4.5 texto, 3 isotipo y ojo)
+  for (const b of ARTBOARDS.filter((x) => x.use)) {
+    assert.equal(b.min, ['isotipo', 'ojo'].includes(b.variant) ? 3 : 4.5, `mesa ${b.n}: umbral de su variante`);
+  }
+});
+
+test('(vi-viii) mutación: un catálogo sin la excepción de la mesa 17 o con una razón cambiada se detecta', async () => {
+  const { ARTBOARDS } = await loadCatalog();
+  const svgTextOf = (b) => readFileSync(`${BRAND_DIR}/${b.file}.svg`, 'utf8');
+  const withoutException = ARTBOARDS.map((b) => (b.n === 17 ? { ...b, exception: undefined } : b));
+  assert.ok(contrastProblems(withoutException, svgTextOf).length > 0, 'quitar la excepción de 17 debe fallar');
+  const badRatio = ARTBOARDS.map((b) => (b.n === 1 ? { ...b, ratio: 6 } : b));
+  assert.ok(contrastProblems(badRatio, svgTextOf).length > 0, 'cambiar una razón debe fallar');
+  const extra = ARTBOARDS.map((b) => (b.n === 5 ? { ...b, exception: 'x' } : b));
+  assert.ok(contrastProblems(extra, svgTextOf).length > 0, 'ampliar las excepciones debe fallar');
+});
+
+test('(vi-v) resolveLogo devuelve la mesa de cada variante y tono, y falla en español si no existe', async () => {
+  const { resolveLogo, availableTones, ARTBOARDS, LOGO_TONES, LOGO_VARIANTS, MIN_HEIGHT_PX } = await loadCatalog();
+  const expected = {
+    'apilado/light': 1, 'apilado/yellow': 5, 'apilado/dark': 8, 'apilado/purple': 3,
+    'horizontal/light': 6, 'imagotipo/light': 7,
+    'emblema/light': 10, 'emblema/yellow': 24, 'emblema/purple': 12,
+    'isotipo/light': 13, 'isotipo/yellow': 16, 'isotipo/purple': 14, 'isotipo/dark': 17,
+    'ojo/light': 18, 'ojo/yellow': 21, 'ojo/purple': 19, 'ojo/dark': 22,
+  };
+  for (const [key, n] of Object.entries(expected)) {
+    const [variant, tone] = key.split('/');
+    const board = resolveLogo(variant, tone);
+    assert.equal(board.n, n, key);
+    assert.equal(board.file, ARTBOARDS.find((b) => b.n === n).file);
+  }
+  assert.equal(resolveLogo('horizontal', 'light').file, 'horizontal-06-blanco');
+  assert.throws(
+    () => resolveLogo('horizontal', 'dark'),
+    (e) => e instanceof Error && /"horizontal"/.test(e.message) && /"dark"/.test(e.message) && /disponibles: light\)/.test(e.message) && /No se recolorea/.test(e.message),
+  );
+  assert.throws(() => resolveLogo('imagotipo', 'yellow'), /"imagotipo".*"yellow".*disponibles: light/s);
+  assert.throws(() => resolveLogo('emblema', 'dark'), /"emblema".*"dark".*disponibles: light, yellow, purple/s);
+  assert.throws(() => resolveLogo('raro', 'light'), /raro/);
+  assert.deepEqual(availableTones('emblema'), ['light', 'yellow', 'purple']);
+  assert.deepEqual(LOGO_TONES, ['light', 'yellow', 'dark', 'purple']);
+  assert.deepEqual([...LOGO_VARIANTS], ['apilado', 'horizontal', 'imagotipo', 'emblema', 'isotipo', 'ojo']);
+  assert.deepEqual(MIN_HEIGHT_PX, { horizontal: 32, imagotipo: 32, apilado: 48, emblema: 96, isotipo: 24, ojo: 24 });
+});
+
+test('(vi-vi) Logo.astro importa exactamente los archivos del catálogo, sin recolor ni atributo de tono', async () => {
+  const { ARTBOARDS } = await loadCatalog();
+  const logo = readFileSync('src/components/brand/Logo.astro', 'utf8');
+  const imported = [...logo.matchAll(/^import\s+\w+\s+from\s+'\.\.\/\.\.\/assets\/brand\/([\w-]+)\.svg';$/gm)].map((m) => m[1]).sort();
+  const expected = ARTBOARDS.filter((b) => b.use).map((b) => b.file).sort();
+  assert.deepEqual(imported, expected);
+  assert.ok(!/\bfill\s*:/.test(logo), 'Logo.astro declara una regla de relleno por CSS');
+  assert.ok(!logo.includes('data-tone'), 'Logo.astro usa el atributo de tono de la página');
+  assert.ok(!/import\.meta\.glob/.test(logo));
+});
+
+test('(vi-vii) cleanArtboard: quita los rect, ajusta el crema, rechaza colores ajenos y limpia la raíz', async () => {
+  const { cleanArtboard } = await loadClean();
+  const rect = '<rect x="-80" y="-80" width="960" height="960" fill="rgb(100%, 77.598572%, 0.799561%)" fill-opacity="1"/>';
+  const svg = (inner) =>
+    `<?xml version="1.0" encoding="UTF-8"?>\n<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="800pt" height="800pt" viewBox="0 0 800 800">${inner}</svg>\n`;
+  const out = cleanArtboard(
+    svg(`${rect}${rect}${rect}<path fill-rule="nonzero" fill="rgb(95.698547%, 95.298767%, 88.198853%)" fill-opacity="1" d="M 0 0 L 1 1 Z"/>`),
+    24,
+  );
+  assert.ok(!/<rect/.test(out), 'quedó un rect');
+  assert.ok(out.includes('fill="#f4f3e0"'), 'el crema no salió como el oficial');
+  assert.ok(!out.includes('#f4f3e1'));
+  assert.ok(!/width=|height=|xmlns:xlink|<\?xml/.test(out), 'la raíz conserva width, height, xlink o declaración');
+  assert.ok(out.includes('viewBox="0 0 800 800"'));
+  const purple = cleanArtboard(svg('<path fill="rgb(25.898743%, 15.699768%, 81.999207%)" d="M 0 0 Z"/>'), 1);
+  assert.ok(purple.includes('fill="#4228d1"'));
+  assert.throws(() => cleanArtboard(svg('<path fill="rgb(50%, 50%, 50%)" d="M 0 0 Z"/>'), 9), /mesa 9.*fuera de la paleta/s);
+  assert.throws(() => cleanArtboard(svg('<path fill="rgb(50%, 50%, 50%)" d="M 0 0 Z"/>'), 9), /#808080/);
+});
+
+test('(vi-ix) los originales (.ai, .pdf, brand-inventory/) no están versionados y .gitignore los cubre', (t) => {
+  let tracked;
+  try {
+    tracked = execFileSync('git', ['ls-files'], { encoding: 'utf8' }).split('\n').filter(Boolean);
+  } catch {
+    t.skip('no es un repositorio git');
+    return;
+  }
+  assert.deepEqual(tracked.filter((f) => /\.(ai|pdf)$/i.test(f)), []);
+  assert.deepEqual(tracked.filter((f) => f.includes('brand-inventory/')), []);
+  const ignore = readFileSync('.gitignore', 'utf8').split('\n').map((l) => l.trim());
+  for (const pattern of ['*.ai', 'BrandBook*.pdf', '.planning/phases/*/brand-inventory/']) {
+    assert.ok(ignore.includes(pattern), `.gitignore sin ${pattern}`);
+  }
+});

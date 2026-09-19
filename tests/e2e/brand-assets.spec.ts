@@ -1,7 +1,8 @@
 import { test, expect, type Page } from '@playwright/test';
 import { readFileSync } from 'node:fs';
 import { parse } from 'yaml';
-import { PURPLE_RGB } from './lib/brand';
+import { PURPLE_RGB, rgbOfToken } from './lib/brand';
+import { ARTBOARDS, MIN_HEIGHT_PX } from '../../src/components/brand/logo-variants.mjs';
 
 // El nombre accesible esperado sale del YAML, nunca de una cadena escrita a mano.
 const es = (parse(readFileSync('src/content/landing.es.yaml', 'utf8')) as {
@@ -19,7 +20,7 @@ function viewBoxRatio(path: string): number {
   return parts[2] / parts[3];
 }
 
-const LOGO_RATIO = viewBoxRatio('src/assets/brand/logo-horizontal.svg');
+const LOGO_RATIO = viewBoxRatio('src/assets/brand/horizontal-06-blanco.svg');
 
 async function open(page: Page, width: number, path = '/') {
   await page.setViewportSize({ width, height: 900 });
@@ -27,6 +28,17 @@ async function open(page: Page, width: number, path = '/') {
 }
 
 test.describe('logo horizontal en el header', () => {
+  test('(f) el header trae la mesa 06 horizontal con el mismo tono que su superficie', async ({ page }) => {
+    await open(page, 1280);
+    const info = await page.locator('header .brand-logo').first().evaluate((el) => ({
+      artboard: el.getAttribute('data-artboard'),
+      variant: el.getAttribute('data-variant'),
+      logoTone: el.getAttribute('data-logo-tone'),
+      surfaceTone: el.closest('[data-tone]')?.getAttribute('data-tone'),
+    }));
+    expect(info).toEqual({ artboard: '06', variant: 'horizontal', logoTone: 'light', surfaceTone: 'light' });
+  });
+
   for (const width of HEADER_WIDTHS) {
     test(`(a) a ${width}px el logo es una imagen con nombre, sin enlace en / y de 32px o más`, async ({ page }) => {
       await open(page, width);
@@ -86,11 +98,10 @@ test.describe('logo horizontal en el header', () => {
     });
   }
 
-  test('(e) el relleno del logo no es none ni negro puro', async ({ page }) => {
+  test('(e) el relleno del logo del header es el morado de marca', async ({ page }) => {
     await open(page, 1280);
     const fill = await page.locator('header .brand-logo svg path').first().evaluate((el) => getComputedStyle(el).fill);
-    expect(fill).not.toBe('none');
-    expect(fill).not.toBe('rgb(0, 0, 0)');
+    expect(fill).toBe(PURPLE_RGB);
   });
 
   test('(e2) el logo del header y el h1 comparten el morado de marca', async ({ page }) => {
@@ -118,27 +129,75 @@ test.describe('logo horizontal sin JavaScript', () => {
 const SHEET = '/marca/hoja/';
 const SHEET_WIDTHS = [320, 390, 768, 1024, 1280];
 
-test.describe('hoja de revisión: identidad', () => {
-  for (const width of SHEET_WIDTHS) {
-    test(`logo e isotipo a ${width}px: tamaños mínimos, blanco sobre dark y sin scroll horizontal`, async ({ page }) => {
-      await open(page, width, SHEET);
-      const sizes = await page.evaluate(() => {
-        const h = (sel: string) => Array.from(document.querySelectorAll(sel)).map((el) => el.getBoundingClientRect().height);
-        return { logo: h('.brand-logo[data-variant="horizontal"] svg'), iso: h('.brand-logo[data-variant="isotipo"] svg') };
-      });
-      expect(sizes.logo.length).toBeGreaterThan(0);
-      expect(sizes.iso.length).toBeGreaterThan(0);
-      for (const v of sizes.logo) expect(v).toBeGreaterThanOrEqual(32);
-      for (const v of sizes.iso) expect(v).toBeGreaterThanOrEqual(24);
+const TONE_COUNTS: Record<string, number> = { light: 6, yellow: 4, dark: 3, purple: 4 };
+const hexToRgbString = (hex: string) => {
+  const n = parseInt(hex.slice(1), 16);
+  return `rgb(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255})`;
+};
 
-      const darkFill = await page
-        .locator('[data-tone="dark"] .brand-logo[data-variant="horizontal"] svg path')
-        .first()
-        .evaluate((el) => getComputedStyle(el).fill);
-      expect(darkFill).toBe('rgb(255, 255, 255)');
+test.describe('hoja de revisión: identidad por tono', () => {
+  for (const width of SHEET_WIDTHS) {
+    test(`las 17 mesas a ${width}px: mesa por tono, nombre accesible, alto mínimo, sin recolor y sin scroll horizontal`, async ({ page }) => {
+      await open(page, width, SHEET);
+      let total = 0;
+      for (const [tone, count] of Object.entries(TONE_COUNTS)) {
+        const section = page.locator(`[data-sheet="identidad"][data-tone="${tone}"]`);
+        await expect(section).toHaveCount(1);
+        const expected = ARTBOARDS.filter((b: { use: boolean; tone: string }) => b.use && b.tone === tone);
+        expect(expected.length).toBe(count);
+        const logos = await section.locator('.brand-logo').evaluateAll((els) =>
+          els.map((el) => {
+            const svg = el.querySelector('svg')!;
+            const paths = Array.from(svg.querySelectorAll('path'));
+            return {
+              n: Number(el.getAttribute('data-artboard')),
+              variant: el.getAttribute('data-variant')!,
+              logoTone: el.getAttribute('data-logo-tone'),
+              role: svg.getAttribute('role'),
+              label: svg.getAttribute('aria-label'),
+              focusable: svg.getAttribute('focusable'),
+              hidden: svg.hasAttribute('aria-hidden'),
+              height: svg.getBoundingClientRect().height,
+              attrFills: paths.map((p) => p.getAttribute('fill')),
+              computedFills: paths.map((p) => getComputedStyle(p).fill),
+            };
+          }),
+        );
+        expect(logos.map((l) => l.n).sort((x, y) => x - y)).toEqual(expected.map((b: { n: number }) => b.n).sort((x: number, y: number) => x - y));
+        total += logos.length;
+        for (const logo of logos) {
+          const board = ARTBOARDS.find((b: { n: number }) => b.n === logo.n);
+          expect(logo.logoTone).toBe(tone);
+          expect(logo.role).toBe('img');
+          expect(logo.label).toBe(BRAND_NAME);
+          expect(logo.focusable).toBe('false');
+          expect(logo.hidden).toBe(false);
+          expect(logo.height, `mesa ${logo.n}`).toBeGreaterThanOrEqual((MIN_HEIGHT_PX as Record<string, number>)[logo.variant]);
+          // Sin recolor: el relleno calculado de cada path es el atributo fill del propio path.
+          logo.attrFills.forEach((fill, i) => {
+            expect(fill, `mesa ${logo.n}`).not.toBeNull();
+            expect(logo.computedFills[i], `mesa ${logo.n}`).toBe(hexToRgbString(fill!));
+          });
+          expect(logo.computedFills, `mesa ${logo.n}`).toContain(rgbOfToken(board.fg));
+        }
+      }
+      expect(total).toBe(17);
 
       const overflow = await page.evaluate(() => document.documentElement.scrollWidth - innerWidth);
       expect(overflow).toBeLessThanOrEqual(0);
+    });
+
+    test(`la paleta a ${width}px imprime los seis hex de tokens.css`, async ({ page }) => {
+      await open(page, width, SHEET);
+      const strip = page.locator('[data-sheet="paleta"]');
+      await expect(strip.locator('[data-swatch]')).toHaveCount(6);
+      for (const name of ['purple', 'cream', 'orange', 'yellow', 'dark', 'white']) {
+        const swatch = strip.locator(`[data-swatch="${name}"]`);
+        const printed = (await swatch.locator('[data-swatch-hex]').textContent())!.trim();
+        expect(hexToRgbString(printed)).toBe(rgbOfToken(name));
+        const bg = await swatch.locator('.swatch-chip').evaluate((el) => getComputedStyle(el).backgroundColor);
+        expect(bg).toBe(rgbOfToken(name));
+      }
     });
   }
 
@@ -146,6 +205,26 @@ test.describe('hoja de revisión: identidad', () => {
     await open(page, 1280, SHEET);
     await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex');
   });
+});
+
+// Herramienta de capturas de la hoja. Solo corre con PHASE2_BATCH definida (p. ej. PHASE2_BATCH=M).
+// Guarda test-results/phase2/<lote>-hoja-<ancho>.png a página completa, con todo lo que no es
+// localhost abortado.
+test.describe('captura de la hoja', () => {
+  test.skip(!process.env.PHASE2_BATCH, 'define PHASE2_BATCH (p. ej. M) para generar capturas de la hoja');
+  for (const width of SHEET_WIDTHS) {
+    test(`captura de la hoja a ${width}px`, async ({ browser, baseURL }) => {
+      const context = await browser.newContext({ baseURL, viewport: { width, height: 900 } });
+      await context.route('**/*', (route) => {
+        const host = new URL(route.request().url()).hostname;
+        return host === 'localhost' || host === '127.0.0.1' ? route.continue() : route.abort();
+      });
+      const page = await context.newPage();
+      await page.goto(SHEET);
+      await page.screenshot({ path: `test-results/phase2/${process.env.PHASE2_BATCH}-hoja-${width}.png`, fullPage: true });
+      await context.close();
+    });
+  }
 });
 
 test.describe('favicon', () => {

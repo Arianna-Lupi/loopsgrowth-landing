@@ -3,7 +3,7 @@
  * Hoja de revisión visual de la marca (herramienta interna, no es copy de la landing).
  * Existe solo fuera de producción: con PUBLIC_ENV=production `getStaticPaths` devuelve una lista
  * vacía y no se genera `/marca/hoja/`. Lleva `noindex` por BaseLayout. Los rótulos son ids de
- * pieza en elementos `code`, nunca frases. Sirve para que Juan y Ari aprueben logo, isotipo,
+ * pieza en elementos `code`, nunca frases. Sirve para que Juan y Ari aprueben las 17 mesas oficiales del logo por tono, la paleta,
  * primitivas de collage, composiciones y avatares a varios anchos antes de que existan las
  * secciones que los usan.
  */
@@ -13,6 +13,9 @@ import CollagePiece from '../../components/collage/CollagePiece.astro';
 import AgendaCollage from '../../components/collage/AgendaCollage.astro';
 import Avatar from '../../components/collage/Avatar.astro';
 import { PIECES, ALLOWED_FILLS } from '../../components/collage/collage-rules.mjs';
+import { ARTBOARDS, LOGO_TONES, LOGO_VARIANTS } from '../../components/brand/logo-variants.mjs';
+import { parseTokens } from '../../../scripts/lib/contrast.mjs';
+import { readFileSync } from 'node:fs';
 import { isProduction } from '../../lib/site';
 import { getLanding } from '../../lib/content';
 
@@ -22,7 +25,20 @@ export function getStaticPaths() {
 
 const data = await getLanding();
 const name = data.brand.name.text;
-const TONES = ['light', 'dark'] as const;
+// Mesas oficiales usadas, por tono, en el orden de las variantes (apilado, horizontal, ...).
+const BOARDS_BY_TONE = LOGO_TONES.map((tone) => ({
+  tone,
+  boards: ARTBOARDS.filter((b) => b.use && b.tone === tone).sort(
+    (a, b) => LOGO_VARIANTS.indexOf(a.variant) - LOGO_VARIANTS.indexOf(b.variant),
+  ),
+}));
+// Paleta: los hex se leen de tokens.css, así la página no lleva ningún valor escrito.
+const { theme } = parseTokens(readFileSync('src/styles/tokens.css', 'utf8'));
+const SWATCHES = ['purple', 'cream', 'orange', 'yellow', 'dark', 'white'].map((swatch) => ({
+  swatch,
+  token: `--color-brand-${swatch}`,
+  hex: theme[`--color-brand-${swatch}`],
+}));
 const PIECE_TONES = ['light', 'yellow', 'dark', 'purple'] as const;
 // Combinación de colores por tono: siempre dentro de ALLOWED_FILLS y sin repetir el color del fondo.
 const COMBOS = {
@@ -42,21 +58,42 @@ const SIZES: Record<string, string> = { lupa: '10rem', loop: '8rem', puntos: '6r
       <h1><code>marca/hoja</code></h1>
     </div>
 
-    <section aria-labelledby="sheet-identity" class="sheet-block" data-sheet="identidad">
+    {
+      BOARDS_BY_TONE.map(({ tone, boards }) => (
+        <section class="sheet-band" data-tone={tone} data-sheet="identidad" aria-labelledby={`sheet-id-${tone}`}>
+          <div class="wrap">
+            <h2 id={`sheet-id-${tone}`}>
+              <code>identidad / {tone}</code>
+            </h2>
+            <ul class="sheet-logos">
+              {boards.map((board) => (
+                <li>
+                  <Logo class="sheet-zone" name={name} variant={board.variant} tone={tone} />
+                  <code>
+                    {board.variant} / mesa {String(board.n).padStart(2, '0')}
+                  </code>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+      ))
+    }
+
+    <section class="sheet-band" data-tone="light" data-sheet="paleta" aria-labelledby="sheet-palette">
       <div class="wrap">
-        <h2 id="sheet-identity"><code>identidad</code></h2>
-        <div class="sheet-grid">
+        <h2 id="sheet-palette"><code>paleta</code></h2>
+        <ul class="sheet-swatches">
           {
-            TONES.map((tone) => (
-              <div class="sheet-tone" data-tone={tone}>
-                <p><code>logo-horizontal / {tone}</code></p>
-                <Logo class="sheet-zone" name={name} variant="horizontal" />
-                <p><code>isotipo / {tone}</code></p>
-                <Logo class="sheet-zone" name={name} variant="isotipo" />
-              </div>
+            SWATCHES.map(({ swatch, token, hex }) => (
+              <li data-swatch={swatch}>
+                <span class="swatch-chip" style={`--swatch: var(${token})`} aria-hidden="true" />
+                <code>{token}</code>
+                <code data-swatch-hex>{hex}</code>
+              </li>
             ))
           }
-        </div>
+        </ul>
       </div>
     </section>
 
@@ -117,31 +154,52 @@ const SIZES: Record<string, string> = { lupa: '10rem', loop: '8rem', puntos: '6r
     padding-block: 2rem;
   }
 
-  .sheet-block {
-    margin-top: 2rem;
-  }
-
-  .sheet-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
-    gap: 1.5rem;
-    margin-top: 1rem;
-  }
-
-  .sheet-tone {
-    min-width: 0;
-    padding: 1rem;
-    border: 3px solid var(--color-brand-dark);
-    border-radius: var(--radius-card, 1rem);
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.75rem;
-  }
-
   .sheet-band {
     margin-top: 2rem;
     padding-block: 2rem;
+  }
+
+  .sheet-logos {
+    list-style: none;
+    margin: 1rem 0 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 1.5rem;
+  }
+
+  .sheet-logos li {
+    min-width: 0;
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .sheet-swatches {
+    list-style: none;
+    margin: 1rem 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 9rem), 1fr));
+    gap: 1.5rem;
+  }
+
+  .sheet-swatches li {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .swatch-chip {
+    display: block;
+    min-height: 4.5rem;
+    background: var(--swatch);
+    border: 3px solid var(--color-brand-dark);
+    border-radius: var(--radius-card, 1rem);
   }
 
   .sheet-pieces {
@@ -206,5 +264,12 @@ const SIZES: Record<string, string> = { lupa: '10rem', loop: '8rem', puntos: '6r
     border: 2px dashed currentColor;
     max-width: 100%;
     box-sizing: border-box;
+  }
+
+  /* Por debajo de 64em la zona reduce su padding para no desbordar; el logo nunca se reduce. */
+  @media (max-width: 63.99em) {
+    .sheet :global(.sheet-zone) {
+      padding: min(var(--logo-clear), 1.5rem);
+    }
   }
 </style>
