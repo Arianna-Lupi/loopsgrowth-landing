@@ -1,7 +1,7 @@
 ---
 phase: "02"
 slug: secciones-marca-y-copy
-status: draft
+status: approved
 shadcn_initialized: false
 preset: none
 created: "2026-09-18"
@@ -710,10 +710,10 @@ Corrida autónoma: no hubo usuario disponible. Cada punto es un valor por defect
 | # | Decisión o supuesto | Por qué | Quién confirma |
 |---|---------------------|---------|----------------|
 | 1 | Se rehizo el estudio de las referencias con render real (Chromium) en lugar del WebFetch de texto de la investigación previa | Juan pidió estudiarlas de verdad; el render mostró estructura, medidas y animaciones reales | Juan |
-| 2 | Quinto tamaño tipográfico, Title (20 a 24 px), para h3 | La Fase 1 lo dejó previsto; sin él el h3 de tarjeta no tiene jerarquía. Desvío de la guía de 4 tamaños | Juan |
-| 3 | Paso de espaciado 96 px solo para `--section-y` desde 1024 px | Alinea con `py-24` y `py-28` de rankingonai; la Fase 1 lo dejó abierto | Juan |
+| 2 | Quinto tamaño tipográfico, Title (20 a 24 px), para h3 | La Fase 1 lo dejó previsto; sin él el h3 de tarjeta no tiene jerarquía. Desvío de la guía de 4 tamaños | Juan (APROBADO 2026-09-19: 5 tamaños, levanta la regla del checker) |
+| 3 | Paso de espaciado 96 px solo para `--section-y` desde 1024 px | Alinea con `py-24` y `py-28` de rankingonai; la Fase 1 lo dejó abierto | Juan (APROBADO 2026-09-19: 96 px, levanta la regla del checker) |
 | 4 | El h2 de `#agenda` pasa al titular del CTA final del doc; "Agenda tu llamada" sale del h2 | CONT-13 lo pide; hay que actualizar el YAML y las pruebas e2e de la Fase 1 | Planner |
-| 5 | La sección `#agenda` no lleva un `CtaLink` a sí misma: hay 4 CTA (header, hero, solución, casos) | Un ancla al propio destino es un no-op y suma una parada de teclado. CONTEXT menciona "el CTA final" y se interpreta como la propia sección | Juan |
+| 5 | La sección `#agenda` no lleva un `CtaLink` a sí misma: hay 4 CTA (header, hero, solución, casos) | Un ancla al propio destino es un no-op y suma una parada de teclado. CONTEXT menciona "el CTA final" y se interpreta como la propia sección | Juan (CONFIRMADO 2026-09-19: 4 CTA + formulario) |
 | 6 | Tonos nuevos `yellow` y `dark`; tarjetas usan tono anidado `light` | Reutiliza los tokens y el script de contraste; CONTEXT fija fondos blanco, amarillo y oscuro | Planner |
 | 7 | Morado como fondo solo en `#agenda`; secuencia de tonos sin repetir vecino y sin morado junto a oscuro | Regla de contraste y ritmo | Juan |
 | 8 | Desviación de 60/30/10: dominante blanco cercano al 45 %, secundario cercano al 50 %, acento menor al 10 % | La alternancia de CONTEXT lo implica | Juan |

@@ -44,6 +44,11 @@ La landing completa con las secciones del Copy v2 (Hero, El problema, Por qué a
 - El relleno aplica solo donde falta el dato (cifras sin respaldo, plazos, sector de casos, cuerpo de privacidad). Lo que ya viene en el doc de Ari ("30 minutos", "SEO/GEO", H1 del Copy v2) se muestra tal cual y solo se lista para que Ari lo confirme.
 - El build de producción sigue fallando (COPY-02) mientras haya `pending` o "FALTA CONFIRMAR" en la página.
 
+### Excepciones del contrato de diseño aprobadas por Juan (2026-09-19)
+- Quinto tamaño tipográfico, Title (20 a 24 px), para el h3 de tarjeta. Levanta la regla de "máximo 4 tamaños" del checker.
+- Paso de espaciado de 96 px solo para `--section-y` desde 1024 px (viene del `py-24` de rankingonai). Levanta la regla de escala hasta 64 px. Obliga a ajustar el padding de `#agenda` de la fase 1 y su prueba e2e.
+- CTA: 4 CTA (header, hero, tras La solución, tras Casos de éxito) más la sección `#agenda`, que es el CTA final por sí misma y no lleva un enlace a sí misma.
+
 ### Claude's Discretion
 Estructura de componentes, nombres de archivos, esquema exacto de las secciones en `landing.es.yaml`, composición de cada collage y detalles de espaciado y tipografía dentro de los tokens. Reglas de proyecto que aplican: diseño web por `impeccable` y `design-taste-frontend`; todo el texto sale tal cual del doc de Ari (fuente de verdad, sin humanizar ni reescribir; si falta un texto se pide a Ari, no se inventa); A11Y.md estricto.
 
