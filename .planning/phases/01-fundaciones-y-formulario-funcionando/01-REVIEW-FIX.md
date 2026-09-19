@@ -1,13 +1,19 @@
 ---
 phase: 01-fundaciones-y-formulario-funcionando
-fixed_at: 2026-09-19T03:50:25Z
+fixed_at: 2026-09-19T04:31:06Z
 review_path: .planning/phases/01-fundaciones-y-formulario-funcionando/01-REVIEW.md
-iteration: 1
-findings_in_scope: 16
-fixed: 16
+iteration: 2
+findings_in_scope: 3
+fixed: 3
 skipped: 0
 status: all_fixed
+iteration_1_fixed_at: 2026-09-19T03:50:25Z
+iteration_1_findings_in_scope: 16
+iteration_1_fixed: 16
+iteration_1_skipped: 0
 ---
+
+> El encabezado de arriba describe la iteración más reciente (2). El contenido de la iteración 1 sigue intacto a continuación; la sección "Iteración 2" está al final.
 
 # Fase 1: Informe de corrección de la revisión de código
 
@@ -151,3 +157,86 @@ Ninguno. Todos los hallazgos en alcance se aplicaron y se confirmaron con prueba
 _Fixed: 2026-09-19T03:50:25Z_
 _Fixer: Claude (gsd-code-fixer)_
 _Iteration: 1_
+
+---
+
+# Iteración 2
+
+**Corregido:** 2026-09-19T04:31:06Z
+**Revisión de origen:** .planning/phases/01-fundaciones-y-formulario-funcionando/01-REVIEW.md (informe de la iteración 2)
+**Iteración:** 2
+
+**Resumen:**
+- Hallazgos en alcance: 3 (WR-01, WR-02 y WR-03; los tres Info, IN-01 a IN-03, quedaron fuera de alcance)
+- Corregidos: 3
+- Omitidos: 0
+
+## Verificación final (iteración 2)
+
+Dónde corrieron las comprobaciones: en un worktree aislado (`.claude/worktrees/rf-01-61552-1789790629`, rama temporal `gsd-reviewfix/01-61552`) con `node_modules` enlazado al del checkout principal. Antes de retirar el worktree se quitó el enlace con `unlink` (sin borrado recursivo). Al cerrar, el fast-forward no fue posible porque el orquestador añadió el commit `c5cbcde` (UAT) a la rama mientras se corregía. Los cambios eran disjuntos (`.planning/` frente a código), así que los tres commits se aplicaron sobre la rama con `cherry-pick`; por eso los hashes de abajo son los de la rama final y no los del worktree. La rama temporal y el worktree ya no existen. El árbol de código de la rama final es idéntico (sin diferencias) al que se probó en el worktree, y las guardas se volvieron a ejecutar desde el checkout principal.
+
+| Comprobación | Resultado |
+|--------------|-----------|
+| `node --test tests/guards/*.test.mjs` | 66 pruebas, 66 pasan, 0 fallan (antes: 62). Se repitió desde el checkout principal tras el cherry-pick: 66 de 66 |
+| `npm run build` (con `prebuild` y `postbuild`) | Pasa |
+| `PUBLIC_ENV=production npm run build` | Sale con código 1 solo por las 5 reclamaciones PENDING (`brand.term`, `call.duration`, `meta.title_template`, `hero.subtitle`, `agenda.intro`); 0 fallos estructurales |
+| `node scripts/check-copy.mjs` (fuera de producción) | 11 verified, 5 pending; 0 estructurales; solo las 5 advertencias PENDING, ningún VOSEO nuevo sobre el copy real de Ari |
+| `npx playwright test --project=chromium` con `E2E_BLOCK_CLICKUP=1` (ClickUp inalcanzable) | 42 de 42 pasan, 3 corridas seguidas antes del commit y una más al final |
+| `npx playwright test --project=chromium` con red | 42 de 42 pasan, 3 corridas seguidas (cada una tarda unos 3 minutos porque el iframe real carga) |
+| `npx playwright test` (proyectos `chromium` y `live`, con red, contra `astro preview` en 4322) | 51 de 51 pasan, dos veces (una al aplicar WR-01 y otra sobre el build final). `forms.clickup.com` respondía 200 |
+| `node scripts/verify-env-surface.mjs` | Todas las comprobaciones PASS, incluido el caso (e) |
+| `node scripts/list-pending.mjs --check` y `node scripts/check-contrast.mjs` | `PENDING-COPY.md` al día (5 pendientes); contraste 9/9 aprobados y 6 prohibidos |
+
+Ninguna prueba llenó ni envió el formulario de ClickUp, no se leyó ningún archivo `.env`, se detuvo el preview (`astro preview stop`) y no quedan servidores propios en marcha.
+
+## Fixed Issues (iteración 2)
+
+### WR-01: La prueba `(f2)` depende de ClickUp y compite con el salto de ancla, así que el proyecto `chromium` no es "sin conexión"
+
+**Files modified:** `tests/e2e/a11y-base.spec.ts`, `playwright.config.ts`, `package.json`
+**Commit:** ac559ee
+**Applied fix:**
+- `(f2)` ya no mide justo después de `goto('/#agenda')`. Provoca el desplazamiento con `scrollIntoView({ behavior: 'instant', block: 'start' })` (el `instant` evita el `scroll-behavior: smooth` de `global.css`) y espera con `expect.poll` a que `window.scrollY` sea mayor que 0. Así la medición de `overAgenda` no depende de cuánto tarde `load` ni de la red.
+- Se corrigió el comentario de `playwright.config.ts`: `chromium` no corre sin red por sí solo (el iframe sigue pidiendo `forms.clickup.com`); lo correcto es que sus pruebas no dependen de que ClickUp responda.
+- Se mantiene una comprobación con ClickUp inalcanzable: con `E2E_BLOCK_CLICKUP=1` (script nuevo `npm run test:e2e:isolated`) el proyecto `chromium` usa un proxy muerto (`http://127.0.0.1:9`) con `bypass: 'localhost,127.0.0.1'`. Sin ese `bypass` Playwright también envía `localhost` al proxy y las 42 pruebas fallan con `ERR_PROXY_CONNECTION_FAILED` (fue el primer intento). `test:e2e:offline` se dejó con su nombre por compatibilidad.
+
+**Comprobado:** con el código anterior de `(f2)` y ClickUp bloqueado la prueba falla 2 de 2 (`Expected: true, Received: false` en `overAgenda`), que reproduce el hallazgo. Con el arreglo: 42/42 bloqueado (4 corridas), 42/42 con red (3 corridas) y suite completa 51/51 con red (2 corridas).
+**Nota:** el script `test:e2e:isolated` usa la sintaxis POSIX `VAR=1 comando`, válida en macOS y Linux; en Windows habría que definir la variable aparte.
+
+### WR-02: `httpsUrlFrom` lanza `TypeError: Invalid URL` en vez de un error de Zod cuando el valor no es una URL
+
+**Files modified:** `src/content.config.ts`
+**Commit:** b7b41bd
+**Applied fix:** `httpsUrlFrom` usa `z.url({ protocol: /^https$/, hostname: /^host$/, error })` en lugar de `z.url().refine(new URL(...))`. Zod valida protocolo y host dentro de `z.url()`, así que un valor que no es URL da un error de Zod con la ruta del campo y el mensaje `debe ser una URL https://{host}/...`. El host se escapa antes de armar la expresión regular.
+
+**Comprobado:**
+- Con un script que extrae la definición real de `src/content.config.ts` y usa el `zod` de Astro: `"nota url"`, `""`, `javascript:alert(1)`, `https://forms.clickup.com@evil.com/x`, `http://...`, un host parecido (`forms-clickup.com`) y `data:` se rechazan con un error de Zod cuya ruta es `form_url`; lo mismo para `form_script_src` con sus cuatro casos. Ninguno lanza. Las dos URLs reales del YAML pasan.
+- Con `astro build` real y cada valor malo puesto temporalmente en el YAML (restaurado con `git checkout` después de cada uno): el build falla con `config.form_url: debe ser una URL https://forms.clickup.com/...`, con el nombre del campo. `npm run build` con los valores reales pasa.
+- Detalle cosmético: para `javascript:` y `data:` el mensaje sale dos veces (protocolo y host fallan a la vez). No afecta al resultado.
+
+### WR-03: La guarda de voseo sigue evadible por "Sos" en mayúscula inicial y por verbos de CTA muy comunes que la lista cerrada no incluye
+
+**Files modified:** `scripts/lib/copy-rules.mjs`, `tests/guards/copy.test.mjs`
+**Commit:** 0d97f0c
+**Estado:** fixed: requires human verification (la lista sigue siendo cerrada y es una decisión de cobertura; conviene que alguien de contenido la revise)
+**Applied fix:**
+- `sos` se marca con una expresión sensible a mayúsculas sobre `['sos', 'Sos']`: se detectan `Sos` inicial y `sos`, y la sigla `SOS` sigue fuera. Límite conocido y documentado en el código: un titular entero en mayúsculas (`¿SOS DUEÑO?`) se confunde con la sigla.
+- Los imperativos de vos pasaron a una lista base `VOSEO_IMPERATIVES` con los verbos nuevos (`contactá`, `sabé`, `hablá`, `llamá`, `avisá`, `ayudá`, `mostrá`, `visitá`, `usá`, `buscá`, `pensá`, `decí`, `esperá`, `tomá`, `bajá`, `generá`, `optimizá`, `analizá`, `diseñá`, `armá`, `ganá`, `crecé`, `posicioná`, `cambiá`, `traé`, `sumá`, `cuidá`, `leé`). De ella se generan las formas con enclítico `nos`, `me`, `te`, `lo`, `la`, `le` (`consultanos`, `hacelo`, `ponete`, `probalo`, `pedile`, `contactame`, `mandale`...). `VOSEO_WORDS` pasó de 88 a 489 formas sin duplicados y sigue exportada.
+- Esas formas sin tilde no existen en español neutro (el imperativo de tú es `consúltanos`, `hazlo`, `ponte`, `pruébalo`, `pídele`), por eso no tocan copy legítimo. Se añadió una lista de excepciones para las palabras reales que coinciden con una forma generada: `tomate`, `mandala`, `generala`, `andale`, `create`, `activate`, `generate` y `mandate`.
+- No se añadieron como base los verbos cuyo imperativo de vos coincide con el pretérito de primera persona (`medí`, `sentí`, `viví`, `convertí`, `invertí`, `subí`, `seguí`), para no marcar testimonios en español neutro (mismo problema que IN-01 con `pedí` y `elegí`, que no se tocó).
+- Pruebas nuevas: `4g` (`Sos` inicial y `sos` se marcan, `SOS` no), `4h` (`Contactá`, `Consultanos`, `Hacelo`, `Ponete`, `Probalo`, `Pedile`, `Sabé` y otros se marcan), `4i` (las formas de tú con tilde, `tomate`, `mandala` y las palabras en inglés no se marcan) y `4j` (desde el CLI, `Sos` inicial y `Contactá` bloquean producción). Sin el arreglo, `4g`, `4h` y `4j` fallan (3 fallos); con él pasan las 66.
+
+**Comprobado contra el copy real:** `node scripts/check-copy.mjs` sobre `src/content/landing.es.yaml` no da ningún VOSEO nuevo (solo las 5 advertencias PENDING), y la producción sigue fallando únicamente por esas 5 (la prueba 9b lo exige). Las 489 formas se compararon con el diccionario inglés del sistema: quedan como coincidencias deliberadas `probate`, `decile`, `mirate`, `venite` y `generale`, más `unite`, `animate` y `registrate`, que ya estaban en la lista original. Se dejaron marcadas a propósito, porque un voseo colado es peor que un falso positivo raro con una palabra en inglés.
+
+## Notas para el orquestador (iteración 2)
+
+- Los tres Info (IN-01 a IN-03) quedaron fuera de alcance (`fix_scope: critical_warning`).
+- Cada corrección tiene su propio commit atómico `fix(01): WR-NN ...` y ninguno incluye este informe.
+- Los hashes son los de la rama final (`ac559ee`, `b7b41bd`, `0d97f0c`), aplicados con `cherry-pick` sobre `c5cbcde`. Los commits originales del worktree (`56c9e71`, `3a64321`, `7e3850f`) ya no son alcanzables porque la rama temporal se borró.
+- Tras cualquier cambio de código hay que ejecutar `npx astro build` y reiniciar el preview antes de correr Playwright; `tests/global-setup.ts` falla si `dist` está viejo.
+
+---
+
+_Fixed: 2026-09-19T04:31:06Z_
+_Fixer: Claude (gsd-code-fixer)_
+_Iteration: 2_
