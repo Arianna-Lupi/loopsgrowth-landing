@@ -22,13 +22,14 @@ const claim = z.strictObject({
  * se actualiza aquí a propósito.
  */
 const httpsUrlFrom = (host: string) =>
-  z.url().refine(
-    (value) => {
-      const url = new URL(value);
-      return url.protocol === 'https:' && url.hostname === host;
-    },
-    { message: `debe ser una URL https://${host}/...` },
-  );
+  // Zod valida protocolo y host dentro del propio `z.url()`: si el valor no es una URL ("nota url",
+  // vacío), falla con un error de Zod que trae la ruta del campo. Un `.refine()` con `new URL()`
+  // lanzaría `TypeError: Invalid URL` sin campo, porque en Zod 4 el refine también corre tras un fallo.
+  z.url({
+    protocol: /^https$/,
+    hostname: new RegExp(`^${host.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`),
+    error: `debe ser una URL https://${host}/...`,
+  });
 
 const landing = defineCollection({
   // El `file()` de Astro 7 detecta YAML por la extensión. La clave superior
