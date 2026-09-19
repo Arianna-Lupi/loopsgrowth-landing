@@ -2,21 +2,29 @@
  * Tokens de marca (FND-03). Fuente única de color, tipografía, forma y movimiento.
  * Tres niveles: primitivos de marca en @theme, semánticos por tono fuera de @theme,
  * y componentes que solo consumen los semánticos. Cuatro tonos de superficie:
- * light, yellow, dark y purple (UI-SPEC de la Fase 2). Los cuatro colores del brandbook
- * más el blanco existen una sola vez, aquí. `scripts/check-contrast.mjs` lee este
- * archivo en cada build y falla si un par baja de su umbral de contraste.
- * No agregar neutrales: el brandbook no define crema ni grises.
+ * light, yellow, dark y purple (UI-SPEC de la Fase 2).
+ *
+ * Colores de marca: el morado azulado (#4228d1, el del logo y de la muestra del BrandBook),
+ * el naranja, el amarillo, el oscuro y el blanco, más el crema del logo. Existen una sola vez,
+ * aquí, salvo los SVG oficiales de `src/assets/brand`, que traen sus colores por diseño; el iris
+ * y la pupila del isotipo viven solo en esos SVG. La página 8 del BrandBook rotula el morado con
+ * otro valor: se trata como etiqueta errónea (decisión de Juan, 2026-09-19) y no se usa.
+ *
+ * El crema no es un tono ni un neutral libre: es superficie de chips y píldoras y color de texto
+ * del logo sobre morado y oscuro, con las reglas de pares de más abajo. `scripts/check-contrast.mjs`
+ * lee este archivo en cada build y falla si un par baja de su umbral de contraste.
  */
 
 /* `static` hace que Tailwind emita siempre todas las variables, aunque un
    componente solo las use desde su propio bloque de estilo. */
 @theme static {
   /* Primitivos de marca */
-  --color-brand-purple: #73187f;
+  --color-brand-purple: #4228d1;
   --color-brand-orange: #fd6938;
   --color-brand-yellow: #ffc602;
   --color-brand-dark: #212121;
   --color-brand-white: #ffffff;
+  --color-brand-cream: #f4f3e0;
 
   /* Escala tipográfica: 5 roles (Title es el quinto, previsto por la Fase 1 y aprobado por
      Juan para la Fase 2). Pesos del brandbook: 400 párrafos, 600 texto secundario y
@@ -91,7 +99,10 @@
    Un bloque plano por tono, con selector exacto `[data-tone="x"]` (la guarda de contraste
    rechaza selectores compuestos y CSS anidado) y siempre con `var(--color-brand-*)`.
    Reglas que la guarda protege: nunca morado sobre oscuro; nunca naranja ni blanco como
-   texto sobre amarillo; tarjeta blanca sobre amarillo o blanco lleva borde oscuro de 3 px. */
+   texto sobre amarillo; tarjeta blanca sobre amarillo o blanco lleva borde oscuro de 3 px;
+   nunca naranja sobre morado (2.95) ni oscuro sobre morado (1.88); sobre crema nunca amarillo,
+   naranja ni blanco. Cambiar el morado exige actualizar este token y las razones medidas de
+   `scripts/lib/contrast.mjs` (no basta un solo lugar). */
 :root,
 [data-tone="light"] {
   --surface: var(--color-brand-white);

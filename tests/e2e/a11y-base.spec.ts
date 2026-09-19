@@ -2,6 +2,7 @@ import { test, expect, type Page } from '@playwright/test';
 import { readFileSync } from 'node:fs';
 import { parse } from 'yaml';
 import { walkClaims, MISSING_MARK } from '../../scripts/lib/copy-rules.mjs';
+import { PURPLE_RGB } from './lib/brand';
 
 // Los textos esperados salen del YAML y no se copian a mano: cuando Ari confirma o cambia un
 // texto (el término, la duración, el subtítulo), la prueba sigue midiendo lo que la página debe
@@ -145,9 +146,9 @@ test.describe('orden de tabulación y foco a 1280 px', () => {
       };
     });
     // El enlace (fixed) queda, al menos en parte, sobre #agenda: el contorno morado de UI-SPEC no se ve ahí,
-    // así que el anillo amarillo del box-shadow (6.15 sobre morado) debe estar presente.
+    // así que el anillo amarillo del box-shadow (5.43 sobre morado) debe estar presente.
     expect(info.overAgenda).toBe(true);
-    expect(info.outlineColor).toBe('rgb(115, 24, 127)');
+    expect(info.outlineColor).toBe(PURPLE_RGB);
     expect(info.boxShadow).toContain('rgb(255, 198, 2)');
     await page.screenshot({ path: 'test-results/skip-link-focused-agenda.png', clip: { x: 0, y: 0, width: 640, height: 160 } });
   });

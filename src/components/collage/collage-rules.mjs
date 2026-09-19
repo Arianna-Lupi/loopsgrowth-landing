@@ -28,6 +28,10 @@ export function fillVar(color) {
 }
 
 /**
+ * Nota del naranja sobre morado: mide 2.95, está prohibido para texto y UI en `scripts/lib/contrast.mjs`
+ * y solo se permite aquí como relleno decorativo con contorno blanco (que es el que define la forma).
+ * Este permiso y ese par prohibido se cambian juntos (lo exige `tests/guards/brand-palette.test.mjs`).
+ *
  * Rellenos permitidos por tono (los que se ven y cumplen contraste sobre esa superficie).
  * @type {Readonly<Record<Tone, readonly BrandColor[]>>}
  */

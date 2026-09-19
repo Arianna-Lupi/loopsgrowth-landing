@@ -1,6 +1,7 @@
 import { test, expect, type Page } from '@playwright/test';
 import { readFileSync } from 'node:fs';
 import { parse } from 'yaml';
+import { PURPLE_RGB } from './lib/brand';
 
 // El nombre accesible esperado sale del YAML, nunca de una cadena escrita a mano.
 const es = (parse(readFileSync('src/content/landing.es.yaml', 'utf8')) as {
@@ -90,6 +91,14 @@ test.describe('logo horizontal en el header', () => {
     const fill = await page.locator('header .brand-logo svg path').first().evaluate((el) => getComputedStyle(el).fill);
     expect(fill).not.toBe('none');
     expect(fill).not.toBe('rgb(0, 0, 0)');
+  });
+
+  test('(e2) el logo del header y el h1 comparten el morado de marca', async ({ page }) => {
+    await open(page, 1280);
+    const fill = await page.locator('header .brand-logo svg path').first().evaluate((el) => getComputedStyle(el).fill);
+    const h1 = await page.locator('h1').first().evaluate((el) => getComputedStyle(el).color);
+    expect(fill).toBe(h1);
+    expect(fill).toBe(PURPLE_RGB);
   });
 });
 

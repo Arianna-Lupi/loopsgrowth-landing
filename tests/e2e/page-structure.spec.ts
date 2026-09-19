@@ -1,6 +1,7 @@
 import { test, expect, type Page } from '@playwright/test';
 import { readFileSync } from 'node:fs';
 import { parse } from 'yaml';
+import { PURPLE_RGB } from './lib/brand';
 
 // Estructura de la página (fase 2, plan 01). Los textos esperados salen del YAML y no se copian
 // a mano: se resuelven {term} y {duration} igual que `fill()` de src/lib/content.ts.
@@ -22,7 +23,7 @@ const DESCRIPTION_TEXTS = es.hero.description.map(resolveText);
 // Orden vertical del hero (desviación 1 del plan 02-01): h1, subtítulo, CTA y después la descripción.
 const HERO_ORDER = ['h1', 'subtitle', 'cta', 'description'] as const;
 
-const PURPLE = 'rgb(115, 24, 127)';
+const PURPLE = PURPLE_RGB;
 
 type Box = { top: number; bottom: number; left: number; right: number; width: number; height: number };
 

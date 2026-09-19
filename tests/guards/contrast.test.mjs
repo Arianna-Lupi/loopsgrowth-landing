@@ -16,7 +16,8 @@ const CLI = 'scripts/check-contrast.mjs';
 const TOKENS = 'src/styles/tokens.css';
 
 const HEX = {
-  purple: '#73187f',
+  purple: '#4228d1',
+  cream: '#f4f3e0',
   orange: '#fd6938',
   yellow: '#ffc602',
   dark: '#212121',
@@ -39,30 +40,47 @@ function replaceInTone(css, tone, prop, value) {
   return css.replace(re, `$1${value};`);
 }
 
-test('contrastRatio reproduce los 15 ratios medidos (9 aprobados y 6 prohibidos)', () => {
-  const known = [
+test('contrastRatio reproduce los 25 ratios medidos (14 aprobados y 11 prohibidos)', () => {
+  // Oráculo escrito a mano e independiente de las listas del código.
+  const approved = [
     [HEX.dark, HEX.white, 16.1],
-    [HEX.purple, HEX.white, 9.69],
-    [HEX.white, HEX.purple, 9.69],
-    [HEX.yellow, HEX.purple, 6.15],
+    [HEX.purple, HEX.white, 8.55],
+    [HEX.white, HEX.purple, 8.55],
+    [HEX.yellow, HEX.purple, 5.43],
     [HEX.dark, HEX.yellow, 10.22],
     [HEX.dark, HEX.orange, 5.56],
     [HEX.yellow, HEX.dark, 10.22],
     [HEX.orange, HEX.dark, 5.56],
-    [HEX.orange, HEX.purple, 3.35],
+    [HEX.purple, HEX.yellow, 5.43],
+    [HEX.white, HEX.dark, 16.1],
+    [HEX.cream, HEX.purple, 7.63],
+    [HEX.purple, HEX.cream, 7.63],
+    [HEX.dark, HEX.cream, 14.37],
+    [HEX.cream, HEX.dark, 14.37],
+  ];
+  const forbidden = [
     [HEX.white, HEX.orange, 2.89],
     [HEX.orange, HEX.white, 2.89],
     [HEX.yellow, HEX.white, 1.58],
     [HEX.white, HEX.yellow, 1.58],
-    [HEX.purple, HEX.dark, 1.66],
+    [HEX.purple, HEX.dark, 1.88],
     [HEX.orange, HEX.yellow, 1.84],
+    [HEX.dark, HEX.purple, 1.88],
+    [HEX.orange, HEX.purple, 2.95],
+    [HEX.yellow, HEX.cream, 1.41],
+    [HEX.orange, HEX.cream, 2.58],
+    [HEX.white, HEX.cream, 1.12],
   ];
-  assert.equal(known.length, 15);
-  for (const [fg, bg, expected] of known) {
+  assert.equal(approved.length, 14);
+  assert.equal(forbidden.length, 11);
+  for (const [fg, bg, expected] of [...approved, ...forbidden]) {
     assert.ok(
       Math.abs(contrastRatio(fg, bg) - expected) <= 0.01 + 1e-9,
       `${fg} sobre ${bg}: se esperaba ${expected} y salió ${contrastRatio(fg, bg)}`,
     );
+  }
+  for (const [fg, bg] of forbidden) {
+    assert.ok(contrastRaw(fg, bg) < 3, `${fg} sobre ${bg} debía medir menos de 3`);
   }
 });
 
@@ -79,9 +97,9 @@ test('un enlace de tono con ratio real 4.4971 falla check-contrast aunque el rat
   assert.match(res.stderr, /real 4\.4971/);
 });
 
-test('las listas exportadas traen 11 pares aprobados y 6 prohibidos', () => {
-  assert.equal(APPROVED_PAIRS.length, 11);
-  assert.equal(FORBIDDEN_PAIRS.length, 6);
+test('las listas exportadas traen 14 pares aprobados y 11 prohibidos', () => {
+  assert.equal(APPROVED_PAIRS.length, 14);
+  assert.equal(FORBIDDEN_PAIRS.length, 11);
 });
 
 test('parseTokens lee @theme static, resuelve los tonos y no toma un :root suelto por tono', () => {
@@ -97,7 +115,7 @@ test('parseTokens lee @theme static, resuelve los tonos y no toma un :root suelt
 });
 
 test('parseTokens acepta comillas simples y sin comillas en [data-tone] y no reporta problemas', () => {
-  const css = `[data-tone='light'] { --surface: #ffffff; } [data-tone=purple] { --surface: #73187f; }`;
+  const css = `[data-tone='light'] { --surface: #ffffff; } [data-tone=purple] { --surface: #4228d1; }`;
   const { tones, problems } = parseTokens(css);
   assert.deepEqual(Object.keys(tones).sort(), ['light', 'purple']);
   assert.deepEqual(problems, []);
@@ -143,7 +161,7 @@ test('un selector descendiente [data-tone="x"] .card no se fusiona con el tono: 
   assert.equal(tones.purple['--surface'], HEX.purple);
 });
 
-test('ejecución por defecto: código 0 y 11 pares aprobados ok en --json', () => {
+test('ejecución por defecto: código 0 y 14 pares aprobados ok en --json', () => {
   const res = run();
   assert.equal(res.status, 0, res.stderr);
   const json = run('--json');
@@ -151,9 +169,9 @@ test('ejecución por defecto: código 0 y 11 pares aprobados ok en --json', () =
   const results = JSON.parse(json.stdout);
   const approved = results.filter((r) => r.kind === 'approved');
   const forbidden = results.filter((r) => r.kind === 'forbidden');
-  assert.equal(approved.length, 11);
+  assert.equal(approved.length, 14);
   assert.ok(approved.every((r) => r.ok));
-  assert.equal(forbidden.length, 6);
+  assert.equal(forbidden.length, 11);
   assert.ok(forbidden.every((r) => r.ok && r.ratio < r.threshold));
   assert.ok(results.filter((r) => r.kind === 'tone').every((r) => r.ok));
 });
@@ -176,14 +194,14 @@ test('apuntar --on-cta del tono claro a blanco rompe con código 1 y menciona 2.
   assert.match(res.stderr, /2\.89/);
 });
 
-test('apuntar --focus-ring del tono morado a oscuro rompe con código 1 y menciona 1.66', () => {
+test('apuntar --focus-ring del tono morado a oscuro rompe con código 1 y menciona 1.88', () => {
   const file = mutatedTokens((css) =>
     replaceInTone(css, 'purple', '--focus-ring', 'var(--color-brand-dark)'),
   );
   const res = run('--tokens', file);
   assert.equal(res.status, 1);
   assert.match(res.stderr, /tono purple: --focus-ring sobre --surface/);
-  assert.match(res.stderr, /1\.66/);
+  assert.match(res.stderr, /1\.88/);
 });
 
 test('declarar un par prohibido en un tono (naranja sobre blanco como enlace) falla y lo nombra', () => {
@@ -208,7 +226,7 @@ test('una ruta de tokens inexistente sale con 1', () => {
 });
 
 test('los pares nuevos (morado sobre amarillo y blanco sobre oscuro) están aprobados y morado sobre blanco exige 4.5', () => {
-  assert.equal(contrastRatio(HEX.purple, HEX.yellow), 6.15);
+  assert.equal(contrastRatio(HEX.purple, HEX.yellow), 5.43);
   assert.equal(contrastRatio(HEX.white, HEX.dark), 16.1);
   const has = (fg, bg) => APPROVED_PAIRS.find((p) => p.fg === fg && p.bg === bg);
   const purpleOnYellow = has('--color-brand-purple', '--color-brand-yellow');
@@ -275,4 +293,43 @@ test('cambiar --color-brand-yellow rompe el par morado sobre amarillo', () => {
   const res = run('--tokens', file);
   assert.equal(res.status, 1);
   assert.match(res.stderr, /purple sobre yellow/);
+});
+
+test('un tono purple con --bar naranja sale con 1, dice par prohibido y menciona 2.95', () => {
+  const file = mutatedTokens((css) => replaceInTone(css, 'purple', '--bar', 'var(--color-brand-orange)'));
+  const res = run('--tokens', file);
+  assert.equal(res.status, 1);
+  assert.match(res.stderr, /tono purple: --bar sobre --surface/);
+  assert.match(res.stderr, /par prohibido/);
+  assert.match(res.stderr, /2\.95/);
+});
+
+test('un tono purple con --on-surface oscuro sale con 1 y menciona 1.88', () => {
+  const file = mutatedTokens((css) => replaceInTone(css, 'purple', '--on-surface', 'var(--color-brand-dark)'));
+  const res = run('--tokens', file);
+  assert.equal(res.status, 1);
+  assert.match(res.stderr, /tono purple: --on-surface sobre --surface/);
+  assert.match(res.stderr, /1\.88/);
+});
+
+test('cambiar --color-brand-purple a otro morado rompe check-contrast y nombra purple sobre white', () => {
+  const file = mutatedTokens((css) => css.replace(/(--color-brand-purple:\s*)#4228d1/, '$1#7a1f8a'));
+  const res = run('--tokens', file);
+  assert.equal(res.status, 1);
+  assert.match(res.stderr, /purple sobre white/);
+});
+
+test('cambiar --color-brand-cream a blanco rompe check-contrast y nombra cream sobre purple', () => {
+  const file = mutatedTokens((css) => css.replace(/(--color-brand-cream:\s*)#f4f3e0/, '$1#ffffff'));
+  const res = run('--tokens', file);
+  assert.equal(res.status, 1);
+  assert.match(res.stderr, /cream sobre purple/);
+});
+
+test('un tono light con --link crema sale con 1 y menciona 1.12', () => {
+  const file = mutatedTokens((css) => replaceInTone(css, 'light', '--link', 'var(--color-brand-cream)'));
+  const res = run('--tokens', file);
+  assert.equal(res.status, 1);
+  assert.match(res.stderr, /tono light: --link sobre --surface/);
+  assert.match(res.stderr, /1\.12/);
 });

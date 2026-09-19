@@ -2,6 +2,7 @@ import { test, expect, type Page } from '@playwright/test';
 import { readFileSync } from 'node:fs';
 import { parse } from 'yaml';
 import { walkClaims, MISSING_MARK } from '../../scripts/lib/copy-rules.mjs';
+import { PURPLE_RGB } from './lib/brand';
 
 // Los textos esperados salen del YAML (walkClaims y el propio arreglo): nunca cadenas escritas a mano
 // (COPY-01). Los espacios se normalizan al comparar porque el HTML colapsa el espacio doble del doc de Ari.
@@ -24,7 +25,7 @@ const marksUnder = (prefix: string) =>
   ).length;
 
 const WHITE = 'rgb(255, 255, 255)';
-const PURPLE = 'rgb(115, 24, 127)';
+const PURPLE = PURPLE_RGB;
 
 const color = (page: Page, sel: string) =>
   page.locator(sel).evaluate((el) => getComputedStyle(el).color);
