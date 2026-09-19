@@ -26,9 +26,11 @@ La landing completa con las secciones del Copy v2 (Hero, El problema, Por qué a
 - Si falta sector o plazo de un caso, se marca `pending`: en local se muestra con etiqueta visible de borrador y en producción no se muestra hasta que Ari confirme.
 
 ### Estilo visual, collage y movimiento
-- Las referencias de Ari (m8l.com, skale.so, rankingonai.com) aportan ritmo de secciones y jerarquía de conversión; la identidad es la de Loops Growth. No se copian layouts.
+- Las referencias de Ari (m8l.com, skale.so, rankingonai.com) son la guía de layout y vibra (cambio de Juan, 2026-09-18). Se estudian a fondo para entender cómo arman cada sección (estructura, ritmo, jerarquía, composición del hero, tarjetas, prueba social, CTA) y se hace un combinado propio para Loops Growth, no una copia de una sola página. La identidad visual (logo, paleta, tipografía, collage) sigue siendo la de Loops Growth.
+- Método de diseño: skill `impeccable` con los verbos que apliquen (por ejemplo shape para definir cada sección, critique y polish para iterar, colorize, animate y adapt cuando toque) y las iteraciones que hagan falta hasta que la landing se sienta con la vibra de esas referencias. Se documenta en el plan qué patrón se toma de cada referencia. Se aplica también `design-taste-frontend`.
+- Límites que no se negocian aunque la referencia haga otra cosa: contraste medido, A11Y.md, contenido visible sin JavaScript, `prefers-reduced-motion` respetado, sin texto oculto por animación y el copy tal cual del doc de Ari. Todo movimiento que aporte a la vibra vive solo bajo `motion-safe:` y nunca esconde contenido.
 - Fondos alternados blanco, amarillo `#ffc602` y oscuro `#212121`. Morado `#73187F` en títulos y texto sobre blanco o amarillo. Botón naranja `#fd6938` con texto oscuro. Se respeta la tabla de contraste (sin morado sobre oscuro, sin blanco sobre naranja, sin amarillo como texto sobre claro).
-- Lupas, ojos y clics como SVG estático en línea con `aria-hidden="true"` y `focusable="false"`. Sin animación por defecto.
+- Lupas, ojos y clics como SVG estático en línea con `aria-hidden="true"` y `focusable="false"`. Sin movimiento con `prefers-reduced-motion: reduce`; el movimiento que pida la vibra de las referencias va solo bajo `motion-safe:`.
 - Logo e isotipo en SVG con su área de salvado, tomados del Drive de Ari. Si falta el vectorial, se redibuja el isotipo Loopy y se marca para aprobación de Ari.
 
 ### Secciones informativas
