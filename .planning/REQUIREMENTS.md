@@ -46,8 +46,8 @@ Requisitos para la primera entrega. Cada uno se asigna a una fase del roadmap.
 
 ### Diseño y marca
 
-- [ ] **DSGN-01**: La página aplica el estilo collage pop del brandbook (lupas, ojos, clics) con SVG decorativo estático por defecto.
-- [ ] **DSGN-02**: El logo e isotipo se usan en SVG respetando el área de salvado del brandbook.
+- [x] **DSGN-01**: La página aplica el estilo collage pop del brandbook (lupas, ojos, clics) con SVG decorativo estático por defecto.
+- [x] **DSGN-02**: El logo e isotipo se usan en SVG respetando el área de salvado del brandbook.
 - [x] **DSGN-03**: La página se ve y funciona de 320 px a 1280 px sin scroll horizontal.
 - [x] **DSGN-04**: Todo el trabajo de diseño web pasa por las skills `impeccable` y `design-taste-frontend`.
 - [ ] **DSGN-05**: Cualquier movimiento se desactiva con `prefers-reduced-motion: reduce`.
@@ -145,8 +145,8 @@ Qué fase cubre cada requisito. Completado al crear el roadmap.
 | CONT-12 | Phase 2 | Pending |
 | CONT-13 | Phase 2 | Pending |
 | COPY-01 | Phase 2 | Complete |
-| DSGN-01 | Phase 2 | Pending |
-| DSGN-02 | Phase 2 | Pending |
+| DSGN-01 | Phase 2 | Complete |
+| DSGN-02 | Phase 2 | Complete |
 | DSGN-03 | Phase 2 | Complete |
 | DSGN-04 | Phase 2 | Complete |
 | DSGN-05 | Phase 2 | Pending |

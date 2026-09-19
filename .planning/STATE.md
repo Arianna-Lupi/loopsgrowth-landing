@@ -3,16 +3,16 @@ gsd_state_version: "1.0"
 current_phase: 02
 current_phase_name: Secciones, marca y copy
 status: executing
-stopped_at: Completed 02-01-PLAN.md
-last_updated: "2026-09-19T17:49:41.648Z"
+stopped_at: Completed 02-02-PLAN.md
+last_updated: "2026-09-19T18:55:40.722Z"
 last_activity: 2026-09-19
 last_activity_desc: Phase 02 execution started
-state_head: 81271d1fa9560e83c5cbef6986430363f8208fa8
+state_head: c425494819fc08827ebf2785424358ce1b6be377
 progress:
   total_phases: 4
   completed_phases: 0
   total_plans: 12
-  completed_plans: 5
+  completed_plans: 6
   percent: 0
 ---
 
@@ -28,7 +28,7 @@ See: .planning/PROJECT.md (updated 2026-09-18)
 ## Current Position
 
 Phase: 02 (Secciones, marca y copy) — EXECUTING
-Plan: 2 of 8
+Plan: 3 of 8
 Status: Ready to execute
 Last activity: 2026-09-19 — Phase 02 execution started
 
@@ -63,6 +63,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 01 P03 | 30min | 3 tasks | 13 files |
 | Phase 01 P04 | 15min | 2 tasks | 6 files |
 | Phase 02 P01 | 3 sesiones | 3 tasks | 17 files |
+| Phase 02 P02 | unos 45 min | 4 tasks | 14 files |
 
 ## Accumulated Context
 
@@ -86,6 +87,8 @@ Recent decisions affecting current work:
 - [Phase 01]: Plan 01-04: la reserva del iframe de ClickUp se mide con el scrollHeight de cu-form (fase natural, min-height 0), no con style.height — El formulario usa height 100% y iframe-resizer solo reporta la altura del propio iframe; style.height devuelve el min-height vigente (medicion circular). Tokens: sm 1664px y lg 1536px
 - [Phase 01]: Plan 01-04: FORM-05 sigue pendiente; los dos envios reales son humanos (Juan) y ninguna prueba automatica llena ni envia el formulario — Un envio crea una tarea real en la Lista de ClickUp de Ari; los bloques human-check se consolidan en 01-UAT.md
 - [Phase 02]: 02-01: collage del hero como SVG en linea (lupa morada con cristal blanco, mango oscuro) con seis piezas nombradas listas para animar en el plan 07
+- [Phase 02]: 02-02: --logo-clear = 1 X (BrandBook pag. 7); logo con los colores del vectorial de Ari (#4228d1), pendiente decision de Ari sobre #73187f
+- [Phase 02]: 02-02: loop del collage como dos anillos solapados (los concentricos se leian como diana); sprite montado en SiteHeader hasta que 02-07 lo mueva a BaseLayout
 
 ### Pending Todos
 
@@ -128,6 +131,6 @@ Items acknowledged and deferred at milestone close, most recent first:
 
 ## Session Continuity
 
-Last session: 2026-09-19T17:49:41.621Z
-Stopped at: Completed 02-01-PLAN.md
+Last session: 2026-09-19T18:55:40.686Z
+Stopped at: Completed 02-02-PLAN.md
 Resume file: None
