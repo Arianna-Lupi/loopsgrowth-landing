@@ -117,6 +117,13 @@ Items acknowledged and deferred at milestone close, most recent first:
 |----------|------|--------|-------------|-----------|
 | *(none)* | | | | |
 
+## Reanudar (2026-09-19)
+
+- Fase 1: ejecutada y verificada en codigo (`verification_deferred_human`, 6 items humanos en `01-UAT.md`). Codigo integrado en `master`.
+- Fase 2: `02-CONTEXT.md`, `02-UI-SPEC.md` (aprobado), `02-ARI-COPY-V2.md` y `02-PLANNING-BRIEF.md` listos; 7 planes escritos (`02-01` a `02-07`). Plan-checker de la fase 2 lanzado; falta aplicar lo que marque y ejecutar. Retomar con `/gsd-autonomous --from 2` (si el checker ya paso, sigue directo a `/gsd-execute-phase 2 --no-transition`).
+- Decisiones abiertas de Juan: cargar el iframe de ClickUp solo al acercarse a `#agenda` (medido: el formulario mete ~55 MB de JS descomprimido y `load` de 4,7 s; la pagina propia pesa 66 KB y da FCP de 48 ms).
+- Reglas de ejecucion aprendidas: forzar aislamiento `none` antes de cada executor (`gsd-tools query dispatch-isolation --raw --phase NN --force-isolation none`), `astro preview` en segundo plano rompe Playwright dentro de agentes (arrancarlo a mano y detenerlo con `astro preview stop`), planners grandes se estancan a los 600 s: dividir por plan.
+
 ## Session Continuity
 
 Last session: 2026-09-19T03:09:04.774Z
