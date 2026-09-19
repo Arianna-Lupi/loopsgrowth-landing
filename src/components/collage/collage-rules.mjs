@@ -1,14 +1,14 @@
-// Reglas de color y catálogo de piezas del collage pop (DSGN-01).
+// Reglas de color y catálogo de piezas del collage de marca (DSGN-01).
 // ESM plano con JSDoc: lo importan los componentes de Astro y `node --test` sin compilar.
 //
 // La política de color por tono vive aquí, en una tabla, y `assertToneSafe` la aplica al construir:
 // un color prohibido para el tono rompe el build con un mensaje que nombra pieza, tono y color.
-// Contrato de marca: sobre dark y purple el contorno es blanco y no hay relleno morado; sobre
-// light y yellow el contorno es oscuro; nunca amarillo sobre yellow ni oscuro sobre dark o purple.
+// Contrato de marca: nunca morado sobre dark o purple, amarillo sobre yellow ni oscuro sobre dark o
+// purple. `STROKE_BY_TONE` publica el color de trazo por tono (los garabatos de 3 px).
 
 import { readFileSync } from 'node:fs';
 import { contrastRaw, parseTokens } from '../../../scripts/lib/contrast.mjs';
-import { loopyGeometry } from './loopy.mjs';
+import { loopyGeometry, loopyScheme } from './loopy.mjs';
 
 /** @typedef {'light' | 'yellow' | 'dark' | 'purple'} Tone */
 /** @typedef {'yellow' | 'orange' | 'purple' | 'white' | 'dark' | 'cream'} BrandColor */
@@ -55,29 +55,6 @@ export const STROKE_BY_TONE = Object.freeze({
   yellow: 'dark',
   dark: 'white',
   purple: 'white',
-});
-
-/**
- * Catálogo de piezas: id del símbolo en el sprite, tamaño del viewBox y, si aplica, el color fijo
- * de la pieza (los chips llevan el suyo y no aceptan otro).
- * @type {Readonly<Record<string, { symbol: string, w: number, h: number, fixed?: BrandColor }>>}
- */
-export const PIECES = Object.freeze({
-  lupa: { symbol: 'cs-lupa', w: 240, h: 240 },
-  'ojos-izq': { symbol: 'cs-ojos-izq', w: 120, h: 64 },
-  'ojos-der': { symbol: 'cs-ojos-der', w: 120, h: 64 },
-  'ojos-abajo': { symbol: 'cs-ojos-abajo', w: 120, h: 64 },
-  clic: { symbol: 'cs-clic', w: 80, h: 80 },
-  loop: { symbol: 'cs-loop', w: 160, h: 160 },
-  destello: { symbol: 'cs-destello', w: 24, h: 24 },
-  puntos: { symbol: 'cs-puntos', w: 96, h: 72 },
-  'sticker-ojos': { symbol: 'cs-sticker-ojos', w: 64, h: 64 },
-  'sticker-clic': { symbol: 'cs-sticker-clic', w: 64, h: 64 },
-  'sticker-lupa': { symbol: 'cs-sticker-lupa', w: 64, h: 64 },
-  'chip-lupa': { symbol: 'cs-chip-lupa', w: 64, h: 64, fixed: 'yellow' },
-  'chip-ojos': { symbol: 'cs-chip-ojos', w: 64, h: 64, fixed: 'orange' },
-  'chip-loop': { symbol: 'cs-chip-loop', w: 64, h: 64, fixed: 'purple' },
-  'chip-clic': { symbol: 'cs-chip-clic', w: 64, h: 64, fixed: 'white' },
 });
 
 /**
@@ -185,3 +162,37 @@ export const SCENE_PIECES = Object.freeze({
   garabato: { symbol: 'lg-garabato', w: 96, h: 24, family: 'doodle' },
   puntos: { symbol: 'lg-puntos', w: 96, h: 64, family: 'dots' },
 });
+
+/**
+ * Símbolo del sprite de una pieza suelta (`CollagePiece`). Lanza si el nombre no existe.
+ * @param {string} name
+ */
+export function pieceSymbol(name) {
+  const piece = SCENE_PIECES[name];
+  if (!piece) throw new Error(`CollagePiece: pieza desconocida "${name}". Usa una de: ${Object.keys(SCENE_PIECES).join(', ')}.`);
+  return piece;
+}
+
+/**
+ * Esquema de color (A o B) de un Loopy suelto sobre un tono; null para garabatos y retícula, que
+ * no tienen esquema. Sobre dark lanza (Loopy no va directo sobre oscuro).
+ * @param {string} name
+ * @param {Tone} tone
+ * @returns {'A' | 'B' | null}
+ */
+export function pieceScheme(name, tone) {
+  const piece = pieceSymbol(name);
+  return piece.family === 'loopy' ? loopyScheme(/** @type {'ojos' | 'lupa'} */ (name), tone) : null;
+}
+
+/**
+ * Color por defecto de un garabato o de la retícula según el tono: morado sobre light, oscuro sobre
+ * yellow, amarillo sobre dark y sobre purple. Todos pasan `assertToneSafe`.
+ * @param {Tone} tone
+ * @returns {BrandColor}
+ */
+export function defaultPieceColor(tone) {
+  const color = { light: 'purple', yellow: 'dark', dark: 'yellow', purple: 'yellow' }[tone];
+  if (!color) throw new Error(`Tono desconocido "${tone}". Usa uno de: ${TONES.join(', ')}.`);
+  return /** @type {BrandColor} */ (color);
+}

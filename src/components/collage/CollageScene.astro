@@ -70,7 +70,9 @@ const rootAttrs = {
 };
 const Wrap = bare ? Fragment : 'div';
 const wrapProps = bare ? {} : { ...rootAttrs, 'aria-hidden': 'true', style: `aspect-ratio:${scene.w}/${scene.h}` };
-const svgProps = bare ? { ...rootAttrs, class: `${rootAttrs.class} collage-layer` } : { class: 'collage-layer' };
+const svgProps = bare
+  ? { ...rootAttrs, class: ['collage-layer', className].filter(Boolean).join(' ') }
+  : { class: 'collage-layer' };
 ---
 
 <Wrap {...wrapProps}>

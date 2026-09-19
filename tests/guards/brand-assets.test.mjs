@@ -3,8 +3,6 @@ import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
 import {
   ALLOWED_FILLS,
-  BRAND_COLORS,
-  PIECES,
   SCENE_PIECES,
   TONES,
   assertToneSafe,
@@ -66,16 +64,6 @@ test('assertToneSafe rechaza un tono o un color desconocido', () => {
   assert.throws(() => fillVar('rosa'), /Color de marca desconocido/);
 });
 
-test('los colores fijos de los chips respetan la política donde se pueden usar', () => {
-  for (const [name, piece] of Object.entries(PIECES)) {
-    if (!piece.fixed) continue;
-    assert.ok(BRAND_COLORS.includes(piece.fixed), `${name}: color fijo válido`);
-  }
-  // chip-loop es morado: nunca sobre dark ni purple; chip-lupa es amarillo: nunca sobre yellow.
-  assert.throws(() => assertToneSafe('dark', [PIECES['chip-loop'].fixed], 'chip-loop'));
-  assert.throws(() => assertToneSafe('yellow', [PIECES['chip-lupa'].fixed], 'chip-lupa'));
-});
-
 // (ii) Mutación: la comprobación no es vacía; una tabla con un par prohibido se detecta.
 test('mutación: una tabla con un par prohibido agregado es detectada', () => {
   for (const [tone, color] of FORBIDDEN) {
@@ -89,7 +77,7 @@ test('mutación: una tabla con un par prohibido agregado es detectada', () => {
 // (iii) Símbolos del sprite y catálogo de piezas
 // ---------------------------------------------------------------------------------------------
 
-test('cada símbolo del sprite está en su catálogo exactamente una vez, con su viewBox, y viceversa', () => {
+test('el conjunto de ids del sprite es exactamente el de SCENE_PIECES, con w y h iguales al viewBox', () => {
   assert.ok(existsSync('dist/index.html'), 'Falta dist: ejecuta npx astro build antes de estas pruebas');
   const sprite = readFileSync('dist/index.html', 'utf8').match(/<svg class="collage-sprite"[\s\S]*?<\/svg>/)?.[0] ?? '';
   const symbols = [...sprite.matchAll(/<symbol id="([^"]+)" viewBox="([^"]+)"/g)].map((m) => {
@@ -99,12 +87,11 @@ test('cada símbolo del sprite está en su catálogo exactamente una vez, con su
   });
   const ids = symbols.map((s) => s.id);
   assert.equal(new Set(ids).size, ids.length, 'ids duplicados en el sprite');
-  const old = Object.values(PIECES);
   const fresh = Object.values(SCENE_PIECES);
+  assert.equal(fresh.length, 8);
   assert.equal(new Set(fresh.map((p) => p.symbol)).size, fresh.length, 'símbolos repetidos en SCENE_PIECES');
-  assert.deepEqual(ids.filter((id) => id.startsWith('lg-')).sort(), fresh.map((p) => p.symbol).sort());
-  assert.deepEqual(ids.filter((id) => !id.startsWith('lg-')).sort(), old.map((p) => p.symbol).sort());
-  for (const piece of [...old, ...fresh]) {
+  assert.deepEqual([...ids].sort(), fresh.map((p) => p.symbol).sort());
+  for (const piece of fresh) {
     const symbol = symbols.find((s) => s.id === piece.symbol);
     assert.ok(Math.abs(symbol.w - piece.w) < 0.01, `${piece.symbol}: ancho del viewBox`);
     assert.ok(Math.abs(symbol.h - piece.h) < 0.01, `${piece.symbol}: alto del viewBox`);
@@ -156,7 +143,7 @@ const RULES = [
   { id: 'titulo', re: /<title[\s>]/, bad: '<svg><title>x</title></svg>' },
 ];
 
-const CLEAN = '<svg aria-hidden="true" focusable="false"><path d="M0 0" class="cs-a cs-o"></path></svg>';
+const CLEAN = '<svg aria-hidden="true" focusable="false"><path d="M0 0" class="lg-line"></path></svg>';
 
 test('los archivos propios no traen construcciones prohibidas', () => {
   for (const file of OWNED) {
@@ -200,8 +187,9 @@ test('el logo es una imagen con nombre: role img, aria-label y nunca aria-hidden
 test('las piezas validan el tono en el build', () => {
   const piece = readFileSync('src/components/collage/CollagePiece.astro', 'utf8');
   assert.match(piece, /assertToneSafe\(/);
+  assert.match(readFileSync('src/components/collage/CollageScene.astro', 'utf8'), /assertScene\(/);
   for (const file of ['src/components/collage/AgendaCollage.astro', 'src/components/collage/Avatar.astro']) {
-    if (existsSync(file)) assert.match(readFileSync(file, 'utf8'), /assertToneSafe\(/, `${file} valida el tono`);
+    assert.match(readFileSync(file, 'utf8'), /<CollageScene\b/, `${file} monta el mecanismo de escenas`);
   }
 });
 
@@ -216,24 +204,28 @@ function readDist(path) {
 
 const spriteOf = (html) => html.match(/<svg class="collage-sprite"[\s\S]*?<\/svg>/)?.[0] ?? '';
 
-// El sprite viejo convive con el nuevo hasta la tarea 3 del plan 02-10: tope temporal de 16384.
-test('dist/index.html trae un solo sprite, pesa menos de 60 KB y el sprite menos de 16 KB', () => {
+// Tope definitivo del sprite: ocho símbolos lg y nada más (plan 02-10, tarea 3).
+test('dist/index.html trae un solo sprite, pesa menos de 60 KB y el sprite menos de 10 KB', () => {
   const html = readDist('dist/index.html');
   assert.equal((html.match(/class="collage-sprite"/g) ?? []).length, 1);
   assert.ok(Buffer.byteLength(html) < 61440, `dist/index.html pesa ${Buffer.byteLength(html)} bytes`);
-  assert.ok(Buffer.byteLength(spriteOf(html)) < 16384, `sprite de ${Buffer.byteLength(spriteOf(html))} bytes`);
+  assert.ok(Buffer.byteLength(spriteOf(html)) < 10240, `sprite de ${Buffer.byteLength(spriteOf(html))} bytes`);
+  assert.equal((html.match(/<symbol id="lg-/g) ?? []).length, 8);
+  assert.equal((html.match(/<symbol id="/g) ?? []).length, 8, 'queda un símbolo de otro prefijo');
 });
 
-test('en la hoja, cada <use href="#cs-..."> resuelve a un <symbol id> de esa página', (t) => {
+test('en la hoja, cada <use href="#lg-..."> resuelve a un <symbol id> de esa página', (t) => {
   if (!existsSync('dist/marca/hoja/index.html')) {
     t.skip('la hoja no existe en este build (producción)');
     return;
   }
   const html = readDist('dist/marca/hoja/index.html');
   const ids = new Set([...html.matchAll(/<symbol id="([^"]+)"/g)].map((m) => m[1]));
-  const uses = [...html.matchAll(/<use href="#(cs-[^"]+)"/g)].map((m) => m[1]);
+  const uses = [...html.matchAll(/<use[^>]*?\shref="#([^"]+)"/g)].map((m) => m[1]);
   assert.ok(uses.length > 0, 'la hoja no usa ninguna pieza');
-  for (const id of uses) assert.ok(ids.has(id), `<use> sin símbolo: ${id}`);
+  for (const id of uses) assert.ok(id.startsWith('lg-') && ids.has(id), `<use> sin símbolo: ${id}`);
+  assert.equal((html.match(/<symbol id="/g) ?? []).length, 8);
+  assert.equal(/(id|class|href)="#?cs-/.test(html), false, 'la hoja conserva una pieza del collage viejo');
 });
 
 // ---------------------------------------------------------------------------------------------

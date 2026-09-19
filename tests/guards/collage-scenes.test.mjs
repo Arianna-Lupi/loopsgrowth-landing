@@ -392,3 +392,121 @@ test('(vii) los consumidores de las escenas no traen hex ni set:html', () => {
     assert.ok(/CollageScene/.test(text) && !/CollagePiece/.test(text), `${f}: debe usar CollageScene y no CollagePiece`);
   }
 });
+
+// ---------------------------------------------------------------------------------------------
+// (viii) Agenda y avatares con el mismo mecanismo, y retiro del collage viejo (tarea 3)
+// ---------------------------------------------------------------------------------------------
+
+const AVATAR_SCENES = ['avatar-ojo-morado', 'avatar-ojo-amarillo', 'avatar-ojos-morado', 'avatar-ojos-amarillo'];
+
+test('(viii) agenda: assertScene pasa, sin ranura, con Loopy dentro de su disco y una pildora card', async () => {
+  const { SCENES, assertScene, sceneBoxes, boxInsideCircle } = await loadScenes();
+  const agenda = SCENES.agenda;
+  assert.ok(agenda, 'falta la escena agenda');
+  assert.doesNotThrow(() => assertScene('agenda'));
+  assert.equal([agenda.kind, agenda.w, agenda.h, agenda.ground, agenda.stage].join(' '), 'full 480 480 purple yellow');
+  assert.equal(agenda.layers.some((l) => l.kind === 'slot'), false, 'agenda no lleva ranura');
+  const disc = agenda.layers.find((l) => l.kind === 'disc');
+  const boxes = sceneBoxes(agenda);
+  for (const l of agenda.layers.filter((x) => x.kind === 'loopy')) {
+    assert.ok(boxInsideCircle(boxes.find((b) => b.id === l.id).box, disc.cx, disc.cy, disc.r, 4), `${l.id} dentro del disco`);
+  }
+  assert.deepEqual(agenda.layers.filter((l) => l.kind === 'pill').map((p) => [p.word, p.shape ?? 'pill']).sort(), [['seo', 'pill'], ['team work', 'card']]);
+});
+
+test('(viii) avatares: cuatro escenas de 120 x 120, Loopy dentro del disco, sin pildora ni ranura ni garabatos', async () => {
+  const { SCENES, assertScene, sceneTraits, PHOTO_SLOTS } = await loadScenes();
+  const expected = {
+    'avatar-ojo-morado': ['lupa', 'purple'],
+    'avatar-ojo-amarillo': ['lupa', 'yellow'],
+    'avatar-ojos-morado': ['ojos', 'purple'],
+    'avatar-ojos-amarillo': ['ojos', 'yellow'],
+  };
+  for (const name of AVATAR_SCENES) {
+    const scene = SCENES[name];
+    assert.ok(scene, `falta la escena ${name}`);
+    assert.doesNotThrow(() => assertScene(name), name);
+    assert.equal([scene.family, scene.kind, scene.w, scene.h, scene.ground].join(' '), 'avatar avatar 120 120 light', name);
+    const loopy = scene.layers.filter((l) => l.kind === 'loopy');
+    assert.deepEqual([loopy[0]?.art, scene.stage], expected[name], `${name}: Loopy y escenario`);
+    assert.equal(loopy.length, 1);
+    const traits = sceneTraits(scene);
+    for (const t of ['pill', 'slot', 'doodle', 'dots']) assert.equal(traits.has(t), false, `${name}: no lleva ${t}`);
+  }
+  assert.equal(new Set(AVATAR_SCENES.map((n) => JSON.stringify(SCENES[n].layers))).size, 4, 'los cuatro avatares son distintos');
+  assert.deepEqual(PHOTO_SLOTS.map((s) => s.name).sort(), ['hero', 'whynow'], 'PHOTO_SLOTS sigue con dos entradas');
+});
+
+test('(viii) agenda y avatares: cada mutación lanza nombrando escena, capa y regla', async () => {
+  const cases = [
+    ['agenda', 'R9', (s) => { s.layers.push({ id: 'agenda-slot', kind: 'slot', on: 'ground', name: 'agenda', x: 20, y: 20, w: 40, h: 40, rx: 4, fill: 'white', shadow: [2, 2] }); }, 'agenda-slot'],
+    ['agenda', 'R3', (s) => { layerOf(s, 'agenda-loopy').cx += 60; }, 'agenda-loopy'],
+    ['agenda', 'R7', (s) => { layerOf(s, 'agenda-pill-seo').word = 'hola'; }, 'agenda-pill-seo'],
+    ['agenda', 'R6', (s) => { layerOf(s, 'agenda-puntos').x = 440; }, 'agenda-puntos'],
+    ...AVATAR_SCENES.flatMap((name) => [
+      [name, 'R10', (s) => { s.layers.push({ id: `${name}-pill`, kind: 'pill', on: 'ground', word: 'seo', bg: 'yellow', fg: 'dark', x: 8, y: 90, anchor: 'left', fs: 10 }); }, 'avatar'],
+      [name, 'R3', (s) => { layerOf(s, `${name}-loopy`).cx += 40; }, `${name}-loopy`],
+      [name, 'R9', (s) => { s.layers.push({ id: `${name}-slot`, kind: 'slot', on: 'ground', name, x: 4, y: 4, w: 20, h: 20, rx: 4, fill: 'white', shadow: [2, 2] }); }, `${name}-slot`],
+    ]),
+  ];
+  for (const [name, rule, fn, layer] of cases) {
+    const message = await mutate(name, fn);
+    assert.ok(message, `${name} ${rule}: la mutación no lanzó`);
+    assert.ok(message.startsWith(`Escena "${name}"`), `${name} ${rule}: ${message}`);
+    assert.ok(message.includes(layer) && message.includes(rule), `${name} ${rule}: mensaje sin capa o regla: ${message}`);
+  }
+});
+
+test('(viii) retiro del collage viejo: sin PIECES, sprite de ocho simbolos lg y sin clases de contorno', async () => {
+  const rules = await loadRules();
+  assert.equal('PIECES' in rules, false, 'collage-rules.mjs ya no exporta PIECES');
+  assert.equal(Object.keys(rules.SCENE_PIECES).length, 8);
+  const sprite = readFileSync('src/components/collage/CollageSprite.astro', 'utf8');
+  assert.deepEqual([...sprite.matchAll(/<symbol id="([^"]+)"/g)].map((m) => m[1]).sort(), Object.values(rules.SCENE_PIECES).map((p) => p.symbol).sort());
+  assert.ok(!/\bcs-[a-z]/.test(sprite), 'CollageSprite.astro conserva el prefijo antiguo');
+  assert.ok(!/vector-effect|--collage-stroke/.test(sprite.replace(/\.lg-line[\s\S]*?\}/, '')), 'clases de contorno viejas fuera de lg-line');
+  const rulesText = readFileSync('src/components/collage/collage-rules.mjs', 'utf8');
+  for (const gone of ['ojos-izq', 'ojos-der', 'ojos-abajo', "'sticker-", "'chip-", 'fixed:']) assert.ok(!rulesText.includes(gone), `collage-rules.mjs conserva ${gone}`);
+  assert.ok(!/(^|[^_A-Z])PIECES/m.test(rulesText), 'queda una tabla PIECES');
+});
+
+test('(viii) CollagePiece: funciones puras de simbolo, esquema y color por defecto', async () => {
+  const { pieceSymbol, pieceScheme, defaultPieceColor, assertToneSafe } = await loadRules();
+  assert.equal(pieceSymbol('lupa').symbol, 'lg-lupa');
+  assert.equal(pieceSymbol('garabato').family, 'doodle');
+  assert.throws(() => pieceSymbol('loop'), /pieza desconocida/i);
+  assert.throws(() => pieceSymbol('ojos-izq'), /pieza desconocida/i);
+  assert.equal(pieceScheme('lupa', 'light'), 'A');
+  assert.equal(pieceScheme('ojos', 'yellow'), 'A');
+  assert.equal(pieceScheme('ojos', 'purple'), 'B');
+  assert.throws(() => pieceScheme('lupa', 'dark'), /oscuro/);
+  assert.equal(pieceScheme('flecha', 'purple'), null, 'los garabatos no tienen esquema');
+  assert.deepEqual(
+    ['light', 'yellow', 'dark', 'purple'].map(defaultPieceColor),
+    ['purple', 'dark', 'yellow', 'yellow'],
+  );
+  for (const tone of ['light', 'yellow', 'dark', 'purple']) assert.doesNotThrow(() => assertToneSafe(tone, [defaultPieceColor(tone)], 'p'));
+  assert.throws(() => assertToneSafe('dark', ['purple'], 'CollagePiece'), /prohibido/);
+  const text = readFileSync('src/components/collage/CollagePiece.astro', 'utf8');
+  assert.match(text, /assertToneSafe\(/);
+  assert.match(text, /defaultPieceColor\(/);
+  assert.match(text, /pieceScheme\(/);
+  assert.ok(!/PIECES(?!_)/.test(text.replace(/SCENE_PIECES/g, '')), 'CollagePiece usa la tabla vieja');
+});
+
+test('(viii) AgendaCollage, Avatar y CollagePiece montan el mecanismo y no traen hex ni set:html', () => {
+  const agenda = readFileSync('src/components/collage/AgendaCollage.astro', 'utf8');
+  const avatar = readFileSync('src/components/collage/Avatar.astro', 'utf8');
+  assert.match(agenda, /<CollageScene\s+scene="agenda"/);
+  assert.match(agenda, /display:\s*none/);
+  assert.match(agenda, /min-width:\s*64em/);
+  assert.match(avatar, /<CollageScene[^>]*scene=\{`avatar-\$\{variant\}`\}[^>]*\bbare\b/);
+  assert.match(avatar, /variant=\{variant\}/);
+  for (const f of ['AgendaCollage.astro', 'Avatar.astro', 'CollagePiece.astro', 'CollageSprite.astro']) {
+    const text = readFileSync(`src/components/collage/${f}`, 'utf8');
+    assert.ok(!/#[0-9a-fA-F]{3}(?![0-9a-zA-Z_-])|#[0-9a-fA-F]{6}(?![0-9a-zA-Z_-])/.test(text), `${f}: hex`);
+    assert.ok(!/set:html|<text[\s>]|<title|<image|<img[\s>]|<script|@keyframes|transition/.test(text), `${f}: construccion prohibida`);
+  }
+  const scene = readFileSync('src/components/collage/CollageScene.astro', 'utf8');
+  assert.match(scene, /assertScene\(/);
+});

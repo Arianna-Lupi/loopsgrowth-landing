@@ -1,84 +1,28 @@
 ---
 /**
- * Avatar "Loopy" para las tarjetas del equipo: cuatro personajes de una misma familia sobre un
- * círculo suave, con los mismos ojos del sistema en la misma posición y un accesorio distinto.
- * No son retratos ni buscan parecido; el set lo aprueba Ari. Decorativo, sin texto ni título.
- *
- * Tono `light` (van dentro de tarjetas blancas): `assertToneSafe` valida los colores en el build.
- * El color dominante de cada variante es el del círculo de fondo (lupa amarillo, auriculares
- * naranja, gafas morado, gorro oscuro). Los ojos y la lupa vienen del sprite.
+ * Avatar Loopy para las tarjetas del equipo: cuatro variantes de una misma familia, el Loopy oficial
+ * de Ari sobre un disco con sombra dura (ojo-morado, ojo-amarillo, ojos-morado y ojos-amarillo).
+ * Sin cara, sin accesorio y sin píldora: no son retratos ni buscan parecido; el set lo aprueba Ari.
+ * Es la escena `avatar-<variante>` de `scenes.mjs` en modo `bare` (la raíz es el propio svg, cuadrado
+ * 1:1, decorativo y sin foco). `CollageScene` valida colores y geometría en el build.
  */
-import { assertToneSafe, fillVar } from './collage-rules.mjs';
+import CollageScene from './CollageScene.astro';
 
 interface Props {
-  variant: 'lupa' | 'auriculares' | 'gafas' | 'gorro';
+  variant: 'ojo-morado' | 'ojo-amarillo' | 'ojos-morado' | 'ojos-amarillo';
   class?: string;
 }
 const { variant, class: className } = Astro.props;
-
-const COLORS = {
-  lupa: { a: 'yellow', b: 'purple', c: 'white' },
-  auriculares: { a: 'orange', b: 'dark', c: 'white' },
-  gafas: { a: 'purple', b: 'dark', c: 'white' },
-  gorro: { a: 'dark', b: 'orange', c: 'yellow' },
-} as const;
-const c = COLORS[variant];
-assertToneSafe('light', [c.a, c.b, c.c], `Avatar "${variant}"`);
-const style = `--cf-a:${fillVar(c.a)};--cf-b:${fillVar(c.b)};--cf-c:${fillVar(c.c)}`;
 ---
 
-<svg
-  class:list={['avatar', className]}
-  data-collage="avatar"
-  data-variant={variant}
-  viewBox="0 0 120 120"
-  width="120"
-  height="120"
-  aria-hidden="true"
-  focusable="false"
-  style={style}
->
-  <circle class="cs-a cs-o" cx="60" cy="60" r="56"></circle>
-  {
-    variant === 'gorro' && (
-      <>
-        <circle class="cs-w cs-o" cx="60" cy="66" r="34"></circle>
-        <path class="cs-b cs-o" d="M27 48C27 16 93 16 93 48z"></path>
-        <rect class="cs-c cs-o" x="23" y="44" width="74" height="13" rx="6.5"></rect>
-        <circle class="cs-w cs-o" cx="60" cy="16" r="7"></circle>
-      </>
-    )
-  }
-  {variant !== 'gorro' && <circle class="cs-w cs-o" cx="60" cy="66" r="34"></circle>}
-  {
-    variant === 'auriculares' && (
-      <>
-        <path class="cs-k cs-o" d="M22 66A38 38 0 0 1 98 66h-7A31 31 0 0 0 29 66z"></path>
-        <rect class="cs-k cs-o" x="15" y="58" width="15" height="28" rx="7"></rect>
-        <rect class="cs-k cs-o" x="90" y="58" width="15" height="28" rx="7"></rect>
-      </>
-    )
-  }
-  <use href="#cs-ojos-der" x="32" y="55" width="56" height="30"></use>
-  <path class="cs-o" d="M52 90q8 6 16 0"></path>
-  {
-    variant === 'gafas' && (
-      <>
-        <rect class="cs-o" x="27" y="55" width="33" height="30" rx="12"></rect>
-        <rect class="cs-o" x="60" y="55" width="33" height="30" rx="12"></rect>
-      </>
-    )
-  }
-  {variant === 'lupa' && <use href="#cs-lupa" x="66" y="66" width="52" height="52" style="--cf-a:var(--color-brand-white);--cf-b:var(--color-brand-purple)"></use>}
-</svg>
+<CollageScene scene={`avatar-${variant}`} variant={variant} bare class:list={['avatar', className]} />
 
-<style>
-  .avatar {
+<style is:global>
+  svg.avatar {
     display: block;
     width: 100%;
     max-width: 7.5rem;
     height: auto;
     aspect-ratio: 1;
-    overflow: visible;
   }
 </style>

@@ -200,14 +200,14 @@ test.describe('escenas: lenguaje del moodboard', () => {
     });
   }
 
-  test('pesos: hero menor a 8192 bytes, cada mini menor a 1536, Por qué ahora menor a 3072 y sprite menor a 16384', async ({ page }) => {
+  test('pesos: hero menor a 8192 bytes, cada mini menor a 1536, Por qué ahora menor a 3072 y sprite menor a 10240', async ({ page }) => {
     await open(page, 1280);
     const bytes = (name: string) => page.locator(SCENES[name]).evaluate((el) => new TextEncoder().encode(el.outerHTML).length);
     expect(await bytes('hero')).toBeLessThan(8192);
     expect(await bytes('whynow')).toBeLessThan(3072);
     for (const name of MINIS) expect(await bytes(name), name).toBeLessThan(1536);
     const sprite = await page.locator('svg.collage-sprite').evaluate((el) => new TextEncoder().encode(el.outerHTML).length);
-    expect(sprite).toBeLessThan(16384);
+    expect(sprite).toBeLessThan(10240);
   });
 });
 
@@ -217,5 +217,108 @@ test.describe('escenas: sin JavaScript', () => {
     await page.goto('/');
     for (const name of NAMES) await expect(page.locator(SCENES[name]), name).toBeVisible();
     for (const pill of await page.locator('[data-collage] [data-pill]').all()) await expect(pill).toBeVisible();
+  });
+});
+
+// ---------------------------------------------------------------------------------------------
+// La hoja de revisión: las diez composiciones enmarcadas y los cuatro avatares (tarea 3)
+// ---------------------------------------------------------------------------------------------
+
+const SHEET = '/marca/hoja/';
+const AVATARS = ['avatar-ojo-morado', 'avatar-ojo-amarillo', 'avatar-ojos-morado', 'avatar-ojos-amarillo'];
+const SHEET_NAMES = ['hero', 'whynow', 'agenda', ...MINIS, ...AVATARS];
+const onSheet = (name: string) => `[data-demo="${name}"] [data-collage-scene="${name}"]`;
+
+/** Rasgos por estructura derivados de las capas de la escena (la sombra viene de las copias desplazadas). */
+const traitsOfData = (name: string): string[] => {
+  const layers = SCENE_DATA[name].layers as { kind: string; shadow?: unknown }[];
+  const byKind: Record<string, string> = { disc: 'stage', slot: 'slot', loopy: 'loopy', doodle: 'doodle', dots: 'dots', pill: 'pill' };
+  const t = new Set(layers.map((l) => byKind[l.kind]));
+  if (layers.some((l) => l.kind !== 'pill' && l.shadow)) t.add('shadow');
+  return [...t].sort();
+};
+
+async function openSheet(page: Page, width: number) {
+  await page.setViewportSize({ width, height: 900 });
+  await page.goto(SHEET);
+}
+
+test.describe('hoja: escenas del lenguaje del moodboard', () => {
+  test('cada escena de la hoja está una vez dentro de su data-demo con su nombre', async ({ page }) => {
+    await openSheet(page, 1280);
+    for (const name of SHEET_NAMES) await expect(page.locator(onSheet(name)), name).toHaveCount(1);
+    expect(SHEET_NAMES).toHaveLength(14);
+  });
+
+  for (const name of SHEET_NAMES) {
+    test(`hoja, ${name}: rasgos por estructura`, async ({ page }) => {
+      await openSheet(page, 1280);
+      const traits = await page.locator(onSheet(name)).evaluate((el) => [...new Set([...el.querySelectorAll('[data-trait]')].map((e) => e.getAttribute('data-trait')))].sort());
+      expect(traits).toEqual(traitsOfData(name));
+      if (name.startsWith('avatar-')) expect(traits).not.toContain('pill');
+    });
+
+    if (!name.startsWith('avatar-')) {
+      test(`hoja, ${name}: paleta con el morado de marca y el amarillo o el naranja`, async ({ page }) => {
+        await openSheet(page, 1280);
+        // El fondo de la banda cuenta: en agenda el morado es el fondo de la sección y no un relleno del svg.
+        const root = page.locator(onSheet(name));
+        const ground = await root.evaluate((el) => getComputedStyle(el.closest('[data-tone]')!).backgroundColor);
+        const palette = [...(await paletteOf(root)), ground];
+        expect(palette).toContain(rgbOfToken('purple'));
+        expect(palette.includes(rgbOfToken('yellow')) || palette.includes(rgbOfToken('orange'))).toBe(true);
+      });
+    }
+  }
+
+  test('las píldoras de las composiciones: palabra de la lista, ocultas a tecnologías de asistencia y sin foco', async ({ page }) => {
+    await openSheet(page, 1280);
+    const pills = await page.locator('[data-collage] [data-pill]').evaluateAll((els) =>
+      els.map((e) => ({ text: (e.textContent ?? '').trim(), word: e.getAttribute('data-pill'), hidden: !!e.closest('[aria-hidden="true"]'), tabindex: e.getAttribute('tabindex'), lang: e.getAttribute('lang') })),
+    );
+    expect(pills.length).toBe(2 + 2 + 2 + 7);
+    for (const p of pills) {
+      expect(WORDS).toContain(p.text);
+      expect(p.word).toBe(p.text);
+      expect(p.hidden).toBe(true);
+      expect(p.tabindex).toBeNull();
+      const entry = CHIP_WORDS.find((w: { word: string }) => w.word === p.text);
+      if (entry.lang === 'en') expect(p.lang).toBe('en');
+    }
+  });
+
+  for (const width of WIDTHS) {
+    test(`hoja: nada de lo pintado ni ninguna píldora sale de la raíz de ninguna escena a ${width} px`, async ({ page }) => {
+      await openSheet(page, width);
+      const bad: string[] = [];
+      for (const name of SHEET_NAMES) {
+        const out = await page.locator(onSheet(name)).evaluate((root) => {
+          if (getComputedStyle(root).display === 'none') return [];
+          const r = root.getBoundingClientRect();
+          return Array.from(root.querySelectorAll('[data-trait], [data-pill]'))
+            .filter((el) => {
+              const b = el.getBoundingClientRect();
+              return b.left < r.left - 0.5 || b.right > r.right + 0.5 || b.top < r.top - 0.5 || b.bottom > r.bottom + 0.5;
+            })
+            .map((el) => `${el.getAttribute('data-trait')}:${el.getAttribute('data-pill') ?? ''}`);
+        });
+        bad.push(...out.map((o) => `${name}/${o}`));
+      }
+      expect(bad).toEqual([]);
+    });
+  }
+
+  test('hoja, accesibilidad: el árbol es idéntico con y sin el collage, y la comprobación no es vacía', async ({ page }) => {
+    await openSheet(page, 1280);
+    const withCollage = await page.locator('body').ariaSnapshot();
+    await page.evaluate(() => document.querySelectorAll('[data-collage]').forEach((e) => e.remove()));
+    expect(await page.locator('body').ariaSnapshot()).toBe(withCollage);
+    await openSheet(page, 1280);
+    await page.evaluate(() => {
+      const root = document.querySelector('[data-collage-scene="hero"]') as HTMLElement;
+      root.removeAttribute('aria-hidden');
+      root.querySelector('[data-pill]')?.setAttribute('aria-hidden', 'false');
+    });
+    expect(await page.locator('body').ariaSnapshot()).not.toBe(withCollage);
   });
 });

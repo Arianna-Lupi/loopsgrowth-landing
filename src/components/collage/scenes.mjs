@@ -19,6 +19,11 @@ export const REQUIRED_TRAITS = Object.freeze({
   avatar: Object.freeze(['stage', 'shadow', 'loopy']),
 });
 
+/** Rasgos que un tipo de escena no lleva: los avatares son solo Loopy sobre un disco, sin píldora ni garabatos. */
+export const FORBIDDEN_TRAITS = Object.freeze({
+  avatar: Object.freeze(['pill', 'doodle', 'dots', 'slot']),
+});
+
 /** Grupos de animación del hero: los prepara este plan y los usa 02-07. */
 const HERO_GROUPS = Object.freeze(['stage', 'panel', 'loopy', 'pills', 'doodles', 'dots']);
 
@@ -82,6 +87,26 @@ export const SCENES = {
       { id: 'whynow-pill-geo', kind: 'pill', on: 'ground', word: 'geo', bg: 'white', fg: 'purple', x: 308, y: 214, anchor: 'right', fs: 22 },
     ],
   },
+  agenda: {
+    name: 'agenda',
+    family: 'agenda',
+    kind: 'full',
+    w: 480,
+    h: 480,
+    ground: 'purple',
+    stage: 'yellow',
+    layers: [
+      { id: 'agenda-disc', kind: 'disc', on: 'ground', cx: 238, cy: 232, r: 186, fill: 'yellow', shadow: [14, 14] },
+      { id: 'agenda-loopy', kind: 'loopy', on: 'stage', art: 'ojos', cx: 236, cy: 234, width: 296 },
+      { id: 'agenda-flecha', kind: 'doodle', on: 'ground', piece: 'flecha', x: 398, y: 380, w: 64, color: 'white' },
+      { id: 'agenda-destello', kind: 'doodle', on: 'ground', piece: 'destello', x: 26, y: 26, w: 40, color: 'white' },
+      { id: 'agenda-asterisco', kind: 'doodle', on: 'ground', piece: 'asterisco', x: 28, y: 430, w: 36, color: 'yellow' },
+      { id: 'agenda-mas', kind: 'doodle', on: 'ground', piece: 'mas', x: 442, y: 226, w: 20, color: 'cream' },
+      { id: 'agenda-puntos', kind: 'dots', on: 'ground', x: 380, y: 10, w: 84, color: 'cream' },
+      { id: 'agenda-pill-team', kind: 'pill', on: 'ground', word: 'team work', bg: 'cream', fg: 'purple', x: 14, y: 352, anchor: 'left', fs: 24, shape: 'card' },
+      { id: 'agenda-pill-seo', kind: 'pill', on: 'ground', word: 'seo', bg: 'yellow', fg: 'dark', x: 420, y: 76, anchor: 'right', fs: 26 },
+    ],
+  },
 };
 
 /**
@@ -124,6 +149,37 @@ Object.assign(SCENES, {
   'chip-ojos': mini('chip-ojos', 'chip', { stage: 'yellow', art: 'ojos', word: 'geo', bg: 'purple', fg: 'cream', spark: 'purple' }),
   'chip-loop': mini('chip-loop', 'chip', { stage: 'purple', art: 'ojos', word: 'team work', bg: 'cream', fg: 'purple', shape: 'card', spark: 'orange' }),
   'chip-clic': mini('chip-clic', 'chip', { stage: 'yellow', flecha: 'purple', word: 'seo', bg: 'purple', fg: 'cream', spark: 'dark' }),
+});
+
+/**
+ * Avatares de 120 x 120 (equipo): Loopy oficial centrado en un disco con sombra dura, sin píldora,
+ * sin garabatos y sin cara ni accesorio. `art` es el Loopy (lupa de un ojo u ojos) y `stage` el escenario.
+ * @param {string} variant
+ * @param {'ojos' | 'lupa'} art
+ * @param {'purple' | 'yellow'} stage
+ */
+function avatar(variant, art, stage) {
+  const name = `avatar-${variant}`;
+  return {
+    name,
+    family: 'avatar',
+    kind: 'avatar',
+    w: 120,
+    h: 120,
+    ground: 'light',
+    stage,
+    layers: [
+      { id: `${name}-disc`, kind: 'disc', on: 'ground', cx: 58, cy: 58, r: 50, fill: stage, shadow: [6, 6] },
+      { id: `${name}-loopy`, kind: 'loopy', on: 'stage', art, cx: 58, cy: 58, width: art === 'lupa' ? 60 : 72 },
+    ],
+  };
+}
+
+Object.assign(SCENES, {
+  'avatar-ojo-morado': avatar('ojo-morado', 'lupa', 'purple'),
+  'avatar-ojo-amarillo': avatar('ojo-amarillo', 'lupa', 'yellow'),
+  'avatar-ojos-morado': avatar('ojos-morado', 'ojos', 'purple'),
+  'avatar-ojos-amarillo': avatar('ojos-amarillo', 'ojos', 'yellow'),
 });
 
 // ---------------------------------------------------------------------------------------------
@@ -419,4 +475,6 @@ export function assertScene(input) {
   const traits = sceneTraits(scene);
   const missingTraits = required.filter((t) => !traits.has(t));
   if (missingTraits.length) fail(scene, scene.name, 'R10', `faltan rasgos del moodboard: ${missingTraits.join(', ')}.`);
+  const extraTraits = (FORBIDDEN_TRAITS[scene.kind] ?? []).filter((t) => traits.has(t));
+  if (extraTraits.length) fail(scene, scene.name, 'R10', `sobran rasgos que el tipo ${scene.kind} no lleva: ${extraTraits.join(', ')}.`);
 }

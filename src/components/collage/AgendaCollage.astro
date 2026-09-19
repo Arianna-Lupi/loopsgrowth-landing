@@ -1,57 +1,27 @@
 ---
 /**
- * Composición del collage de `#agenda` (columna izquierda, solo desde 64em): una lupa grande, unos
- * ojos que miran a la derecha (hacia el formulario) y un clic que apunta al lente, con aros de loop
- * detrás y un parche de puntos. Todo son piezas del sprite (`CollageSprite`) colocadas con `<use>`;
- * decorativo, sin texto, sin título, sin movimiento propio.
+ * Composición del collage de `#agenda` (columna izquierda, solo desde 64em): la escena `agenda` de
+ * `scenes.mjs`, con el Loopy oficial de dos ojos sobre un disco amarillo, dos píldoras (team work y
+ * seo), garabatos y retícula sobre el morado de la sección. Sin ranura de foto. Decorativa
+ * (aria-hidden), sin texto SVG ni imágenes ni movimiento propio.
  *
- * Tono `purple`: `assertToneSafe` rechaza en el build cualquier relleno que no se permita sobre el
- * morado (contorno blanco; rellenos amarillo, naranja o blanco, nunca morado). Los colores llegan
- * como variables de marca ya validadas. Se oculta por debajo de 64em por responsividad, no por
- * movimiento.
+ * La raíz es un `div[data-collage="agenda"]` y todo lo pintado queda dentro de su caja (regla R6),
+ * así que no invade la columna del formulario ni su anillo de foco. Se oculta por debajo de 64em por
+ * responsividad, no por movimiento. `CollageScene` valida la escena en el build.
  */
-import { PIECES, assertToneSafe, fillVar } from './collage-rules.mjs';
+import CollageScene from './CollageScene.astro';
 
 interface Props {
   class?: string;
 }
 const { class: className } = Astro.props;
-
-type Item = { piece: keyof typeof PIECES; x: number; y: number; w: number; a?: string; b?: string };
-const items: Item[] = [
-  { piece: 'puntos', x: 24, y: 36, w: 96, a: 'yellow' },
-  { piece: 'loop', x: 214, y: 150, w: 210, a: 'orange', b: 'yellow' },
-  { piece: 'lupa', x: 8, y: 132, w: 300, a: 'yellow', b: 'orange' },
-  { piece: 'ojos-der', x: 236, y: 30, w: 200 },
-  { piece: 'clic', x: 292, y: 330, w: 120, a: 'white' },
-  { piece: 'destello', x: 176, y: 62, w: 36 },
-  { piece: 'destello', x: 420, y: 250, w: 30 },
-];
-assertToneSafe('purple', items.flatMap((i) => [i.a, i.b]), 'AgendaCollage');
-
-const placed = items.map((i) => {
-  const p = PIECES[i.piece];
-  const vars = [i.a && `--cf-a:${fillVar(i.a)}`, i.b && `--cf-b:${fillVar(i.b)}`].filter(Boolean).join(';');
-  return { href: `#${p.symbol}`, x: i.x, y: i.y, width: i.w, height: Math.round((i.w * p.h) / p.w), style: vars || undefined };
-});
 ---
 
-<svg
-  class:list={['agenda-collage', className]}
-  data-collage="agenda"
-  viewBox="0 0 480 480"
-  aria-hidden="true"
-  focusable="false"
->
-  {placed.map((p) => <use href={p.href} x={p.x} y={p.y} width={p.width} height={p.height} style={p.style}></use>)}
-</svg>
+<CollageScene scene="agenda" class:list={['agenda-collage', className]} />
 
-<style>
+<style is:global>
   .agenda-collage {
     display: none;
-    max-width: 100%;
-    height: auto;
-    overflow: visible;
   }
 
   @media (min-width: 64em) {

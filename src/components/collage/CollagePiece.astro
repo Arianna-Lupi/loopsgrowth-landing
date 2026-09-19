@@ -1,55 +1,53 @@
 ---
 /**
- * Una pieza del collage pop: un gráfico SVG decorativo en línea que invoca un símbolo del sprite
+ * Una pieza suelta del collage de marca: un gráfico SVG decorativo que invoca un símbolo del sprite
  * (`CollageSprite`, montado una vez por página). Sin título, sin texto, sin imágenes.
  *
- * `tone` es obligatoria y valida el build: `assertToneSafe` rechaza un color de relleno que no se
- * permite sobre esa superficie (por ejemplo morado sobre dark o amarillo sobre yellow) y el build
- * falla con un mensaje que nombra pieza, tono y color. Los colores llegan como nombres de marca y
- * se traducen a `var(--color-brand-*)` con `fillVar`; nunca hay un valor literal.
- *
- * `rotate` fija una rotación estática (`--r`). El atributo `data-collage-piece` identifica la
- * pieza; los ganchos `data-piece` pertenecen a la composición del hero.
+ * `name`: ojos, lupa (los dos Loopy oficiales), flecha, destello, asterisco, mas, garabato o puntos.
+ * `tone` es obligatoria y valida el build. Loopy toma su esquema del tono (`pieceScheme`: A sobre
+ * light y yellow con clase `lp-a`, B sobre purple con `lp-b`; sobre dark lanza) y no acepta `color`.
+ * Un garabato o la retícula toman `color` (por defecto `defaultPieceColor(tone)`), que pasa por
+ * `assertToneSafe` y se traduce a `var(--color-brand-*)`; nunca hay un valor literal.
+ * `rotate` fija una rotación estática (`--r`) y `size` el ancho CSS. `data-collage-piece` identifica la pieza.
  */
-import { PIECES, assertToneSafe, fillVar } from './collage-rules.mjs';
+import { assertToneSafe, defaultPieceColor, fillVar, pieceScheme, pieceSymbol } from './collage-rules.mjs';
 
 interface Props {
-  name: keyof typeof PIECES | (string & {});
+  name: 'ojos' | 'lupa' | 'flecha' | 'destello' | 'asterisco' | 'mas' | 'garabato' | 'puntos' | (string & {});
   tone: 'light' | 'yellow' | 'dark' | 'purple';
-  a?: 'yellow' | 'orange' | 'purple' | 'white' | 'dark';
-  b?: 'yellow' | 'orange' | 'purple' | 'white' | 'dark';
-  c?: 'yellow' | 'orange' | 'purple' | 'white' | 'dark';
+  color?: 'yellow' | 'orange' | 'purple' | 'white' | 'dark' | 'cream';
   size?: string;
   rotate?: number;
   class?: string;
 }
 
-const { name, tone, a, b, c, size, rotate, class: className } = Astro.props;
-const piece = PIECES[name];
-if (!piece) {
-  throw new Error(`CollagePiece: pieza desconocida "${name}". Usa una de: ${Object.keys(PIECES).join(', ')}.`);
+const { name, tone, color, size, rotate, class: className } = Astro.props;
+const piece = pieceSymbol(name);
+const scheme = pieceScheme(name, tone);
+if (scheme && color) {
+  throw new Error(`CollagePiece "${name}": el color de Loopy lo fija el esquema (${scheme}); no se le pasa "color".`);
 }
-assertToneSafe(tone, [a, b, c, piece.fixed], `CollagePiece "${name}"`);
+const tint = scheme ? undefined : (color ?? defaultPieceColor(tone));
+assertToneSafe(tone, [tint], `CollagePiece "${name}"`);
 
-const vars: string[] = [];
-if (a) vars.push(`--cf-a:${fillVar(a)}`);
-if (b) vars.push(`--cf-b:${fillVar(b)}`);
-if (c) vars.push(`--cf-c:${fillVar(c)}`);
-if (rotate !== undefined) vars.push(`--r:${rotate}deg`);
-if (size) vars.push(`width:${size}`);
+const style = [
+  tint && `--cf-a:${fillVar(tint)}`,
+  rotate !== undefined && `--r:${rotate}deg`,
+  `width:${size ?? (piece.family === 'loopy' ? '10rem' : `${piece.w / 16}rem`)}`,
+]
+  .filter(Boolean)
+  .join(';');
 ---
 
 <svg
-  class:list={['collage-piece', className]}
-  data-collage
+  class:list={['collage-piece', scheme === 'A' && 'lp-a', scheme === 'B' && 'lp-b', className]}
+  data-collage="piece"
   data-collage-piece={name}
   data-collage-tone={tone}
-  viewBox={`0 0 ${piece.w} ${piece.h}`}
-  width={piece.w}
-  height={piece.h}
+  viewBox={`0 0 ${Number(piece.w.toFixed(2))} ${Number(piece.h.toFixed(2))}`}
   aria-hidden="true"
   focusable="false"
-  style={vars.length ? vars.join(';') : undefined}
+  style={style}
 >
   <use href={`#${piece.symbol}`}></use>
 </svg>

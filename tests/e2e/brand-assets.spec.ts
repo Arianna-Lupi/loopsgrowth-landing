@@ -3,6 +3,7 @@ import { readFileSync } from 'node:fs';
 import { parse } from 'yaml';
 import { PURPLE_RGB, rgbOfToken } from './lib/brand';
 import { ARTBOARDS, MIN_HEIGHT_PX } from '../../src/components/brand/logo-variants.mjs';
+import { CHIP_WORDS, assertPill } from '../../src/components/collage/collage-rules.mjs';
 
 // El nombre accesible esperado sale del YAML, nunca de una cadena escrita a mano.
 const es = (parse(readFileSync('src/content/landing.es.yaml', 'utf8')) as {
@@ -282,79 +283,151 @@ test.describe('favicon', () => {
   }
 });
 
-test.describe('hoja de revisión: primitivas del collage', () => {
-  test('(a) toda pieza y el sprite son decorativos: aria-hidden true y focusable false', async ({ page }) => {
+// ---------------------------------------------------------------------------------------------
+// Hoja: piezas, píldoras, composiciones y avatares (plan 02-10, tarea 3)
+// ---------------------------------------------------------------------------------------------
+
+const WORDS: string[] = CHIP_WORDS.map((w: { word: string }) => w.word);
+// Estilos (fondo, texto) por tono del fondo de la sección: los que `assertPill` acepta y usa la hoja.
+const PILL_STYLES: Record<string, [string, string][]> = {
+  light: [['purple', 'cream'], ['yellow', 'dark'], ['cream', 'purple'], ['orange', 'dark'], ['dark', 'yellow']],
+  yellow: [['dark', 'yellow'], ['purple', 'cream'], ['purple', 'white'], ['white', 'purple']],
+  dark: [['yellow', 'dark'], ['cream', 'purple'], ['white', 'purple'], ['orange', 'dark']],
+  purple: [['yellow', 'dark'], ['cream', 'purple'], ['white', 'purple']],
+};
+const PIECE_NAMES = ['ojos', 'lupa', 'flecha', 'destello', 'asterisco', 'mas', 'garabato', 'puntos'];
+const DOODLE_COLOR: Record<string, string> = { light: 'purple', yellow: 'dark', dark: 'yellow', purple: 'yellow' };
+const MINI_SCENES = ['sticker-clic', 'sticker-lupa', 'sticker-ojos', 'chip-lupa', 'chip-ojos', 'chip-loop', 'chip-clic'];
+const AVATAR_VARIANTS = ['ojo-amarillo', 'ojo-morado', 'ojos-amarillo', 'ojos-morado'];
+// Raíces de las diez composiciones enmarcadas y de los cuatro avatares de la hoja.
+const SHEET_SCENES: Record<string, string> = {
+  hero: '[data-demo="hero"] [data-collage-scene="hero"]',
+  whynow: '[data-demo="whynow"] [data-collage-scene="whynow"]',
+  agenda: '[data-demo="agenda"] [data-collage-scene="agenda"]',
+  ...Object.fromEntries(MINI_SCENES.map((n) => [n, `[data-demo="${n}"] [data-collage-scene="${n}"]`])),
+  ...Object.fromEntries(AVATAR_VARIANTS.map((v) => [`avatar-${v}`, `[data-demo="avatar-${v}"] [data-collage-scene="avatar-${v}"]`])),
+};
+const PIECES_ON_SHEET = 8 + 8 + 8 + 6; // light, yellow, purple y dark (sin Loopy)
+const ROOTS_ON_SHEET = PIECES_ON_SHEET + Object.keys(SHEET_SCENES).length;
+
+test.describe('hoja: piezas y píldoras', () => {
+  test('(a) toda raíz y el sprite son decorativos: aria-hidden true; todo svg con focusable false', async ({ page }) => {
     await open(page, 1280, SHEET);
-    const bad = await page.evaluate(() =>
-      Array.from(document.querySelectorAll('svg[data-collage], .collage-sprite'))
-        .filter((el) => el.getAttribute('aria-hidden') !== 'true' || el.getAttribute('focusable') !== 'false')
-        .map((el) => el.getAttribute('data-collage-piece') ?? el.getAttribute('class')),
-    );
+    const bad = await page.evaluate(() => {
+      const out: string[] = [];
+      for (const el of document.querySelectorAll('[data-collage], .collage-sprite')) {
+        if (el.getAttribute('aria-hidden') !== 'true') out.push(`${el.getAttribute('data-collage-piece') ?? el.getAttribute('class')}: raíz sin aria-hidden`);
+        const svgs = el.tagName.toLowerCase() === 'svg' ? [el] : Array.from(el.querySelectorAll('svg'));
+        for (const svg of svgs) {
+          if (svg.getAttribute('aria-hidden') !== 'true' || svg.getAttribute('focusable') !== 'false') out.push(`${el.getAttribute('data-collage-piece') ?? el.getAttribute('class')}: svg sin aria-hidden o focusable`);
+        }
+      }
+      return out;
+    });
     expect(bad).toEqual([]);
-    expect(await page.locator('svg[data-collage]').count()).toBeGreaterThan(40);
+    expect(await page.locator('[data-collage]').count()).toBe(ROOTS_ON_SHEET);
   });
 
-  test('(b) dentro de las piezas y del sprite no hay título, texto, raster, degradados, filtros ni movimiento', async ({ page }) => {
+  test('(b) dentro de las raíces y del sprite no hay título, texto SVG, imagen, foreignObject, SMIL, degradados, filtros ni script', async ({ page }) => {
     await open(page, 1280, SHEET);
     const found = await page.evaluate(() => {
-      const forbidden = 'title, text, image, foreignObject, animate, animateTransform, animateMotion, set, linearGradient, radialGradient, filter, script';
-      return Array.from(document.querySelectorAll('svg[data-collage], .collage-sprite'))
-        .flatMap((el) => Array.from(el.querySelectorAll(forbidden)).map((n) => n.tagName));
+      const forbidden = 'title, text, image, img, foreignObject, animate, animateTransform, animateMotion, set, linearGradient, radialGradient, filter, script';
+      return Array.from(document.querySelectorAll('[data-collage], .collage-sprite')).flatMap((el) => Array.from(el.querySelectorAll(forbidden)).map((n) => n.tagName));
     });
     expect(found).toEqual([]);
   });
 
-  test('(c) cada pieza tiene caja no vacía y su <use> resuelve a un símbolo', async ({ page }) => {
+  test('(c) cada <use> resuelve a un símbolo y cada raíz tiene caja no vacía', async ({ page }) => {
     await open(page, 1280, SHEET);
-    const problems = await page.evaluate(() =>
-      Array.from(document.querySelectorAll('svg[data-collage]')).flatMap((svg) => {
-        const box = svg.getBoundingClientRect();
-        const use = svg.querySelector('use');
-        const target = use ? document.querySelector(use.getAttribute('href') ?? '') : null;
-        const out: string[] = [];
-        if (box.width < 2 || box.height < 2) out.push(`${svg.getAttribute('data-collage-piece')}: caja vacía`);
-        if (!target || target.tagName.toLowerCase() !== 'symbol') out.push(`${svg.getAttribute('data-collage-piece')}: use sin símbolo`);
-        return out;
-      }),
-    );
+    const problems = await page.evaluate(() => {
+      const out: string[] = [];
+      for (const root of document.querySelectorAll('[data-collage]')) {
+        const label = root.getAttribute('data-collage-piece') ?? '';
+        const box = root.getBoundingClientRect();
+        if (box.width < 2 || box.height < 2) out.push(`${label}: caja vacía`);
+        for (const use of root.querySelectorAll('use')) {
+          const target = document.querySelector(use.getAttribute('href') ?? '');
+          if (!target || target.tagName.toLowerCase() !== 'symbol') out.push(`${label}: use sin símbolo (${use.getAttribute('href')})`);
+        }
+      }
+      return out;
+    });
     expect(problems).toEqual([]);
   });
 
-  test('(d) contorno de 3 px y color por tono: oscuro en light y yellow, blanco en dark y purple', async ({ page }) => {
+  test('(d) el trazo de un garabato mide 3 px y su color por tono es el esperado', async ({ page }) => {
     await open(page, 1280, SHEET);
-    const width = await page.evaluate(() => getComputedStyle(document.querySelector('#cs-lupa .cs-o')!).strokeWidth);
+    const width = await page.evaluate(() => getComputedStyle(document.querySelector('#lg-flecha .lg-line')!).strokeWidth);
     expect(width).toBe('3px');
-    const expected: Record<string, string> = {
-      light: 'rgb(33, 33, 33)',
-      yellow: 'rgb(33, 33, 33)',
-      dark: 'rgb(255, 255, 255)',
-      purple: 'rgb(255, 255, 255)',
-    };
-    for (const [tone, color] of Object.entries(expected)) {
+    for (const [tone, color] of Object.entries(DOODLE_COLOR)) {
       const got = await page.evaluate((t) => {
-        const section = document.querySelector(`section[data-sheet="primitivas"][data-tone="${t}"]`)!;
-        const probe = document.createElement('span');
-        probe.style.color = 'var(--collage-stroke)';
-        section.appendChild(probe);
+        const svg = document.querySelector(`section[data-sheet="piezas"][data-tone="${t}"] svg[data-collage-piece="garabato"]`)!;
+        const probe = document.createElement('i');
+        probe.style.color = getComputedStyle(svg).getPropertyValue('--cf-a');
+        document.body.appendChild(probe);
         const value = getComputedStyle(probe).color;
         probe.remove();
         return value;
       }, tone);
-      expect(got, `contorno sobre ${tone}`).toBe(color);
+      expect(got, `garabato sobre ${tone}`).toBe(rgbOfToken(color));
     }
   });
 
-  test('(d2) el relleno de la lupa cambia con el tono: las variables atraviesan el <use>', async ({ page }) => {
+  test('(d2) el aro de Loopy es morado en light y yellow y crema en purple, y sobre dark no hay Loopy', async ({ page }) => {
     await open(page, 1280, SHEET);
-    const result = await page.evaluate(() => {
-      const token = (name: string) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
-      const fills = ['light', 'yellow', 'dark', 'purple'].map((t) => {
-        const svg = document.querySelector(`section[data-sheet="primitivas"][data-tone="${t}"] svg[data-collage-piece="lupa"]`)!;
-        return getComputedStyle(svg).getPropertyValue('--cf-a').trim();
-      });
-      return { fills, yellow: token('--color-brand-yellow'), white: token('--color-brand-white') };
+    const frames = await page.evaluate(() => {
+      const probe = document.createElement('i');
+      document.body.appendChild(probe);
+      const out: Record<string, string[]> = {};
+      for (const tone of ['light', 'yellow', 'purple', 'dark']) {
+        out[tone] = Array.from(document.querySelectorAll(`section[data-sheet="piezas"][data-tone="${tone}"] svg[data-collage-piece="ojos"], section[data-sheet="piezas"][data-tone="${tone}"] svg[data-collage-piece="lupa"]`)).map((svg) => {
+          probe.style.color = getComputedStyle(svg).getPropertyValue('--lp-frame');
+          return getComputedStyle(probe).color;
+        });
+      }
+      probe.remove();
+      return out;
     });
-    expect(result.fills).toEqual([result.yellow, result.white, result.yellow, result.yellow]);
+    expect(frames.light).toEqual([rgbOfToken('purple'), rgbOfToken('purple')]);
+    expect(frames.yellow).toEqual([rgbOfToken('purple'), rgbOfToken('purple')]);
+    expect(frames.purple).toEqual([rgbOfToken('cream'), rgbOfToken('cream')]);
+    expect(frames.dark).toEqual([]);
+  });
+
+  test('(d3) cada banda de piezas trae las ocho piezas (seis sobre dark) con su data-demo', async ({ page }) => {
+    await open(page, 1280, SHEET);
+    for (const tone of ['light', 'yellow', 'purple', 'dark']) {
+      const names = await page.locator(`section[data-sheet="piezas"][data-tone="${tone}"] [data-demo]`).evaluateAll((els) => els.map((e) => e.getAttribute('data-demo')));
+      const expected = PIECE_NAMES.filter((n) => tone !== 'dark' || (n !== 'ojos' && n !== 'lupa')).map((n) => `${n}-${tone}`);
+      expect(names, tone).toEqual(expected);
+    }
+    await expect(page.locator('section[data-sheet="piezas"][data-tone="dark"] code', { hasText: 'ojos y lupa no van directo sobre dark' })).toHaveCount(1);
+  });
+
+  test('píldoras: una por palabra y estilo permitido y tono, con assertPill, palabra de la lista y colores calculados', async ({ page }) => {
+    await open(page, 1280, SHEET);
+    for (const [tone, styles] of Object.entries(PILL_STYLES)) {
+      for (const [bg, fg] of styles) for (const word of WORDS) expect(() => assertPill(tone, bg, fg, word), `${word} ${bg}/${fg} sobre ${tone}`).not.toThrow();
+      const section = page.locator(`section[data-sheet="pildoras"][data-tone="${tone}"]`);
+      await expect(section).toHaveAttribute('data-demo', `pildoras-${tone}`);
+      const items = await section.locator('li').evaluateAll((lis) =>
+        lis.map((li) => {
+          const pill = li.querySelector('[data-pill]') as HTMLElement;
+          const cs = getComputedStyle(pill);
+          return { label: li.querySelector('code')!.textContent!.trim(), text: pill.textContent!.trim(), bg: cs.backgroundColor, fg: cs.color, hidden: !!pill.closest('[aria-hidden="true"]') || pill.getAttribute('aria-hidden') === 'true' };
+        }),
+      );
+      const expected = WORDS.flatMap((word) => styles.map(([bg, fg]) => `${word} / ${bg} / ${fg}`));
+      expect(items.map((i) => i.label).sort(), tone).toEqual([...expected].sort());
+      for (const item of items) {
+        const [word, bg, fg] = item.label.split(' / ');
+        expect(item.text).toBe(word);
+        expect(WORDS).toContain(item.text);
+        expect(item.bg).toBe(rgbOfToken(bg));
+        expect(item.fg).toBe(rgbOfToken(fg));
+        expect(item.hidden).toBe(true);
+      }
+    }
   });
 
   for (const motion of ['reduce', 'no-preference'] as const) {
@@ -375,92 +448,87 @@ test.describe('hoja de revisión: primitivas del collage', () => {
   test.describe('sin JavaScript', () => {
     test.use({ javaScriptEnabled: false });
 
-    test('(g) todas las piezas se pintan con caja no vacía', async ({ page }) => {
+    test('(g) todas las piezas, composiciones y píldoras se pintan con caja no vacía', async ({ page }) => {
       await open(page, 1280, SHEET);
-      const pieces = await page.locator('svg[data-collage]').all();
-      expect(pieces.length).toBeGreaterThan(40);
-      for (const piece of pieces) {
-        const box = await piece.boundingBox();
-        expect(box, 'pieza sin caja').not.toBeNull();
+      const roots = await page.locator('[data-collage]').all();
+      expect(roots.length).toBe(ROOTS_ON_SHEET);
+      for (const root of roots) {
+        const box = await root.boundingBox();
+        expect(box, 'raíz sin caja').not.toBeNull();
         expect(box!.width).toBeGreaterThan(1);
         expect(box!.height).toBeGreaterThan(1);
       }
+      for (const pill of await page.locator('[data-pill]').all()) await expect(pill).toBeVisible();
     });
   });
 });
 
-test.describe('hoja de revisión: composiciones y avatares', () => {
-  test('(a) pesos medidos sobre el HTML: AgendaCollage 4 KB, cada Avatar 2,5 KB y colección 28 KB', async ({ page }) => {
+test.describe('hoja: composiciones y avatares', () => {
+  test('(a) pesos medidos con TextEncoder sobre outerHTML: hero 8192, agenda 4096, whynow 3072, mini 1536, avatar 2560 y sprite más raíces 30720', async ({ page }) => {
     await open(page, 1280, SHEET);
-    const sizes = await page.evaluate(() => {
+    const sizes = await page.evaluate((selectors) => {
       const bytes = (html: string) => new TextEncoder().encode(html).length;
-      const agenda = bytes(document.querySelector('svg[data-collage="agenda"]')!.outerHTML);
-      const avatars = Array.from(document.querySelectorAll('svg[data-collage="avatar"]')).map((el) => bytes(el.outerHTML));
-      const sprite = bytes(document.querySelector('.collage-sprite')!.outerHTML);
-      const firstOfEach = new Map<string, Element>();
-      for (const el of document.querySelectorAll('svg[data-collage-piece]')) {
-        const key = el.getAttribute('data-collage-piece')!;
-        if (!firstOfEach.has(key)) firstOfEach.set(key, el);
-      }
-      const pieces = Array.from(firstOfEach.values()).reduce((sum, el) => sum + bytes(el.outerHTML), 0);
-      return { agenda, avatars, collection: sprite + agenda + avatars.reduce((a, b) => a + b, 0) + pieces };
-    });
+      const out: Record<string, number> = {};
+      for (const [name, selector] of Object.entries(selectors)) out[name] = bytes(document.querySelector(selector)!.outerHTML);
+      out.sprite = bytes(document.querySelector('.collage-sprite')!.outerHTML);
+      return out;
+    }, SHEET_SCENES);
+    expect(sizes.hero).toBeLessThanOrEqual(8192);
     expect(sizes.agenda).toBeLessThanOrEqual(4096);
-    expect(sizes.avatars).toHaveLength(4);
-    for (const bytes of sizes.avatars) expect(bytes).toBeLessThanOrEqual(2560);
-    expect(sizes.collection).toBeLessThanOrEqual(28672);
-  });
-
-  test('(b) cada elemento de AgendaCollage queda dentro de su viewBox con 4px de margen', async ({ page }) => {
-    await open(page, 1280, SHEET);
-    const outside = await page.evaluate(() =>
-      Array.from(document.querySelectorAll('svg[data-collage="agenda"] use')).flatMap((el) => {
-        const b = (el as unknown as SVGGraphicsElement).getBBox();
-        const bad = b.x < 4 || b.y < 4 || b.x + b.width > 476 || b.y + b.height > 476;
-        return bad ? [`${el.getAttribute('href')} ${JSON.stringify([b.x, b.y, b.width, b.height].map(Math.round))}`] : [];
-      }),
-    );
-    expect(outside).toEqual([]);
+    expect(sizes.whynow).toBeLessThanOrEqual(3072);
+    for (const name of MINI_SCENES) expect(sizes[name], name).toBeLessThanOrEqual(1536);
+    for (const v of AVATAR_VARIANTS) expect(sizes[`avatar-${v}`], v).toBeLessThanOrEqual(2560);
+    expect(Object.values(sizes).reduce((a, b) => a + b, 0)).toBeLessThanOrEqual(30720);
   });
 
   for (const [width, visible] of [[320, false], [390, false], [768, false], [1024, true], [1280, true]] as const) {
-    test(`(c) AgendaCollage ${visible ? 'visible' : 'oculto'} a ${width}px`, async ({ page }) => {
+    test(`(b) agenda ${visible ? 'visible' : 'oculta'} a ${width}px y todo lo pintado dentro de su caja`, async ({ page }) => {
       await open(page, width, SHEET);
-      const display = await page.locator('svg[data-collage="agenda"]').evaluate((el) => getComputedStyle(el).display);
-      expect(display === 'none').toBe(!visible);
+      const root = page.locator(SHEET_SCENES.agenda);
+      expect(await root.evaluate((el) => getComputedStyle(el).display === 'none')).toBe(!visible);
+      if (!visible) return;
+      const outside = await root.evaluate((el) => {
+        const r = el.getBoundingClientRect();
+        return Array.from(el.querySelectorAll('[data-trait], [data-pill]'))
+          .filter((n) => {
+            const b = n.getBoundingClientRect();
+            return b.left < r.left - 0.5 || b.right > r.right + 0.5 || b.top < r.top - 0.5 || b.bottom > r.bottom + 0.5;
+          })
+          .map((n) => `${n.getAttribute('data-trait')}:${n.getAttribute('data-pill') ?? ''}`);
+      });
+      expect(outside).toEqual([]);
     });
   }
 
-  test('(d) los cuatro avatares tienen variantes distintas, el mismo tamaño y alto igual a ancho', async ({ page }) => {
+  test('(c) los cuatro avatares tienen variantes distintas, el mismo tamaño, alto igual a ancho y ninguna píldora', async ({ page }) => {
     await open(page, 1280, SHEET);
     const info = await page.evaluate(() =>
       Array.from(document.querySelectorAll('svg[data-collage="avatar"]')).map((el) => {
         const box = el.getBoundingClientRect();
-        return { variant: el.getAttribute('data-variant'), w: Math.round(box.width * 10) / 10, h: Math.round(box.height * 10) / 10 };
+        return { variant: el.getAttribute('data-variant'), w: Math.round(box.width * 10) / 10, h: Math.round(box.height * 10) / 10, pills: el.querySelectorAll('[data-pill]').length, tag: el.tagName.toLowerCase() };
       }),
     );
-    expect(info).toHaveLength(4);
-    expect(new Set(info.map((i) => i.variant)).size).toBe(4);
+    expect(info.map((i) => i.variant).sort()).toEqual(AVATAR_VARIANTS);
     expect(new Set(info.map((i) => `${i.w}x${i.h}`)).size).toBe(1);
-    for (const i of info) expect(i.w).toBe(i.h);
+    for (const i of info) {
+      expect(i.tag).toBe('svg');
+      expect(i.w).toBe(i.h);
+      expect(i.w).toBeLessThanOrEqual(120);
+      expect(i.pills).toBe(0);
+    }
   });
 
-  test('(d2) los avatares y AgendaCollage usan el contorno del tono de su sección', async ({ page }) => {
+  test('(d) ningún elemento de las composiciones lleva contorno: trazo none en discos, bloques y paneles', async ({ page }) => {
     await open(page, 1280, SHEET);
-    const strokes = await page.evaluate(() => {
-      const read = (selector: string) => {
-        const el = document.querySelector(selector)!;
-        const probe = document.createElement('span');
-        probe.style.color = 'var(--collage-stroke)';
-        el.parentElement!.appendChild(probe);
-        const value = getComputedStyle(probe).color;
-        probe.remove();
-        return value;
-      };
-      return { agenda: read('svg[data-collage="agenda"]'), avatar: read('svg[data-collage="avatar"]') };
-    });
-    expect(strokes.agenda).toBe('rgb(255, 255, 255)');
-    expect(strokes.avatar).toBe('rgb(33, 33, 33)');
+    const stroked = await page.evaluate(() =>
+      Array.from(document.querySelectorAll('[data-demo] svg circle, [data-demo] svg rect')).filter((el) => {
+        const cs = getComputedStyle(el);
+        return cs.stroke !== 'none' && cs.strokeWidth !== '0px';
+      }).length,
+    );
+    expect(stroked).toBe(0);
+    const pillBorders = await page.evaluate(() => Array.from(document.querySelectorAll('[data-pill]')).filter((el) => getComputedStyle(el).borderTopWidth !== '0px').length);
+    expect(pillBorders).toBe(0);
   });
 
   for (const motion of ['reduce', 'no-preference'] as const) {
@@ -468,6 +536,39 @@ test.describe('hoja de revisión: composiciones y avatares', () => {
       await page.emulateMedia({ reducedMotion: motion });
       await open(page, 1280, SHEET);
       expect(await page.evaluate(() => document.getAnimations().length)).toBe(0);
+    });
+  }
+
+  test('(f) la hoja trae identidad, paleta y favicon (de 02-09) más piezas, píldoras, composiciones y avatares', async ({ page }) => {
+    await open(page, 1280, SHEET);
+    const kinds = await page.locator('[data-sheet]').evaluateAll((els) => [...new Set(els.map((e) => e.getAttribute('data-sheet')))].sort());
+    expect(kinds).toEqual(['avatares', 'composiciones', 'favicon', 'identidad', 'paleta', 'piezas', 'pildoras']);
+  });
+});
+
+// Capturas de composiciones para el ciclo visual. Solo corren con PHASE2_BATCH definida: abren la
+// hoja con todo lo que no es localhost abortado y guardan test-results/phase2/<lote>-<demo>-<ancho>.png.
+test.describe('captura de composiciones', () => {
+  test.skip(!process.env.PHASE2_BATCH, 'define PHASE2_BATCH (p. ej. C-collage) para generar capturas de composiciones');
+  const FIVE = ['hero', 'whynow', 'sticker-lupa', 'chip-loop', 'avatar-ojos-morado'];
+  const AT_1280 = ['ojos-purple', 'lupa-purple', 'ojos-yellow', 'lupa-yellow', 'ojos-light', 'lupa-light', 'pildoras-light', 'pildoras-purple'];
+  const shots: [string, number][] = [
+    ...FIVE.flatMap((demo) => SHEET_WIDTHS.map((w) => [demo, w] as [string, number])),
+    ['agenda', 1024],
+    ['agenda', 1280],
+    ...AT_1280.map((demo) => [demo, 1280] as [string, number]),
+  ];
+  for (const [demo, width] of shots) {
+    test(`captura de ${demo} a ${width}px`, async ({ browser, baseURL }) => {
+      const context = await browser.newContext({ baseURL, viewport: { width, height: 900 } });
+      await context.route('**/*', (route) => {
+        const host = new URL(route.request().url()).hostname;
+        return host === 'localhost' || host === '127.0.0.1' ? route.continue() : route.abort();
+      });
+      const page = await context.newPage();
+      await page.goto(SHEET);
+      await page.locator(`[data-demo="${demo}"]`).screenshot({ path: `test-results/phase2/${process.env.PHASE2_BATCH}-${demo}-${width}.png` });
+      await context.close();
     });
   }
 });

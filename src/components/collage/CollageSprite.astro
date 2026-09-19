@@ -1,22 +1,18 @@
 ---
 /**
- * Sprite del collage pop: 15 símbolos `cs-*` que las piezas invocan con `<use href>`. Se monta una
- * sola vez por página (hoy dentro de SiteHeader), fuera de flujo y sin `display: none`, porque el
- * contrato pide que siga renderizado. Es decorativo: `aria-hidden` y sin foco.
+ * Sprite del collage de marca: ocho símbolos `lg-*` que las escenas y las piezas invocan con
+ * `<use href>`. Se monta una sola vez por página (hoy dentro de SiteHeader), fuera de flujo y sin
+ * `display: none`, porque el contrato pide que siga renderizado. Es decorativo: `aria-hidden` y sin foco.
  *
- * Reglas de dibujo: formas planas de color de marca, sin degradados ni sombras difusas, sin texto
- * ni elemento de título. El contorno es de 3 px de pantalla (no escala con el viewBox) y sale de
- * `--collage-stroke`, que cambia con el tono de la sección. Los rellenos leen `--cf-a`, `--cf-b`
- * y `--cf-c`, que `CollagePiece` fija con colores de marca ya validados para el tono; los chips
- * llevan su color fijo. Las variables atraviesan el `<use>`, así una misma lupa sirve en cualquier
- * tono. Cada símbolo deja unos 2 px de margen interior; la pieza que lo usa deja el desborde
- * visible por si el contorno lo pide. Ninguna pieza tiene movimiento propio.
+ * Dos Loopy oficiales de Ari (`lg-ojos` y `lg-lupa`, rutas de `src/assets/loopy`), cinco garabatos
+ * de trazo de 3 px y la retícula de puntos. Sin degradados, sombras difusas, texto ni títulos. El aro
+ * y el anillo de Loopy leen `--lp-frame` y `--lp-rim`, que fijan las clases `lp-a` y `lp-b` (esquema A
+ * sobre light y yellow, B sobre purple); iris, pupila y brillo llevan su color oficial. Los garabatos
+ * y la retícula leen `--cf-a`, que fija quien los usa con un color de marca ya validado para el tono.
+ * Las variables atraviesan el `<use>`. Ninguna pieza tiene movimiento propio.
  */
 import { loopyGeometry } from './loopy.mjs';
 
-// Sprite nuevo (plan 02-10): ocho símbolos `lg-*` con el Loopy oficial, cinco garabatos de trazo y la
-// retícula de puntos. Convive con los `cs-*` hasta que el plan 02-10 los retire (tarea 3). Aro y anillo
-// de Loopy leen `--lp-frame` y `--lp-rim`, que fijan las clases `lp-a` y `lp-b` (esquemas A y B).
 const loopyParts = (kind) =>
   loopyGeometry(kind).parts.map((p) => ({
     d: p.d,
@@ -26,95 +22,9 @@ const loopyParts = (kind) =>
 const ojos = { viewBox: loopyGeometry('ojos').viewBox.join(' '), parts: loopyParts('ojos') };
 const lupa = { viewBox: loopyGeometry('lupa').viewBox.join(' '), parts: loopyParts('lupa') };
 const grid = Array.from({ length: 24 }, (_, i) => ({ cx: 8 + 16 * (i % 6), cy: 8 + 16 * Math.floor(i / 6) }));
-const dots = Array.from({ length: 24 }, (_, i) => ({ cx: 8 + 16 * (i % 6), cy: 9 + 18 * Math.floor(i / 6) }));
 ---
 
 <svg class="collage-sprite" aria-hidden="true" focusable="false" width="0" height="0" xmlns="http://www.w3.org/2000/svg">
-  <symbol id="cs-lupa" viewBox="0 0 240 240">
-    <g transform="rotate(45 104 104)"><rect class="cs-b cs-o" x="176" y="88" width="84" height="32" rx="16"></rect></g>
-    <circle class="cs-b cs-o" cx="104" cy="104" r="90"></circle>
-    <circle class="cs-a cs-o" cx="104" cy="104" r="66"></circle>
-    <path class="cs-o" d="M64 92A42 42 0 0 1 92 64"></path>
-  </symbol>
-  <symbol id="cs-ojos-izq" viewBox="0 0 120 64">
-    <ellipse class="cs-w cs-o" cx="31" cy="32" rx="28" ry="29"></ellipse>
-    <ellipse class="cs-w cs-o" cx="89" cy="32" rx="28" ry="29"></ellipse>
-    <circle class="cs-k" cx="22" cy="36" r="10"></circle>
-    <circle class="cs-k" cx="80" cy="36" r="10"></circle>
-    <circle class="cs-w" cx="19" cy="32" r="3"></circle>
-    <circle class="cs-w" cx="77" cy="32" r="3"></circle>
-  </symbol>
-  <symbol id="cs-ojos-der" viewBox="0 0 120 64">
-    <ellipse class="cs-w cs-o" cx="31" cy="32" rx="28" ry="29"></ellipse>
-    <ellipse class="cs-w cs-o" cx="89" cy="32" rx="28" ry="29"></ellipse>
-    <circle class="cs-k" cx="40" cy="36" r="10"></circle>
-    <circle class="cs-k" cx="98" cy="36" r="10"></circle>
-    <circle class="cs-w" cx="37" cy="32" r="3"></circle>
-    <circle class="cs-w" cx="95" cy="32" r="3"></circle>
-  </symbol>
-  <symbol id="cs-ojos-abajo" viewBox="0 0 120 64">
-    <ellipse class="cs-w cs-o" cx="31" cy="32" rx="28" ry="29"></ellipse>
-    <ellipse class="cs-w cs-o" cx="89" cy="32" rx="28" ry="29"></ellipse>
-    <circle class="cs-k" cx="31" cy="45" r="10"></circle>
-    <circle class="cs-k" cx="89" cy="45" r="10"></circle>
-    <circle class="cs-w" cx="28" cy="41" r="3"></circle>
-    <circle class="cs-w" cx="86" cy="41" r="3"></circle>
-  </symbol>
-  <symbol id="cs-clic" viewBox="0 0 80 80">
-    <g transform="translate(26 20) scale(1.15)"><path class="cs-a cs-o" d="M0 0V40l10-9 8 17 9-4-8-16h14z"></path></g>
-    <path class="cs-o" d="M17 20H7M19 12l-7-7M27 11V2M33 13l5-7"></path>
-  </symbol>
-  <symbol id="cs-loop" viewBox="0 0 160 160">
-    <path class="cs-a cs-o" fill-rule="evenodd" d="M62 6a56 56 0 1 0 0 112a56 56 0 1 0 0-112zM62 26a36 36 0 1 0 0 72a36 36 0 1 0 0-72z"></path>
-    <path class="cs-b cs-o" fill-rule="evenodd" d="M98 42a56 56 0 1 0 0 112a56 56 0 1 0 0-112zM98 62a36 36 0 1 0 0 72a36 36 0 1 0 0-72z"></path>
-  </symbol>
-  <symbol id="cs-destello" viewBox="0 0 24 24">
-    <path class="cs-o" d="M12 3v18M3 12h18"></path>
-  </symbol>
-  <symbol id="cs-puntos" viewBox="0 0 96 72">
-    {dots.map((d) => <circle class="cs-a" cx={d.cx} cy={d.cy} r="4"></circle>)}
-  </symbol>
-  <symbol id="cs-sticker-ojos" viewBox="0 0 64 64">
-    <g transform="rotate(-4 32 32)">
-      <ellipse class="cs-w cs-o" cx="18" cy="32" rx="13" ry="16"></ellipse>
-      <ellipse class="cs-w cs-o" cx="46" cy="32" rx="13" ry="16"></ellipse>
-      <circle class="cs-k" cx="21" cy="35" r="5.5"></circle>
-      <circle class="cs-k" cx="49" cy="35" r="5.5"></circle>
-    </g>
-  </symbol>
-  <symbol id="cs-sticker-clic" viewBox="0 0 64 64">
-    <g transform="rotate(6 32 32)">
-      <g transform="translate(22 14) scale(.95)"><path class="cs-a cs-o" d="M0 0V40l10-9 8 17 9-4-8-16h14z"></path></g>
-      <path class="cs-o" d="M14 14H6M17 8l-5-5"></path>
-    </g>
-  </symbol>
-  <symbol id="cs-sticker-lupa" viewBox="0 0 64 64">
-    <g transform="rotate(3 32 32)">
-      <g transform="rotate(45 26 26)"><rect class="cs-b cs-o" x="38" y="19" width="30" height="14" rx="7"></rect></g>
-      <circle class="cs-a cs-o" cx="26" cy="26" r="18"></circle>
-    </g>
-  </symbol>
-  <symbol id="cs-chip-lupa" viewBox="0 0 64 64">
-    <circle class="cs-fy cs-o" cx="32" cy="32" r="29"></circle>
-    <g transform="rotate(45 27 27)"><rect class="cs-k" x="36" y="24" width="16" height="6" rx="3"></rect></g>
-    <circle class="cs-w cs-o" cx="27" cy="27" r="11"></circle>
-  </symbol>
-  <symbol id="cs-chip-ojos" viewBox="0 0 64 64">
-    <circle class="cs-fo cs-o" cx="32" cy="32" r="29"></circle>
-    <ellipse class="cs-w cs-o" cx="22" cy="32" rx="8" ry="10"></ellipse>
-    <ellipse class="cs-w cs-o" cx="42" cy="32" rx="8" ry="10"></ellipse>
-    <circle class="cs-k" cx="24" cy="34" r="3.2"></circle>
-    <circle class="cs-k" cx="44" cy="34" r="3.2"></circle>
-  </symbol>
-  <symbol id="cs-chip-loop" viewBox="0 0 64 64">
-    <circle class="cs-fp cs-o" cx="32" cy="32" r="29"></circle>
-    <circle class="cs-wl" cx="32" cy="32" r="17"></circle>
-    <circle class="cs-wl" cx="32" cy="32" r="7"></circle>
-  </symbol>
-  <symbol id="cs-chip-clic" viewBox="0 0 64 64">
-    <circle class="cs-w cs-o" cx="32" cy="32" r="29"></circle>
-    <g transform="translate(23 16) scale(.62)"><path class="cs-k" d="M0 0V40l10-9 8 17 9-4-8-16h14z"></path></g>
-  </symbol>
   <symbol id="lg-ojos" viewBox={ojos.viewBox}>
     {ojos.parts.map((p) => <path class={p.cls} fill={p.fill} d={p.d}></path>)}
   </symbol>
@@ -149,52 +59,7 @@ const dots = Array.from({ length: 24 }, (_, i) => ({ cx: 8 + 16 * (i % 6), cy: 9
     overflow: hidden;
   }
 
-  /* Contorno de 3 px de pantalla; sin relleno salvo que se sume una clase de relleno después. */
-  .cs-o {
-    fill: none;
-    stroke: var(--collage-stroke, var(--color-brand-dark));
-    stroke-width: 3px;
-    stroke-linejoin: round;
-    stroke-linecap: round;
-    vector-effect: non-scaling-stroke;
-  }
-
-  .cs-a {
-    fill: var(--cf-a, var(--color-brand-yellow));
-  }
-  .cs-b {
-    fill: var(--cf-b, var(--color-brand-orange));
-  }
-  .cs-c {
-    fill: var(--cf-c, var(--color-brand-white));
-  }
-  .cs-w {
-    fill: var(--color-brand-white);
-  }
-  .cs-k {
-    fill: var(--color-brand-dark);
-  }
-  .cs-fy {
-    fill: var(--color-brand-yellow);
-  }
-  .cs-fo {
-    fill: var(--color-brand-orange);
-  }
-  .cs-fp {
-    fill: var(--color-brand-purple);
-  }
-
-  /* Trazo blanco fijo para los glifos de los chips morados. */
-  .cs-wl {
-    fill: none;
-    stroke: var(--color-brand-white);
-    stroke-width: 3px;
-    stroke-linejoin: round;
-    stroke-linecap: round;
-    vector-effect: non-scaling-stroke;
-  }
-
-  /* Sprite nuevo: Loopy por esquema (A: aro morado, anillo crema; B: al revés) y trazos de garabato. */
+  /* Loopy por esquema (A: aro morado, anillo crema; B: al revés) y trazos de garabato de 3 px. */
   .lg-frame {
     fill: var(--lp-frame);
   }
