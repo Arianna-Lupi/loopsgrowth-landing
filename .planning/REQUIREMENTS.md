@@ -11,7 +11,7 @@ Requisitos para la primera entrega. Cada uno se asigna a una fase del roadmap.
 
 - [x] **FND-01**: El sitio corre en local con `npm run dev` en `localhost:4321` y es accesible desde la red local con `--host` para que Ari y Camila lo validen.
 - [x] **FND-02**: Todo el copy vive en un único archivo `landing.es.yaml` validado por esquema, y cada afirmación tiene `status: verified | pending`.
-- [x] **FND-03**: Los tokens de marca (Purple #73187F, Wild Orange #fd6938, Sun Yellow #ffc602, Dark Gray #212121) y los pares texto/fondo aprobados se definen en un solo lugar, y un script de contraste falla si un par no cumple.
+- [x] **FND-03**: Los tokens de marca (Purple #4228D1, Wild Orange #fd6938, Sun Yellow #ffc602, Dark Gray #212121) y los pares texto/fondo aprobados se definen en un solo lugar, y un script de contraste falla si un par no cumple.
 - [x] **FND-04**: La fuente de marca se consume solo mediante la variable `--font-brand`, con Outfit como respaldo, y los glifos `áéíóúüñ¿¡` se ven correctos.
 - [x] **FND-05**: `PUBLIC_SITE_URL` y `PUBLIC_ENV` controlan canonical, sitemap y robots, y el sitio sale con `noindex` en cualquier entorno distinto de producción.
 

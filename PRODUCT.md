@@ -40,7 +40,7 @@ El copy vive en un doc de Ari y se mapea sin reescribir a `src/content/landing.e
 
 ## Brand Commitments
 
-Brandbook de Eleven (2024): Purple #73187F, Wild Orange #fd6938, Sun Yellow #ffc602, Dark Gray #212121, más blanco. Isotipo "Loopy" (Ari con lupa, ojos animados, círculos que se repiten). Tipografía geométrica sans (Hurme Geometric Sans 3, licencia web pendiente; Outfit como respaldo). Pesos 400, 600 y 700. Estilo collage pop, moderno y con energía, profesional sin ser aburrido. Referencias que Ari nombró: m8l.com, skale.so, rankingonai.com.
+Brandbook de Eleven (2024): Purple (Purblue) #4228D1, Wild Orange #fd6938, Sun Yellow #ffc602, Dark Gray #212121, más blanco y el crema #F4F3E0 del logo. El BrandBook rotula el morado de la página 8 con un valor erróneo (#73187F); el valor oficial es el de los archivos del logo, #4228D1 (decisión de Juan, 2026-09-19). Isotipo "Loopy" (Ari con lupa, ojos animados, círculos que se repiten). Tipografía geométrica sans (Hurme Geometric Sans 3, licencia web pendiente; Outfit como respaldo). Pesos 400, 600 y 700. Estilo collage pop, moderno y con energía, profesional sin ser aburrido. Referencias que Ari nombró: m8l.com, skale.so, rankingonai.com.
 
 ## Evidence on Hand
 

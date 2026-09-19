@@ -202,6 +202,12 @@ Reglas:
 
 Sin neutrales inventados: cuatro colores de marca más blanco. Los tonos son bloques de superficie completos; las tarjetas usan un tono anidado `light` (fondo blanco) para reutilizar los mismos tokens.
 
+**Fe de erratas de color (2026-09-19).**
+- El morado vigente es `#4228D1` (decisión de Juan); el valor anterior salió de una etiqueta errónea de la página 8 del BrandBook.
+- El crema `#F4F3E0` es token de superficie (chips y píldoras), no un tono: se combina solo con morado (7.63) y oscuro (14.37).
+- Los ratios de la tabla que involucran al morado quedan reemplazados por los de `scripts/lib/contrast.mjs`: 8.55 sobre blanco, 5.43 sobre amarillo, y naranja sobre morado 2.95, prohibido en texto y UI (solo relleno decorativo con contorno).
+- Morado sobre oscuro mide 1.88 y sigue prohibido. El resto de la tabla se conserva.
+
 | Role | Value | Uso |
 |------|-------|-----|
 | Dominant | `#ffffff` (~45 % de la página por altura de sección) | Header, hero, solución, casos, incluye, para quién, footer, y el interior de toda tarjeta |

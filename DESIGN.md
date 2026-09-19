@@ -2,7 +2,8 @@
 name: Loops Growth Landing
 description: Sistema de diseño de la landing de captación de Loops Growth. Collage pop de marca, cuatro tonos de superficie y contraste medido.
 colors:
-  purple: "#73187f"
+  purple: "#4228d1"
+  cream: "#f4f3e0"
   orange: "#fd6938"
   yellow: "#ffc602"
   dark: "#212121"
@@ -72,7 +73,7 @@ Collage pop de línea gruesa: formas planas de color de marca, contorno de 3 px,
 
 ## Colors
 
-Cuatro colores de marca más blanco, definidos una sola vez en `@theme static`. Los componentes nunca leen un primitivo: leen los tokens semánticos del tono donde viven.
+Cuatro colores de marca más blanco y el crema del logo (que no es un tono), definidos una sola vez en `@theme static`. Los componentes nunca leen un primitivo: leen los tokens semánticos del tono donde viven.
 
 | Tono (`data-tone`) | `--surface` | `--on-surface` | `--heading` | `--link` | `--cta-bg` (hover) | `--focus-ring` | `--bar` |
 |--------------------|-------------|----------------|-------------|----------|--------------------|----------------|---------|
@@ -83,7 +84,9 @@ Cuatro colores de marca más blanco, definidos una sola vez en `@theme static`. 
 
 `--on-cta` es siempre oscuro. `--pop-shadow-color` es oscuro salvo en `dark`, donde es naranja (decorativa). `--collage-stroke` es oscuro sobre `light` y `yellow`, y blanco sobre `dark` y `purple`. `--mark` (amarillo) existe solo en `light`.
 
-Pares medidos (11 aprobados, umbral 4.5 en texto y 3 en UI): oscuro sobre blanco 16.10, morado sobre blanco 9.69, blanco sobre morado 9.69, morado sobre amarillo 6.15, amarillo sobre morado 6.15, oscuro sobre amarillo 10.22, oscuro sobre naranja 5.56, amarillo sobre oscuro 10.22, naranja sobre oscuro 5.56, blanco sobre oscuro 16.10 y naranja sobre morado 3.35 (solo UI o texto grande).
+Pares medidos (14 aprobados, umbral 4.5 en texto y 3 en UI): oscuro sobre blanco 16.10, morado sobre blanco 8.55, blanco sobre morado 8.55, morado sobre amarillo 5.43, amarillo sobre morado 5.43, oscuro sobre amarillo 10.22, oscuro sobre naranja 5.56, amarillo sobre oscuro 10.22, naranja sobre oscuro 5.56, blanco sobre oscuro 16.10, crema sobre morado 7.63, morado sobre crema 7.63, oscuro sobre crema 14.37 y crema sobre oscuro 14.37. El morado es #4228D1 (Purblue): el BrandBook rotula su página 8 con #73187F, un valor erróneo que ya no se usa en ningún archivo.
+
+El crema #F4F3E0 es superficie de chips y píldoras, no un tono: solo se combina con morado (7.63) y oscuro (14.37); amarillo (1.41), naranja (2.58) y blanco (1.12) sobre crema fallan. El naranja sobre morado (2.95) falla en texto y en UI y solo es relleno decorativo del collage, siempre con contorno blanco. Los logos salen de las mesas oficiales del `.ai` por tono y no se recolorean.
 
 ## Typography
 
@@ -112,7 +115,7 @@ Botones en pastilla (`--radius-pill`), tarjetas de 1 rem (`--radius-card`), cont
 - Do: leer siempre los tokens semánticos del tono; nunca un `--color-brand-*` directo en un componente salvo en SVG de collage.
 - Do: poner borde oscuro de 3 px a toda tarjeta blanca sobre amarillo o sobre blanco (el blanco contra amarillo mide 1.58: el borde define la forma).
 - Do: definir el CTA naranja sobre `yellow` por su borde oscuro (el relleno contra el fondo mide 1.84).
-- Don't: morado sobre oscuro (1.66) en texto, iconos o collage. Un tono `dark` no puede declarar `--heading`, `--link` ni `--collage-stroke` en morado, y una sección `dark` nunca es contigua a `purple`.
+- Don't: morado sobre oscuro (1.88) en texto, iconos o collage. Un tono `dark` no puede declarar `--heading`, `--link` ni `--collage-stroke` en morado, y una sección `dark` nunca es contigua a `purple`.
 - Don't: naranja ni blanco como texto sobre amarillo; blanco sobre naranja (2.89); amarillo como texto o borde sobre claro (1.58); naranja como texto o borde sobre blanco (2.89).
 - Don't: ampliar la escala aprobada. 96 px solo para `--section-y`; Title es el quinto y último tamaño; ningún otro peso.
 - Don't: degradados, sombras suaves, animaciones infinitas ni texto sobre una ilustración.

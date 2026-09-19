@@ -25,7 +25,7 @@ Un visitante entiende en segundos qué hace Loops Growth y llena el formulario d
 
 - [ ] Landing de una página con las secciones del Copy v2: Hero, El problema, Por qué ahora, La solución (4 pilares), Lo que logramos juntos, Casos de éxito, Quiénes somos, Qué incluye, Cómo funciona, CTA final
 - [ ] Formulario de ClickUp embebido por iframe, accesible desde todos los CTAs ("Agenda tu llamada de 30 minutos")
-- [ ] Identidad de marca aplicada fielmente: colores (Purple #73187F, Wild Orange #fd6938, Sun Yellow #ffc602, Dark Gray #212121), Hurme Geometric Sans 3, logo/isotipo, estilo collage pop (lupas, ojos, clicks)
+- [ ] Identidad de marca aplicada fielmente: colores (Purple #4228D1, Wild Orange #fd6938, Sun Yellow #ffc602, Dark Gray #212121), Hurme Geometric Sans 3, logo/isotipo, estilo collage pop (lupas, ojos, clicks)
 - [ ] Diseño inspirado en referencias de Ari: m8l.com, skale.so, rankingonai.com
 - [ ] Responsive (móvil ~400px hasta desktop)
 - [ ] Cumplimiento estricto de A11Y.md (reglas de accesibilidad del frontend)

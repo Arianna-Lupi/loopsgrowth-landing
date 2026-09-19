@@ -404,3 +404,81 @@ test('(vi-ix) los originales (.ai, .pdf, brand-inventory/) no están versionados
     assert.ok(ignore.includes(pattern), `.gitignore sin ${pattern}`);
   }
 });
+
+// ---------------------------------------------------------------------------------------------
+// (vii) Favicon: sale de la mesa 18 (ojo con lupa), no se redibujó y el .ico trae tres PNG.
+// ---------------------------------------------------------------------------------------------
+
+const FAVICON_MAX_BYTES = 3072;
+const pathData = (svg) => [...svg.matchAll(/<path\b[^>]*?\sd="([^"]*)"/g)].map((m) => m[1]);
+
+/** Problemas de un favicon.svg frente a la mesa oficial de la que sale. Vacío = correcto. */
+function faviconIssues(favicon, source) {
+  const issues = [];
+  if (JSON.stringify(pathData(favicon)) !== JSON.stringify(pathData(source))) issues.push('los trazos no son los de la mesa oficial');
+  if (!/<svg\b[^>]*\sxmlns="http:\/\/www\.w3\.org\/2000\/svg"/.test(favicon)) issues.push('falta xmlns');
+  const vb = favicon.match(/viewBox="([^"]+)"/)?.[1].split(/\s+/).map(Number);
+  if (!vb || vb.length !== 4 || vb[2] !== vb[3]) issues.push('el viewBox no es cuadrado');
+  if (/<script|<style|\shref=|xlink|https?:\/\/(?!www\.w3\.org)/i.test(favicon)) issues.push('trae script, style, href, xlink o una referencia externa');
+  if (Buffer.byteLength(favicon) >= FAVICON_MAX_BYTES) issues.push(`pesa ${Buffer.byteLength(favicon)} bytes`);
+  return issues;
+}
+
+test('(vii-i) favicon.svg sale de la mesa 18: mismos trazos, xmlns, viewBox cuadrado y sin script ni referencias', () => {
+  const favicon = readFileSync('public/favicon.svg', 'utf8');
+  const source = readFileSync(`${BRAND_DIR}/ojo-18-blanco.svg`, 'utf8');
+  assert.deepEqual(faviconIssues(favicon, source), []);
+});
+
+test('(vii-ii) favicon.svg es reproducible: buildFaviconSvg(mesa 18) es el archivo publicado y deja 4 % de margen por lado', async () => {
+  const { buildFaviconSvg, readViewBox } = await loadClean();
+  const source = readFileSync(`${BRAND_DIR}/ojo-18-blanco.svg`, 'utf8');
+  const favicon = readFileSync('public/favicon.svg', 'utf8');
+  assert.equal(buildFaviconSvg(source), favicon.trim());
+  const art = readViewBox(source);
+  const box = readViewBox(favicon);
+  assert.ok(Math.abs(box.w - Math.max(art.w, art.h) / 0.92) < 0.02, 'el lado no es el mayor del arte entre 0.92');
+  assert.ok(Math.abs(box.x + box.w / 2 - (art.x + art.w / 2)) < 0.02, 'no está centrado en x');
+  assert.ok(Math.abs(box.y + box.h / 2 - (art.y + art.h / 2)) < 0.02, 'no está centrado en y');
+});
+
+test('(vii-iii) mutación: un favicon con un trazo distinto, con script o con viewBox no cuadrado se detecta', () => {
+  const source = readFileSync(`${BRAND_DIR}/ojo-18-blanco.svg`, 'utf8');
+  const favicon = readFileSync('public/favicon.svg', 'utf8');
+  assert.ok(faviconIssues(favicon.replace(/ d="M302\.7 /, ' d="M302.8 '), source).length > 0, 'un trazo cambiado pasó');
+  assert.ok(faviconIssues(favicon.replace('</svg>', '<script>1</script></svg>'), source).length > 0, 'un script pasó');
+  assert.ok(faviconIssues(favicon.replace(/viewBox="([^"]+) ([^ "]+)"/, 'viewBox="$1 1"'), source).length > 0, 'un viewBox no cuadrado pasó');
+  assert.ok(faviconIssues(favicon.replace('<svg ', '<svg data-x="https://example.com" '), source).length > 0, 'una referencia externa pasó');
+});
+
+test('(vii-iv) favicon.ico: cabecera ICO, tres imágenes de 16, 32 y 48 px, cada una un PNG completo, más de 655 bytes', () => {
+  const ico = readFileSync('public/favicon.ico');
+  assert.ok(ico.length > 655);
+  assert.deepEqual([...ico.subarray(0, 4)], [0, 0, 1, 0]);
+  assert.equal(ico.readUInt16LE(4), 3);
+  const seen = [];
+  for (let i = 0; i < 3; i += 1) {
+    const at = 6 + i * 16;
+    const [w, h] = [ico[at], ico[at + 1]];
+    const length = ico.readUInt32LE(at + 8);
+    const offset = ico.readUInt32LE(at + 12);
+    assert.equal(w, h);
+    seen.push(w);
+    const png = ico.subarray(offset, offset + length);
+    assert.equal(png.length, length, `la imagen ${i} se sale del archivo`);
+    assert.deepEqual([...png.subarray(0, 8)], [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
+    assert.equal(png.readUInt32BE(16), w, 'el ancho del PNG no coincide con la entrada');
+    assert.equal(png.readUInt32BE(20), h, 'el alto del PNG no coincide con la entrada');
+  }
+  assert.deepEqual(seen, [16, 32, 48]);
+});
+
+test('(vii-v) packIco: rechaza tallas fuera de rango y ordena cabecera, entradas y datos', async () => {
+  const { packIco } = await loadClean();
+  const out = packIco([{ size: 16, data: Buffer.from('aa') }, { size: 32, data: Buffer.from('bbb') }]);
+  assert.equal(out.readUInt16LE(4), 2);
+  assert.equal(out.readUInt32LE(6 + 12), 6 + 32);
+  assert.equal(out.readUInt32LE(6 + 16 + 12), 6 + 32 + 2);
+  assert.equal(out.length, 6 + 32 + 5);
+  assert.throws(() => packIco([{ size: 256, data: Buffer.alloc(1) }]), /fuera de 1 a 255/);
+});

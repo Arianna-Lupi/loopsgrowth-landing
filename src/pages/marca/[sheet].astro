@@ -39,6 +39,11 @@ const SWATCHES = ['purple', 'cream', 'orange', 'yellow', 'dark', 'white'].map((s
   token: `--color-brand-${swatch}`,
   hex: theme[`--color-brand-${swatch}`],
 }));
+const FAVICON_SIZES = [16, 32, 48] as const;
+const FAVICON_SAMPLES = [
+  { tone: 'light', label: 'claro' },
+  { tone: 'dark', label: 'oscuro' },
+] as const;
 const PIECE_TONES = ['light', 'yellow', 'dark', 'purple'] as const;
 // Combinación de colores por tono: siempre dentro de ALLOWED_FILLS y sin repetir el color del fondo.
 const COMBOS = {
@@ -79,6 +84,28 @@ const SIZES: Record<string, string> = { lupa: '10rem', loop: '8rem', puntos: '6r
         </section>
       ))
     }
+
+    <section class="sheet-band" data-tone="light" data-sheet="favicon" aria-labelledby="sheet-favicon">
+      <div class="wrap">
+        <h2 id="sheet-favicon"><code>favicon / mesa 18</code></h2>
+        <div class="sheet-favicon">
+          {
+            FAVICON_SAMPLES.map(({ tone, label }) => (
+              <div class="sheet-favicon-sample" data-tone={tone} data-favicon-sample={tone}>
+                <ul>
+                  {FAVICON_SIZES.map((size) => (
+                    <li>
+                      <img src="/favicon.svg" width={size} height={size} alt={`favicon a ${size} px sobre fondo ${label}`} />
+                      <code>{size} px</code>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </section>
 
     <section class="sheet-band" data-tone="light" data-sheet="paleta" aria-labelledby="sheet-palette">
       <div class="wrap">
@@ -175,6 +202,39 @@ const SIZES: Record<string, string> = { lupa: '10rem', loop: '8rem', puntos: '6r
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .sheet-favicon {
+    margin-top: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+  }
+
+  .sheet-favicon-sample {
+    min-width: 0;
+    padding: 1rem 1.5rem;
+    border: 3px solid var(--color-brand-dark);
+    border-radius: var(--radius-card, 1rem);
+    background: var(--surface);
+    color: var(--on-surface);
+  }
+
+  .sheet-favicon-sample ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 1.5rem;
+  }
+
+  .sheet-favicon-sample li {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     gap: 0.5rem;
   }
 

@@ -250,6 +250,36 @@ test.describe('favicon', () => {
     expect(w).toBe(h);
     expect(text).not.toMatch(/<script|href=|xlink|https?:\/\/(?!www\.w3\.org)/);
   });
+
+  for (const width of SHEET_WIDTHS) {
+    test(`la hoja muestra el favicon a 16, 32 y 48 px sobre claro y oscuro a ${width}px: seis imágenes cargan, sin scroll horizontal`, async ({ page }) => {
+      await open(page, width, SHEET);
+      const section = page.locator('[data-sheet="favicon"]');
+      await expect(section).toHaveCount(1);
+      await expect(section.locator('img')).toHaveCount(6);
+      await page.waitForFunction(() => Array.from(document.querySelectorAll('[data-sheet="favicon"] img')).every((i) => (i as HTMLImageElement).complete));
+      const images = await section.locator('img').evaluateAll((els) =>
+        els.map((el) => {
+          const img = el as HTMLImageElement;
+          return {
+            naturalWidth: img.naturalWidth,
+            alt: img.alt,
+            size: Number(img.getAttribute('width')),
+            sample: img.closest('[data-favicon-sample]')?.getAttribute('data-favicon-sample'),
+            rendered: img.getBoundingClientRect().width,
+          };
+        }),
+      );
+      expect(images.map((i) => `${i.sample}-${i.size}`).sort()).toEqual(['dark-16', 'dark-32', 'dark-48', 'light-16', 'light-32', 'light-48']);
+      for (const image of images) {
+        expect(image.naturalWidth, image.alt).toBeGreaterThan(0);
+        expect(image.alt).toContain(`${image.size} px`);
+        expect(image.rendered).toBe(image.size);
+      }
+      const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+      expect(overflow).toBeLessThanOrEqual(0);
+    });
+  }
 });
 
 test.describe('hoja de revisión: primitivas del collage', () => {

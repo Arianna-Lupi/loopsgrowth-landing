@@ -76,3 +76,67 @@ export function cleanArtboard(svgText, mesa) {
   });
   return out;
 }
+
+/** Margen del favicon por lado, como fracción del lado del lienzo (4 %). */
+export const FAVICON_MARGIN = 0.04;
+
+const round2 = (v) => Number(v.toFixed(2));
+
+/**
+ * Lee el viewBox de un SVG ya extraído.
+ * @param {string} svgText
+ * @returns {{ x: number, y: number, w: number, h: number }}
+ */
+export function readViewBox(svgText) {
+  const match = svgText.match(/viewBox="([^"]+)"/);
+  if (!match) throw new Error('el SVG no trae viewBox');
+  const [x, y, w, h] = match[1].split(/\s+/).map(Number);
+  if ([x, y, w, h].some((n) => !Number.isFinite(n)) || w <= 0 || h <= 0) throw new Error(`viewBox inválido: ${match[1]}`);
+  return { x, y, w, h };
+}
+
+/**
+ * Arma el favicon a partir de una mesa oficial ya extraída: mismos trazos y rellenos, con un
+ * viewBox cuadrado centrado en la caja del arte y un margen de 4 % por lado (el lado es el mayor
+ * de ancho y alto dividido entre 0.92). No dibuja nada nuevo.
+ * @param {string} svgText SVG de `src/assets/brand`
+ * @returns {string}
+ */
+export function buildFaviconSvg(svgText) {
+  const { x, y, w, h } = readViewBox(svgText);
+  const side = Math.max(w, h) / (1 - 2 * FAVICON_MARGIN);
+  const vx = round2(x + w / 2 - side / 2);
+  const vy = round2(y + h / 2 - side / 2);
+  const viewBox = `${vx} ${vy} ${round2(side)} ${round2(side)}`;
+  const out = svgText.trim().replace(/viewBox="[^"]*"/, `viewBox="${viewBox}"`);
+  if (!/xmlns="http:\/\/www\.w3\.org\/2000\/svg"/.test(out)) throw new Error('el SVG no trae xmlns');
+  return out;
+}
+
+/**
+ * Empaqueta imágenes PNG en un `.ico` (formato ICO con PNG incrustados, en el orden dado).
+ * @param {{ size: number, data: Buffer }[]} images tallas cuadradas de 1 a 255 px
+ * @returns {Buffer}
+ */
+export function packIco(images) {
+  const header = Buffer.alloc(6);
+  header.writeUInt16LE(0, 0);
+  header.writeUInt16LE(1, 2);
+  header.writeUInt16LE(images.length, 4);
+  const entries = Buffer.alloc(16 * images.length);
+  let offset = 6 + 16 * images.length;
+  images.forEach(({ size, data }, i) => {
+    if (!(size >= 1 && size <= 255)) throw new Error(`talla ${size} fuera de 1 a 255`);
+    const at = i * 16;
+    entries.writeUInt8(size, at);
+    entries.writeUInt8(size, at + 1);
+    entries.writeUInt8(0, at + 2);
+    entries.writeUInt8(0, at + 3);
+    entries.writeUInt16LE(1, at + 4);
+    entries.writeUInt16LE(32, at + 6);
+    entries.writeUInt32LE(data.length, at + 8);
+    entries.writeUInt32LE(offset, at + 12);
+    offset += data.length;
+  });
+  return Buffer.concat([header, entries, ...images.map((i) => i.data)]);
+}
