@@ -64,7 +64,7 @@ Plans:
 **Plans**: TBD
 
 - [x] 02-09-PLAN.md
-- [ ] 02-10-PLAN.md
+- [x] 02-10-PLAN.md
 - [ ] 02-11-PLAN.md
 
 - [x] 02-01-PLAN.md
@@ -120,6 +120,6 @@ Las fases se ejecutan en orden numérico: 1 → 2 → 3 → 4. Las fases 1 a 3 c
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Fundaciones y formulario funcionando | 4/4 | In Progress|  |
-| 2. Secciones, marca y copy | 3/11 | In Progress|  |
+| 2. Secciones, marca y copy | 4/11 | In Progress|  |
 | 3. SEO, medición mínima y QA | 0/TBD | Not started | - |
 | 4. Salida al evento | 0/TBD | Not started | - |
