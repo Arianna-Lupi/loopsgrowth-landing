@@ -2,7 +2,7 @@
 phase: 02-secciones-marca-y-copy
 plan: 01
 subsystem: ui
-tags: [astro, tailwind, hero, copy, playwright, design-tokens]
+tags: [astro, tailwind, hero, copy, playwright, design-tokens, contrast]
 status: partial
 plan_head_before: 5658481fb6f0e287d4e02cd5ea302bf520047e64
 
@@ -12,27 +12,32 @@ requires:
 provides:
   - "Hero real (CONT-01) que reemplaza al esqueleto de la fase 1, con hero.description de Ari"
   - "hero.description en el YAML y el esquema, y PENDING-COPY.md con siete pendientes"
-  - "--space-4xl, --section-y responsivo (64 px y 96 px desde 1024 px) y --heading por tono (light y purple)"
+  - "Cuatro tonos (light, yellow, dark, purple) con --heading, --bar, --mark, --pop-shadow-color y --collage-stroke; escala Title, --card-pad, --card-gap, --radius-card, --space-4xl y --section-y responsivo"
+  - "check-contrast con cuatro tonos obligatorios, 11 pares aprobados y pares por tono, probado por mutación"
+  - "SectionShell.astro y CtaLink con cuatro ubicaciones, prop href y sombra por tono"
   - "page-structure.spec.ts con las pruebas del tracer (hero y ritmo de padding a 390 y 1280 px)"
-  - "PRODUCT.md y 02-VISUAL-LOG.md (lote 0, ronda 0)"
+  - "PRODUCT.md, DESIGN.md y 02-VISUAL-LOG.md (lote 0, rondas 0 y 1)"
 affects: [02-02, 02-03, 02-04, 02-05, 02-06, 02-07, 02-08]
 
 actuals:
-  tokens: 5260
-  tasks: 1
-  commits: 1
+  tokens: 21000
+  tasks: 2
+  commits: 3
 
 tech-stack:
   added: []
   patterns:
     - "El hero imprime el texto de cada afirmación como nodo de texto y no lee su estado"
-    - "--heading por tono: h1 y h2 leen var(--heading) desde global.css"
+    - "Los componentes leen solo tokens semánticos del tono (--surface, --heading, --bar, --pop-shadow-color); nunca un primitivo"
+    - "Un bloque plano por tono con selector exacto [data-tone=x]; la guarda de contraste rechaza selectores compuestos y CSS anidado"
 
 key-files:
   created:
     - src/components/sections/Hero.astro
+    - src/components/ui/SectionShell.astro
     - tests/e2e/page-structure.spec.ts
     - PRODUCT.md
+    - DESIGN.md
     - .planning/phases/02-secciones-marca-y-copy/02-VISUAL-LOG.md
   modified:
     - src/content/landing.es.yaml
@@ -40,6 +45,9 @@ key-files:
     - src/pages/index.astro
     - src/styles/tokens.css
     - src/styles/global.css
+    - src/components/CtaLink.astro
+    - scripts/lib/contrast.mjs
+    - tests/guards/contrast.test.mjs
     - PENDING-COPY.md
   deleted:
     - src/components/HeroSkeleton.astro
@@ -47,6 +55,7 @@ key-files:
 key-decisions:
   - "Orden del hero h1, subtítulo, CTA, descripción, collage (desviación 1 del plan): el CTA sube sobre la descripción por presupuesto de altura."
   - "hero.description[0] y [2] nacen pending (afirmación de mercado sobre asistentes de IA y credencial de 8 años); la [1] verified."
+  - "Sobre el tono dark la tarjeta blanca se distingue por relleno y no lleva borde; la sombra naranja del CTA es decorativa (contrato del UI-SPEC)."
 
 requirements-completed: []
 
@@ -67,52 +76,69 @@ coverage:
         ref: "node --test tests/guards/*.test.mjs; node scripts/list-pending.mjs --check; PUBLIC_ENV=production node scripts/check-copy.mjs --json"
         status: pass
     human_judgment: false
+  - id: D3
+    description: "Cuatro tonos con pares de contraste medidos; una mutación de yellow o dark (morado sobre oscuro, naranja o blanco como texto sobre amarillo) rompe la guarda"
+    requirement: "DSGN-03"
+    verification:
+      - kind: unit
+        ref: "node --test tests/guards/contrast.test.mjs (25 pruebas); node scripts/check-contrast.mjs (11/11 aprobados, 6 prohibidos)"
+        status: pass
+    human_judgment: false
+  - id: D4
+    description: "h2, barra 48x8 px y anillo de foco de 3 px con el color esperado en los cuatro tonos, medido en la página temporal tone-smoke (borrada)"
+    requirement: "DSGN-04"
+    verification:
+      - kind: e2e
+        ref: "Script ad hoc de Playwright fuera del repo; valores en 02-VISUAL-LOG.md (Lote 0, ronda 1)"
+        status: pass
+    human_judgment: false
 ---
 
-# Phase 2 Plan 01: Cimientos visuales y Hero (PARCIAL: solo Tarea 1 de 3) Summary
+# Phase 2 Plan 01: Cimientos visuales y Hero (PARCIAL: Tareas 1 y 2 de 3) Summary
 
-**Tracer del hero de punta a punta: hero.description del doc de Ari en YAML, esquema y PENDING-COPY.md, Hero.astro real en lugar del esqueleto, ritmo de padding responsivo (64 px y 96 px) y las pruebas de estructura que lo fijan.**
+**Tracer del hero con el texto de Ari, más los cuatro tonos de superficie con contraste medido y probado por mutación, `SectionShell` y `CtaLink` de cuatro ubicaciones listos para los planes 03 a 06.**
 
 ## Estado del plan
 
-Este SUMMARY es `status: partial` a propósito. El plan fija un punto de corte tras la Tarea 1: si el contexto pasa de 50 %, se hace commit, se escribe este SUMMARY parcial y las tareas siguientes corren en un ejecutor nuevo. La Tarea 3 (iteración visual) no se parte a mitad de un ciclo, así que se cortó aquí. No es un plan terminado: no se avanzó el contador de planes, ni el progreso de ROADMAP.md, ni se marcaron requisitos como completos.
-
-Duración de esta parte: unos 12 min (17:24 a 17:36 UTC del 2026-09-19).
+Este SUMMARY es `status: partial` a propósito. El plan fija un punto de corte tras la Tarea 2 cuando el contexto pasa de 50 %, y la Tarea 3 (collage e iteración visual del lote A) no se parte a mitad de un ciclo. Quedan hechas las Tareas 1 y 2; falta la Tarea 3. No se avanzó el contador de planes, ni el progreso de ROADMAP.md, ni se marcaron requisitos como completos.
 
 ## Hecho
 
 ### Tarea 1 (tracer): commit `eff9aee`
 
-- `src/content/landing.es.yaml`: `hero.description` con tres afirmaciones copiadas carácter por carácter de `02-ARI-COPY-V2.md` (Hero, Description). La primera y la tercera `pending` con `reason`; la segunda `verified`.
-- `src/content.config.ts`: `hero.description` como `z.array(claim).min(1)`.
-- `PENDING-COPY.md` regenerado con `npm run pending` (siete pendientes; `--check` sale 0).
-- `src/styles/tokens.css`: `--space-4xl` (6rem), `--section-y` que pasa a `var(--space-4xl)` desde 64em, y `--heading` en los tonos `light` (morado) y `purple` (blanco).
-- `src/styles/global.css`: `h1` y `h2` con `color: var(--heading)`.
-- `src/components/sections/Hero.astro`: `<section id="inicio" data-tone="light">` con el único h1, `.hero-sub`, el CTA `location="hero"` y `.hero-desc` (un `<p>` por afirmación, sin leer el estado). Padding arriba 48 y 64 px, abajo `--section-y`. `HeroSkeleton.astro` se eliminó con `git rm`.
-- `src/pages/index.astro`: usa `Hero` y documenta el orden canónico de las 12 secciones con sus tonos.
-- `tests/e2e/page-structure.spec.ts`: h1 morado y único, textos derivados del YAML, CTA completo en el primer pantallazo (390x844 y 1280x800), orden h1, subtítulo, CTA, descripción, padding de `#inicio` y `#agenda` (48/64 y 64/96 px) y h2 de `#agenda` en blanco.
-- `PRODUCT.md` (raíz) y `02-VISUAL-LOG.md` con la entrada "Lote 0, ronda 0".
+- `hero.description` con tres afirmaciones copiadas carácter por carácter de `02-ARI-COPY-V2.md`; la primera y la tercera `pending` con `reason`, la segunda `verified`. Esquema `z.array(claim).min(1)`; `PENDING-COPY.md` regenerado (siete pendientes).
+- `--space-4xl`, `--section-y` responsivo (64 px, 96 px desde 1024 px) y `--heading` en `light` y `purple`; `h1` y `h2` con `var(--heading)`.
+- `Hero.astro` real (h1, subtítulo, CTA, descripción) en lugar de `HeroSkeleton.astro`; `index.astro` con el orden canónico de las 12 secciones.
+- `page-structure.spec.ts` (tracer), `PRODUCT.md` y `02-VISUAL-LOG.md` con el lote 0, ronda 0.
 
-### Verificación de la Tarea 1 (todo verde)
+### Tarea 2 (TDD): commit `169d9df`
 
-- `npm run build` sale 0 (con `prebuild` y `postbuild`); `node --test tests/guards/*.test.mjs`: 66 pruebas, 0 fallos.
-- `PUBLIC_ENV=production node scripts/check-copy.mjs --json`: cero violaciones estructurales, solo reglas PENDING, siete en total, con `hero.description[0]` y `hero.description[2]`.
-- `grep -c "hero.description\[" PENDING-COPY.md` = 2; `grep -c "te estan buscando" dist/index.html` = 1; un solo `<h1` en `dist/index.html`.
+- **Rojo primero:** `tests/guards/contrast.test.mjs` pasó de 17 a 25 pruebas (contadores a 11 pares, cuatro tonos obligatorios, pares nuevos, tres mutaciones de `dark`, tres de `yellow` y una de `--color-brand-yellow`). Antes de implementar fallaban por aserciones, no por sintaxis.
+- `scripts/lib/contrast.mjs`: `REQUIRED_TONES` de cuatro tonos; morado sobre blanco sube a umbral 4.5; se suman morado sobre amarillo (6.15) y blanco sobre oscuro (16.10); `TONE_PAIRS` mide `--heading`, `--bar` y `--collage-stroke` contra `--surface`. `check-contrast.mjs` no se tocó.
+- `src/styles/tokens.css`: tonos `yellow` y `dark` en bloques planos, tokens nuevos por tono, `--text-title` (Title, quinto y último tamaño), `--card-pad`, `--card-gap` y `--radius-card` (con salto a 40em).
+- `src/styles/global.css`: `h3` en Title, `.section-title::before` (barra de 48x8 px, `aspect-ratio` 6 a 1) y `section[id]` con `scroll-margin-top`.
+- `CtaLink.astro`: `location` de cuatro valores, prop `href` (`'#agenda' | '/#agenda'`) y sombra dura con `--pop-shadow-color` (4, 6 y 2 px).
+- `SectionShell.astro`: `<section id aria-labelledby data-tone>` con h2 y barra, lead de 60ch, slot por defecto y slot `cta` a 48 px.
+- `DESIGN.md` (con `impeccable document`, sin entrevista) y entrada "Lote 0, ronda 1" en `02-VISUAL-LOG.md` con las mediciones.
+- Página temporal `tone-smoke.astro` creada, medida y **borrada** antes del commit; `dist/tone-smoke/index.html` ya no existe.
+
+### Verificación (todo verde)
+
+- `node --test tests/guards/*.test.mjs`: 74 pruebas, 0 fallos. `node scripts/check-contrast.mjs`: 11/11 aprobados, 6 prohibidos verificados.
+- `npm run build` sale 0 (con `prebuild` y `postbuild`); `npm run pending` es idempotente y `--check` sale 0.
 - `test:e2e:isolated` con `page-structure.spec.ts`, `a11y-base.spec.ts` y `cta-focus.spec.ts`: 54 pruebas pasan, sin editar las de la fase 1.
-- Sin `set:html`, sin hex en `src/components` y `src/pages`, sin `outline: none`; ningún archivo protegido (`AgendaSection`, `SiteHeader`, `BaseLayout`, `SkipLinks`, `src/scripts`, `public`) cambió. Preview detenido al terminar.
-- Puerta del tracer: la verificación automática completa pasó, así que la expansión era legítima ("Tracer verified end-to-end").
+- Medición de tonos (1280 px, ClickUp bloqueado): h2 morado en `light` y `yellow`, blanco en `dark` y `purple`; barra 48x8 px con `rgb(115, 24, 127)`, `rgb(33, 33, 33)`, `rgb(253, 105, 56)` y `rgb(255, 198, 2)` respectivamente; anillo de foco de 3 px morado, oscuro, amarillo y amarillo. Padding vertical 96 px; alto del CTA 50.7 px.
+- Sin `set:html`, sin hex en `src/components` y `src/pages`, sin `outline: none`; `grep -c "aria-label" CtaLink.astro` da 0; ningún archivo protegido (`AgendaSection`, `SiteHeader`, `BaseLayout`, `SkipLinks`, `src/scripts`, `public`) cambió. Preview detenido.
 
 ## Pendiente (para el ejecutor nuevo)
 
-**Tarea 2** (TDD): tonos `yellow` y `dark`, `--text-title`, `--card-pad`, `--card-gap`, `--radius-card`, `--bar`, `--mark`, `--pop-shadow-color`, `--collage-stroke`; `contrast.mjs` con cuatro tonos, 11 pares aprobados y pares por tono; mutaciones en `contrast.test.mjs`; `h3`, `.section-title` y `section[id]` en `global.css`; `CtaLink` con cuatro ubicaciones, prop `href` y `--pop-shadow-color`; `SectionShell.astro`; medición de los cuatro tonos con la página temporal `tone-smoke.astro` (no se versiona); `DESIGN.md` con `impeccable document`; entrada "Lote 0, ronda 1" en el log.
+**Tarea 3**: `HeroCollage.astro` (SVG en línea, seis piezas nombradas `loops|lupa|ojos|clic-a|clic-b|destellos`, 8 KB máximo, sin hex, con `--collage-stroke`), `Hero.astro` en rejilla `minmax(0, 7fr) minmax(0, 5fr)` con collage a la derecha desde 64em, extender `page-structure.spec.ts` con los incisos (a) a (j) (orden y tono de las 12 secciones, jerarquía de encabezados, sin desborde a cinco anchos, primer pantallazo, `.hero-art` sin cruce con `.hero-copy`, SVG accesible y liviano, HTML menor a 60 KB, cero animaciones, sin JavaScript, herramienta de capturas `PHASE2_BATCH`), ciclo del lote A (`PHASE2_BATCH=A`, 15 capturas, `impeccable critique`, una ronda de confirmación como máximo) y entrada "Lote A" en `02-VISUAL-LOG.md`. Skills con la herramienta Skill (`impeccable` con `shape`, `layout`, `typeset`, `colorize` y `adapt`; `design-taste-frontend` con diales 7, 3 y 4).
 
-**Tarea 3**: `HeroCollage.astro` (SVG en línea, seis piezas nombradas, 8 KB máximo), `Hero.astro` en rejilla 7fr/5fr con collage a la derecha, extender `page-structure.spec.ts` con los incisos (a) a (j), ciclo del lote A con capturas (`PHASE2_BATCH=A`, 15 imágenes) y `impeccable critique`, entrada "Lote A" en el log, y este SUMMARY reescrito como completo (`status: complete`) con los requisitos `CONT-01, COPY-01, DSGN-03, DSGN-04`.
-
-Tras cerrar el plan: `state.advance-plan`, `state.update-progress`, `roadmap.update-plan-progress 02` y `requirements.mark-complete`, que aquí no se ejecutaron por ser parcial.
+Al cerrar: reescribir este SUMMARY como `status: complete` con requisitos `CONT-01, COPY-01, DSGN-03, DSGN-04`, y correr `state.advance-plan`, `state.update-progress`, `roadmap.update-plan-progress 02` y `requirements.mark-complete`, que aquí no se ejecutaron por ser parcial.
 
 ## Erratas del doc de Ari detectadas (no se corrigieron)
 
-- `hero.description[1]`: "en el momento que te **estan** buscando" (falta la tilde: "están"). Se muestra tal cual en la página y se reporta a Ari. Además el texto encadena "con contenido y optimizaciones y estrategias", que Ari puede querer pulir.
+- `hero.description[1]`: "en el momento que te **estan** buscando" (falta la tilde: "están"). Se muestra tal cual y se reporta a Ari. El texto además encadena "con contenido y optimizaciones y estrategias", que Ari puede querer pulir.
 
 ## Afirmaciones nuevas en PENDING-COPY.md
 
@@ -121,9 +147,12 @@ Tras cerrar el plan: `state.advance-plan`, `state.update-progress`, `roadmap.upd
 
 ## Deviations from Plan
 
-Ninguna en el código: se aplicó la desviación 1 del propio plan (CTA sobre la descripción) y la 2 (estados `pending` de las líneas 1 y 3), ambas ya documentadas allí.
+Ninguna en el código: se aplicaron las desviaciones 1 (CTA sobre la descripción) y 2 (estados `pending` de las líneas 1 y 3) del propio plan.
 
-Una observación de proceso, no de alcance: `impeccable init` pide una entrevista con una persona (AskUserQuestion) y este ejecutor corre sin nadie que responda. Se generó `PRODUCT.md` solo con hechos ya aprobados por Juan y el archivo lo declara en su cabecera; quedó anotado en `02-VISUAL-LOG.md`. Si Juan quiere revisar el producto en vivo, se corre `/impeccable init` de nuevo.
+Observaciones de proceso, no de alcance:
+
+- `impeccable init` y `impeccable document` piden una entrevista con una persona y este ejecutor corre sin nadie que responda. `PRODUCT.md` y `DESIGN.md` se generaron solo con hechos ya aprobados y lo declaran en su cabecera. Si Juan quiere afinar el lenguaje cualitativo, se corre `/impeccable init` o `/impeccable document` de nuevo.
+- Conflicto de skills resuelto a favor del contrato: `design-taste-frontend` pide un tema único de página y `impeccable` desaconseja la sombra dura fuera de un mundo neobrutalista; el brandbook y el UI-SPEC (aprobados por Juan) fijan cuatro tonos alternados y la sombra dura de 4 px. Quedó anotado en el registro visual.
 
 **Total deviations:** 0 auto-fixed. **Impact:** ninguno sobre el resultado.
 
@@ -133,9 +162,9 @@ Ninguno. El hero no tiene datos vacíos ni marcadores; todo texto sale del YAML.
 
 ## Threat Flags
 
-Ninguno: no hay superficie nueva de red, autenticación ni archivos. Las mitigaciones T-02-01-01 (texto como nodo, sin `set:html`) y T-02-01-08 (`PENDING-COPY.md` regenerado y verificado con `--check`) quedaron aplicadas en esta parte.
+Ninguno: no hay superficie nueva de red, autenticación ni archivos. Aplicadas T-02-01-01 (texto como nodo, sin `set:html`), T-02-01-02 (`href` de `CtaLink` es una unión literal), T-02-01-04 (`tone-smoke.astro` borrada y `dist` sin su salida), T-02-01-07 (guarda de contraste con cuatro tonos y mutaciones) y T-02-01-08 (`PENDING-COPY.md` regenerado y verificado con `--check`).
 
 ## Self-Check: PASSED
 
-- FOUND: src/components/sections/Hero.astro, tests/e2e/page-structure.spec.ts, PRODUCT.md, 02-VISUAL-LOG.md; HeroSkeleton.astro eliminado.
-- FOUND: commit eff9aee (`feat(02-01)`), `git rev-list --count 5658481..HEAD` = 1 antes de este commit de documentación.
+- FOUND: src/components/sections/Hero.astro, src/components/ui/SectionShell.astro, tests/e2e/page-structure.spec.ts, PRODUCT.md, DESIGN.md, 02-VISUAL-LOG.md; HeroSkeleton.astro y tone-smoke.astro no existen.
+- FOUND: commits eff9aee y 169d9df; `git rev-list --count 5658481..HEAD` = 3 (incluye el commit de documentación 3388bfe) antes de este commit del SUMMARY.
