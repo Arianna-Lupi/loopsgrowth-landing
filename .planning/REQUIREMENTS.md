@@ -10,8 +10,8 @@ Requisitos para la primera entrega. Cada uno se asigna a una fase del roadmap.
 ### Fundaciones
 
 - [x] **FND-01**: El sitio corre en local con `npm run dev` en `localhost:4321` y es accesible desde la red local con `--host` para que Ari y Camila lo validen.
-- [ ] **FND-02**: Todo el copy vive en un único archivo `landing.es.yaml` validado por esquema, y cada afirmación tiene `status: verified | pending`.
-- [ ] **FND-03**: Los tokens de marca (Purple #73187F, Wild Orange #fd6938, Sun Yellow #ffc602, Dark Gray #212121) y los pares texto/fondo aprobados se definen en un solo lugar, y un script de contraste falla si un par no cumple.
+- [x] **FND-02**: Todo el copy vive en un único archivo `landing.es.yaml` validado por esquema, y cada afirmación tiene `status: verified | pending`.
+- [x] **FND-03**: Los tokens de marca (Purple #73187F, Wild Orange #fd6938, Sun Yellow #ffc602, Dark Gray #212121) y los pares texto/fondo aprobados se definen en un solo lugar, y un script de contraste falla si un par no cumple.
 - [ ] **FND-04**: La fuente de marca se consume solo mediante la variable `--font-brand`, con Outfit como respaldo, y los glifos `áéíóúüñ¿¡` se ven correctos.
 - [x] **FND-05**: `PUBLIC_SITE_URL` y `PUBLIC_ENV` controlan canonical, sitemap y robots, y el sitio sale con `noindex` en cualquier entorno distinto de producción.
 
@@ -42,7 +42,7 @@ Requisitos para la primera entrega. Cada uno se asigna a una fase del roadmap.
 ### Copy
 
 - [ ] **COPY-01**: Todo el texto sale tal cual del doc de Ari (sin humanizar ni reescribir), en español neutro; si falta un texto se pide a Ari.
-- [ ] **COPY-02**: El build de producción falla si queda `[VERIFICAR]`, una afirmación `pending`, voseo, guion largo o el término "AEO".
+- [x] **COPY-02**: El build de producción falla si queda `[VERIFICAR]`, una afirmación `pending`, voseo, guion largo o el término "AEO".
 
 ### Diseño y marca
 
@@ -120,8 +120,8 @@ Qué fase cubre cada requisito. Completado al crear el roadmap.
 | Requirement | Phase | Status |
 |-------------|-------|--------|
 | FND-01 | Phase 1 | Complete |
-| FND-02 | Phase 1 | Pending |
-| FND-03 | Phase 1 | Pending |
+| FND-02 | Phase 1 | Complete |
+| FND-03 | Phase 1 | Complete |
 | FND-04 | Phase 1 | Pending |
 | FND-05 | Phase 1 | Complete |
 | FORM-01 | Phase 1 | Pending |
@@ -129,7 +129,7 @@ Qué fase cubre cada requisito. Completado al crear el roadmap.
 | FORM-03 | Phase 1 | Pending |
 | FORM-04 | Phase 1 | Pending |
 | FORM-05 | Phase 1 | Pending |
-| COPY-02 | Phase 1 | Pending |
+| COPY-02 | Phase 1 | Complete |
 | A11Y-03 | Phase 1 | Pending |
 | CONT-01 | Phase 2 | Pending |
 | CONT-02 | Phase 2 | Pending |

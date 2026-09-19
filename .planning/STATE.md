@@ -3,16 +3,16 @@ gsd_state_version: "1.0"
 current_phase: 01
 current_phase_name: Fundaciones y formulario funcionando
 status: executing
-stopped_at: Completed 01-01-PLAN.md
-last_updated: "2026-09-19T01:38:53.655Z"
+stopped_at: Completed 01-02-PLAN.md
+last_updated: "2026-09-19T02:19:35.745Z"
 last_activity: 2026-09-18
 last_activity_desc: Phase 01 execution started
-state_head: fef4964dccce56efa3ee5621ee6ed04459a9b036
+state_head: 653021d307b12310fea762a6665f41a40baebe6d
 progress:
   total_phases: 4
   completed_phases: 0
   total_plans: 4
-  completed_plans: 1
+  completed_plans: 2
   percent: 0
 ---
 
@@ -28,7 +28,7 @@ See: .planning/PROJECT.md (updated 2026-09-18)
 ## Current Position
 
 Phase: 01 (Fundaciones y formulario funcionando) — EXECUTING
-Plan: 2 of 4
+Plan: 3 of 4
 Status: Ready to execute
 Last activity: 2026-09-18 — Phase 01 execution started
 
@@ -59,6 +59,7 @@ Progress: [░░░░░░░░░░] 0%
 | Plan | Duration | Tasks | Files |
 |------|----------|-------|-------|
 | Phase 01 P01 | 7 min | 3 tasks | 20 files |
+| Phase 01 P02 | 37 min | 3 tasks | 22 files |
 
 ## Accumulated Context
 
@@ -74,6 +75,9 @@ Recent decisions affecting current work:
 - [Phase 01]: Plan 01-01: Astro 7 lee YAML con file() sin parser propio (la clave es el id de la entrada); yaml queda solo como devDependency de QA — Confirmado con Context7 y un build real
 - [Phase 01]: Plan 01-01: preload de fuentes limitado al subset latin (3 archivos) — Menos peso en el primer pintado; latin-ext sigue declarado por unicode-range
 - [Phase 01]: Plan 01-01: commits en la rama gsd/phase-01-fundaciones-y-formulario-funcionando porque master es rama protegida — La guarda pre-commit prohibe commitear en la rama por defecto; falta integrar la rama a master
+- [Phase 01]: Plan 01-02: los 6 pares prohibidos se miden contra el umbral 3 y un par prohibido declarado en un tono falla con mensaje explícito — Un par prohibido debe fallar incluso como UI; el mensaje nombra el motivo
+- [Phase 01]: Plan 01-02: check-copy bloquea solo con PUBLIC_ENV=production (loadEnv, como astro.config); lo estructural falla siempre; --dist corre en postbuild — En prebuild dist es el de la corrida anterior; el contrato de FND-02 no depende del entorno
+- [Phase 01]: Plan 01-02: PENDING-COPY.md se genera con walkClaims, sin fecha ni rutas absolutas; --check no se encadena en el build — Salida determinista y editar copy en desarrollo no debe bloquear el build; LNCH-03 puede exigir --check
 
 ### Pending Todos
 
@@ -100,6 +104,6 @@ Items acknowledged and deferred at milestone close, most recent first:
 
 ## Session Continuity
 
-Last session: 2026-09-19T01:38:53.639Z
-Stopped at: Completed 01-01-PLAN.md
+Last session: 2026-09-19T02:19:35.725Z
+Stopped at: Completed 01-02-PLAN.md
 Resume file: None
