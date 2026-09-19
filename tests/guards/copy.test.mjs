@@ -6,7 +6,7 @@ import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { parse } from 'yaml';
-import { walkClaims } from '../../scripts/lib/copy-rules.mjs';
+import { checkCopy, walkClaims } from '../../scripts/lib/copy-rules.mjs';
 
 const CLI = 'scripts/check-copy.mjs';
 const FIX = 'tests/guards/fixtures';
@@ -167,6 +167,47 @@ test('4f. la sigla SOS no se marca como voseo, pero el verbo "sos" en minúscula
   const resBad = run(['--file', bad, '--json'], { env: PROD });
   assert.equal(resBad.status, 1, resBad.out);
   assert.ok(rules(resBad.json).includes('VOSEO'), resBad.out);
+});
+
+// Evalúa un texto suelto con las reglas de contenido, sin lanzar el CLI: devuelve los extractos VOSEO.
+const voseoHits = (text) =>
+  checkCopy({ es: { hero: { subtitle: { text, status: 'verified' } } } }).content.filter((v) => v.rule === 'VOSEO');
+
+test('4g. "Sos" con mayúscula inicial y "sos" en minúscula se marcan; la sigla SOS no', () => {
+  for (const text of ['¿Sos dueño de una tienda?', 'Sos el dueño.', 'Si sos dueño, escríbenos.']) {
+    assert.ok(voseoHits(text).length > 0, `no se marcó: ${JSON.stringify(text)}`);
+  }
+  for (const text of ['Una llamada SOS para tu tienda.', 'SOS', 'Servicio SOS y soporte']) {
+    assert.deepEqual(voseoHits(text), [], `falso positivo: ${JSON.stringify(text)}`);
+  }
+});
+
+test('4h. imperativos de CTA y sus formas con enclítico (Contactá, Consultanos, Hacelo, Ponete, Probalo, Pedile, Sabé) se marcan', () => {
+  const bad = [
+    'Contactá a un experto', 'Consultanos hoy', 'Hacelo ahora', 'Ponete en contacto', 'Probalo gratis',
+    'Pedile una cotización a tu asesor', 'Sabé que tu tienda puede crecer', 'Contactame por acá',
+    'Mandale un mensaje al equipo', 'Descargalo aquí', 'Usá la guía',
+  ];
+  for (const text of bad) assert.ok(voseoHits(text).length > 0, `no se marcó: ${JSON.stringify(text)}`);
+});
+
+test('4i. las formas de tú con tilde, "tomate" y las palabras en inglés no se marcan como voseo', () => {
+  const ok = [
+    'Contáctanos hoy', 'Consúltanos sin costo', 'Hazlo ahora', 'Ponte en contacto', 'Pruébalo gratis',
+    'Pídele una cotización a tu asesor', 'Sabe que tu tienda puede crecer', 'Contáctame por aquí',
+    'Envíale un mensaje al equipo', 'Descárgalo aquí', 'Usa la guía', 'Ensalada de tomate y mandala',
+    'Create, activate y generate son verbos en inglés', 'Ayer pidió una cotización y llamó al equipo',
+  ];
+  for (const text of ok) assert.deepEqual(voseoHits(text), [], `falso positivo: ${JSON.stringify(text)}`);
+});
+
+test('4j. "Sos" con mayúscula inicial bloquea producción desde el CLI', () => {
+  const file = tmpYaml(docWith(claimYaml('¿Sos dueño de una tienda? Contactá a Loops Growth.')));
+  const res = run(['--file', file, '--json'], { env: PROD });
+  assert.equal(res.status, 1, res.out);
+  const excerpts = (res.json?.content ?? []).filter((v) => v.rule === 'VOSEO').map((v) => v.excerpt).join(' ');
+  assert.match(excerpts, /Sos/);
+  assert.match(excerpts, /Contactá/);
 });
 
 test('5a. guion largo U+2014 bloquea producción', () => {

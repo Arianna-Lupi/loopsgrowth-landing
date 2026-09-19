@@ -13,16 +13,36 @@ export const STATUSES = ['verified', 'pending'];
 // Lista de PITFALLS.md ampliada con las formas de "vos" más comunes en imperativo, en trato directo
 // y en presente de indicativo, con y sin pronombre enclítico (llamanos, hablanos, dejanos).
 // Es una lista cerrada: una forma que no esté aquí no se detecta. Ampliarla cuando aparezca una nueva.
-export const VOSEO_WORDS = [
-  'vos', 'tenés', 'querés', 'podés', 'sabés', 'sos', 'hacé', 'agendá', 'escribí', 'contanos',
-  'llená', 'descubrí', 'empezá', 'mirá', 'necesitás', 'contactanos', 'escribinos', 'reservá',
-  'descargá', 'registrate', 'sumate',
-  // Imperativos
+
+// Imperativos de vos (con tilde final). Además de ser formas propias, son la base de las formas con
+// enclítico: quitar la tilde y añadir el pronombre da "consultanos", "hacelo", "probalo", "pedile".
+// Esas formas sin tilde no existen en el español neutro (el imperativo de tú lleva tilde y otra
+// vocal: "consúltanos", "hazlo"), así que marcarlas no toca copy legítimo.
+const VOSEO_IMPERATIVES = [
+  'hacé', 'agendá', 'escribí', 'llená', 'descubrí', 'empezá', 'mirá', 'reservá', 'descargá',
   'conocé', 'completá', 'solicitá', 'pedí', 'consultá', 'elegí', 'probá', 'comenzá', 'aprovechá',
   'ingresá', 'seleccioná', 'enviá', 'dejá', 'vení', 'andá', 'poné', 'mandá', 'resolvé', 'comprá',
-  'vendé', 'pagá', 'activá', 'encontrá', 'aprendé', 'creá', 'mejorá', 'potenciá', 'contá',
-  'cotizá', 'decime', 'avisame', 'mostrame',
-  // Con pronombre enclítico
+  'vendé', 'pagá', 'activá', 'encontrá', 'aprendé', 'creá', 'mejorá', 'potenciá', 'contá', 'cotizá',
+  'contactá', 'sabé', 'hablá', 'llamá', 'avisá', 'ayudá', 'mostrá', 'visitá', 'usá', 'buscá',
+  'pensá', 'decí', 'esperá', 'tomá', 'bajá', 'generá', 'optimizá', 'analizá', 'diseñá', 'armá',
+  'ganá', 'crecé', 'posicioná', 'cambiá', 'traé', 'sumá', 'cuidá', 'leé',
+];
+
+// Pronombres enclíticos de los imperativos de vos: "-nos", "-me", "-te", "-lo", "-la", "-le".
+const VOSEO_ENCLITICS = ['nos', 'me', 'te', 'lo', 'la', 'le'];
+
+// Palabras reales que coinciden con un imperativo + enclítico generado y no son voseo: inglés
+// (create, activate, generate, mandate), "tomate", "mandala", "generala" y "andale" (interjección
+// mexicana sin tilde). Si una forma generada choca con una palabra legítima, se añade aquí.
+const VOSEO_ENCLITIC_EXCEPTIONS = ['create', 'activate', 'generate', 'mandate', 'tomate', 'mandala', 'generala', 'andale'];
+
+const stripFinalAccent = (word) => word.replace(/[áéíóú]$/u, (c) => 'aeiou'['áéíóú'.indexOf(c)]);
+
+// Formas propias que no salen de un imperativo de la lista anterior.
+const VOSEO_OTHER = [
+  'vos', 'tenés', 'querés', 'podés', 'sabés', 'sos', 'necesitás', 'contanos', 'contactanos',
+  'escribinos', 'registrate', 'sumate',
+  // Con pronombre enclítico (reflexivos y de verbos sin imperativo listado)
   'llamanos', 'hablanos', 'dejanos', 'avisanos', 'ayudanos', 'mostranos', 'seguinos', 'visitanos',
   'cotizanos', 'unite', 'animate', 'anotate', 'inscribite', 'quedate', 'fijate', 'acordate',
   'olvidate',
@@ -31,9 +51,18 @@ export const VOSEO_WORDS = [
   'pagás', 'ganás', 'gastás', 'conocés', 'encontrás', 'obtenés', 'recibís', 'lográs',
 ];
 
-// `SOS` en mayúsculas es una sigla ("Llamada SOS"), no el verbo: estas formas solo se marcan
-// en minúscula y sin la bandera `i`.
-const CASE_SENSITIVE_VOSEO = ['sos'];
+export const VOSEO_WORDS = [
+  ...new Set([
+    ...VOSEO_OTHER,
+    ...VOSEO_IMPERATIVES,
+    ...VOSEO_IMPERATIVES.flatMap((word) => VOSEO_ENCLITICS.map((clitic) => `${stripFinalAccent(word)}${clitic}`)),
+  ]),
+].filter((word) => !VOSEO_ENCLITIC_EXCEPTIONS.includes(word));
+
+// `SOS` en mayúsculas es una sigla ("Llamada SOS"), no el verbo: "sos" se marca solo en minúscula
+// ("si sos dueño") o con mayúscula inicial ("¿Sos dueño?"), sin la bandera `i`. Límite conocido:
+// un titular todo en mayúsculas ("¿SOS DUEÑO?") se confunde con la sigla y no se detecta.
+const CASE_SENSITIVE_VOSEO = ['sos', 'Sos'];
 
 /**
  * Texto que las reglas de contenido evalúan: NFC (un pegado desde macOS o Google Docs puede traer
