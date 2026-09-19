@@ -258,7 +258,8 @@ test('(vi) assertScene pasa en el hero y lanza con cada mutación, nombrando esc
   const cases = [
     ['R3', (s) => { layerOf(s, 'hero-loopy').cx += 60; }, 'hero-loopy'],
     ['R1', (s) => { layerOf(s, 'hero-destello').color = 'purple'; }, 'hero-destello'],
-    ['R7', (s) => { layerOf(s, 'hero-pill-seo').word = 'hola'; }, 'hero-pill-seo'],
+    // Palabra de tres letras (como 'seo'): una de cuatro con la píldora de fs 36 se solapaba antes (R5) con el destello.
+    ['R7', (s) => { layerOf(s, 'hero-pill-seo').word = 'hoy'; }, 'hero-pill-seo'],
     ['R8', (s) => { s.groups.push({ name: 'extra', i: 6, r: 0, rFrom: 0 }); }, 'extra'],
     ['R6', (s) => { layerOf(s, 'hero-puntos').x = -20; }, 'hero-puntos'],
     ['R5', (s) => { Object.assign(layerOf(s, 'hero-mas'), { x: 30, y: 180 }); }, 'hero-mas'],

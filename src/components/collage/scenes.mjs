@@ -59,8 +59,8 @@ export const SCENES = {
       { id: 'hero-mas', kind: 'doodle', group: 'doodles', on: 'ground', piece: 'mas', x: 24, y: 100, w: 24, color: 'purple' },
       { id: 'hero-garabato', kind: 'doodle', group: 'doodles', on: 'ground', piece: 'garabato', x: 16, y: 470, w: 96, color: 'dark' },
       { id: 'hero-puntos', kind: 'dots', group: 'dots', on: 'ground', x: 16, y: 20, w: 96, color: 'purple' },
-      { id: 'hero-pill-seo', kind: 'pill', group: 'pills', on: 'ground', word: 'seo', bg: 'yellow', fg: 'dark', x: 16, y: 168, anchor: 'left', fs: 30 },
-      { id: 'hero-pill-geo', kind: 'pill', group: 'pills', on: 'ground', word: 'geo', bg: 'purple', fg: 'cream', x: 470, y: 352, anchor: 'right', fs: 30 },
+      { id: 'hero-pill-seo', kind: 'pill', group: 'pills', on: 'ground', word: 'seo', bg: 'yellow', fg: 'dark', x: 16, y: 164, anchor: 'left', fs: 36 },
+      { id: 'hero-pill-geo', kind: 'pill', group: 'pills', on: 'ground', word: 'geo', bg: 'cream', fg: 'purple', x: 470, y: 394, anchor: 'right', fs: 36 },
     ],
   },
   whynow: {
