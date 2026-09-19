@@ -21,14 +21,24 @@ export default defineConfig({
     baseURL: 'http://localhost:4322',
     ...devices['Desktop Chrome'],
   },
-  // Dos proyectos: `chromium` no toca la red de ClickUp (corre sin conexión) y `live` reúne los
-  // specs que necesitan el formulario real (forms.clickup.com y app-cdn.clickup.com). Si ClickUp
-  // cae o no hay red, solo `live` falla: `npm run test:e2e:offline` valida el código propio.
+  // Dos proyectos: `chromium` no depende de que ClickUp responda y `live` reúne los specs que
+  // necesitan el formulario real (forms.clickup.com y app-cdn.clickup.com). Ojo: `chromium` NO
+  // corre sin red por sí solo, el iframe sigue pidiendo `forms.clickup.com`; solo garantiza que
+  // sus pruebas pasan aunque esa petición falle o tarde. Si ClickUp cae, solo `live` falla.
+  // Con `E2E_BLOCK_CLICKUP=1` (`npm run test:e2e:isolated`) el navegador usa un proxy muerto: todo
+  // lo que no es localhost falla, y así se comprueba de verdad que `chromium` no depende de ClickUp.
   projects: [
     {
       name: 'chromium',
       testIgnore: LIVE_SPECS,
-      use: { viewport: { width: 1280, height: 800 } },
+      use: {
+        viewport: { width: 1280, height: 800 },
+        // Playwright fuerza el proxy también para localhost salvo que se excluya: `bypass` deja el
+        // preview (4322) accesible y todo lo demás (ClickUp incluido) cae en el proxy muerto.
+        ...(process.env.E2E_BLOCK_CLICKUP
+          ? { proxy: { server: 'http://127.0.0.1:9', bypass: 'localhost,127.0.0.1' } }
+          : {}),
+      },
     },
     {
       name: 'live',

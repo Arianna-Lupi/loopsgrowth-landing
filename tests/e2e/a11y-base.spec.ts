@@ -117,6 +117,12 @@ test.describe('orden de tabulación y foco a 1280 px', () => {
 
   test('(f2) un skip link enfocado sobre la sección morada #agenda conserva un anillo visible (dos tonos)', async ({ page }) => {
     await page.goto('/#agenda');
+    // La medición solo vale con #agenda ya en pantalla. El salto de ancla del navegador llega en un
+    // momento distinto según cuánto tarde `load` (con ClickUp respondiendo, tras 5 a 11 s; sin
+    // ClickUp, antes), así que no se espera a él: se provoca el desplazamiento y no depende de la
+    // red. `behavior: 'instant'` ignora el `scroll-behavior: smooth` de global.css.
+    await page.locator('#agenda').evaluate((el) => el.scrollIntoView({ behavior: 'instant', block: 'start' }));
+    await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(0);
     const link = page.locator('.skip a[href="#main"]');
     await link.evaluate((el) => (el as HTMLElement).focus());
     await expect(link).toBeFocused();
