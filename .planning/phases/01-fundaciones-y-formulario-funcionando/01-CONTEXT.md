@@ -18,6 +18,7 @@ Sitio Astro 7 + Tailwind 4 corriendo en local (`npm run dev --host`, puerto 4321
 - `landing.es.yaml` organizado por secciones; cada afirmación es `{text, status}` con `status: verified | pending`, validado por esquema (Zod en content config o script propio).
 - Fuente de respaldo Outfit vía Fonts API con `fontProviders.fontsource()`, detrás de `--font-brand`. Cambio a `fontProviders.local()` cuando llegue la licencia web de Hurme. Glifos `áéíóúüñ¿¡` verificados.
 - Duración de llamada ("30 minutos") y término ("SEO/GEO") viven en un solo lugar del YAML, marcados `pending` hasta que Ari confirme.
+- Textos `pending` (cambio de Juan, 2026-09-18): se listan en `PENDING-COPY.md` (generado con `npm run pending`, con clave, texto actual y quién confirma). En la página no hay placeholders vacíos ni etiquetas de borrador: donde falta el dato se muestra "FALTA CONFIRMAR". El relleno aplica solo donde falta el dato; lo que ya viene en el doc de Ari (H1 y subtítulo del hero, "30 minutos", "SEO/GEO", cuerpo del CTA final) se muestra tal cual y solo se lista si Ari debe confirmarlo. El build de producción sigue fallando con cualquier `pending` o "FALTA CONFIRMAR".
 
 ### Formulario embebido de ClickUp
 - Iframe con `loading="lazy"`, `title` en español, `min-h` medido a 390 px y 1280 px, y script de ClickUp con `is:inline async`.

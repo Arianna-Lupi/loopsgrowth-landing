@@ -27,7 +27,7 @@ created: "2026-09-18"
 | Preset | not applicable |
 | Component library | none (HTML nativo, cero islas de framework, cero JS de UI) |
 | Icon library | none. SVG en línea con `aria-hidden="true"` y `focusable="false"`. En esta fase solo existe un ícono: flecha de enlace externo |
-| Font | Outfit (variable, pesos 400 y 700, subsets latin y latin-ext) vía Fonts API con `fontProviders.fontsource()`, consumida solo por `var(--font-brand)`. Cambio a `fontProviders.local()` con Hurme Geometric Sans 3 cuando llegue la licencia web |
+| Font | Outfit (variable, pesos 400, 600 y 700, subsets latin y latin-ext) vía Fonts API con `fontProviders.fontsource()`, consumida solo por `var(--font-brand)`. Cambio a `fontProviders.local()` con Hurme Geometric Sans 3 cuando llegue la licencia web |
 | Styling | Tailwind CSS 4.3.3 por `@tailwindcss/vite`. Tokens en `src/styles/tokens.css` con `@theme` |
 
 Notas de fuente:
@@ -82,22 +82,22 @@ Exceptions:
 
 ## Typography
 
-Exactamente 4 tamaños y 2 pesos. Todo en `rem` con `clamp()`, sin `px` fijos, para que el zoom a 200 % no rompa el layout. Los valores en px son los extremos (a 320 px de ancho y a 1280 px).
+Exactamente 4 tamaños y 3 pesos (Regular, SemiBold y Bold, los tres del brandbook). Todo en `rem` con `clamp()`, sin `px` fijos, para que el zoom a 200 % no rompa el layout. Los valores en px son los extremos (a 320 px de ancho y a 1280 px).
 
 | Role | Size | Weight | Line Height |
 |------|------|--------|-------------|
 | Body | 16px a 18px: `clamp(1rem, 0.96rem + 0.20vw, 1.125rem)` | 400 | 1.6 |
-| Label | 14px fijo (`0.875rem`) | 700 | 1.5 |
+| Label | 14px fijo (`0.875rem`) | 600 | 1.5 |
 | Heading (h2) | 28px a 44px: `clamp(1.75rem, 1.40rem + 1.70vw, 2.75rem)` | 700 | 1.2 |
 | Display (h1) | 36px a 64px: `clamp(2.25rem, 1.60rem + 3.00vw, 4rem)` | 700 | 1.2 |
 
-Pesos: solo 400 (regular) y 700 (bold). No cargar 600 ni ningún otro peso. La marca pide "Loopsgrowth" en Bold grande.
+Pesos: 400 (Regular), 600 (SemiBold) y 700 (Bold), tal como define el brandbook (fuente de la verdad para estilos, decisión de Juan 2026-09-18). SemiBold es para textos secundarios (tagline, cuadros descriptivos, Label). Títulos y botones se mantienen en Bold 700 (decisión de Juan). No cargar ningún otro peso. La marca pide "Loopsgrowth" en Bold grande.
 
 Uso por rol:
 - Display: solo el `<h1>` del hero.
 - Heading: el `<h2>` de `#agenda`. La Fase 2 puede agregar un tamaño de `h3` en su propio contrato.
 - Body: párrafos, texto de botones y enlaces (700 en botones, 400 en párrafos), wordmark del header (700).
-- Label: solo los skip links.
+- Label: solo los skip links (SemiBold 600).
 
 Reglas: sin texto justificado (`text-start`), párrafos con `max-width: 65ch`, `overflow-wrap: anywhere` en encabezados para que un título largo no desborde a 320 px, sin `line-height !important` en ninguna parte.
 
@@ -193,7 +193,7 @@ Reglas derivadas:
 
 ### Skip links
 - Contenedor `<nav aria-label="Saltos de página">` como primer hijo de `<body>`. Dos enlaces en este orden: "Saltar al contenido" (`#main`) y "Saltar al formulario" (`#agenda`).
-- Fuera de pantalla por defecto con posicionamiento (`position: absolute; transform: translateY(-200%)`), nunca `display: none` ni `visibility: hidden`. Al recibir foco: `top: 8px; left: 8px` (fijo a la ventana), fondo `#212121`, texto `#ffc602`, tamaño Label 700, padding `8px 16px`, `min-h-11`, radio 8 px, contorno de foco `3px solid #73187F` con offset 2 px (se ve contra el header blanco).
+- Fuera de pantalla por defecto con posicionamiento (`position: absolute; transform: translateY(-200%)`), nunca `display: none` ni `visibility: hidden`. Al recibir foco: `top: 8px; left: 8px` (fijo a la ventana), fondo `#212121`, texto `#ffc602`, tamaño Label (SemiBold 600), padding `8px 16px`, `min-h-11`, radio 8 px, contorno de foco `3px solid #73187F` con offset 2 px (se ve contra el header blanco).
 - `<main id="main" tabindex="-1">` para que el salto mueva el foco.
 
 ### Header
@@ -228,7 +228,7 @@ Reglas derivadas:
 
 ## Copywriting Contract
 
-Todo el texto vive en `landing.es.yaml` como `{text, status}`. Español neutro, trato de "tú", sin voseo, sin em/en dashes, sin "AEO". Los textos estructurales sin afirmaciones van `verified`. Todo lo que afirma algo del negocio va `pending` hasta que Ari lo apruebe (el build de producción falla con cualquier `pending`, y eso es lo esperado).
+Todo el texto vive en `landing.es.yaml` como `{text, status}`. Español neutro, trato de "tú", sin voseo, sin em/en dashes, sin "AEO". Los textos estructurales sin afirmaciones van `verified`. Todo lo que afirma algo del negocio y no viene del doc de Ari va `pending` hasta que Ari lo apruebe (el build de producción falla con cualquier `pending`, y eso es lo esperado). Regla de Juan (2026-09-18): los `pending` se listan en `PENDING-COPY.md` (generado por `npm run pending` desde el YAML) y en la página nunca hay placeholders vacíos, etiquetas de borrador ni contenido oculto: donde falta el dato se muestra el relleno visible "FALTA CONFIRMAR". Lo que ya está en el doc de Ari se muestra tal cual y solo se lista si Ari debe confirmarlo (por ejemplo "30 minutos" y "SEO/GEO").
 
 | Element | Copy |
 |---------|------|
@@ -236,10 +236,10 @@ Todo el texto vive en `landing.es.yaml` como `{text, status}`. Español neutro, 
 | Skip link 1 | "Saltar al contenido" |
 | Skip link 2 | "Saltar al formulario" |
 | `<title>` (provisional, `pending`) | "Loops Growth: agencia de SEO/GEO" (el término sale de `brand.term`, `pending`). La Fase 3 lo reemplaza |
-| Hero H1 (provisional, `pending`, lo reemplaza CONT-01) | "Que te encuentren en Google y en ChatGPT cuando te estén buscando" |
-| Hero subtítulo (provisional, `pending`) | "Somos una agencia de SEO/GEO para e-commerce y negocios con presupuesto de marketing serio." (`e-commerce` en `<span lang="en">`) |
+| Hero H1 | Tal cual del Copy v2 de Ari: "Crecemos tu tienda a través de Google, ChatGPT y Gemini." (sale del doc, sin reescribir) |
+| Hero subtítulo | Tal cual del Copy v2 de Ari: "Un equipo dedicado y especializado que ejecuta tu SEO/GEO y tu visibilidad en asistentes de IA (ChatGPT, Gemini)." (sin reescribir; el término `SEO/GEO` sale de `brand.term`, `pending` para que Ari lo confirme) |
 | `#agenda` H2 | "Agenda tu llamada" |
-| `#agenda` intro | "Llena el formulario y coordinamos tu llamada con nuestro equipo." |
+| `#agenda` intro | Cuerpo del CTA final del Copy v2 de Ari, tal cual: "Agenda una llamada de 30 minutos. Sin costo y sin compromiso. Entendemos tu negocio y te decimos con honestidad si podemos ayudarte. Si no somos el equipo correcto, también te lo decimos." La duración sale de `call.duration` (`pending`). Reemplaza el texto inventado anterior |
 | Fallback lead-in (también es el copy de error) | "¿El formulario no carga o prefieres abrirlo aparte?" |
 | Fallback link (siempre visible) | "Abre el formulario en una pestaña nueva". `target="_blank" rel="noopener noreferrer"`. El texto visible ya dice que se abre aparte; no hace falta `sr-only` |
 | iframe `title` | "Formulario para agendar tu llamada con Loops Growth" |
@@ -250,7 +250,7 @@ Todo el texto vive en `landing.es.yaml` como `{text, status}`. Español neutro, 
 | Confirmación de envío | No es nuestro copy: la muestra ClickUp dentro del iframe. FORM-05 solo verifica que aparezca. Si aparece en inglés, se registra como hallazgo para Ari (el formulario declara `lang="en-US"`), no se parchea desde la landing |
 | Destructive confirmation | none: Fase 1 no tiene acciones destructivas |
 
-Reglas de redacción para el planner: ningún texto nuevo se inventa: sale del doc de Ari o se marca `pending` y se pide a Ari. Sin "agendá", "tenés", "vos", "llená". Sin guiones largos. `scripts/check-copy.mjs` debe cubrir también los textos estructurales de arriba, no solo los del hero.
+Reglas de redacción para el planner: ningún texto nuevo se inventa: sale del doc de Ari o se muestra "FALTA CONFIRMAR" y se lista en `PENDING-COPY.md` para pedírselo a Ari. Sin "agendá", "tenés", "vos", "llená". Sin guiones largos. `scripts/check-copy.mjs` debe cubrir también los textos estructurales de arriba, no solo los del hero.
 
 ---
 
@@ -372,7 +372,7 @@ Corrida autónoma: no hubo usuario disponible. Cada punto es un valor por defect
 | 7 | Dos skip links (contenido y formulario) | CONTEXT.md exige uno al `main`; el segundo cubre el valor central de la página con costo casi nulo | Juan |
 | 8 | Sin mensaje temporizado de "el formulario tarda en cargar" | El evento `load` no detecta fallas y sumaría JS no decidido en CONTEXT.md; basta el enlace permanente | Juan |
 | 9 | CTA del header oculto por debajo de 640 px | El CTA del hero está en el primer pantallazo y el header no cabe con un texto de 31 caracteres a 320 px | Juan |
-| 10 | Solo pesos 400 y 700, 4 tamaños tipográficos | Regla del checker (3 a 4 tamaños, 2 pesos). La Fase 2 amplía en su propio contrato | Fase 2 |
+| 10 | Pesos 400, 600 y 700 (los tres del brandbook), 4 tamaños tipográficos | El brandbook manda en estilos (Juan, 2026-09-18). La Fase 2 amplía en su propio contrato | Fase 2 |
 | 11 | Duración "30 minutos" y término "SEO/GEO" `pending` en un solo lugar del YAML | Bloqueo abierto en STATE.md | Ari |
 | 12 | La confirmación de envío y su idioma dependen de ClickUp | Fuera de nuestro control; FORM-05 solo observa | Ari (si aparece en inglés) |
 
