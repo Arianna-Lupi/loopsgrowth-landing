@@ -13,9 +13,14 @@ yarn-error.log*
 pnpm-debug.log*
 
 
-# environment variables
+# environment variables (solo .env.example se versiona)
 .env
-.env.production
+.env.*
+!.env.example
+
+# pruebas de navegador
+test-results/
+playwright-report/
 
 # macOS-specific files
 .DS_Store
