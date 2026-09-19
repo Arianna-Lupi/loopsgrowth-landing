@@ -12,14 +12,14 @@ Requisitos para la primera entrega. Cada uno se asigna a una fase del roadmap.
 - [x] **FND-01**: El sitio corre en local con `npm run dev` en `localhost:4321` y es accesible desde la red local con `--host` para que Ari y Camila lo validen.
 - [x] **FND-02**: Todo el copy vive en un único archivo `landing.es.yaml` validado por esquema, y cada afirmación tiene `status: verified | pending`.
 - [x] **FND-03**: Los tokens de marca (Purple #73187F, Wild Orange #fd6938, Sun Yellow #ffc602, Dark Gray #212121) y los pares texto/fondo aprobados se definen en un solo lugar, y un script de contraste falla si un par no cumple.
-- [ ] **FND-04**: La fuente de marca se consume solo mediante la variable `--font-brand`, con Outfit como respaldo, y los glifos `áéíóúüñ¿¡` se ven correctos.
+- [x] **FND-04**: La fuente de marca se consume solo mediante la variable `--font-brand`, con Outfit como respaldo, y los glifos `áéíóúüñ¿¡` se ven correctos.
 - [x] **FND-05**: `PUBLIC_SITE_URL` y `PUBLIC_ENV` controlan canonical, sitemap y robots, y el sitio sale con `noindex` en cualquier entorno distinto de producción.
 
 ### Formulario y conversión
 
-- [ ] **FORM-01**: El formulario de ClickUp aparece embebido por iframe en la sección `#agenda`, con un `title` descriptivo en español.
-- [ ] **FORM-02**: Cada CTA "Agenda tu llamada" lleva a `#agenda` y mueve el foco al encabezado de esa sección.
-- [ ] **FORM-03**: El visitante ve siempre un enlace de respaldo que abre el formulario de ClickUp en pestaña nueva, y un `noscript` con el mismo enlace.
+- [x] **FORM-01**: El formulario de ClickUp aparece embebido por iframe en la sección `#agenda`, con un `title` descriptivo en español.
+- [x] **FORM-02**: Cada CTA "Agenda tu llamada" lleva a `#agenda` y mueve el foco al encabezado de esa sección.
+- [x] **FORM-03**: El visitante ve siempre un enlace de respaldo que abre el formulario de ClickUp en pestaña nueva, y un `noscript` con el mismo enlace.
 - [ ] **FORM-04**: El iframe reserva una altura mínima medida en 390 px y 1280 px, sin recortes ni saltos de layout, y el auto-resize de ClickUp funciona.
 - [ ] **FORM-05**: Un envío real de prueba, en móvil y en escritorio, muestra la confirmación al visitante y crea la tarea en la Lista de ClickUp.
 
@@ -56,7 +56,7 @@ Requisitos para la primera entrega. Cada uno se asigna a una fase del roadmap.
 
 - [ ] **A11Y-01**: axe no reporta violaciones serias ni críticas, y el visitante completa toda la página solo con teclado.
 - [ ] **A11Y-02**: Existen `docs/a11y/REPORT.md`, `EXCEPTIONS.md` (incluye el iframe de ClickUp) y `A11Y-DECISIONS.md`, según A11Y.md.
-- [ ] **A11Y-03**: El foco es visible (2 px, contraste 3:1), los objetivos táctiles miden al menos 44 px, hay skip link, `lang="es"` y todo el contenido es visible sin JavaScript.
+- [x] **A11Y-03**: El foco es visible (2 px, contraste 3:1), los objetivos táctiles miden al menos 44 px, hay skip link, `lang="es"` y todo el contenido es visible sin JavaScript.
 
 ### SEO y rendimiento
 
@@ -122,15 +122,15 @@ Qué fase cubre cada requisito. Completado al crear el roadmap.
 | FND-01 | Phase 1 | Complete |
 | FND-02 | Phase 1 | Complete |
 | FND-03 | Phase 1 | Complete |
-| FND-04 | Phase 1 | Pending |
+| FND-04 | Phase 1 | Complete |
 | FND-05 | Phase 1 | Complete |
-| FORM-01 | Phase 1 | Pending |
-| FORM-02 | Phase 1 | Pending |
-| FORM-03 | Phase 1 | Pending |
+| FORM-01 | Phase 1 | Complete |
+| FORM-02 | Phase 1 | Complete |
+| FORM-03 | Phase 1 | Complete |
 | FORM-04 | Phase 1 | Pending |
 | FORM-05 | Phase 1 | Pending |
 | COPY-02 | Phase 1 | Complete |
-| A11Y-03 | Phase 1 | Pending |
+| A11Y-03 | Phase 1 | Complete |
 | CONT-01 | Phase 2 | Pending |
 | CONT-02 | Phase 2 | Pending |
 | CONT-03 | Phase 2 | Pending |

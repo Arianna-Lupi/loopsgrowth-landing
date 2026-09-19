@@ -3,16 +3,16 @@ gsd_state_version: "1.0"
 current_phase: 01
 current_phase_name: Fundaciones y formulario funcionando
 status: executing
-stopped_at: Completed 01-02-PLAN.md
-last_updated: "2026-09-19T02:19:35.745Z"
+stopped_at: Completed 01-03-PLAN.md
+last_updated: "2026-09-19T02:51:00.728Z"
 last_activity: 2026-09-18
 last_activity_desc: Phase 01 execution started
-state_head: 653021d307b12310fea762a6665f41a40baebe6d
+state_head: abbc0be26e4de04e7c10f3cadd085233de8f2df6
 progress:
   total_phases: 4
   completed_phases: 0
   total_plans: 4
-  completed_plans: 2
+  completed_plans: 3
   percent: 0
 ---
 
@@ -28,7 +28,7 @@ See: .planning/PROJECT.md (updated 2026-09-18)
 ## Current Position
 
 Phase: 01 (Fundaciones y formulario funcionando) — EXECUTING
-Plan: 3 of 4
+Plan: 4 of 4
 Status: Ready to execute
 Last activity: 2026-09-18 — Phase 01 execution started
 
@@ -60,6 +60,7 @@ Progress: [░░░░░░░░░░] 0%
 |------|----------|-------|-------|
 | Phase 01 P01 | 7 min | 3 tasks | 20 files |
 | Phase 01 P02 | 37 min | 3 tasks | 22 files |
+| Phase 01 P03 | 30min | 3 tasks | 13 files |
 
 ## Accumulated Context
 
@@ -78,6 +79,8 @@ Recent decisions affecting current work:
 - [Phase 01]: Plan 01-02: los 6 pares prohibidos se miden contra el umbral 3 y un par prohibido declarado en un tono falla con mensaje explícito — Un par prohibido debe fallar incluso como UI; el mensaje nombra el motivo
 - [Phase 01]: Plan 01-02: check-copy bloquea solo con PUBLIC_ENV=production (loadEnv, como astro.config); lo estructural falla siempre; --dist corre en postbuild — En prebuild dist es el de la corrida anterior; el contrato de FND-02 no depende del entorno
 - [Phase 01]: Plan 01-02: PENDING-COPY.md se genera con walkClaims, sin fecha ni rutas absolutas; --check no se encadena en el build — Salida determinista y editar copy en desarrollo no debe bloquear el build; LNCH-03 puede exigir --check
+- [Phase 01]: La rejilla de #agenda vive en .wrap.agenda-grid (dentro de la seccion morada de ancho completo), con minmax(0,5fr)/minmax(0,7fr) desde 1024 px — El contenedor de 72rem con gutter es .wrap; evita duplicar su calculo en la seccion
+- [Phase 01]: El enlace de respaldo y el noscript usan la geometria Tabler external-link inline (16 px, aria-hidden), sin sumar libreria de iconos — UI-SPEC pide un SVG en linea; el hueco de dependencias se cierra en Fase 2 si hace falta mas iconografia
 
 ### Pending Todos
 
@@ -104,6 +107,6 @@ Items acknowledged and deferred at milestone close, most recent first:
 
 ## Session Continuity
 
-Last session: 2026-09-19T02:19:35.725Z
-Stopped at: Completed 01-02-PLAN.md
+Last session: 2026-09-19T02:51:00.713Z
+Stopped at: Completed 01-03-PLAN.md
 Resume file: None
