@@ -1,20 +1,23 @@
 ---
 /**
  * Header mínimo, en el flujo normal (ni fijo ni pegado arriba) para no tapar el foco
- * (SC 2.4.11). El wordmark de texto lo reemplaza el logo SVG en la Fase 2 (DSGN-02).
+ * (SC 2.4.11). El logo es el SVG del vectorial de Ari (DSGN-02): sin enlace en `/` y con
+ * enlace a `/` en cualquier otra ruta. Se conserva la clase `.wordmark` en el contenedor.
  * El CTA se oculta con `display: none` por debajo de 640 px: así sale también del
  * orden de tabulación y el CTA del hero queda como único acceso en móvil.
  */
 import CtaLink from './CtaLink.astro';
+import Logo from './brand/Logo.astro';
 import { getLanding, ctaLabel } from '../lib/content';
 
 const data = await getLanding();
 const label = ctaLabel(data);
+const homeHref = Astro.url.pathname === '/' ? undefined : '/';
 ---
 
 <header class="site-header" data-tone="light">
   <div class="wrap bar">
-    <span class="wordmark">{data.brand.name.text}</span>
+    <span class="wordmark"><Logo name={data.brand.name.text} href={homeHref} /></span>
     <div class="header-cta">
       <CtaLink label={label} location="header" />
     </div>
@@ -34,6 +37,8 @@ const label = ctaLabel(data);
   }
 
   .wordmark {
+    display: flex;
+    align-items: center;
     font-weight: 700;
   }
 

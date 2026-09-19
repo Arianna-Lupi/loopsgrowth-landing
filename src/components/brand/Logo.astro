@@ -1,0 +1,83 @@
+---
+/**
+ * Logo de Loops Growth como SVG en línea, tomado del vectorial de Ari (LOGO_LOOPSGRWOTH.ai,
+ * mesa 6, logo horizontal). Los colores viven solo en `src/assets/brand/*.svg`; aquí no hay hex.
+ *
+ * `--logo-clear` es el área de salvado del BrandBook (página 7): un margen X en los cuatro
+ * lados, con X igual a la altura del logo (o del isotipo). Es una zona de exclusión, no un
+ * relleno visible: ningún elemento de contenido debe entrar en ese rectángulo ensanchado. Corrige
+ * la suposición de media altura del UI-SPEC, que solo vale para el logo apilado.
+ *
+ * Alturas mínimas con `max()`: 32 px el logo horizontal y 24 px el isotipo, aunque un consumidor
+ * cambie `--logo-h`.
+ *
+ * Accesibilidad: `role="img"` con nombre accesible igual a `name` (viene de `brand.name.text`);
+ * sin `aria-hidden`. Con `href` el SVG va dentro de un enlace (el nombre del enlace es el del
+ * logo); sin `href` no hay enlace (en `/` el logo no es un destino).
+ */
+import LogoHorizontal from '../../assets/brand/logo-horizontal.svg';
+
+interface Props {
+  name: string;
+  href?: string;
+  variant?: 'horizontal';
+  class?: string;
+}
+
+const { name, href, variant = 'horizontal', class: className } = Astro.props;
+---
+
+<span class:list={['brand-logo', className]} data-variant={variant}>
+  {
+    href ? (
+      <a class="brand-logo__link" href={href}>
+        <LogoHorizontal role="img" aria-label={name} focusable="false" />
+      </a>
+    ) : (
+      <LogoHorizontal role="img" aria-label={name} focusable="false" />
+    )
+  }
+</span>
+
+<style>
+  .brand-logo {
+    --logo-min: 32px;
+    --logo-h: 2rem;
+    --logo-clear: max(var(--logo-h), var(--logo-min));
+    display: inline-flex;
+    align-items: center;
+    line-height: 0;
+  }
+
+  /* Desde 640 px el header ya mide lo que el CTA (44 px), así que el logo crece a 40 px sin
+     mover la altura del header; en móvil se queda en el mínimo de 32 px. */
+  @media (min-width: 40em) {
+    .brand-logo {
+      --logo-h: 2.5rem;
+    }
+  }
+
+  .brand-logo__link {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--target-min);
+    border-radius: 0.25rem;
+  }
+
+  .brand-logo__link:focus-visible {
+    outline: var(--focus-width) solid var(--focus-ring);
+    outline-offset: var(--focus-offset);
+  }
+
+  .brand-logo :global(svg) {
+    display: block;
+    height: max(var(--logo-h), var(--logo-min));
+    width: auto;
+    max-width: 100%;
+  }
+
+  /* Sobre superficies oscuras o moradas el logo pasa a blanco (regla de contraste por tono). */
+  :where([data-tone='dark'], [data-tone='purple']) .brand-logo :global(svg) {
+    fill: var(--color-brand-white);
+  }
+</style>
