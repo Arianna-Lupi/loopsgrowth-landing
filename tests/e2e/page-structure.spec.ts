@@ -104,3 +104,268 @@ for (const vp of viewports) {
     });
   });
 }
+
+// ---------------------------------------------------------------------------------------------
+// Tarea 3: orden y tono de las secciones, jerarquía de encabezados, desborde a cinco anchos,
+// primer pantallazo, collage del hero (accesible, liviano, sin movimiento), sin JavaScript y
+// herramienta de capturas por lote.
+// ---------------------------------------------------------------------------------------------
+
+type Tone = 'light' | 'yellow' | 'dark' | 'purple';
+
+// Orden canónico de las 12 secciones de `main` y su tono (UI-SPEC, Page Architecture). Cada plan
+// de la fase 2 suma su sección en este orden; hoy la página trae solo una parte.
+const PAGE_ORDER: ReadonlyArray<readonly [string, Tone]> = [
+  ['inicio', 'light'],
+  ['problema', 'dark'],
+  ['por-que-ahora', 'yellow'],
+  ['solucion', 'light'],
+  ['resultados', 'dark'],
+  ['casos', 'light'],
+  ['nosotros', 'yellow'],
+  ['incluye', 'light'],
+  ['como-funciona', 'dark'],
+  ['para-quien', 'light'],
+  ['faq', 'yellow'],
+  ['agenda', 'purple'],
+];
+
+test.describe('orden y tono de las secciones', () => {
+  test('la constante PAGE_ORDER: 12 ids, ningún vecino repite tono y dark nunca toca purple', () => {
+    expect(PAGE_ORDER).toHaveLength(12);
+    expect(new Set(PAGE_ORDER.map(([id]) => id)).size).toBe(12);
+    for (let i = 1; i < PAGE_ORDER.length; i++) {
+      const [, prev] = PAGE_ORDER[i - 1];
+      const [, cur] = PAGE_ORDER[i];
+      expect(cur, `${PAGE_ORDER[i - 1][0]} y ${PAGE_ORDER[i][0]} repiten tono`).not.toBe(prev);
+      expect(new Set([prev, cur]), 'dark junto a purple').not.toEqual(new Set(['dark', 'purple']));
+    }
+  });
+
+  test('las main > section del build existen en PAGE_ORDER, en orden canónico y con su tono', async ({
+    page,
+  }) => {
+    await page.goto('/');
+    const sections = await page
+      .locator('main > section')
+      .evaluateAll((els) => els.map((el) => ({ id: el.id, tone: el.getAttribute('data-tone') })));
+    expect(sections.length).toBeGreaterThan(0);
+    const ids = PAGE_ORDER.map(([id]) => id);
+    let last = -1;
+    for (const s of sections) {
+      const idx = ids.indexOf(s.id);
+      expect(idx, `id de sección desconocido: ${s.id}`).toBeGreaterThanOrEqual(0);
+      expect(idx, `${s.id} fuera del orden canónico`).toBeGreaterThan(last);
+      last = idx;
+      expect(s.tone, `tono de ${s.id}`).toBe(PAGE_ORDER[idx][1]);
+    }
+  });
+});
+
+test.describe('encabezados', () => {
+  test('un solo h1, ningún salto de nivel y cada sección con aria-labelledby a un encabezado existente', async ({
+    page,
+  }) => {
+    await page.goto('/');
+    await expect(page.locator('h1')).toHaveCount(1);
+    const levels = await page
+      .locator('h1, h2, h3, h4, h5, h6')
+      .evaluateAll((els) => els.map((el) => Number(el.tagName.slice(1))));
+    expect(levels[0]).toBe(1);
+    for (let i = 1; i < levels.length; i++) {
+      expect(levels[i] - levels[i - 1], `salto de h${levels[i - 1]} a h${levels[i]}`).toBeLessThanOrEqual(1);
+    }
+    const links = await page.locator('main > section').evaluateAll((els) =>
+      els.map((el) => {
+        const id = el.getAttribute('aria-labelledby');
+        const target = id ? document.getElementById(id) : null;
+        return { section: el.id, id, isHeading: !!target && /^H[1-6]$/.test(target.tagName) };
+      }),
+    );
+    for (const l of links) {
+      expect(l.id, `${l.section} sin aria-labelledby`).toBeTruthy();
+      expect(l.isHeading, `${l.section}: aria-labelledby no apunta a un encabezado`).toBe(true);
+    }
+  });
+});
+
+const WIDTHS = [
+  { width: 320, height: 640 },
+  { width: 390, height: 844 },
+  { width: 768, height: 1024 },
+  { width: 1024, height: 768 },
+  { width: 1280, height: 800 },
+] as const;
+
+for (const vp of WIDTHS) {
+  test.describe(`hero a ${vp.width} px`, () => {
+    test.use({ viewport: { width: vp.width, height: vp.height } });
+
+    test('sin scroll horizontal y ninguna sección fuera de [0, ancho]', async ({ page }) => {
+      await page.goto('/');
+      const m = await page.evaluate(() => ({
+        scrollWidth: document.documentElement.scrollWidth,
+        innerWidth: window.innerWidth,
+        sections: Array.from(document.querySelectorAll('main > section')).map((el) => {
+          const r = el.getBoundingClientRect();
+          return { id: el.id, left: r.left, right: r.right };
+        }),
+      }));
+      expect(m.scrollWidth).toBeLessThanOrEqual(m.innerWidth);
+      for (const s of m.sections) {
+        expect(s.left, `${s.id} left`).toBeGreaterThanOrEqual(-0.5);
+        expect(s.right, `${s.id} right`).toBeLessThanOrEqual(m.innerWidth + 0.5);
+      }
+    });
+
+    test('.hero-art no se cruza con .hero-copy y el collage cabe en el ancho', async ({ page }) => {
+      await page.goto('/');
+      const copy = await box(page, '#inicio .hero-copy');
+      const art = await box(page, '#inicio .hero-art');
+      const overlapX = Math.min(copy.right, art.right) - Math.max(copy.left, art.left);
+      const overlapY = Math.min(copy.bottom, art.bottom) - Math.max(copy.top, art.top);
+      expect(overlapX > 0.5 && overlapY > 0.5, 'el collage y el texto se cruzan').toBe(false);
+      const svg = await box(page, 'svg.hero-collage');
+      expect(svg.left).toBeGreaterThanOrEqual(-0.5);
+      expect(svg.right).toBeLessThanOrEqual(vp.width + 0.5);
+    });
+  });
+}
+
+test.describe('primer pantallazo', () => {
+  test.describe('390x844', () => {
+    test.use({ viewport: { width: 390, height: 844 } });
+    test('el h1, el subtítulo y el CTA quedan completos', async ({ page }) => {
+      await page.goto('/');
+      for (const sel of [HERO_SELECTORS.h1, HERO_SELECTORS.subtitle, HERO_SELECTORS.cta]) {
+        const r = await box(page, sel);
+        expect(r.top, `${sel} top`).toBeGreaterThanOrEqual(0);
+        expect(r.bottom, `${sel} bottom`).toBeLessThanOrEqual(844);
+        expect(r.left).toBeGreaterThanOrEqual(0);
+        expect(r.right).toBeLessThanOrEqual(390);
+      }
+    });
+  });
+
+  test.describe('1280x800', () => {
+    test.use({ viewport: { width: 1280, height: 800 } });
+    test('h1, subtítulo, CTA y el collage completos, con el collage a la derecha del texto', async ({
+      page,
+    }) => {
+      await page.goto('/');
+      for (const sel of [HERO_SELECTORS.h1, HERO_SELECTORS.subtitle, HERO_SELECTORS.cta, 'svg.hero-collage']) {
+        const r = await box(page, sel);
+        expect(r.top, `${sel} top`).toBeGreaterThanOrEqual(0);
+        expect(r.bottom, `${sel} bottom`).toBeLessThanOrEqual(800);
+        expect(r.left).toBeGreaterThanOrEqual(0);
+        expect(r.right).toBeLessThanOrEqual(1280);
+      }
+      const copy = await box(page, '#inicio .hero-copy');
+      const svg = await box(page, 'svg.hero-collage');
+      expect(svg.left).toBeGreaterThanOrEqual(copy.right - 0.5);
+    });
+
+    test('el h1 mide 64 px, peso 700 y color morado', async ({ page }) => {
+      await page.goto('/');
+      const h1 = page.locator('#inicio h1');
+      await expect(h1).toHaveCSS('font-size', '64px');
+      await expect(h1).toHaveCSS('font-weight', '700');
+      await expect(h1).toHaveCSS('color', PURPLE);
+    });
+  });
+});
+
+test.describe('collage del hero', () => {
+  test('SVG decorativo: aria-hidden, sin title ni text, liviano y sin img en el hero', async ({ page }) => {
+    await page.goto('/');
+    const svg = page.locator('svg.hero-collage');
+    await expect(svg).toHaveCount(1);
+    await expect(svg).toHaveAttribute('aria-hidden', 'true');
+    await expect(svg).toHaveAttribute('focusable', 'false');
+    await expect(svg.locator('title')).toHaveCount(0);
+    await expect(svg.locator('text')).toHaveCount(0);
+    await expect(page.locator('#inicio img')).toHaveCount(0);
+    const size = await svg.evaluate((el) => el.outerHTML.length);
+    expect(size).toBeLessThan(8192);
+  });
+
+  test('seis piezas nombradas con --i, --r y --r-from y dos pupilas', async ({ page }) => {
+    await page.goto('/');
+    const pieces = await page
+      .locator('svg.hero-collage g.hc-piece')
+      .evaluateAll((els) => els.map((el) => ({ name: el.getAttribute('data-piece'), style: el.getAttribute('style') ?? '' })));
+    expect(pieces.map((p) => p.name)).toEqual(['loops', 'lupa', 'ojos', 'clic-a', 'clic-b', 'destellos']);
+    for (const p of pieces) {
+      expect(p.style).toMatch(/--i:\s*\d/);
+      expect(p.style).toMatch(/--r:\s*-?\d/);
+      expect(p.style).toMatch(/--r-from:\s*-?\d/);
+    }
+    expect(await page.locator('svg.hero-collage .hc-pupil').count()).toBeGreaterThanOrEqual(2);
+  });
+});
+
+test('el HTML de / pesa menos de 60 KB sin comprimir', async ({ page }) => {
+  const res = await page.request.get('/');
+  expect(res.ok()).toBe(true);
+  const body = await res.body();
+  expect(body.length).toBeLessThan(60 * 1024);
+});
+
+for (const mode of ['reduce', 'no-preference'] as const) {
+  test(`sin animaciones y con opacidad 1 en el hero (prefers-reduced-motion: ${mode})`, async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: mode });
+    await page.goto('/');
+    await page.waitForTimeout(400);
+    expect(await page.evaluate(() => document.getAnimations().length)).toBe(0);
+    for (const sel of [HERO_SELECTORS.h1, HERO_SELECTORS.subtitle, HERO_SELECTORS.cta]) {
+      await expect(page.locator(sel).first()).toHaveCSS('opacity', '1');
+    }
+  });
+}
+
+test.describe('sin JavaScript', () => {
+  test.use({ javaScriptEnabled: false });
+  test('el hero es visible y el CTA lleva #agenda', async ({ page }) => {
+    await page.goto('/');
+    await expect(page.locator('#inicio h1')).toBeVisible();
+    await expect(page.locator('#inicio .hero-sub')).toBeVisible();
+    await expect(page.locator('#inicio a[data-cta="hero"]')).toBeVisible();
+    await expect(page.locator('#inicio a[data-cta="hero"]')).toHaveAttribute('href', '#agenda');
+    await expect(page.locator('svg.hero-collage')).toBeVisible();
+  });
+});
+
+// Herramienta de capturas por lote. Solo corre con PHASE2_BATCH definida (p. ej. PHASE2_BATCH=A).
+// Guarda test-results/phase2/<lote>-<ancho>[-reduce|-nojs].png a página completa, con todo lo que
+// no es localhost abortado (ClickUp incluido).
+test.describe('captura de lote', () => {
+  test.skip(!process.env.PHASE2_BATCH, 'define PHASE2_BATCH (p. ej. A) para generar capturas');
+  const variants = [
+    { suffix: '', reducedMotion: 'no-preference' as const, javaScriptEnabled: true },
+    { suffix: '-reduce', reducedMotion: 'reduce' as const, javaScriptEnabled: true },
+    { suffix: '-nojs', reducedMotion: 'no-preference' as const, javaScriptEnabled: false },
+  ];
+  for (const vp of WIDTHS) {
+    for (const v of variants) {
+      test(`captura ${vp.width}${v.suffix}`, async ({ browser, baseURL }) => {
+        const context = await browser.newContext({
+          baseURL,
+          viewport: { width: vp.width, height: vp.height },
+          reducedMotion: v.reducedMotion,
+          javaScriptEnabled: v.javaScriptEnabled,
+        });
+        await context.route('**/*', (route) => {
+          const host = new URL(route.request().url()).hostname;
+          return host === 'localhost' || host === '127.0.0.1' ? route.continue() : route.abort();
+        });
+        const page = await context.newPage();
+        await page.goto('/');
+        await page.screenshot({
+          path: `test-results/phase2/${process.env.PHASE2_BATCH}-${vp.width}${v.suffix}.png`,
+          fullPage: true,
+        });
+        await context.close();
+      });
+    }
+  }
+});
