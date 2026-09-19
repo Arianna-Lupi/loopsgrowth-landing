@@ -1,0 +1,16 @@
+---
+/**
+ * Por qué ahora (CONT-03). Tono yellow. Una fila por afirmación de `why_now.items`; se imprime
+ * solo `.text`, sin leer el estado (COPY-01). Sin CTA.
+ */
+import SectionShell from '../ui/SectionShell.astro';
+import { getLanding } from '../../lib/content';
+
+const data = await getLanding();
+---
+
+<SectionShell id="por-que-ahora" tone="yellow" title={data.why_now.title.text}>
+  <ul role="list" class="whynow-list">
+    {data.why_now.items.map((item) => <li>{item.text}</li>)}
+  </ul>
+</SectionShell>

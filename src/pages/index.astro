@@ -1,6 +1,9 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/sections/Hero.astro';
+import Problem from '../components/sections/Problem.astro';
+import WhyNow from '../components/sections/WhyNow.astro';
+import Solution from '../components/sections/Solution.astro';
 import AgendaSection from '../components/AgendaSection.astro';
 import { getLanding, fill, textVars } from '../lib/content';
 
@@ -14,5 +17,8 @@ const title = fill(data.meta.title_template, textVars(data), 'meta.title_templat
 
 <BaseLayout title={title}>
   <Hero />
+  <Problem />
+  <WhyNow />
+  <Solution />
   <AgendaSection />
 </BaseLayout>

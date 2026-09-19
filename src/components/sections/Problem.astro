@@ -1,0 +1,17 @@
+---
+/**
+ * El problema (CONT-02). Tono dark. Todo el texto sale del YAML y se imprime como nodo de texto,
+ * tal cual: este componente no lee `status`, `reason` ni `confirm_by` (COPY-01). Sin CTA.
+ */
+import SectionShell from '../ui/SectionShell.astro';
+import { getLanding } from '../../lib/content';
+
+const data = await getLanding();
+---
+
+<SectionShell id="problema" tone="dark" title={data.problem.title.text}>
+  <ul role="list" class="pain-grid">
+    {data.problem.items.map((item) => <li>{item.text}</li>)}
+  </ul>
+  <p class="pain-closing">{data.problem.closing.text}</p>
+</SectionShell>

@@ -6,7 +6,7 @@ import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { parse } from 'yaml';
-import { checkCopy, walkClaims } from '../../scripts/lib/copy-rules.mjs';
+import { checkCopy, walkClaims, MISSING_MARK, findMissingMark } from '../../scripts/lib/copy-rules.mjs';
 
 const CLI = 'scripts/check-copy.mjs';
 const FIX = 'tests/guards/fixtures';
@@ -272,19 +272,26 @@ test('9a. el YAML real sale con 0 fuera de producción y no se modifica (solo le
   assert.equal(sha(REAL_YAML), before);
 });
 
-test('9b. sobre el YAML real, producción solo reporta como PENDING las reclamaciones pending del propio YAML', () => {
+test('9b. sobre el YAML real, producción solo reporta PENDING y MISSING, derivados del propio YAML', () => {
   const before = sha(REAL_YAML);
   const res = run(['--file', REAL_YAML, '--json'], { env: PROD });
   assert.deepEqual(res.json?.structural, []);
   const violations = res.json?.content ?? [];
-  assert.ok(violations.every((v) => v.rule === 'PENDING'), JSON.stringify(violations));
+  // Solo dos reglas de contenido pueden aparecer sobre el YAML real: PENDING y MISSING (dato faltante).
+  // VOSEO, DASH, AEO y VERIFICAR nunca: el texto de Ari que las dispararía queda pending con la marca.
+  assert.ok(violations.every((v) => v.rule === 'PENDING' || v.rule === 'MISSING'), JSON.stringify(violations));
   // Lo esperado se deriva del YAML: cuando Ari confirma un texto, esta prueba no se rompe.
-  const expected = walkClaims(parse(readFileSync(REAL_YAML, 'utf8')))
-    .filter((n) => n.kind === 'claim' && n.claim.status === 'pending')
-    .map((n) => n.path)
-    .sort();
-  assert.deepEqual(violations.map((v) => v.path).sort(), expected);
-  assert.equal(res.status, expected.length > 0 ? 1 : 0, res.out);
+  const claims = walkClaims(parse(readFileSync(REAL_YAML, 'utf8'))).filter((n) => n.kind === 'claim');
+  const pending = claims.filter((n) => n.claim.status === 'pending').map((n) => n.path).sort();
+  const missing = claims.filter((n) => findMissingMark(String(n.claim.text)).length > 0).map((n) => n.path).sort();
+  const byRule = (rule) => violations.filter((v) => v.rule === rule).map((v) => v.path).sort();
+  assert.deepEqual(byRule('PENDING'), pending);
+  assert.deepEqual(byRule('MISSING'), missing);
+  // Toda reclamación con la marca de dato faltante debe estar pending: nunca se publica como verificada.
+  for (const n of claims.filter((c) => c.claim.text === MISSING_MARK)) {
+    assert.equal(n.claim.status, 'pending', `${n.path} lleva ${MISSING_MARK} y debe ser pending`);
+  }
+  assert.equal(res.status, pending.length + missing.length > 0 ? 1 : 0, res.out);
   assert.equal(sha(REAL_YAML), before);
 });
 

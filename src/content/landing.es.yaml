@@ -61,6 +61,86 @@ es:
       - text: "Contrata un equipo de especialistas con 8 años de experiencia, que arman tu estrategia, ejecutan, implementan y monitorean los resultados y ventas de tu web."
         status: pending
         reason: "Credencial del equipo (8 años de experiencia) del Copy v2; Ari la confirma"
+  problem:
+    title:
+      text: "Tu negocio no atrae clientes. Los alquila."
+      status: verified
+    items:
+      - text: "Subiste el presupuesto y el costo por cliente subió igual. Más dinero, mismo resultado. Y cada año pagas más por el mismo cliente."
+        status: verified
+      - text: "Sabes que el orgánico es la salida. Pero no tienes el equipo ni el tiempo para ejecutarlo."
+        status: verified
+      - text: "El problema no es que no sepas que necesitas SEO. Es que sin alguien ejecutándolo en serio, la lista de \"deberíamos hacer esto\" no se mueve  y el negocio se vuelve más dependiente cada trimestre de un canal que se encarece solo."
+        status: verified
+    closing:
+      text: "Mientras tu competencia aparece gratis donde tú pagas por estar."
+      status: verified
+  why_now:
+    title:
+      text: "La búsqueda dejó de ser solo Google."
+      status: verified
+    items:
+      - text: "Google sigue siendo la mayor parte del tráfico de búsqueda."
+        status: verified
+      - text: "Pero una parte creciente de tus clientes ya no hace clic: le pregunta a ChatGPT o a Gemini \"cuál es el mejor\", \"compara estas dos opciones\", \"qué me recomiendas\"."
+        status: pending
+        confirm_by: Ari
+        reason: "Afirmación de mercado del Copy v2 sobre clientes que preguntan a ChatGPT o a Gemini; misma familia que COPY-VERIFICATION 3b (datos de EE.UU.)"
+      - text: "Si la IA no te menciona en esa respuesta, no existes en esa decisión."
+        status: verified
+      - text: "Optimizar solo para Google era suficiente hace unos años."
+        status: verified
+      - text: "Hoy, estar donde tu cliente pregunta (Google y asistentes de IA) es la diferencia entre aparecer en la conversación de compra o quedar fuera de ella."
+        status: verified
+      - text: "Nosotros trabajamos los dos frentes a la vez."
+        status: verified
+  solution:
+    title:
+      text: "FALTA CONFIRMAR"
+      status: pending
+      confirm_by: Ari
+      reason: "Titular del Copy v2 (línea 79): \"Un equipo que ejecuta SEO y AEO, no que te asesora.\" La guarda de copy rechaza la sigla de tres letras que trae; Ari decide qué término usar (hallazgos 1 y 4 del UI-SPEC). No se edita el texto de Ari."
+    lead:
+      text: "La mayoría de agencias te entrega recomendaciones y te deja el trabajo pesado a ti. Nosotros funcionamos como tu equipo interno de crecimiento: hacemos el trabajo, mes a mes, y respondemos por el resultado."
+      status: verified
+    items:
+      - title:
+          text: "Auditoría que muestra el dinero que dejas sobre la mesa"
+          status: verified
+        body:
+          text: "Analizamos técnica, contenido y competencia para que veas dónde estás hoy, dónde deberías estar y por qué tus competidores aparecen cuando tú no. El entregable no es un diagnóstico genérico: es una lista priorizada de oportunidades con su tamaño estimado."
+          status: verified
+      - title:
+          text: "Estrategia para Google y para IA, no dos proyectos separados"
+          status: verified
+        body:
+          text: "Google premia contenido, autoridad y una base técnica limpia. Los asistentes de IA citan fuentes que consideran confiables y bien estructuradas. Trabajamos ambos con la misma máquina de contenido y autoridad, para que cada pieza sirva en los dos lados."
+          status: verified
+      - title:
+          text: "Un equipo dedicado que ejecuta"
+          status: verified
+        body:
+          text: "No somos consultores. Somos las personas que hacen el trabajo:"
+          status: verified
+        list:
+          - text: "Juan (Director Técnico): auditorías, Core Web Vitals, arquitectura."
+            status: verified
+          - text: "Miguel (Especialista SEO): keywords, contenido, link building."
+            status: verified
+          - text: "Verónica (Gerente de Proyectos y Consultora SEO): timeline, reportes, tu contacto directo."
+            status: pending
+            confirm_by: Ari
+            reason: "El cargo del Copy v2 en La solución ('Gerente de Proyectos y Consultora SEO') difiere del de Quiénes somos ('Directora de Proyectos'); Ari confirma cuál usar"
+          - text: "Arianna (Fundadora): estrategia y direcciôn"
+            status: verified
+      - title:
+          text: "Reportes que hablan de ventas, no de posiciones"
+          status: verified
+        body:
+          text: "FALTA CONFIRMAR"
+          status: pending
+          confirm_by: Ari
+          reason: "Cuerpo del Pilar 4 del Copy v2 (línea 104): \"Cada mes ves qué se hizo, qué se movió y cuánto te costó contra cuánto generó. Nada de \"subimos 20%\". Más bien: \"el orgánico trajo X visitas, convirtieron Y, compraron Z\". [VERIFICAR: solo desglosa por canal (Google vs IA) si de verdad puedes atribuirlo con datos. Si no, repórtalo junto y no inventes el split.]\" La nota entre corchetes pide verificar el desglose por canal; Ari lo respalda con datos o lo suaviza. No se recorta la nota para publicar el resto."
   agenda:
     title:
       text: "Agenda tu llamada"

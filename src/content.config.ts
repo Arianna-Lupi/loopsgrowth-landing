@@ -42,6 +42,20 @@ const landing = defineCollection({
     skip: z.strictObject({ nav_label: claim, content: claim, form: claim }),
     meta: z.strictObject({ title_template: claim }),
     hero: z.strictObject({ h1: claim, subtitle: claim, description: z.array(claim).min(1) }),
+    // Las cantidades fijas las impone el esquema: 3 dolores y 4 pilares. `why_now.items` admite 1 o más.
+    problem: z.strictObject({
+      title: claim,
+      items: z.array(claim).length(3),
+      closing: claim,
+    }),
+    why_now: z.strictObject({ title: claim, items: z.array(claim).min(1) }),
+    solution: z.strictObject({
+      title: claim,
+      lead: claim,
+      items: z
+        .array(z.strictObject({ title: claim, body: claim, list: z.array(claim).min(1).optional() }))
+        .length(4),
+    }),
     agenda: z.strictObject({
       title: claim,
       intro: claim,

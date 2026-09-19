@@ -1,0 +1,32 @@
+---
+/**
+ * La solución (CONT-04). Tono light. Imprime solo `.text` de cada afirmación, sin leer su estado
+ * (COPY-01): el titular y el cuerpo del Pilar 4 muestran "FALTA CONFIRMAR" porque así se guardaron.
+ * El CTA `solucion` es el tercero de los cuatro del sitio y va tras los pilares.
+ */
+import SectionShell from '../ui/SectionShell.astro';
+import CtaLink from '../CtaLink.astro';
+import { getLanding, ctaLabel } from '../../lib/content';
+
+const data = await getLanding();
+const label = ctaLabel(data);
+---
+
+<SectionShell id="solucion" tone="light" title={data.solution.title.text} lead={data.solution.lead.text}>
+  <ul role="list" class="pillar-grid">
+    {
+      data.solution.items.map((item) => (
+        <li>
+          <h3>{item.title.text}</h3>
+          <p>{item.body.text}</p>
+          {item.list && (
+            <ul role="list" class="pillar-team">
+              {item.list.map((member) => <li>{member.text}</li>)}
+            </ul>
+          )}
+        </li>
+      ))
+    }
+  </ul>
+  <CtaLink slot="cta" label={label} location="solucion" />
+</SectionShell>

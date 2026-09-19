@@ -1,6 +1,7 @@
 import { test, expect, type Page } from '@playwright/test';
 import { readFileSync } from 'node:fs';
 import { parse } from 'yaml';
+import { walkClaims, MISSING_MARK } from '../../scripts/lib/copy-rules.mjs';
 
 // Los textos esperados salen del YAML y no se copian a mano: cuando Ari confirma o cambia un
 // texto (el término, la duración, el subtítulo), la prueba sigue midiendo lo que la página debe
@@ -19,6 +20,13 @@ const resolveText = (claim: Claim) =>
   claim.text.replaceAll('{term}', es.brand.term.text).replaceAll('{duration}', es.call.duration.text);
 
 const FORM_URL = es.config.form_url;
+
+// Marcas de dato faltante que la página debe mostrar en `/`: una por reclamación del YAML cuyo texto es
+// la marca, sin contar `privacy.` (el cuerpo de la política vive en /privacidad). Se deriva del YAML: se
+// ajusta sola cuando un plan agrega o resuelve una marca (plan 02-03 es el único que reescribe esto).
+const VISIBLE_MARKS = walkClaims(parse(readFileSync('src/content/landing.es.yaml', 'utf8')))
+  .filter((n: { kind: string; path: string; claim?: { text: string } }) => n.kind === 'claim' && n.claim?.text === MISSING_MARK && !n.path.startsWith('privacy.'))
+  .length;
 
 // Textos de Ari, tal cual (con el término y la duración ya resueltos desde el YAML).
 const H1_TEXT = resolveText(es.hero.h1);
@@ -68,11 +76,11 @@ async function tabUntilIframe(page: Page, max = 12): Promise<Stop[]> {
 test.describe('orden de tabulación y foco a 1280 px', () => {
   test.use({ viewport: { width: 1280, height: 800 } });
 
-  test('(a) el orden es skip 1, skip 2, CTA del header, CTA del hero, enlace de respaldo y el iframe', async ({ page }) => {
+  test('(a) el orden es skip 1, skip 2, CTA del header, CTA del hero, CTA de La solución, enlace de respaldo y el iframe', async ({ page }) => {
     await page.goto('/');
     const stops = await tabUntilIframe(page);
     const order = stops.map((s) => (s.cta ? `cta:${s.cta}` : s.tag === 'IFRAME' ? 'iframe' : `a:${s.href}`));
-    expect(order).toEqual(['a:#main', 'a:#agenda', 'cta:header', 'cta:hero', `a:${FORM_URL}`, 'iframe']);
+    expect(order).toEqual(['a:#main', 'a:#agenda', 'cta:header', 'cta:hero', 'cta:solucion', `a:${FORM_URL}`, 'iframe']);
   });
 
   test('(c) cada parada muestra un contorno sólido de 2 px o más', async ({ page }) => {
@@ -193,6 +201,7 @@ test.describe('orden de tabulación a 390 px', () => {
       'a:#main',
       'a:#agenda',
       'cta:hero',
+      'cta:solucion',
       `a:${FORM_URL}`,
       'iframe',
     ]);
@@ -446,7 +455,8 @@ test.describe('textos de Ari visibles', () => {
     await expect(page.locator('.agenda-intro')).toBeVisible();
     await expect(page.locator('.agenda-intro')).toHaveText(INTRO_TEXT);
     const body = await page.evaluate(() => document.body.innerText);
-    expect(body).not.toContain('FALTA CONFIRMAR');
+    // Aserción derivada del YAML (COPY-01): la marca aparece tantas veces como reclamaciones la traigan.
+    expect(body.split(MISSING_MARK).length - 1).toBe(VISIBLE_MARKS);
     expect(body).not.toMatch(/[{}]/);
     expect(body).not.toMatch(/borrador|TBD|lorem/i);
   };

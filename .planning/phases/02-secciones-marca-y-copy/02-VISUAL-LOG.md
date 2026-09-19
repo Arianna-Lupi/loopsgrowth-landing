@@ -48,3 +48,13 @@ Protocolo por lote: (1) construir el lote completo desde el contrato; (2) una ro
 - **Lista de vibra:** rasgo 1 cumplido en el hero (titular enorme en negrita, un solo pill dominante y collage a la derecha, todo visible en 1280x800). Rasgo 7 cumplido para el hero (un foco claro y un collage propio, no se lee como plantilla). Los demás rasgos corresponden a secciones de planes posteriores.
 - **Nota de 320 px (comprobación de respaldo):** se revisó `A-320.png`. El collage queda a 240 px de alto centrado bajo la descripción, sin desborde ni cruce con el texto. Con 320 px el texto del CTA se parte en dos líneas dentro del pill (reflujo permitido por A11Y.md, sin altura fija ni recorte). Es el CTA de la fase 1 y no se tocó.
 - **Conflicto resuelto a favor del contrato:** `design-taste-frontend` desaconseja SVG dibujados a mano y pide generar imágenes; el UI-SPEC fija el collage como SVG en línea de marca sin peticiones ni raster. Manda el contrato. La skill también pide evitar el morado de IA; aquí el morado es el color de marca.
+
+## Lote B, ronda 0
+
+- **Plan 02-03.** Secciones El problema (dark), Por qué ahora (yellow) y La solución (light).
+- **Skills invocadas:** `impeccable` (context y verbo `shape`; no se repiten `init` ni `document`, son del plan 01) y `design-taste-frontend`. El contrato del UI-SPEC y A11Y.md mandan sobre ambas.
+- **Lectura de diseño (design-taste-frontend):** landing de captación B2B para dueños de e-commerce, lenguaje collage pop de marca, con reglas de accesibilidad que mandan sobre la estética. Diales: DESIGN_VARIANCE 7, MOTION_INTENSITY 3, VISUAL_DENSITY 4. Sin degradados, sin vidrio, sin sombras difusas, sin animaciones infinitas.
+- **Brief de `shape` (foco de cada sección):** El problema es reconocerse (tres dolores en tarjetas blancas sobre fondo oscuro, con la frase de cierre debajo); Por qué ahora es el cambio de la búsqueda (frases cortas con reglas de 3 px y un collage compacto de lupa y ojos); La solución es qué hace el equipo (cuatro pilares con chip propio y el CTA al final).
+- **Verbos usados hasta aquí:** `shape`. Esta ronda es el tracer: las tres secciones con el copy completo, esquema, guardas y CTA, sin tarjetas ni collage (tareas 2 y 3).
+- **Conflictos resueltos a favor del contrato:** la skill de gusto desaconseja tres tarjetas iguales y el UI-SPEC fija tres dolores en tres columnas iguales; se varía por pegatina y numeral. La skill prohíbe el guion largo y el copy de Ari no se edita (regla del proyecto).
+- **Capturas:** ninguna todavía.
