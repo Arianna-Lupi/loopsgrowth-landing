@@ -1,302 +1,119 @@
 ---
 phase: 01-fundaciones-y-formulario-funcionando
-reviewed: 2026-09-18T00:00:00Z
+reviewed: 2026-09-19T00:00:00Z
 depth: standard
-files_reviewed: 37
+iteration: 2
+files_reviewed: 24
 files_reviewed_list:
-  - .env.example
-  - .gitignore
-  - PENDING-COPY.md
-  - README.md
-  - astro.config.mjs
   - package.json
+  - package-lock.json
   - playwright.config.ts
+  - astro.config.mjs
   - scripts/check-contrast.mjs
-  - scripts/check-copy.mjs
   - scripts/lib/contrast.mjs
   - scripts/lib/copy-rules.mjs
-  - scripts/list-pending.mjs
   - scripts/verify-dev-lan.mjs
   - scripts/verify-env-surface.mjs
-  - src/components/AgendaSection.astro
-  - src/components/CtaLink.astro
-  - src/components/HeroSkeleton.astro
-  - src/components/SiteHeader.astro
   - src/components/SkipLinks.astro
   - src/content.config.ts
   - src/content/landing.es.yaml
   - src/layouts/BaseLayout.astro
   - src/lib/content.ts
   - src/lib/site.ts
-  - src/pages/index.astro
-  - src/pages/robots.txt.ts
   - src/scripts/cta-focus.ts
-  - src/styles/global.css
-  - src/styles/tokens.css
+  - tests/global-setup.ts
   - tests/e2e/a11y-base.spec.ts
   - tests/e2e/cta-focus.spec.ts
-  - tests/e2e/form-live.spec.ts
   - tests/e2e/form-measure.spec.ts
   - tests/guards/contrast.test.mjs
   - tests/guards/copy.test.mjs
   - tests/guards/list-pending.test.mjs
-  - tsconfig.json
 findings:
-  critical: 1
-  warning: 15
-  info: 7
-  total: 23
+  critical: 0
+  warning: 3
+  info: 3
+  total: 6
 status: issues_found
 ---
 
-# Fase 1: Informe de revisión de código
+# Fase 1: Informe de revisión de código (iteración 2)
 
-**Reviewed:** 2026-09-18
 **Depth:** standard
-**Files Reviewed:** 37
 **Status:** issues_found
 
-## Structural Findings (fallow)
+La iteración 1 (commit 3012361) encontró CR-01 y WR-01 a WR-15; el corrector aplicó 16 commits `fix(01):`. Esta iteración los verifica y busca regresiones.
 
-No se entregó bloque `<structural_findings>`; esta sección no aplica.
+## Resumen
 
-## Narrative Findings (AI reviewer)
-
-## Summary
-
-El sitio es pequeño y correcto en lo esencial: noindex por defecto, el CTA sin `aria-label`, el iframe con título y el fallback con `noscript`. Los problemas están en las guardas y en las pruebas.
-
-- Hay una prueba de guarda en rojo: `npm run test:guards` da 46 pasan y 1 falla (CR-01).
-- Las guardas de contraste y de copy tienen falsos "OK" reproducidos con scripts: contraste (WR-03, WR-04) y copy (WR-05, WR-06, WR-07).
-- La lógica de `PUBLIC_ENV` tiene una contradicción entre lo documentado y lo implementado (WR-01) y su script de verificación no es hermético (WR-02).
-- Con el iframe de ClickUp bloqueado, el foco de `/#agenda` se pierde en la mayoría de las corridas (WR-08).
-- Varias pruebas dependen de contenido vivo o de la red (WR-13, WR-15).
-
-## Critical Issues
-
-### CR-01: La suite de guardas ya está en rojo por una aserción obsoleta y acoplada a un token de layout
-
-**File:** `tests/guards/contrast.test.mjs:76`
-**Issue:** La prueba `parseTokens lee @theme static...` afirma `theme['--form-min-h-sm'] === '1100px'`, pero el Plan 04 dejó `--form-min-h-sm: 1664px` en `src/styles/tokens.css:56`. `node --test tests/guards/*.test.mjs` da 47 pruebas, 46 pasan, 1 falla con `'1664px' !== '1100px'`. La aserción tampoco tiene relación con el contraste: acopla la guarda de color a una medida de layout que cambia cada vez que se vuelve a medir el formulario.
-
-**Fix:**
-```js
-// tests/guards/contrast.test.mjs, línea 76: comprobación de forma, no de valor
-assert.match(theme['--form-min-h-sm'], /^\d+px$/, 'el bloque @theme static debe exponer --form-min-h-sm');
-```
+- `node --test tests/guards/*.test.mjs`: 62 de 62 pasan. `check-contrast`: 9/9 aprobados y 6 prohibidos. `check-copy` en producción falla solo por las 5 PENDING, con 0 estructurales. `list-pending --check`: al día. `npm ci --dry-run`: consistente.
+- Resueltos sin regresión observada: CR-01, WR-01, WR-02, WR-03, WR-04, WR-06, WR-07, WR-08 (incluida la prueba `(d2)`), WR-09, WR-10, WR-12, WR-13, WR-14.
+- WR-05 resuelto solo en parte (ver WR-03 de esta iteración). WR-11 funciona pero introdujo un fallo de mensajes (ver WR-02). WR-15 se cumple a medias (ver WR-01).
+- No hay hallazgos críticos nuevos.
 
 ## Warnings
 
-### WR-01: `canonical` se emite fuera de producción, contradice el README y convive con `noindex`
+### WR-01: La prueba `(f2)` depende de ClickUp y compite con el salto de ancla, así que el proyecto `chromium` no es "sin conexión"
 
-**File:** `src/layouts/BaseLayout.astro:21-22`
-**Issue:** `{canonical && <link rel="canonical" ...>}` depende solo de `PUBLIC_SITE_URL`, no de `isProduction`. El README:25 y `.env.example` prometen "sin canonical ni sitemap" fuera de producción. Un preview con `PUBLIC_ENV=preview` y `PUBLIC_SITE_URL=https://loopsgrowth.com` emite `noindex` y además `canonical` al dominio de producción. `verify-env-surface.mjs` no lo detecta: nunca prueba fuera de producción con URL.
+**File:** `tests/e2e/a11y-base.spec.ts:118-139` (y el comentario de `playwright.config.ts:27-28`, que afirma "corre sin conexión")
+**Issue:** La prueba hace `page.goto('/#agenda')` y de inmediato mide si el skip link (fixed) queda sobre `#agenda` (`overAgenda`). Esa medición solo es válida después de que el navegador termine el salto de ancla. Con ClickUp respondiendo, `load` tarda entre 5 y 11 s y para entonces la página ya está desplazada; sin ClickUp, `load` llega antes del salto. Con `chromium` y un proxy que bloquea todo salvo localhost pasan 41 pruebas y falla solo `(f2)`, 6 de 6 corridas en `expect(info.overAgenda).toBe(true)`; con red normal pasó 6 de 6. Sonda directa sin conexión: `scrollY=0`, `agendaTop=528`; con conexión: `scrollY=504`, `agendaTop=24`. `npm run test:e2e:offline` falla cuando ClickUp cae, que es el caso que WR-15 quería aislar.
 
-**Fix:**
-```astro
-{isProduction && canonical && <link rel="canonical" href={canonical} />}
-```
-Añadir a `verify-env-surface.mjs` un caso (e): `PUBLIC_ENV: 'preview', PUBLIC_SITE_URL: SITE`, esperando noindex y ningún `rel="canonical"`.
-
-### WR-02: `verify-env-surface.mjs` no es hermético: un `.env` local cambia el resultado
-
-**File:** `scripts/verify-env-surface.mjs:18-25`
-**Issue:** `build()` borra `PUBLIC_ENV` y `PUBLIC_SITE_URL` de `process.env`, pero `astro.config.mjs:9` lee además `.env` y `.env.local` con `loadEnv`. Un `.env` con `PUBLIC_SITE_URL` hace fallar el caso (a); uno con `PUBLIC_ENV=production` hace que (a) y (d) construyan en producción. `tests/guards/copy.test.mjs` sí resolvió esto con una raíz vacía (`EMPTY_ROOT`).
-
-**Fix:** En `build()`, forzar valores explícitos porque `process.env` gana sobre los archivos `.env`:
-```js
-const env = { ...process.env, PUBLIC_ENV: '', PUBLIC_SITE_URL: '', ...envOverrides };
-```
-
-### WR-03: La guarda de contraste compara el ratio ya redondeado contra el umbral
-
-**File:** `scripts/lib/contrast.mjs:26` (consumido en `scripts/check-contrast.mjs:51` y `:80`)
-**Issue:** `contrastRatio` devuelve `Math.round(x * 100) / 100` y luego se evalúa `ratio >= pair.min`. WCAG no redondea. `#6473b6` sobre blanco tiene ratio real 4.4971 y devuelve 4.5, así que pasa el umbral 4.5 sin cumplirlo.
-
-**Fix:**
-```js
-export const contrastRaw = (a, b) => { /* sin Math.round */ };
-export const contrastRatio = (a, b) => Math.round(contrastRaw(a, b) * 100) / 100; // solo para mostrar
-// check-contrast.mjs: usar contrastRaw en meetsThreshold y en `ok = raw >= min`
-```
-
-### WR-04: Un tono con comillas simples, anidado o ausente se ignora y la guarda sale con código 0
-
-**File:** `scripts/lib/contrast.mjs:61` y `:68` (con `scripts/check-contrast.mjs:66`)
-**Issue:** El parser exige `[data-tone="x"]` con comillas dobles y bloques sin llaves anidadas. `[data-tone='dark'] {...}` produce `tones = ['light']`; CSS anidado produce `tones = {}`. `check-contrast.mjs` itera solo sobre los tonos encontrados y no exige que existan `light` y `purple`. Un selector descendiente `[data-tone="purple"] .card {...}` se fusiona por error con el tono completo.
-
-**Fix:**
-```js
-// regex: /\[data-tone\s*=\s*["']?([\w-]+)["']?\]/g, y exigir que el selector sea EXACTAMENTE ese atributo
-// en check-contrast.mjs, después de parseTokens:
-for (const required of ['light', 'purple']) {
-  if (!tones[required]) results.push({ kind: 'tone', pair: `tono ${required}`, ok: false, ratio: null, threshold: 0, detail: 'el tono no se encontró en tokens.css' });
-}
-// y fallar si el CSS contiene llaves anidadas dentro de un bloque data-tone
-```
-
-### WR-05: La guarda de voseo se evade con formas no listadas y con Unicode no normalizado
-
-**File:** `scripts/lib/copy-rules.mjs:14-18` y `:25`, usado en `:159`
-**Issue:** La regla es una lista cerrada de 21 palabras, sin normalización Unicode. `Conocé cómo, completá el formulario y llamanos.` da 0 violaciones. `Tenés` en NFD (típico de un pegado desde macOS o Docs) y `Agen​dá` con espacio de ancho cero dan 0. Falso positivo: `Llamada SOS` se marca por `sos`. El copy va verbatim del doc de Ari, origen probable de texto NFD.
-
-**Fix:**
-```js
-const clean = (t) => t.normalize('NFC').replace(/[​-‍⁠﻿]/g, '');
-// aplicar clean(text) antes de todas las reglas de contenido en checkCopy
-// ampliar VOSEO_WORDS: conocé, completá, solicitá, pedí, consultá, elegí, probá, comenzá, aprovechá,
-//   llamanos, hablanos, dejanos, avisanos, decime, hacés, pensás, buscás, vendés...
-// quitar 'sos' o exigir minúscula (sin flag i) para no marcar "SOS"
-// añadir a copy.test.mjs un caso NFD y uno con "conocé/completá"
-```
-
-### WR-06: `FALTA CONFIRMAR` se evade con mayúsculas o espacios distintos
-
-**File:** `scripts/lib/copy-rules.mjs:6` y `:47-57`
-**Issue:** `findMissingMark` usa `indexOf('FALTA CONFIRMAR')`, sensible a mayúsculas y a un único espacio ASCII. `Falta confirmar`, `FALTA  CONFIRMAR` (dos espacios) y NBSP dan 0 violaciones. Es el único bloqueo de producción para "dato faltante" y también se usa en `--dist`.
-
-**Fix:**
-```js
-const MISSING_RE = /falta[\s ]+confirmar/giu;
-// findMissingMark: recorrer text.matchAll(MISSING_RE) sobre text.normalize('NFC')
-```
-
-### WR-07: Un placeholder sin resolver llega a la página si el campo no pasa por `fill()`
-
-**File:** `src/lib/content.ts:25-37`, con usos en bruto en `src/components/HeroSkeleton.astro:17`, `src/components/AgendaSection.astro:19,22,24,52,60`, `src/components/SkipLinks.astro:13-15` y `src/components/SiteHeader.astro:17`
-**Issue:** Solo `hero.subtitle`, `agenda.intro`, `meta.title_template` y `cta.label_template` pasan por `fill()`, que lanza si queda una llave. `hero.h1`, `agenda.title`, `fallback_*`, `iframe_title`, `noscript`, `skip.*` y `brand.name` se imprimen con `.text` directo. `checkCopy` sobre `Hola {term}` devuelve 0 violaciones. Si se edita `hero.h1` a `Crecemos tu {term}...` el build pasa y la página publica el literal.
-
-**Fix:** Añadir una regla estructural `PLACEHOLDER` en `checkCopy` (toda `{...}` debe ser `{term}` o `{duration}` y solo en claves `*_template`, `intro` y `subtitle`). Alternativa: que los componentes lean todo con un helper `t(claim)` que siempre llame a `fill`.
-
-### WR-08: Con el iframe de ClickUp bloqueado, el foco de `/#agenda` se pierde en la mayoría de las corridas
-
-**File:** `src/scripts/cta-focus.ts:33-42`
-**Issue:** La carga directa enfoca con `setTimeout(0)` y reintenta una sola vez en `load`, y solo si `activeElement` es `body`. Con `forms.clickup.com` y `app-cdn.clickup.com` abortados, en 5 de 6 corridas `document.activeElement` era `BODY` a los 800 ms. Con red, 6 de 6 enfocaron el h2. Es el caso para el que existe el enlace de respaldo (bloqueadores o fallos de red).
-
-**Fix:**
+**Fix:** esperar al salto de ancla antes de medir, o provocarlo.
 ```ts
-if (location.hash === HASH) {
-  const t0 = performance.now();
-  const tick = () => {
-    if (document.activeElement !== document.getElementById(TITLE_ID)) focusTitle();
-    if (performance.now() - t0 < 1500) setTimeout(tick, 150);
-  };
-  tick();
-}
+await page.goto('/#agenda');
+await page.waitForFunction(() => window.scrollY > 0); // el salto de ancla ya ocurrió
+// o, sin depender del salto del navegador:
+// await page.locator('#agenda').evaluate((el) => el.scrollIntoView());
 ```
-Añadir una prueba con las rutas de ClickUp abortadas (`page.route(..., r => r.abort())`).
+Corregir el comentario de `playwright.config.ts`: con `chromium` el iframe sigue pidiendo `forms.clickup.com`; lo correcto es "no depende de que ClickUp responda". Mantener una comprobación con proxy muerto (o `page.route` abortando ClickUp).
 
-### WR-09: `reuseExistingServer: true` incondicional permite validar un build viejo
+### WR-02: `httpsUrlFrom` lanza `TypeError: Invalid URL` en vez de un error de Zod cuando el valor no es una URL
 
-**File:** `playwright.config.ts:22`
-**Issue:** Si ya hay un `astro preview` en 4322, Playwright lo reutiliza sin reconstruir. Se cambia `cta-focus.ts`, se ejecuta `npm run test:e2e` y las pruebas corren contra el `dist` viejo.
+**File:** `src/content.config.ts:24-31`
+**Issue:** `z.url().refine((v) => new URL(v)...)`: en Zod 4 (instalado 4.6.5) el `refine` se ejecuta aunque `z.url()` ya haya fallado. `"nota url"` y `""` dan `THROWS Invalid URL`: se pierde el nombre del campo y el mensaje. `javascript:alert(1)` y `https://forms.clickup.com@evil.com/x` sí se rechazan bien. `landing.es.yaml` lo edita el equipo desde la web de GitHub; antes del arreglo un valor mal escrito daba un error claro y ahora un fallo de build sin ruta ni campo. No hay hueco de seguridad.
 
-**Fix:**
+**Fix:** dejar que Zod valide protocolo y host (verificado: rechaza los cinco casos y devuelve `false` en vez de lanzar):
 ```ts
-reuseExistingServer: !process.env.CI,
+const httpsUrlFrom = (host: string) =>
+  z.url({
+    protocol: /^https$/,
+    hostname: new RegExp(`^${host.replaceAll('.', '\\.')}$`),
+  });
 ```
-En el flujo del agente, documentar reconstruir antes (`astro build`) y matar el preview previo. Opcionalmente, un `globalSetup` que compare el mtime de `dist/index.html` con `src/`.
+Otra opción: mantener el `refine` con `URL.canParse(value) && ...`.
 
-### WR-10: Dependencias no declaradas o mal ubicadas rompen `prebuild` y `astro.config.mjs` en instalaciones estrictas
+### WR-03: La guarda de voseo sigue evadible por "Sos" en mayúscula inicial y por verbos de CTA muy comunes que la lista cerrada no incluye
 
-**File:** `package.json:22-34`, `astro.config.mjs:5`, `scripts/check-copy.mjs:7-8`
-**Issue:** `astro.config.mjs` y `check-copy.mjs` importan `vite` directamente, pero `vite` no está declarado (funciona por hoisting de npm). `yaml` está en `devDependencies` pero lo usa el `prebuild` de producción. Con `npm ci --omit=dev` o pnpm estricto, `prebuild` falla con `ERR_MODULE_NOT_FOUND`.
+**File:** `scripts/lib/copy-rules.mjs:13-30` (`VOSEO_WORDS`), `:33-37` (`CASE_SENSITIVE_VOSEO`) y `:55-57` (`VOSEO_CASE_RE`, sin bandera `i`)
+**Issue:** El arreglo de WR-05 evitó el falso positivo de la sigla SOS con una regla solo en minúscula, lo que abre un hueco: `checkCopy` deja pasar `¿Sos dueño de una tienda?`, `Sos el dueño.`, `Contactá a un experto`, `Consultanos`, `Hacelo ahora`, `Ponete en contacto`, `Probalo`, `Pedile una cotización` y `Sabé que`. Sí marca `Si sos dueño`, `Vos decidís`, `Escribinos hoy`, `Mirá esto`, `Empezá ya`, `Descubrí cómo`. "Contactá" es de los verbos de CTA más frecuentes y en la lista solo está `contactanos`. La regla del proyecto es "nunca voseo", así que un CTA como "Contactá a Loops Growth" pasaría la guarda de producción.
 
-**Fix:** Declarar `"vite"` (misma major que usa Astro 7) en `dependencies` y mover `yaml` a `dependencies`, o documentar y forzar que el build instale devDependencies.
-
-### WR-11: `z.url()` acepta cualquier esquema para un `<script src>` editable por el equipo
-
-**File:** `src/content.config.ts:37-40`, usado en `src/components/AgendaSection.astro:23,51,56,61`
-**Issue:** `form_url` y `form_script_src` solo pasan `z.url()`, que acepta `javascript:`, `data:` y `http:`. `form_script_src` se emite como `<script async src=...>` y el README:30 indica que el equipo edita ese YAML, incluso desde la web de GitHub. No hay SRI ni allowlist.
-
-**Fix:**
-```ts
-const https = (host: string) => z.url().refine((u) => { const x = new URL(u); return x.protocol === 'https:' && x.hostname === host; }, `debe ser https://${host}`);
-config: z.strictObject({ form_url: https('forms.clickup.com'), form_script_src: https('app-cdn.clickup.com') }),
-```
-
-### WR-12: `verify-dev-lan.mjs` detiene el servidor del usuario cuando el puerto está ocupado
-
-**File:** `scripts/verify-dev-lan.mjs:17-28` y `:67-71`
-**Issue:** Si el puerto 4321 ya responde, `fail()` llama a `cleanup()`, que ejecuta `npx astro dev stop`. Si Juan tiene su `astro dev` en segundo plano (Astro 7 lo hace con agentes), el script sale con error y mata ese servidor. `cleanup()` también corre `astro dev stop` (hasta 20 s) aunque nunca lanzó `child`.
-
-**Fix:**
+**Fix:** para `sos`, distinguir la sigla completa de la palabra sin depender de la minúscula:
 ```js
-const fail = (msg, { clean = true } = {}) => { console.error(`FAIL: ${msg}`); if (clean && child) cleanup(); process.exit(1); };
-if (busy) fail(`el puerto ${PORT} ya está ocupado ...`, { clean: false });
+const VOSEO_CASE_RE = new RegExp(voseoPattern(['sos', 'Sos']), 'gu'); // "SOS" queda fuera
 ```
-
-### WR-13: Pruebas atadas al contenido vivo se rompen cuando Ari confirma un texto
-
-**File:** `tests/guards/copy.test.mjs:200-215` (9b), `tests/guards/list-pending.test.mjs:167`, `tests/e2e/a11y-base.spec.ts:7-11`
-**Issue:** Las pruebas fijan que hay exactamente 5 `pending` con esas rutas y los textos resueltos con `SEO/GEO` y `30 minutos`, escritos a mano. En cuanto Ari confirme uno, la suite de guardas y el e2e se rompen aunque el código esté bien.
-
-**Fix:** Derivar lo esperado del YAML (`walkClaims` + `fill`) o usar fixtures propios. Para 9b, verificar "todas las violaciones son PENDING" y "las rutas coinciden con las `pending` del YAML", no una lista literal.
-
-### WR-14: El anillo de foco del skip link es morado fijo y puede quedar invisible sobre `#agenda`
-
-**File:** `src/components/SkipLinks.astro:44`
-**Issue:** El anillo usa `var(--color-brand-purple)` sin tono, pero el enlace es `position: fixed` mientras tiene foco. Con el usuario en `#agenda` (fondo morado) que vuelve arriba con Shift+Tab, el skip link aparece sobre la sección morada con anillo morado sobre morado. La prueba (f) solo revisa el enlace arriba sobre fondo claro. No se verificó en navegador; es razonamiento sobre el CSS.
-
-**Fix:**
-```css
-.skip a:focus-visible { outline: var(--focus-width) solid var(--color-brand-yellow); outline-offset: calc(var(--focus-width) * -1); }
-```
-Amarillo sobre `#212121` da 10.22, ya es un par aprobado.
-
-### WR-15: La suite e2e depende de la red viva sin degradación
-
-**File:** `tests/e2e/a11y-base.spec.ts:271-275`, `tests/e2e/cta-focus.spec.ts:42-45`, `tests/e2e/form-live.spec.ts`, `tests/e2e/form-measure.spec.ts`
-**Issue:** El test "(e) la tarjeta vence el overflow" espera hasta 20 s a que el script de `app-cdn.clickup.com` ponga `overflow:auto`. form-live y form-measure esperan campos visibles del formulario real. Sin red o con ClickUp caído, `npm run test:e2e` falla en pruebas ajenas al código propio. El (d) de cta-focus solo pasa con red (ver WR-08), ocultando ese bug. `playwright.config.ts` no define `retries` ni separa un proyecto "sin red" de otro "con red".
-
-**Fix:** Separar las pruebas que necesitan ClickUp en un proyecto o tag `@live`. Para las demás, mockear con `page.route`. Para (e), inyectar `style.overflow='auto'` a mano en vez de esperar al script.
+Añadir a la lista `contactá`, `ponete`, `consultanos`, `hacelo`, `probalo`, `pedile`, `sabé` y las formas con enclítico de los imperativos que ya están. Forma sostenible: generar `imperativo sin tilde + (nos|me|te|lo|la|le)` desde la lista de imperativos, con pruebas de tres ejemplos nuevos. Añadir además una prueba `Sos` inicial y `Contactá`.
 
 ## Info
 
-### IN-01: `fill()` usa `replaceAll` con una cadena de reemplazo
+### IN-01: `pedí` y `elegí` marcan como voseo el pretérito de primera persona del español neutro
 
-**File:** `src/lib/content.ts:28`
-**Issue:** Un valor con `$&`, `$1` o `$$` se interpreta como patrón de reemplazo. Tampoco se protege un valor `undefined` en `Partial<Vars>`, que insertaría "undefined".
-**Fix:** `out = out.replaceAll(`{${name}}`, () => value ?? '')`.
+**File:** `scripts/lib/copy-rules.mjs:21-22`
+**Issue:** `Ayer pedí una cotización y elegí el plan.` produce dos VOSEO. En español neutro "pedí" y "elegí" son "yo pedí" y "yo elegí" (pretérito); un testimonio de cliente los usaría. Solo bloquea producción, pero Ari no reescribe el copy, así que el falso positivo obligaría a una excepción manual.
+**Fix:** quitarlos de la lista (`Pedile` y `Pedinos` se cubren por otra vía) o permitir una lista de excepciones por ruta.
 
-### IN-02: La resolución de entorno está triplicada y usa modos de Vite distintos
+### IN-02: `tests/global-setup.ts` puede dar falsos positivos por archivos ocultos y por mtime de carpetas, y no comprueba qué `dist` sirve el servidor reutilizado
 
-**File:** `astro.config.mjs:9-24`, `src/lib/site.ts:4-20`, `scripts/check-copy.mjs:23`
-**Issue:** `parseSiteUrl` está duplicado; la config y las guardas usan `loadEnv('production', ...)` mientras `site.ts` usa `import.meta.env` del modo real. Sin aviso de build si `PUBLIC_ENV` falta: un deploy productivo que olvide la variable sale con `noindex` en silencio.
-**Fix:** Un único módulo `scripts/lib/env.mjs` compartido, y un mensaje de consola explícito con el modo resuelto.
+**File:** `tests/global-setup.ts:11-16`
+**Issue:** `newestMtime` incluye el mtime de los directorios y de cualquier archivo, incluidos `.DS_Store` y archivos temporales de editor; en macOS abrir `src/` en Finder o guardar de forma atómica actualiza el mtime y el setup falla sin cambio real (razonamiento, no reproducido). Con `reuseExistingServer`, si en 4322 queda un preview de otra rama o worktree, las pruebas corren contra otro build y el setup pasa igual. `resolve('dist/index.html')` depende del cwd.
+**Fix:** comparar solo archivos (no directorios), ignorando los que empiezan por `.`. Opcionalmente comparar un identificador del build contra lo que responde `http://localhost:4322/`. Usar la ruta del config para `dist`.
 
-### IN-03: `canonicalUrl('/')` descarta una ruta base, y producción acepta `http:`
+### IN-03: `package-lock.json` editado a mano deja `vite` y `yaml` con `"peer": true`, y `vite` fijado exacto puede duplicarse al actualizar Astro
 
-**File:** `src/lib/site.ts:23-25` y `:13`
-**Issue:** Con `PUBLIC_SITE_URL=https://x.com/landing/`, `new URL('/', siteUrl)` devuelve `https://x.com/`. `parseSiteUrl` acepta `http:` en producción.
-**Fix:** `new URL(path.replace(/^\//, ''), siteUrl)` y exigir `https:` cuando `isProduction`.
-
-### IN-04: Parseo frágil de opciones en las CLI
-
-**File:** `scripts/check-copy.mjs:13-18`, `scripts/list-pending.mjs:13-19`
-**Issue:** `check-copy.mjs --dist` sin valor hace que `opt` devuelva `undefined` y el script valide el YAML en modo normal y salga 0 sin escanear `dist`. `list-pending.mjs --out --check` escribe un archivo llamado `--check`. No se ejecutó.
-**Fix:** Validar que el valor exista y no empiece por `--`; salir con 1 si falta.
-
-### IN-05: `PENDING-COPY.md` puede quedar desactualizado y el módulo exporta desde un script ejecutable
-
-**File:** `scripts/list-pending.mjs:9-10` y `:52-62`, `package.json:16-19`
-**Issue:** `--check` existe y está probado, pero ningún script npm ni `prebuild` lo invoca. `DEFAULT_REASON` y `DEFAULT_CONFIRM_BY` se exportan desde un script con efectos secundarios de nivel superior.
-**Fix:** Añadir `"check:pending": "node scripts/list-pending.mjs --check"` al `prebuild` y mover las constantes a `scripts/lib/`.
-
-### IN-06: La regla DASH solo cubre U+2014 y U+2013
-
-**File:** `scripts/lib/copy-rules.mjs:28`
-**Issue:** `‒` (figura), `―` (barra horizontal) y `−` (menos) pasan sin violación.
-**Fix:** `/[‒-―−]/g` si la intención es prohibir todos los guiones largos.
-
-### IN-07: `tabUntilIframe` no comprueba que se llegó al iframe
-
-**File:** `tests/e2e/a11y-base.spec.ts:42-51` y `:66`
-**Issue:** Si tras 12 Tab no aparece un `IFRAME`, la función devuelve las paradas igualmente. (c) y (d) solo exigen `stops.length >= 6` y filtran el iframe, así que pasarían sin haberlo alcanzado.
-**Fix:** Que `tabUntilIframe` lance un error si no termina en `IFRAME`, o que (c) y (d) afirmen `stops.at(-1)?.tag === 'IFRAME'`.
+**File:** `package-lock.json` (`node_modules/vite`, `node_modules/yaml`), `package.json:26`
+**Issue:** Ambos son dependencias directas de producción pero el lockfile los conserva marcados `peer`. `npm ci --dry-run` lo acepta, pero la próxima `npm install` reescribirá esas líneas. `vite` está fijado a `8.3.0` exacto mientras Astro pide `^8.0.13`; si una versión futura de Astro exige otro vite mayor, npm instalará dos copias.
+**Fix:** `npm install --package-lock-only` en un checkout limpio y aceptar solo las líneas de estos dos paquetes. Usar `^8.3.0` para `vite` si no se necesita el pin exacto.
 
 ---
 
-_Reviewed: 2026-09-18_
+_Reviewed: 2026-09-19_
 _Reviewer: Claude (gsd-code-reviewer)_
 _Depth: standard_
