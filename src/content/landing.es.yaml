@@ -176,6 +176,134 @@ es:
         body:
           text: "No es un pico de un mes. El contenido que rankea hoy sigue trayendo clientes el año que viene, sin volver a pagar por él."
           status: verified
+  cases:
+    title:
+      text: "Casos de exito"
+      status: pending
+      confirm_by: Ari
+      reason: "Rótulo de la sección 5 del Copy v2 (el doc no trae titular para casos), con la errata sin tilde en exito. Ari confirma el titular y la ortografía."
+    labels:
+      sector:
+        text: "Sector"
+        status: verified
+      period:
+        text: "Plazo"
+        status: verified
+      channel:
+        text: "Canal"
+        status: verified
+    items:
+      - figure:
+          text: "+85%"
+          status: verified
+        metric:
+          text: "en ventas"
+          status: verified
+        detail:
+          text: "De $41K a $76K en ventas en 6 meses, con estrategia de contenido y optimización técnica."
+          status: verified
+        sector:
+          text: "e-commerce de vapes (LATAM)"
+          status: verified
+        period:
+          text: "6 meses"
+          status: pending
+          confirm_by: Ari
+          reason: "Plazo tomado del detalle del caso en el Copy v2 (sección 5); el UI-SPEC pide que Ari confirme los cinco plazos."
+        channel:
+          text: "FALTA CONFIRMAR"
+          status: pending
+          confirm_by: Ari
+          reason: "Canal del caso 1: el Copy v2 (sección 5) no lo nombra. Se lo pedimos a Ari; el chip y el dato de Canal muestran el relleno hasta que lo entregue."
+      - figure:
+          text: "+237%"
+          status: verified
+        metric:
+          text: "en tráfico"
+          status: verified
+        detail:
+          text: "De 1.267 a 4.230 clics mensuales en 6 meses, que se tradujeron en 552 inscripciones de calidad."
+          status: verified
+        sector:
+          text: "academia de salud (EE.UU.)"
+          status: verified
+        period:
+          text: "6 meses"
+          status: pending
+          confirm_by: Ari
+          reason: "Plazo tomado del detalle del caso en el Copy v2 (sección 5); el UI-SPEC pide que Ari confirme los cinco plazos."
+        channel:
+          text: "FALTA CONFIRMAR"
+          status: pending
+          confirm_by: Ari
+          reason: "Canal del caso 2: el Copy v2 (sección 5) no lo nombra. Se lo pedimos a Ari; el chip y el dato de Canal muestran el relleno hasta que lo entregue."
+      - figure:
+          text: "x3"
+          status: verified
+        metric:
+          text: "en conversiones"
+          status: verified
+        detail:
+          text: "+132% de tráfico orgánico y conversiones triplicadas en 6 meses."
+          status: verified
+        sector:
+          text: "software de email marketing (SaaS B2B)"
+          status: verified
+        period:
+          text: "6 meses"
+          status: pending
+          confirm_by: Ari
+          reason: "Plazo tomado del detalle del caso en el Copy v2 (sección 5); el UI-SPEC pide que Ari confirme los cinco plazos."
+        channel:
+          text: "FALTA CONFIRMAR"
+          status: pending
+          confirm_by: Ari
+          reason: "Canal del caso 3: el Copy v2 (sección 5) no lo nombra (el detalle habla de tráfico orgánico, pero no dice cuál fue el canal del caso). Se lo pedimos a Ari; el chip y el dato de Canal muestran el relleno hasta que lo entregue."
+      - figure:
+          text: "+3.808%"
+          status: verified
+        metric:
+          text: "en clics"
+          status: verified
+        detail:
+          text: "De cero a un posicionamiento sólido en 12 meses."
+          status: verified
+        sector:
+          text: "app infantil"
+          status: verified
+        period:
+          text: "12 meses"
+          status: pending
+          confirm_by: Ari
+          reason: "Plazo tomado del detalle del caso 4 en el Copy v2 (sección 5); el UI-SPEC pide que Ari confirme los cinco plazos."
+        channel:
+          text: "FALTA CONFIRMAR"
+          status: pending
+          confirm_by: Ari
+          reason: "Canal del caso 4: el Copy v2 (sección 5) no lo nombra. Se lo pedimos a Ari; el chip y el dato de Canal muestran el relleno hasta que lo entregue."
+      - figure:
+          text: "+500%"
+          status: verified
+        metric:
+          text: "en crecimiento de trafico organico"
+          status: pending
+          confirm_by: Ari
+          reason: "Métrica del caso 5 del Copy v2 (sección 5), tal como está en el doc, con la errata sin tilde en trafico y organico. El caso es de Meta Ads y la métrica habla de tráfico orgánico: Ari confirma la métrica y la ortografía. El doc no trae línea de detalle para este caso y termina sin punto final."
+        sector:
+          text: "marca personal referente en Meta Ads"
+          status: pending
+          confirm_by: Ari
+          reason: "El doc trae una sola frase para el caso 5 (marca personal referente en Meta Ads); se muestra completa como sector y Ari confirma cómo se divide."
+        period:
+          text: "FALTA CONFIRMAR"
+          status: pending
+          confirm_by: Ari
+          reason: "Plazo del caso 5: el Copy v2 (sección 5) no lo da. Se lo pedimos a Ari."
+        channel:
+          text: "Meta Ads"
+          status: pending
+          confirm_by: Ari
+          reason: "Canal del caso 5 tomado de la frase del doc (subcadena de marca personal referente en Meta Ads); Ari lo confirma."
   agenda:
     title:
       text: "Agenda tu llamada"

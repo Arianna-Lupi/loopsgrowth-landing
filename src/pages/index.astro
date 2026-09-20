@@ -5,6 +5,7 @@ import Problem from '../components/sections/Problem.astro';
 import WhyNow from '../components/sections/WhyNow.astro';
 import Solution from '../components/sections/Solution.astro';
 import Results from '../components/sections/Results.astro';
+import Cases from '../components/sections/Cases.astro';
 import AgendaSection from '../components/AgendaSection.astro';
 import { getLanding, fill, textVars } from '../lib/content';
 
@@ -22,5 +23,6 @@ const title = fill(data.meta.title_template, textVars(data), 'meta.title_templat
   <WhyNow />
   <Solution />
   <Results />
+  <Cases />
   <AgendaSection />
 </BaseLayout>

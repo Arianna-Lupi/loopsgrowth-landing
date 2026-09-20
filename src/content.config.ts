@@ -61,6 +61,24 @@ const landing = defineCollection({
       title: claim,
       items: z.array(z.strictObject({ lead: claim, body: claim })).length(4),
     }),
+    // Cinco casos exactos: la rejilla de 3 columnas con la quinta ancha depende del conteo. `detail` es
+    // opcional porque el caso de Meta Ads no trae línea de detalle en el doc.
+    cases: z.strictObject({
+      title: claim,
+      labels: z.strictObject({ sector: claim, period: claim, channel: claim }),
+      items: z
+        .array(
+          z.strictObject({
+            figure: claim,
+            metric: claim,
+            detail: claim.optional(),
+            sector: claim,
+            period: claim,
+            channel: claim,
+          }),
+        )
+        .length(5),
+    }),
     agenda: z.strictObject({
       title: claim,
       intro: claim,

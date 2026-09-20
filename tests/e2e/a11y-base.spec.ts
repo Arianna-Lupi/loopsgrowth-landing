@@ -28,6 +28,10 @@ const FORM_URL = es.config.form_url;
 const VISIBLE_MARKS = walkClaims(parse(readFileSync('src/content/landing.es.yaml', 'utf8')))
   .filter((n: { kind: string; path: string; claim?: { text: string } }) => n.kind === 'claim' && n.claim?.text === MISSING_MARK && !n.path.startsWith('privacy.'))
   .length;
+// El canal de cada caso se imprime dos veces (chip y dato de Canal): las marcas de ese canal se ven el doble.
+const CHIP_DUPLICATES = (
+  parse(readFileSync('src/content/landing.es.yaml', 'utf8')) as { es: { cases: { items: { channel: Claim }[] } } }
+).es.cases.items.filter((item) => item.channel.text === MISSING_MARK).length;
 
 // Textos de Ari, tal cual (con el término y la duración ya resueltos desde el YAML).
 const H1_TEXT = resolveText(es.hero.h1);
@@ -81,7 +85,7 @@ test.describe('orden de tabulación y foco a 1280 px', () => {
     await page.goto('/');
     const stops = await tabUntilIframe(page);
     const order = stops.map((s) => (s.cta ? `cta:${s.cta}` : s.tag === 'IFRAME' ? 'iframe' : `a:${s.href}`));
-    expect(order).toEqual(['a:#main', 'a:#agenda', 'cta:header', 'cta:hero', 'cta:solucion', `a:${FORM_URL}`, 'iframe']);
+    expect(order).toEqual(['a:#main', 'a:#agenda', 'cta:header', 'cta:hero', 'cta:solucion', 'cta:casos', `a:${FORM_URL}`, 'iframe']);
   });
 
   test('(c) cada parada muestra un contorno sólido de 2 px o más', async ({ page }) => {
@@ -203,6 +207,7 @@ test.describe('orden de tabulación a 390 px', () => {
       'a:#agenda',
       'cta:hero',
       'cta:solucion',
+      'cta:casos',
       `a:${FORM_URL}`,
       'iframe',
     ]);
@@ -457,7 +462,7 @@ test.describe('textos de Ari visibles', () => {
     await expect(page.locator('.agenda-intro')).toHaveText(INTRO_TEXT);
     const body = await page.evaluate(() => document.body.innerText);
     // Aserción derivada del YAML (COPY-01): la marca aparece tantas veces como reclamaciones la traigan.
-    expect(body.split(MISSING_MARK).length - 1).toBe(VISIBLE_MARKS);
+    expect(body.split(MISSING_MARK).length - 1).toBe(VISIBLE_MARKS + CHIP_DUPLICATES);
     expect(body).not.toMatch(/[{}]/);
     expect(body).not.toMatch(/borrador|TBD|lorem/i);
   };
