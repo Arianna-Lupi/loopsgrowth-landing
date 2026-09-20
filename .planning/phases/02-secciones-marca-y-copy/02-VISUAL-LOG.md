@@ -59,6 +59,27 @@ Protocolo por lote: (1) construir el lote completo desde el contrato; (2) una ro
 - **Conflictos resueltos a favor del contrato:** la skill de gusto desaconseja tres tarjetas iguales y el UI-SPEC fija tres dolores en tres columnas iguales; se varía por pegatina y numeral. La skill prohíbe el guion largo y el copy de Ari no se edita (regla del proyecto).
 - **Capturas:** ninguna todavía.
 
+## Lote B, ronda 1
+
+- **Plan 02-03, tarea 4.** Ronda de captura con `PHASE2_BATCH=B` (21 archivos: 15 de página completa y 6 de sección) sobre el sitio ya con el collage oficial, las pildoras y la foto de Por qué ahora de los planes 02-09 a 02-11. Se miraron solo las de sección a 390 y 1280 px; 320, 768 y 1024 px se comprobaron con las mediciones del spec (matriz de cinco anchos, ritmo de 64 y 96 px, SC 1.4.12 a 320 px), sin abrir capturas porque ninguna medición falló.
+- **Referencia real:** `brand-inventory/moodboard.png` (recortes en blanco y negro sobre disco morado, pildoras "seo", "spy" y "team work" y superficie crema) y `ai_a.png`.
+- **Skills y verbos usados:** `impeccable` con `critique` del lote y los verbos `layout` (collage de Por qué ahora y reglas del equipo) y `colorize` (alternancia blanco y crema en los pilares); `bolder` no hizo falta, ninguna sección quedó plana. `design-taste-frontend` con diales 7, 3 y 4 (sin degradados, sin vidrio, sin sombras difusas, sin animaciones infinitas). El contrato del UI-SPEC y A11Y.md mandaron sobre ambas: el desacuerdo con tres tarjetas iguales en El problema se resuelve, como en la ronda 0, con pegatina distinta, numeral y pildora por tarjeta.
+- **Hallazgos del `critique` (1280 px):**
+  1. Por qué ahora dejaba la columna izquierda vacía bajo un collage de 320 px frente a seis filas.
+  2. Las cuatro tarjetas de La solución se leían uniformes.
+  3. Las filas del equipo (Pilar 3) no tenían la regla de 3 px de la lista de Por qué ahora.
+  4. El Pilar 4 tiene mucho aire bajo FALTA CONFIRMAR.
+  5. El problema funciona: dos tarjetas medio vacías junto a la del párrafo largo son el alto parejo del contrato, no un defecto.
+- **Correcciones (un solo lote, commit `149f172`):**
+  1. `WhyNow`: el collage ocupa su columna desde 64em con tope de 26rem (416 px); bajo 64em sigue en 224 px. Se ajustaron `collage-language` y `collage-photos`, que fijaban 320 px.
+  2. `PillarCard`: las tarjetas 2 y 4 van sobre crema (par oscuro sobre crema aprobado, 14.37), en tablero con las blancas 1 y 3. Los chips de amarillo se leen sobre crema.
+  3. `PillarCard`: las filas del equipo llevan `border-top` de 3 px (variable `--border-pop`) y la última no duplica la del borde de la tarjeta.
+  4. El aire del Pilar 4 se deja: viene de que el cuerpo es el marcador FALTA CONFIRMAR y de igualar el alto con el Pilar 3; se cierra cuando Ari entregue el texto. No se rompe el alto parejo por un marcador.
+- **Ronda de confirmación:** 1 de 1 (tope de tres ciclos, no hizo falta otra). 1280 px de Por qué ahora y La solución y 390 px de La solución revisados tras la corrección.
+- **Listas con `role="list"`:** `.pain-grid`, `.whynow-list`, `.pillar-grid` y `.pillar-team` se revisaron como respaldo de VoiceOver (el `list-style: none` de Safari quita la semántica sin el rol explícito); las cuatro llevan el rol. Queda la verificación manual con VoiceOver a cargo de una persona.
+- **Rasgos de la lista de vibra:** 2 (recortes de media tinta: la foto de la lupa en Por qué ahora) y 3 (formas planas de color detrás: disco morado, chips amarillos y crema) cumplidos; 7 (cada sección con foco y layout propio: tarjetas numeradas, lista con collage, tablero 2x2) y 8 (aire de 96 px, bloques de tono a ancho completo, borde de 3 px, sombra dura y radio parejo, sin sombra difusa) cumplidos.
+- **Capturas** (`test-results/phase2/`, no versionadas): `B-{320,390,768,1024,1280}` con `-reduce` y `-nojs`, y `B-{problema,por-que-ahora,solucion}-{390,1280}`.
+
 ## Lote M, ronda 0
 
 - **Plan 02-09.** Marca oficial: morado #4228D1, crema #F4F3E0, las 17 mesas del .ai como logos por variante y tono, favicon de la mesa 18 y hoja de revisión `/marca/hoja/`. Tareas 1 a 3, construidas desde el contrato antes de la ronda de captura.

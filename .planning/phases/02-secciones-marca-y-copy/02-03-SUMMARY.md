@@ -3,8 +3,12 @@ phase: 02-secciones-marca-y-copy
 plan: 03
 subsystem: ui
 tags: [astro, copy, yaml, collage, svg, playwright, cards, guards]
-status: partial
+status: complete
 plan_head_before: ae44486e5062b8a1cfa9f3d018c19b27005b2bea
+# commits es el conteo medido del libro (rev-list desde plan_head_before). Incluye los commits de los planes 02-09,
+# 02-10 y 02-11, que se ejecutaron entre la tarea 3 y la tarea 4. Los de este plan son 7: d07604f, 1ecebf6, d194134,
+# 0d106c2, 9243d2e, 149f172 y el commit de cierre de documentos.
+commits_own: 7
 
 requires:
   - phase: 02-secciones-marca-y-copy
@@ -14,13 +18,13 @@ provides:
   - "Prueba 9b de la guarda de copy reescrita: solo PENDING y MISSING, derivada del YAML con walkClaims, y toda marca debe ser pending"
   - "Secciones Problem, WhyNow y Solution completas entre el hero y #agenda; PainCard, PillarCard y la variante split del SectionShell"
   - "CTA de La solución con orden de tabulación actualizado y aserción de marcas visibles del caso k derivada del YAML"
-  - "sections-problem-solution.spec.ts con 34 pruebas (estructura, copy del YAML, estilos calculados, columnas, collage, CTA y foco)"
+  - "sections-problem-solution.spec.ts con 52 pruebas (estructura, copy del YAML, estilos calculados, columnas, collage, CTA y foco, matriz de cinco anchos, ritmo de 64 y 96 px, SC 1.4.12, cero animaciones, sin JavaScript y capturas del lote B)"
 affects: [02-04, 02-05, 02-06, 02-07, 02-08]
 
 actuals:
-  tokens: 12500
-  tasks: 3
-  commits: 3
+  tokens: 16200   # 12500 de las tareas 1 a 3 mas 3684 (chars/4 sobre src y tests de la tarea 4)
+  tasks: 4
+  commits: 41
 
 tech-stack:
   added: []
@@ -54,8 +58,7 @@ key-decisions:
   - "Verónica queda pending: su cargo en La solución difiere del de Quiénes somos."
   - "Numerales de las tarjetas por contador de CSS; la prueba comprueba la expresión y el contador porque getComputedStyle no resuelve el valor."
 
-requirements-completed: []
-requirements-pending: [CONT-02, CONT-03, CONT-04, COPY-01, DSGN-04]
+requirements-completed: [CONT-02, CONT-03, CONT-04, COPY-01, DSGN-04]
 
 coverage:
   - id: D1
@@ -75,34 +78,40 @@ coverage:
         status: pass
     human_judgment: false
   - id: D3
-    description: "Lote B de diseño (rondas de captura, critique, correcciones y verificación de 320 a 1280 px)"
+    description: "Lote B de diseño (ronda de captura, critique, correcciones y verificación de 320 a 1280 px), registrado como Lote B, ronda 1 en 02-VISUAL-LOG.md"
     requirement: "DSGN-04"
-    verification: []
+    verification:
+      - kind: e2e
+        ref: "E2E_BLOCK_CLICKUP=1 npx playwright test --project=chromium (276 pasan, 65 omitidas de capturas) y PHASE2_BATCH=B con 21 capturas"
+        status: pass
     human_judgment: true
 ---
 
 # Phase 2 Plan 03: Problema, Por qué ahora y La solución Summary
 
-**Tres secciones de contenido con el texto de Ari tal cual (tarjetas de dolor con sombra naranja, lista de frases con collage compacto y cuatro pilares con chip propio y CTA), con el titular de La solución y el cuerpo del Pilar 4 mostrando FALTA CONFIRMAR y las guardas de copy aceptando solo PENDING y MISSING. Las tareas 1 a 3 están hechas; falta la tarea 4 (lote B de diseño y verificación de 320 a 1280 px).**
+**Tres secciones de contenido con el texto de Ari tal cual (tarjetas de dolor con sombra naranja, lista de frases con collage oficial de la lupa y foto en media tinta, y cuatro pilares en tablero blanco y crema con chip propio y CTA), con el titular de La solución y el cuerpo del Pilar 4 mostrando FALTA CONFIRMAR, las guardas de copy aceptando solo PENDING y MISSING y todo verificado de 320 a 1280 px (columnas, ritmo de 64 y 96 px, espaciado de texto, cero animaciones y sin JavaScript).**
 
-## Estado: parcial (corte natural tras la tarea 3)
+## Estado: completo
 
-El plan prevé cortar tras la tarea 3 cuando el contexto pasa de la mitad (las tres secciones ya están construidas y probadas). Las tareas 1, 2 y 3 están commiteadas y en verde. **Pendiente de un ejecutor nuevo: la tarea 4 completa.** No se marcaron como cumplidos CONT-02, CONT-03, CONT-04, COPY-01 ni DSGN-04 en REQUIREMENTS.md, ni se avanzó el contador de planes: eso corresponde al cierre de la tarea 4.
+Las cuatro tareas están hechas y en verde. El plan se cortó tras la tarea 3 por presupuesto de contexto; entre esa tarea y la 4 se ejecutaron los planes 02-09 (marca oficial, morado `#4228D1`), 02-10 (collage de marca) y 02-11 (fotos en media tinta), que cambiaron el collage, las pegatinas, los chips y la foto de Por qué ahora. La tarea 4 se hizo sobre ese estado (spec con `PURPLE_RGB` y `rgbOfToken` de `tests/e2e/lib/brand.ts`, sin ningún valor de morado escrito a mano).
 
-### Qué debe hacer la tarea 4 (según 02-03-PLAN.md)
+### Tarea 4 (lote B), commits `9243d2e` (pruebas) y `149f172` (correcciones)
 
-1. **Pruebas primero** en `tests/e2e/sections-problem-solution.spec.ts`: (a) matriz de cinco anchos (320, 390, 768, 1024, 1280 px) con columnas esperadas (dolores en 3 desde 1024 px, pilares en 2 desde 640 px, Por qué ahora en dos columnas desde 1024 px), `scrollWidth` de cada sección menor o igual al viewport, ningún rectángulo de tarjeta o fila fuera de `[0, innerWidth]` y `.whynow-art` sin cruzar h2 ni lista; (b) padding vertical de las tres secciones (64 px bajo 1024 px, 96 px desde 1024 px); (c) espaciado de texto SC 1.4.12 con `addStyleTag` (interlineado 1.5, letras 0.12em, palabras 0.16em, párrafos 2em, prioridad forzada solo en el spec): ninguna `.pain-card`, `.pillar-card` ni `.whynow-list > li` recorta su contenido y no hay scroll horizontal a 320 px; (d) `document.getAnimations().length` es 0 con `reduce` y `no-preference`, y con `javaScriptEnabled: false` las tres secciones y el CTA `solucion` son visibles; (e) bloque de capturas que solo corre con `PHASE2_BATCH` (`test.skip` si no) con título que contenga "captura", que a 390 y 1280 px guarda `test-results/phase2/<lote>-<id>-<ancho>.png` de `problema`, `por-que-ahora` y `solucion` con todo lo que no es localhost abortado.
-2. **Ciclo del lote B** (invocar `impeccable` con `critique`, `layout`, `colorize` y `bolder` solo si una sección se ve plana, y `design-taste-frontend` con diales 7, 3 y 4): una ronda de captura con `PHASE2_BATCH=B` (21 archivos: 15 de página completa más 6 de sección), mirar solo 390 y 1280 px de sección, corregir todo en un lote, una ronda de confirmación como máximo (tope de tres ciclos), y registrar "Lote B, ronda 1" en `02-VISUAL-LOG.md` con verbos, hallazgos, correcciones, capturas, la nota de las listas con `role="list"` (respaldo de VoiceOver) y los rasgos 2, 3, 7 y 8 de la lista de vibra.
-3. **Cierre:** suite completa (`npm run test:e2e:isolated`), guardas, `PUBLIC_ENV=production node scripts/check-copy.mjs --dist dist --json` con solo MISSING en el mismo número que las marcas del YAML, actualizar este SUMMARY a `status: complete` y correr `state.advance-plan`, `state.update-progress`, `roadmap.update-plan-progress 02` y `requirements.mark-complete CONT-02 CONT-03 CONT-04 COPY-01 DSGN-04`.
+- **Pruebas primero, en `sections-problem-solution.spec.ts`:** matriz de cinco anchos (320, 390, 768, 1024 y 1280 px) con columnas (dolores en 3 desde 1024 px, pilares en 2 desde 640 px, Por qué ahora en dos columnas desde 1024 px), `scrollWidth` de las tres secciones y de las tarjetas y filas dentro de `[0, innerWidth]`, y `.whynow-art` sin cruzar h2 ni lista; padding de 64 px bajo 1024 px y de 96 px desde 1024 px; SC 1.4.12 a 320 px con `addStyleTag` (interlineado 1.5, letras 0.12em, palabras 0.16em, párrafos 2em) sin recortes ni scroll horizontal; `document.getAnimations().length` en 0 con `reduce` y `no-preference`; las tres secciones y el CTA `solucion` visibles con `javaScriptEnabled: false`; y el bloque de capturas de sección solo con `PHASE2_BATCH`. Nacieron en verde: el código de las tareas 2 y 3 ya cumplía el contrato (se anota como en la tarea 2). La prueba nueva de las reglas del equipo (`las filas del equipo llevan regla de 3 px arriba`) sí nació de una observación del `critique` y se escribió junto con la corrección.
+- **Ciclo del lote B:** ronda de captura con `PHASE2_BATCH=B` (21 archivos), `impeccable` (`critique`, `layout`, `colorize`; `bolder` no hizo falta) y `design-taste-frontend` (diales 7, 3 y 4), contra `moodboard.png` y `ai_a.png` de la marca real. Una corrección en un solo lote y una ronda de confirmación (1 de 1). Detalle en `02-VISUAL-LOG.md`, "Lote B, ronda 1".
+- **Correcciones:** (1) `WhyNow.astro`: el collage llena su columna desde 64em con tope de 26rem (416 px); antes quedaba a 320 px con el resto de la columna vacía frente a las seis filas. (2) `PillarCard.astro`: tarjetas 2 y 4 sobre crema (par oscuro sobre crema aprobado, 14.37) en tablero con las blancas 1 y 3. (3) `PillarCard.astro`: filas del equipo con `border-top` de 3 px. (4) Los specs `collage-language.spec.ts` y `collage-photos.spec.ts` (planes 02-10 y 02-11) fijaban 320 px desde 64em; ahora aceptan de 320 a 416 px. El fondo esperado de las tarjetas de pilar en este spec pasa a blanco y crema alternados.
+- **Decisión sobre el Pilar 4:** el aire bajo FALTA CONFIRMAR se deja. Viene del marcador (cuerpo corto) y de igualar el alto con el Pilar 3, y se cierra solo cuando Ari entregue el texto; romper el alto parejo del contrato o dar estilo propio al marcador (la tarjeta solo imprime `.text`) sería un parche.
+- **Registro:** `02-VISUAL-LOG.md` trae "Lote B, ronda 1" con verbos, hallazgos, correcciones, capturas, la nota de las listas con `role="list"` (respaldo de VoiceOver) y los rasgos 2, 3, 7 y 8 de la lista de vibra cumplidos.
 
-### Observaciones visuales de una revisión previa (1280 px, no es una ronda del lote B)
+### Verificación de cierre
 
-Se miraron capturas de las tres secciones a 1280 px (fuera del repositorio) al terminar cada tarea. Candidatos para el `critique` de la tarea 4:
-
-- **El problema:** funciona (tarjetas blancas, sombra naranja, numerales morados, pegatinas distintas). Las tarjetas 1 y 2 quedan medio vacías junto a la 3, que trae el párrafo largo; es el comportamiento esperado del contrato (alto parejo).
-- **Por qué ahora:** a 1280 px la columna izquierda queda con mucho vacío bajo el collage de 160 px frente a la lista de seis filas; evaluar si `layout` debe anclar el collage o dar más presencia.
-- **La solución:** las cuatro tarjetas blancas se ven uniformes y algo planas; `bolder` o `colorize` pueden dar variación al Pilar 3 (equipo) o a los chips sin salirse de la paleta ni de la escala. La tarjeta del Pilar 4 queda con mucho aire bajo "FALTA CONFIRMAR" (cuerpo en Body 400, sin énfasis); decidir si la marca necesita un estilo de ranura más visible sin ocultarla. Las filas del equipo no tienen regla de 3 px (decisión abierta del plan: la iteración decide).
-- No se miraron aún capturas a 390 px de las tres secciones; las mediciones del spec pasan a 390 px.
+- `E2E_BLOCK_CLICKUP=1 npx playwright test --project=chromium` (preview en 4322, detenido después): 276 pasan, 65 omitidas (capturas e informes, solo con `PHASE2_BATCH`), 0 fallos.
+- `PHASE2_BATCH=B` sobre `page-structure` y `sections-problem-solution`: 21 archivos `test-results/phase2/B-*.png` (no versionados).
+- `node --test tests/guards/*.test.mjs`: 162 de 162. `node scripts/check-contrast.mjs` y `node scripts/list-pending.mjs --check` salen 0. `npm run build` pasa; `dist/index.html` pesa 39497 bytes (tope 42240).
+- `PUBLIC_ENV=production node scripts/check-copy.mjs --dist dist --json`: 0 estructurales y 2 de contenido, todas MISSING, igual a las 2 marcas del YAML.
+- Barridos: cero `set:html`, cero hex en `src/components` y `src/pages`, cero `outline: none`, cero `line-height ... !important`; cero `AEO` y cero `[VERIFICAR` en `dist/index.html`; los únicos hosts son `app-cdn.clickup.com`, `forms.clickup.com` y el espacio de nombres de SVG (`www.w3.org`).
+- El diff contra `plan_head_before` de los archivos que el plan declara prohibidos (favicon, `scripts/brand`, `scripts/lib`, `scripts/photos`, `check-photos.mjs`) lista archivos de los planes 02-09 a 02-11; ninguno lo tocó este plan (solo cambiaron `PillarCard.astro`, `WhyNow.astro` y tres specs).
+- Ningún servidor quedó levantado por este ejecutor (`npx astro preview stop` tras cada ciclo; el `astro dev` del usuario no se tocó).
 
 ## Hecho
 
@@ -125,7 +134,7 @@ Se miraron capturas de las tres secciones a 1280 px (fuera del repositorio) al t
 - `PillarCard` (chip de 64 px, h3 a 16 px del chip, cuerpo a 8 px del h3, lista opcional del equipo; borde de 3 px y sombra dura de 4 px) y `Solution` (chips lupa, ojos, loop y clic; 1 columna bajo 640 px y 2 desde 640 px; CTA a 48 px bajo la rejilla). El Pilar 4 muestra `FALTA CONFIRMAR`; la errata "direcciôn" sale tal cual.
 - Esta tarea sí corrió en rojo primero: cinco pruebas fallaron por contenido (sin `.pillar-card`) antes de construir.
 
-## Verificación (estado tras la tarea 3)
+## Verificación histórica (estado tras la tarea 3)
 
 - `npm run test:e2e:isolated -- tests/e2e/sections-problem-solution.spec.ts tests/e2e/page-structure.spec.ts tests/e2e/a11y-base.spec.ts tests/e2e/cta-focus.spec.ts`: 110 pasan, 15 omitidas (capturas de lote sin `PHASE2_BATCH`).
 - `node --test tests/guards/*.test.mjs`: 88 pasan. `node scripts/check-contrast.mjs`: 11/11 pares. `npm run build` pasa; `node scripts/list-pending.mjs --check` sale 0 (11 pendientes).
@@ -171,7 +180,8 @@ Las cuatro rutas pending nuevas: `why_now.items[1]`, `solution.title`, `solution
 - **Orden TDD en la tarea 2:** los componentes se escribieron antes que las pruebas, así que las pruebas nuevas nacieron en verde (salvo las dos correcciones de arriba) y no se vio el rojo previo. La tarea 3 sí respetó el rojo primero. La cobertura de la tarea 2 es equivalente; se anota por transparencia.
 - **Prueba de estilos de La solución:** se añadió `toHaveLength(4)` para que no pase en vacío si no hay tarjetas.
 - **`HeroCollage.astro` declarado por 02-01 y 02-02:** este plan no lo toca; el choque de `files_modified` no produjo conflicto (ambos planes ya estaban commiteados antes de esta wave).
-- **Tarea 4 no ejecutada** (corte natural del plan por presupuesto de contexto); ver arriba.
+- **Corte del plan tras la tarea 3** por presupuesto de contexto; la tarea 4 se hizo en una segunda ejecución sobre el estado posterior a 02-09, 02-10 y 02-11.
+- **Los specs de los planes 02-10 y 02-11 se tocaron** (`collage-language.spec.ts` y `collage-photos.spec.ts`) porque afirmaban 320 px para el collage de Por qué ahora desde 64em; el lote B lo llevó a 416 px como máximo.
 
 ## Threat Flags
 
@@ -184,4 +194,4 @@ Los dos "FALTA CONFIRMAR" (`solution.title` y `solution.items[3].body`) son huec
 ## Self-Check: PASSED
 
 - Archivos creados existen: PainCard, PillarCard, Problem, WhyNow, Solution y sections-problem-solution.spec.ts.
-- Commits `d07604f`, `1ecebf6` y `d194134` existen en la rama `gsd/phase-02-secciones-marca-y-copy`.
+- Commits `d07604f`, `1ecebf6`, `d194134`, `9243d2e` y `149f172` existen en la rama `gsd/phase-02-secciones-marca-y-copy`.
