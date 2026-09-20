@@ -48,8 +48,10 @@ const HERO_SELECTORS: Record<(typeof HERO_ORDER)[number], string> = {
 };
 
 const viewports = [
-  { name: '1280 px', width: 1280, height: 800, sectionY: 96, heroTop: 64 },
-  { name: '390 px', width: 390, height: 844, sectionY: 64, heroTop: 48 },
+  // El relleno del hero en móvil es más compacto que el de las demás secciones (quick 260920-name-geo-hero-mobile):
+  // 20 px arriba y 48 abajo bajo 40em, para que el CTA del hero entre en el primer pantallazo. #agenda conserva `sectionY`.
+  { name: '1280 px', width: 1280, height: 800, sectionY: 96, heroTop: 64, heroBottom: 96 },
+  { name: '390 px', width: 390, height: 844, sectionY: 64, heroTop: 20, heroBottom: 48 },
 ];
 
 for (const vp of viewports) {
@@ -111,12 +113,12 @@ for (const vp of viewports) {
       expect(tops).toEqual(sorted);
     });
 
-    test(`padding de #inicio (arriba ${vp.heroTop} px, abajo ${vp.sectionY} px) y de #agenda (${vp.sectionY} px)`, async ({
+    test(`padding de #inicio (arriba ${vp.heroTop} px, abajo ${vp.heroBottom} px) y de #agenda (${vp.sectionY} px)`, async ({
       page,
     }) => {
       await page.goto('/');
       await expect(page.locator('#inicio')).toHaveCSS('padding-top', `${vp.heroTop}px`);
-      await expect(page.locator('#inicio')).toHaveCSS('padding-bottom', `${vp.sectionY}px`);
+      await expect(page.locator('#inicio')).toHaveCSS('padding-bottom', `${vp.heroBottom}px`);
       await expect(page.locator('#agenda')).toHaveCSS('padding-top', `${vp.sectionY}px`);
       await expect(page.locator('#agenda')).toHaveCSS('padding-bottom', `${vp.sectionY}px`);
     });
@@ -287,11 +289,12 @@ for (const vp of WIDTHS) {
 test.describe('primer pantallazo', () => {
   test.describe('390x844', () => {
     test.use({ viewport: { width: 390, height: 844 } });
-    // Cambio deliberado (quick 260920-hero-clients): el CTA del hero pasó al final de los párrafos y baja del
-    // primer pantallazo. El header oculta su CTA bajo 40em, así que en 390 px arriba solo hay h1 y subtítulo.
-    test('el h1 y el subtítulo quedan completos (el CTA del hero ya no)', async ({ page }) => {
+    // El CTA del hero va al final de los párrafos (quick 260920-hero-clients) y el ritmo móvil compacto
+    // (quick 260920-name-geo-hero-mobile) lo devuelve al primer pantallazo: entero, con su alto de 48 px.
+    // El header oculta su CTA bajo 40em, así que arriba solo están h1, subtítulo y este CTA.
+    test('el h1, el subtítulo y el CTA del hero quedan completos en el primer pantallazo', async ({ page }) => {
       await page.goto('/');
-      for (const sel of [HERO_SELECTORS.h1, HERO_SELECTORS.subtitle]) {
+      for (const sel of [HERO_SELECTORS.h1, HERO_SELECTORS.subtitle, HERO_SELECTORS.cta]) {
         const r = await box(page, sel);
         expect(r.top, `${sel} top`).toBeGreaterThanOrEqual(0);
         expect(r.bottom, `${sel} bottom`).toBeLessThanOrEqual(844);
@@ -300,6 +303,38 @@ test.describe('primer pantallazo', () => {
       }
     });
   });
+
+  // Pliegue móvil fijado por la medida real (quick 260920-name-geo-hero-mobile): el CTA del hero, con h1, subtítulo y
+  // los párrafos encima, cae entero dentro del primer pantallazo en estos teléfonos. 375x667 entra con margen
+  // corto (el CTA baja hasta 657 px). En 360x640 y 320x568 sigue por debajo del pliegue: no se exige.
+  for (const [width, height] of [[360, 740], [390, 844], [412, 915], [375, 667]] as const) {
+    test.describe(`${width}x${height}: CTA del hero dentro del primer pantallazo`, () => {
+      test.use({ viewport: { width, height } });
+      test('el CTA entero queda dentro del alto del pantallazo, sin scroll, con 44 px de objetivo', async ({ page }) => {
+        await page.goto('/');
+        const r = await box(page, HERO_SELECTORS.cta);
+        expect(r.top, 'top del CTA').toBeGreaterThanOrEqual(0);
+        expect(r.bottom, 'bottom del CTA').toBeLessThanOrEqual(height);
+        expect(r.bottom - r.top, 'alto del CTA').toBeGreaterThanOrEqual(44);
+        expect(r.left).toBeGreaterThanOrEqual(0);
+        expect(r.right).toBeLessThanOrEqual(width);
+        expect(await page.evaluate(() => window.scrollY)).toBe(0);
+        // Ritmo compacto sin romper A11Y.md: interlineado de los párrafos >= 1.5 y ancho máximo <= 80ch.
+        const rhythm = await page.evaluate(() => {
+          const p = document.querySelector('#inicio .hero-desc p') as HTMLElement;
+          const cs = getComputedStyle(p);
+          const probe = document.createElement('div');
+          probe.style.cssText = 'position:absolute;visibility:hidden;width:80ch';
+          p.appendChild(probe);
+          const cap = probe.getBoundingClientRect().width;
+          probe.remove();
+          return { lh: parseFloat(cs.lineHeight) / parseFloat(cs.fontSize), maxW: parseFloat(cs.maxWidth), cap };
+        });
+        expect(rhythm.lh).toBeGreaterThanOrEqual(1.5);
+        expect(rhythm.maxW).toBeLessThanOrEqual(rhythm.cap);
+      });
+    });
+  }
 
   test.describe('1280x800', () => {
     test.use({ viewport: { width: 1280, height: 800 } });
