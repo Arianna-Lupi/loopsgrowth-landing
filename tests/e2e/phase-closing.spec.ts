@@ -389,6 +389,26 @@ test.describe('objetivos, sombras y área de salvado', () => {
     });
   }
 
+  for (const width of [320, 390, 1280]) {
+    test(`/ a ${width} px: la etiqueta de cada CTA cabe en una sola línea`, async ({ browser, baseURL }) => {
+      const context = await isolatedContext(browser, baseURL, width, 800, { reducedMotion: 'reduce' });
+      const page = await context.newPage();
+      await page.goto('/');
+      const wrapped = await page.locator('a[data-cta]').evaluateAll((els) =>
+        els
+          .map((el) => {
+            const cs = getComputedStyle(el);
+            const line = parseFloat(cs.lineHeight);
+            const lines = Math.round((el.getBoundingClientRect().height - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom) - 6) / line);
+            return { where: el.getAttribute('data-cta'), lines };
+          })
+          .filter((c) => c.lines > 1),
+      );
+      await context.close();
+      expect(wrapped).toEqual([]);
+    });
+  }
+
   for (const path of ['/', '/privacidad/']) {
     test(`${path}: cero sombras con desenfoque y cero degradados computados`, async ({ browser, baseURL }) => {
       const context = await isolatedContext(browser, baseURL, 1280, 800, { reducedMotion: 'reduce' });

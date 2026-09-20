@@ -36,6 +36,14 @@ const { label, location, href = '#agenda' } = Astro.props;
     text-decoration: none;
   }
 
+  /* A 320 px el texto (16.6 px, 700) y el relleno de 24 px por lado sumaban 289 px contra 288 de
+     ancho útil y la etiqueta caía a dos líneas. Con 16 px por lado cabe en una línea (273 px). */
+  @media (max-width: 22.5em) {
+    .cta {
+      padding-inline: 1rem;
+    }
+  }
+
   .cta:hover {
     background: var(--cta-bg-hover);
   }
