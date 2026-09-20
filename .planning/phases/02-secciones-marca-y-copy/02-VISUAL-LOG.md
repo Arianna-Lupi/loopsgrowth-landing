@@ -292,3 +292,19 @@ Protocolo por lote: (1) construir el lote completo desde el contrato; (2) una ro
 - **Ronda de confirmación (1 de 1):** el footer de `/privacidad` queda pegado al borde inferior a 1280 x 900; el orden de tabulación y el resto de mediciones siguen en verde.
 - **Lista de vibra:** rasgo 2 (aire generoso) cumplido, rasgo 3 cumplido, rasgo 7 (foco claro y layout propio: titular con collage y tarjeta en `#agenda`, tres bloques en el footer) cumplido, rasgo 8 cumplido.
 - **Pendiente manual (fila interaction), repetido del lote D06:** probar el `<summary>` del FAQ con VoiceOver (macOS con Safari) y con NVDA o TalkBack: el anuncio de contraído o expandido y la lectura de la respuesta al abrir. Lo hace una persona; ningún ejecutor puede darlo por verificado. También queda para una persona recorrer con teclado el iframe real de ClickUp (entrar y salir sin trampa de foco), fuera del alcance de estas pruebas con ClickUp bloqueado.
+
+## Cierre, tracer (CIERRE0)
+
+- **Lote:** `CIERRE0`, plan 02-08 tarea 1 (tracer de punta a punta: dependencia, prueba, build, captura, registro). Sin correcciones de `src/`.
+- **Herramienta nueva** (`tests/e2e/phase-closing.spec.ts`, bloque 'hoja de contacto', solo con `PHASE2_BATCH`): `PHASE2_BATCH=CIERRE0 npx playwright test --project=chromium tests/e2e/phase-closing.spec.ts -g "hoja de contacto"` genera 14 recortes por ancho (header, las 12 secciones de `main` y footer) a 1280 y 390 px en `test-results/phase2/CIERRE0-<id>-<ancho>.png` (28 archivos) y las hojas `CIERRE0-hoja-1280.png` (3 columnas) y `CIERRE0-hoja-390.png` (6 columnas). Con ClickUp bloqueado. No se versionan. Nota de herramienta: Playwright vacía `test-results/` al empezar cada corrida, así que las hojas se leen justo después de generarlas.
+- **axe de humo** (`@axe-core/playwright` 4.13.0, etiquetas wcag2a, wcag2aa, wcag21a, wcag21aa y wcag22aa, sin iframe, ClickUp bloqueado): `/` y `/privacidad/` a 320, 390 y 1280 px con 0 violaciones en total (0 critical o serious, 0 moderate o minor). Se dejó la prueba en sus tres anchos y dos rutas desde el tracer; la tarea 2 no la amplía.
+- **Primeras impresiones contra los 8 rasgos de vibra** (solo las dos hojas; ningún recorte abierto):
+  1. Color plano de tono lleno y alternado (blanco, oscuro, amarillo, blanco, oscuro, blanco, amarillo, blanco, oscuro, blanco, amarillo, morado): se ve como lenguaje de marca, sin degradados.
+  2. Bordes gruesos y sombra dura desplazada en tarjetas, píldoras y botón: consistente en las 12 secciones.
+  3. Loopy (ojo o doble ojo con lupa) en el hero, Por qué ahora, La solución, equipo y `#agenda`, con píldoras `seo`, `geo`, `team work`: coincide con la gramática del moodboard.
+  4. Fotos en media tinta (ojo en el hero, manos en Por qué ahora) dentro de un marco: presentes, pequeñas.
+  5. Los cuatro CTA naranja son iguales; el primer pantallazo de 1280 px muestra titular, CTA y collage.
+  6. Zonas con 'FALTA CONFIRMAR' (La solución, Para quién es, FAQ, footer) se leen como relleno claro, no como error de layout.
+  7. Posibles puntos a mirar en CIERRE1: el hero a 1280 px tiene el texto largo de la descripción en cuerpo pequeño frente al titular; La solución muestra la tarjeta de equipo mucho más alta que su vecina de crema; la tarjeta blanca de `#agenda` queda vacía con ClickUp bloqueado (esperado).
+  8. A 390 px las secciones mantienen una sola columna, sin recortes visibles.
+- **Estado:** el tracer no encontró defectos que corregir. La matriz completa, el ciclo de `critique` y `polish` y la consolidación del lote 0 son de la tarea 2.
