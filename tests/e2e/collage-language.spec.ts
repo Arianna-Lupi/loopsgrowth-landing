@@ -70,9 +70,12 @@ test.describe('escenas: lenguaje del moodboard', () => {
     for (const name of NAMES) await expect(page.locator(SCENES[name]), name).toHaveCount(1);
     // Las piezas sueltas (la lupa de Casos de éxito) y los avatares de Quiénes somos (plan 02-05) no son escenas:
     // se cuentan aparte y son exactamente una pieza y cuatro avatares.
+    // Más la escena `agenda` del CTA final (plan 02-06), que mide `closing-sections.spec.ts`: raíz `div`,
+    // dos píldoras, caja y separación de la tarjeta.
     await expect(
       page.locator('[data-collage]:not(svg.collage-sprite):not([data-collage="piece"]):not([data-collage="avatar"])'),
-    ).toHaveCount(NAMES.length);
+    ).toHaveCount(NAMES.length + 1);
+    await expect(page.locator('#agenda [data-collage="agenda"]')).toHaveCount(1);
     await expect(page.locator('[data-collage="piece"]')).toHaveCount(1);
     await expect(page.locator('[data-collage="avatar"]')).toHaveCount(4);
   });
@@ -104,7 +107,8 @@ test.describe('escenas: lenguaje del moodboard', () => {
         lang: e.getAttribute('lang'),
       })),
     );
-    expect(pills.length).toBe(2 + 2 + 3 + 4);
+    // hero (2), por qué ahora (2), pegatinas (3), chips (4) y la escena `agenda` de #agenda (2, plan 02-06).
+    expect(pills.length).toBe(2 + 2 + 3 + 4 + 2);
     for (const p of pills) {
       expect(WORDS).toContain(p.text);
       expect(p.word).toBe(p.text);
