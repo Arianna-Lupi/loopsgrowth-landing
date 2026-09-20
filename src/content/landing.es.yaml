@@ -333,6 +333,19 @@ es:
         role:
           text: "Director técnico"
           status: verified
+        link:
+          url:
+            text: "https://juan-tech.com"
+            status: verified
+            reason: "Enlace indicado por Juan Angulo el 2026-09-20; no viene del doc de Ari, que puede pedir quitarlo"
+          label:
+            text: "juan-tech.com"
+            status: verified
+            reason: "Texto visible del enlace, indicado por Juan Angulo el 2026-09-20"
+          hint:
+            text: "se abre en una pestaña nueva"
+            status: verified
+            reason: "Complemento solo para lectores de pantalla del enlace externo; Juan Angulo, 2026-09-20"
       - name:
           text: "Miguel Pacheco"
           status: pending

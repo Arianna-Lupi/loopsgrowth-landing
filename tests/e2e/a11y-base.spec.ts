@@ -16,12 +16,15 @@ const es = (parse(readFileSync('src/content/landing.es.yaml', 'utf8')) as {
     faq: { items: unknown[] };
     agenda: { intro: Claim };
     config: { form_url: string };
+    team: { members: { link?: { url: Claim } }[] };
   };
 }).es;
 const resolveText = (claim: Claim) =>
   claim.text.replaceAll('{term}', es.brand.term.text).replaceAll('{duration}', es.call.duration.text);
 
 const FORM_URL = es.config.form_url;
+// Enlace externo de la tarjeta de Juan (quick 260920-team-photos): una parada de Tab más, entre el CTA de Casos y el FAQ.
+const TEAM_LINK_URL = es.team.members.find((m) => m.link)!.link!.url.text;
 // Un resumen del FAQ por elemento del YAML (plan 02-06): cada uno es una parada de Tab antes del enlace de respaldo.
 const FAQ_COUNT = es.faq.items.length;
 const SUMMARIES = Array.from({ length: FAQ_COUNT }, () => 'summary');
@@ -85,11 +88,11 @@ async function tabUntilIframe(page: Page, max = 24): Promise<Stop[]> {
 test.describe('orden de tabulación y foco a 1280 px', () => {
   test.use({ viewport: { width: 1280, height: 800 } });
 
-  test('(a) el orden es skip 1, skip 2, CTA del header, CTA del hero, CTA de La solución, CTA de Casos, los resúmenes del FAQ, enlace de respaldo y el iframe', async ({ page }) => {
+  test('(a) el orden es skip 1, skip 2, CTA del header, CTA del hero, CTA de La solución, CTA de Casos, el enlace de Juan en Quiénes somos, los resúmenes del FAQ, enlace de respaldo y el iframe', async ({ page }) => {
     await page.goto('/');
     const stops = await tabUntilIframe(page);
     const order = stops.map((s) => (s.cta ? `cta:${s.cta}` : s.tag === 'SUMMARY' ? 'summary' : s.tag === 'IFRAME' ? 'iframe' : `a:${s.href}`));
-    expect(order).toEqual(['a:#main', 'a:#agenda', 'cta:header', 'cta:hero', 'cta:solucion', 'cta:casos', ...SUMMARIES, `a:${FORM_URL}`, 'iframe']);
+    expect(order).toEqual(['a:#main', 'a:#agenda', 'cta:header', 'cta:hero', 'cta:solucion', 'cta:casos', `a:${TEAM_LINK_URL}`, ...SUMMARIES, `a:${FORM_URL}`, 'iframe']);
   });
 
   test('(c) cada parada muestra un contorno sólido de 2 px o más', async ({ page }) => {
@@ -211,6 +214,7 @@ test.describe('orden de tabulación a 390 px', () => {
       'cta:hero',
       'cta:solucion',
       'cta:casos',
+      `a:${TEAM_LINK_URL}`,
       ...SUMMARIES,
       `a:${FORM_URL}`,
       'iframe',

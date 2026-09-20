@@ -195,7 +195,10 @@ test.describe('fotos en media tinta', () => {
     await page.goto('/');
     for (const p of CHOSEN) {
       const img = page.locator(`[data-photo-frame="${p.slot}"] img`);
-      await img.scrollIntoViewIfNeeded();
+      // `scrollIntoViewIfNeeded` de Playwright espera fotogramas (rAF) para comprobar que el elemento está quieto y, con
+      // JavaScript desactivado, ese chequeo se queda esperando de forma intermitente (más aún desde que la página trae los
+      // retratos de Quiénes somos). El desplazamiento se hace por evaluación directa: no cambia lo que la prueba mide.
+      await img.evaluate((el) => el.scrollIntoView({ block: 'center' }));
       await expect.poll(() => img.evaluate((el: HTMLImageElement) => el.complete && el.naturalWidth > 0)).toBe(true);
     }
     await context.close();

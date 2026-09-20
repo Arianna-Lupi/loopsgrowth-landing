@@ -51,13 +51,13 @@ test.describe('conexiones de fase', () => {
     });
   }
 
-  test('en / hay 1 collage del hero, 1 de #agenda y 4 avatares', async ({ page }) => {
+  test('en / hay 1 collage del hero, 1 de #agenda y 1 avatar (los otros 3 integrantes llevan foto)', async ({ page }) => {
     await page.goto('/');
     await expect(page.locator('[data-collage="hero"]')).toHaveCount(1);
     await expect(page.locator('div[data-collage="hero"]')).toHaveCount(1);
     await expect(page.locator('[data-collage="agenda"]')).toHaveCount(1);
     await expect(page.locator('#agenda div[data-collage="agenda"]')).toHaveCount(1);
-    await expect(page.locator('svg[data-collage="avatar"]')).toHaveCount(4);
+    await expect(page.locator('svg[data-collage="avatar"]')).toHaveCount(1);
   });
 
   test('en / hay 4 CTA a #agenda con el texto del YAML como nombre accesible', async ({ page }) => {
@@ -242,6 +242,8 @@ p { margin-bottom: 2em !important; }`,
         const clipped: string[] = [];
         for (const el of document.querySelectorAll('body *')) {
           if (el.closest('svg')) continue;
+          // Texto solo para lectores de pantalla (1 px recortado a propósito, técnica sr-only): no es texto que se recorte.
+          if (el.classList.contains('team-link-hint')) continue;
           const cs = getComputedStyle(el);
           const hides = (v: string) => v === 'hidden' || v === 'clip';
           const hiddenY = hides(cs.overflowY);

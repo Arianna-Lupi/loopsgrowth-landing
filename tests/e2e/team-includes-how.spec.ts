@@ -12,15 +12,19 @@ import { expectMotionWithinBudget, expectNoMotion } from './lib/motion';
 type Claim = { text: string; status: string };
 const es = (parse(readFileSync('src/content/landing.es.yaml', 'utf8')) as {
   es: {
-    team: { title: Claim; members: { name: Claim; role: Claim }[] };
+    team: { title: Claim; members: { name: Claim; role: Claim; link?: { url: Claim; label: Claim; hint: Claim } }[] };
     includes: { title: Claim; items: { title: Claim; description: Claim }[] };
     how_it_works: { title: Claim; steps: { title: Claim; description: Claim; timeframe: Claim }[] };
   };
 }).es;
 const norm = (s: string) => s.replace(/\s+/g, ' ').trim();
 
-// Variantes de avatar que fija 02-10 (la asignación por posición vive en `AVATARS` de Team.astro).
-const AVATAR_VARIANTS = ['ojo-morado', 'ojo-amarillo', 'ojos-morado', 'ojos-amarillo'];
+// Tarjetas con foto (por posición, `TEAM_PHOTOS` de team-photos.mjs) y con avatar Loopy: la variante del
+// avatar sale de `AVATARS` de Team.astro por la misma posición. Miguel Pacheco (3) no tiene foto.
+const PHOTO_IDS = ['arianna', 'veronica', 'juan'];
+const AVATAR_CARD = 3;
+const AVATAR_VARIANT = 'ojos-amarillo';
+const JUAN_CARD = 2;
 
 type Box = { x: number; y: number; width: number; height: number };
 const boxes = async (page: Page, sel: string): Promise<Box[]> =>
@@ -61,39 +65,36 @@ for (const viewport of [
       expect(names).toEqual(es.team.members.map((m) => norm(m.name.text)));
       const roles = (await section.locator('p.team-role').allTextContents()).map(norm);
       expect(roles).toEqual(es.team.members.map((m) => norm(m.role.text)));
-      // Sin biografía ni ningún otro párrafo (CONT-07).
-      await expect(section.locator('p')).toHaveCount(4);
+      // Sin biografía ni ningún otro párrafo (CONT-07): cuatro cargos y la fila del enlace de Juan.
+      await expect(section.locator('p')).toHaveCount(5);
+      await expect(section.locator('p:not(.team-role):not(.team-link-row)')).toHaveCount(0);
     });
 
-    test('ningún enlace, botón ni tabindex dentro de la sección', async ({ page }) => {
+    test('un solo enlace, el de Juan; ningún botón ni tabindex dentro de la sección', async ({ page }) => {
       await page.goto('/');
-      await expect(page.locator('#nosotros a, #nosotros button, #nosotros [tabindex]')).toHaveCount(0);
+      await expect(page.locator('#nosotros a')).toHaveCount(1);
+      await expect(page.locator('#nosotros li.team-card').nth(JUAN_CARD).locator('a')).toHaveCount(1);
+      await expect(page.locator('#nosotros button, #nosotros [tabindex]')).toHaveCount(0);
     });
 
-    test('cuatro avatares Loopy decorativos, distintos y del mismo tamaño', async ({ page }) => {
+    test('tres retratos y un avatar Loopy decorativo (Miguel), todos con la misma caja', async ({ page }) => {
       await page.goto('/');
       const cards = page.locator('#nosotros li.team-card');
       await expect(cards).toHaveCount(4);
       const avatars = page.locator('#nosotros svg[data-collage="avatar"]');
-      await expect(avatars).toHaveCount(4);
-      for (let i = 0; i < 4; i++) {
-        const svg = cards.nth(i).locator('svg[data-collage="avatar"]');
-        await expect(svg).toHaveCount(1);
-        await expect(svg).toHaveAttribute('aria-hidden', 'true');
-        await expect(svg).toHaveAttribute('focusable', 'false');
-        await expect(svg.locator('title')).toHaveCount(0);
-        await expect(svg.locator('text')).toHaveCount(0);
-        await expect(svg.locator('[data-pill]')).toHaveCount(0);
-      }
-      const variants = await avatars.evaluateAll((els) => els.map((el) => el.getAttribute('data-variant')));
-      expect([...variants].sort()).toEqual([...AVATAR_VARIANTS].sort());
-      expect(new Set(variants).size).toBe(4);
-      const bytes = await avatars.evaluateAll((els) =>
-        els.map((el) => new TextEncoder().encode(el.outerHTML).length),
-      );
-      for (const n of bytes) expect(n).toBeLessThanOrEqual(2560);
-      const widths = (await boxes(page, '#nosotros svg[data-collage="avatar"]')).map((b) => Math.round(b.width));
-      expect(new Set(widths).size).toBe(1);
+      await expect(avatars).toHaveCount(1);
+      const svg = cards.nth(AVATAR_CARD).locator('svg[data-collage="avatar"]');
+      await expect(svg).toHaveCount(1);
+      await expect(svg).toHaveAttribute('data-variant', AVATAR_VARIANT);
+      await expect(svg).toHaveAttribute('aria-hidden', 'true');
+      await expect(svg).toHaveAttribute('focusable', 'false');
+      await expect(svg.locator('title')).toHaveCount(0);
+      await expect(svg.locator('text')).toHaveCount(0);
+      await expect(svg.locator('[data-pill]')).toHaveCount(0);
+      expect(await svg.evaluate((el) => new TextEncoder().encode(el.outerHTML).length)).toBeLessThanOrEqual(2560);
+      await expect(cards.nth(AVATAR_CARD).locator('img')).toHaveCount(0);
+      const widths = (await boxes(page, '#nosotros .team-avatar')).map((b) => Math.round(b.width));
+      expect(widths).toEqual([widths[0], widths[0], widths[0], widths[0]]);
       expect(widths[0]).toBe(viewport.width >= 640 ? 120 : 96);
     });
 
@@ -394,7 +395,7 @@ test.describe('Lotes C y D: sin desborde y espaciado de texto a cinco anchos', (
       expect(scrollWidth).toBeLessThanOrEqual(clientWidth);
       const clipped = await page.evaluate(() => {
         const out: string[] = [];
-        const sel = '#nosotros h3, #nosotros .team-role, #incluye h3, #incluye .include-desc, #como-funciona h3, #como-funciona .step-desc, #como-funciona .step-time';
+        const sel = '#nosotros h3, #nosotros .team-role, #nosotros .team-link, #incluye h3, #incluye .include-desc, #como-funciona h3, #como-funciona .step-desc, #como-funciona .step-time';
         for (const el of document.querySelectorAll<HTMLElement>(sel)) {
           if (el.scrollHeight - el.clientHeight > 1) out.push(`${el.className || el.tagName}:${(el.textContent ?? '').trim().slice(0, 24)}`);
           if (el.scrollWidth - el.clientWidth > 1) out.push(`w:${el.className || el.tagName}`);
@@ -427,7 +428,7 @@ test.describe('Lotes C y D: contraste medido', () => {
         }
         return '#ffffff';
       };
-      const text = ['#nosotros h3', '#nosotros .team-role', '#incluye h3', '#incluye .include-desc', '#como-funciona h3', '#como-funciona .step-desc', '#como-funciona .step-time'];
+      const text = ['#nosotros h3', '#nosotros .team-role', '#nosotros .team-link', '#incluye h3', '#incluye .include-desc', '#como-funciona h3', '#como-funciona .step-desc', '#como-funciona .step-time'];
       const out: { what: string; fg: string; bg: string; kind: 'text' | 'border' }[] = [];
       for (const sel of text) {
         for (const el of document.querySelectorAll(sel)) {
@@ -487,11 +488,197 @@ test.describe('Lote C: tarjetas del equipo', () => {
       const after = await cards.first().evaluate((el) => getComputedStyle(el).transform);
       expect(after).toBe(before);
       expect(after === 'none' || after === before).toBe(true);
-      const widths = (await boxes(page, '#nosotros svg[data-collage="avatar"]')).map((b) => Math.round(b.width));
+      const widths = (await boxes(page, '#nosotros .team-avatar')).map((b) => Math.round(b.width));
       expect(new Set(widths).size).toBe(1);
       expect(widths[0]).toBe(vp.width >= 640 ? 120 : 96);
     });
   }
+});
+
+// ---------------------------------------------------------------------------------------------
+// Quick 260920-team-photos: retratos duotono, avatar de Miguel y enlace de Juan (excepción de Juan al
+// "sin enlaces" de UI-SPEC sección 7). Los textos y el href salen del YAML.
+// ---------------------------------------------------------------------------------------------
+const juanLink = es.team.members[JUAN_CARD].link!;
+
+test.describe('Quiénes somos: retratos y enlace de Juan', () => {
+  for (const vp of FIVE_WIDTHS) {
+    test(`retratos: img local decorativa con medidas, disco del tamaño del avatar y filas parejas a ${vp.width} px`, async ({ page }) => {
+      await page.setViewportSize(vp);
+      await page.goto('/');
+      const cards = page.locator('#nosotros li.team-card');
+      await cards.first().scrollIntoViewIfNeeded();
+      const imgs = page.locator('#nosotros img');
+      await expect(imgs).toHaveCount(3);
+      for (let i = 0; i < 3; i++) {
+        const img = cards.nth(i).locator('img');
+        await expect(img).toHaveCount(1);
+        await expect(img).toHaveAttribute('alt', '');
+        await expect(img).toHaveAttribute('width', '240');
+        await expect(img).toHaveAttribute('height', '240');
+        await expect(img).toHaveAttribute('loading', 'lazy');
+        await expect(img).toHaveAttribute('data-team-photo', PHOTO_IDS[i]);
+        expect(await img.getAttribute('src')).toMatch(/^\/_astro\/[^/]+\.webp$/);
+        await expect(cards.nth(i).locator('svg[data-collage="avatar"]')).toHaveCount(0);
+      }
+      // La foto termina de cargar y sale a 240x240 reales.
+      await expect.poll(() => imgs.evaluateAll((els) => els.every((el) => (el as HTMLImageElement).complete && (el as HTMLImageElement).naturalWidth === 240))).toBe(true);
+      // Disco de foto = disco del avatar Loopy: mismo diámetro, misma esquina superior izquierda dentro de la caja de 96 o 120 px.
+      const geo = await page.evaluate(() => {
+        const rel = (el: Element, box: Element) => {
+          const r = el.getBoundingClientRect();
+          const b = box.getBoundingClientRect();
+          return { d: r.width, h: r.height, x: r.left - b.left, y: r.top - b.top };
+        };
+        const cs = [...document.querySelectorAll('#nosotros li.team-card')];
+        const photo = rel(cs[0].querySelector('img')!, cs[0].querySelector('.team-avatar')!);
+        const loopy = rel(cs[3].querySelector('svg circle[class*="cw-f-"]')!, cs[3].querySelector('.team-avatar')!);
+        const radius = getComputedStyle(cs[0].querySelector('img')!).borderTopLeftRadius;
+        return { photo, loopy, radius };
+      });
+      expect(Math.abs(geo.photo.d - geo.photo.h)).toBeLessThanOrEqual(0.5);
+      expect(Math.abs(geo.photo.d - geo.loopy.d)).toBeLessThanOrEqual(1);
+      expect(Math.abs(geo.photo.x - geo.loopy.x)).toBeLessThanOrEqual(1);
+      expect(Math.abs(geo.photo.y - geo.loopy.y)).toBeLessThanOrEqual(1);
+      expect(geo.photo.d).toBeGreaterThanOrEqual(vp.width >= 640 ? 99 : 79);
+      expect(geo.radius).toBe('50%');
+      // Filas parejas: las tarjetas de una fila miden lo mismo y sus nombres y cargos arrancan a la misma altura.
+      const rows = await page.evaluate(() => {
+        const cs = [...document.querySelectorAll('#nosotros li.team-card')].map((c) => {
+          const top = (sel: string) => c.querySelector(sel)!.getBoundingClientRect().top;
+          const r = c.getBoundingClientRect();
+          return { top: Math.round(r.top), h: Math.round(r.height * 10) / 10, avatar: Math.round(top('.team-avatar')), name: Math.round(top('h3')), role: Math.round(top('.team-role')) };
+        });
+        const byRow = new Map<number, typeof cs>();
+        for (const c of cs) byRow.set(c.top, [...(byRow.get(c.top) ?? []), c]);
+        return [...byRow.values()];
+      });
+      const perRow = vp.width >= 1024 ? 4 : vp.width >= 640 ? 2 : 1;
+      expect(rows.length).toBe(4 / perRow);
+      for (const row of rows) {
+        expect(row.length).toBe(perRow);
+        for (const c of row) {
+          expect(c.h).toBe(row[0].h);
+          expect(c.avatar - c.top).toBe(row[0].avatar - row[0].top);
+          expect(c.name - c.top).toBe(row[0].name - row[0].top);
+        }
+        // En 4 columnas, con la reserva de dos líneas del nombre, los cargos también quedan alineados.
+        if (vp.width >= 1024) for (const c of row) expect(c.role - c.top).toBe(row[0].role - row[0].top);
+      }
+    });
+
+    test(`enlace de Juan: sin desborde y con objetivo táctil de 44 px a ${vp.width} px`, async ({ page }) => {
+      await page.setViewportSize(vp);
+      await page.goto('/');
+      const card = page.locator('#nosotros li.team-card').nth(JUAN_CARD);
+      const link = card.locator('a');
+      await link.scrollIntoViewIfNeeded();
+      const [c, l] = await Promise.all([card.boundingBox(), link.boundingBox()]);
+      expect(l!.x).toBeGreaterThanOrEqual(c!.x);
+      expect(l!.x + l!.width).toBeLessThanOrEqual(c!.x + c!.width + 0.5);
+      expect(l!.height).toBeGreaterThanOrEqual(44);
+      expect(l!.width).toBeGreaterThanOrEqual(44);
+      const { scrollWidth, clientWidth } = await page.evaluate(() => ({
+        scrollWidth: document.documentElement.scrollWidth,
+        clientWidth: document.documentElement.clientWidth,
+      }));
+      expect(scrollWidth).toBeLessThanOrEqual(clientWidth);
+    });
+  }
+
+  test('Miguel conserva el avatar Loopy y ninguna foto se inventa para él', async ({ page }) => {
+    await page.goto('/');
+    const card = page.locator('#nosotros li.team-card').nth(AVATAR_CARD);
+    await expect(card.locator('h3')).toHaveText(es.team.members[AVATAR_CARD].name.text);
+    await expect(card.locator('svg[data-collage="avatar"]')).toHaveAttribute('data-variant', AVATAR_VARIANT);
+    await expect(card.locator('img, a')).toHaveCount(0);
+  });
+
+  test('el enlace de Juan: href, texto, target y rel exactos; nombre accesible con el texto visible primero', async ({ page }) => {
+    await page.goto('/');
+    expect(juanLink.url.text).toBe('https://juan-tech.com');
+    expect(juanLink.label.text).toBe('juan-tech.com');
+    const link = page.locator('#nosotros li.team-card').nth(JUAN_CARD).locator('a');
+    await expect(link).toHaveCount(1);
+    await expect(link).toHaveAttribute('href', juanLink.url.text);
+    await expect(link).toHaveAttribute('target', '_blank');
+    await expect(link).toHaveAttribute('rel', 'noopener noreferrer');
+    await expect(link).not.toHaveAttribute('aria-label', /.*/);
+    await expect(link).not.toHaveAttribute('aria-labelledby', /.*/);
+    await expect(link).not.toHaveAttribute('download', /.*/);
+    // Texto visible = etiqueta; el complemento para lectores de pantalla mide 1 px y está recortado.
+    const visible = await link.evaluate((a) => {
+      const hint = a.querySelector('.team-link-hint') as HTMLElement;
+      const hb = hint.getBoundingClientRect();
+      const clone = a.cloneNode(true) as HTMLElement;
+      clone.querySelector('.team-link-hint')?.remove();
+      return { text: (clone.textContent ?? '').replace(/\s+/g, ' ').trim(), hint: hint.textContent, hw: hb.width, hh: hb.height };
+    });
+    expect(visible.text).toBe(juanLink.label.text);
+    expect(visible.hint).toBe(juanLink.hint.text);
+    expect(visible.hw).toBeLessThanOrEqual(1);
+    expect(visible.hh).toBeLessThanOrEqual(1);
+    // Nombre accesible: empieza por el texto visible (SC 2.5.3) y suma el complemento.
+    const named = page.getByRole('link', { name: `${juanLink.label.text} ${juanLink.hint.text}` });
+    await expect(named).toHaveCount(1);
+    await expect(page.getByRole('link', { name: juanLink.label.text })).toHaveCount(1);
+    // Icono decorativo.
+    await expect(link.locator('svg')).toHaveAttribute('aria-hidden', 'true');
+    // Subrayado permanente: no depende del color.
+    expect(await link.evaluate((a) => getComputedStyle(a).textDecorationLine)).toBe('underline');
+    // Sin lang propio: es un dominio, no un pasaje en otro idioma.
+    await expect(link).not.toHaveAttribute('lang', /.*/);
+  });
+
+  test('el enlace de Juan recibe el foco por teclado con anillo visible de 3 px de contraste 3:1', async ({ page }) => {
+    await page.goto('/');
+    const link = page.locator('#nosotros li.team-card').nth(JUAN_CARD).locator('a');
+    let reached = false;
+    for (let i = 0; i < 120 && !reached; i++) {
+      await page.keyboard.press('Tab');
+      reached = await link.evaluate((a) => a === document.activeElement);
+    }
+    expect(reached, 'el enlace es alcanzable con Tab').toBe(true);
+    const ring = await link.evaluate((a) => {
+      const c = getComputedStyle(a);
+      // Fondo efectivo: la superficie blanca de la tarjeta.
+      let bg = 'rgba(0, 0, 0, 0)';
+      for (let n: Element | null = a; n; n = n.parentElement) {
+        const b = getComputedStyle(n).backgroundColor;
+        if (!/rgba\(.*, 0\)$/.test(b) && b !== 'transparent') { bg = b; break; }
+      }
+      return { style: c.outlineStyle, width: c.outlineWidth, color: c.outlineColor, offset: c.outlineOffset, matches: a.matches(':focus-visible'), bg };
+    });
+    expect(ring.matches).toBe(true);
+    expect(ring.style).not.toBe('none');
+    expect(parseFloat(ring.width)).toBeGreaterThanOrEqual(2);
+    const hex = (c: string) => '#' + (/rgba?\(([^)]+)\)/.exec(c)![1].split(/[ ,/]+/).slice(0, 3).map((v) => Number(v).toString(16).padStart(2, '0')).join(''));
+    expect(contrastRatio(hex(ring.color), hex(ring.bg))).toBeGreaterThanOrEqual(3);
+    // El foco no queda tapado por la cabecera fija: el enlace está dentro de la ventana por debajo de ella.
+    const box = await link.boundingBox();
+    const header = await page.locator('header').first().boundingBox();
+    expect(box!.y).toBeGreaterThanOrEqual((header?.y ?? 0) + (header?.height ?? 0) - 1);
+  });
+
+  test('sin terceros: las fotos y todo lo de la sección salen del propio origen y no se precarga juan-tech.com', async ({ page, baseURL }) => {
+    const origin = new URL(baseURL ?? 'http://localhost:4322').origin;
+    const seen: { url: string; type: string }[] = [];
+    const sizes: number[] = [];
+    page.on('request', (r) => seen.push({ url: r.url(), type: r.resourceType() }));
+    page.on('response', async (r) => {
+      if (/\/_astro\/(arianna|veronica|juan)\.[^/]+\.webp$/.test(r.url())) sizes.push((await r.body()).length);
+    });
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto('/');
+    await page.locator('#nosotros li.team-card').first().scrollIntoViewIfNeeded();
+    await page.locator('#nosotros li.team-card').last().scrollIntoViewIfNeeded();
+    await expect.poll(() => sizes.length).toBe(3);
+    // Ninguna imagen viene de fuera del origen, y nadie pidió aprendoclub.com ni juan-tech.com.
+    for (const r of seen.filter((s) => s.type === 'image')) expect(r.url.startsWith(origin), r.url).toBe(true);
+    expect(seen.filter((s) => /aprendoclub\.com|juan-tech\.com/.test(s.url))).toEqual([]);
+    // Peso por foto: presupuesto de 12 KB (medido: unos 4 KB).
+    for (const n of sizes) expect(n).toBeLessThanOrEqual(12288);
+  });
 });
 
 test.describe('Lotes C y D: movimiento, peso y sin JavaScript', () => {
