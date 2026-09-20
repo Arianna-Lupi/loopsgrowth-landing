@@ -85,6 +85,15 @@ const landing = defineCollection({
       title: claim,
       members: z.array(z.strictObject({ name: claim, role: claim })).length(4),
     }),
+    // Seis entregables y cuatro fases exactos: las rejillas de 1, 2 y 3 columnas y la lista de fases dependen del conteo.
+    includes: z.strictObject({
+      title: claim,
+      items: z.array(z.strictObject({ title: claim, description: claim })).length(6),
+    }),
+    how_it_works: z.strictObject({
+      title: claim,
+      steps: z.array(z.strictObject({ title: claim, description: claim, timeframe: claim })).length(4),
+    }),
     agenda: z.strictObject({
       title: claim,
       intro: claim,

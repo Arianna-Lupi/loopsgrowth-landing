@@ -10,8 +10,12 @@ const doc = parse(readFileSync('src/content/landing.es.yaml', 'utf8'));
 const es = doc.es;
 
 // Secciones de este plan y cantidades del contrato (el esquema las impone con `.length()`).
-const SECTIONS = ['team'];
-const COUNTS = [['team.members', 4]];
+const SECTIONS = ['team', 'includes', 'how_it_works'];
+const COUNTS = [
+  ['team.members', 4],
+  ['includes.items', 6],
+  ['how_it_works.steps', 4],
+];
 
 const inSections = (path) => SECTIONS.some((s) => path === s || path.startsWith(`${s}.`) || path.startsWith(`${s}[`));
 const mine = walkClaims(doc).filter((n) => inSections(n.path));

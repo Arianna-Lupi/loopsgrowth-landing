@@ -341,6 +341,98 @@ es:
         role:
           text: "Especialista SEO"
           status: verified
+  includes:
+    title:
+      text: "Qué incluye"
+      status: verified
+    items:
+      - title:
+          text: "FALTA CONFIRMAR"
+          status: pending
+          confirm_by: Ari
+          reason: "Texto del Copy v2: 'Auditoría SEO + AEO completa'. La guarda rechaza AEO; Ari decide el término (SEO/GEO o AEO) y entrega el texto final"
+        description:
+          text: "para que sepas exactamente dónde ganar antes de gastar un peso."
+          status: verified
+      - title:
+          text: "Estrategia a 6-12 meses"
+          status: verified
+        description:
+          text: "para que sepas qué haremos, cuándo y cuándo esperar resultados."
+          status: verified
+      - title:
+          text: "Optimización técnica"
+          status: verified
+        description:
+          text: "(Core Web Vitals, velocidad, indexación, schema), para que Google y la IA puedan leerte y confiar en ti."
+          status: verified
+      - title:
+          text: "Contenido estratégico"
+          status: verified
+        description:
+          text: "para que rankees en Google y te citen los asistentes de IA con las mismas piezas."
+          status: verified
+      - title:
+          text: "Link building y autoridad"
+          status: verified
+        description:
+          text: "para que te tomen en serio como fuente confiable."
+          status: verified
+      - title:
+          text: "Reportes mensuales"
+          status: verified
+        description:
+          text: "para que veas el retorno en dinero, no en métricas de vanidad."
+          status: verified
+  how_it_works:
+    title:
+      text: "Cómo funciona"
+      status: verified
+    steps:
+      - title:
+          text: "Llamada de conocimiento"
+          status: verified
+        description:
+          text: "Entendemos tu negocio, tus metas y tu punto de partida. Vemos si somos buen match. Sin presión."
+          status: verified
+        timeframe:
+          text: "30 min"
+          status: pending
+          confirm_by: Ari
+          reason: "Plazo del Copy v2 (30 min); el embudo y el formulario hablan de 20 min (hallazgo 5 del UI-SPEC); Ari alinea con call.duration"
+      - title:
+          text: "Auditoría y propuesta"
+          status: verified
+        description:
+          text: "Análisis profundo, 10-20 oportunidades principales, plan claro e inversión concreta."
+          status: verified
+        timeframe:
+          text: "2 semanas"
+          status: pending
+          confirm_by: Ari
+          reason: "Plazo del Copy v2; los plazos de las cuatro fases quedan pending hasta que Ari confirme (CONTEXT)"
+      - title:
+          text: "Ejecución"
+          status: verified
+        description:
+          text: "Meses 1-3 fundaciones, meses 3-6 primer crecimiento, meses 6-12 tracción que se acumula."
+          status: verified
+        timeframe:
+          text: "6-12 meses"
+          status: pending
+          confirm_by: Ari
+          reason: "Plazo del Copy v2 (coincide con Estrategia a 6-12 meses de Qué incluye); Ari confirma (CONTEXT)"
+      - title:
+          text: "Sistema funcionando"
+          status: verified
+        description:
+          text: "El orgánico trae clientes solo; nosotros seguimos optimizando y escalando."
+          status: verified
+        timeframe:
+          text: "mes 12+"
+          status: pending
+          confirm_by: Ari
+          reason: "Plazo del Copy v2; los plazos de las cuatro fases quedan pending hasta que Ari confirme (CONTEXT)"
   agenda:
     title:
       text: "Agenda tu llamada"

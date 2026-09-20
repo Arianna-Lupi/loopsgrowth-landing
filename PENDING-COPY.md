@@ -34,4 +34,9 @@ Este archivo se genera con `npm run pending` desde `src/content/landing.es.yaml`
 | team.members[1].name | Verónica Romero | Consentimiento del integrante para publicar su nombre y cargo (STATE, Fase 2); Ari confirma | Ari |
 | team.members[2].name | Juan Angulo | Consentimiento del integrante para publicar su nombre y cargo (STATE, Fase 2); Ari confirma | Ari |
 | team.members[3].name | Miguel Pacheco | Consentimiento del integrante para publicar su nombre y cargo (STATE, Fase 2); Ari confirma | Ari |
+| includes.items[0].title | FALTA CONFIRMAR | Texto del Copy v2: 'Auditoría SEO + AEO completa'. La guarda rechaza AEO; Ari decide el término (SEO/GEO o AEO) y entrega el texto final | Ari |
+| how_it_works.steps[0].timeframe | 30 min | Plazo del Copy v2 (30 min); el embudo y el formulario hablan de 20 min (hallazgo 5 del UI-SPEC); Ari alinea con call.duration | Ari |
+| how_it_works.steps[1].timeframe | 2 semanas | Plazo del Copy v2; los plazos de las cuatro fases quedan pending hasta que Ari confirme (CONTEXT) | Ari |
+| how_it_works.steps[2].timeframe | 6-12 meses | Plazo del Copy v2 (coincide con Estrategia a 6-12 meses de Qué incluye); Ari confirma (CONTEXT) | Ari |
+| how_it_works.steps[3].timeframe | mes 12+ | Plazo del Copy v2; los plazos de las cuatro fases quedan pending hasta que Ari confirme (CONTEXT) | Ari |
 | agenda.intro | Agenda una llamada de {duration}. Sin costo y sin compromiso. Entendemos tu negocio y te decimos con honestidad si podemos ayudarte. Si no somos el equipo correcto, también te lo decimos. | Cuerpo del CTA final del Copy v2 de Ari; la duración sale de call.duration, que está pending | Ari |

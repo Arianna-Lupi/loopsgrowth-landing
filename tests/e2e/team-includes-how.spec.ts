@@ -9,6 +9,8 @@ type Claim = { text: string; status: string };
 const es = (parse(readFileSync('src/content/landing.es.yaml', 'utf8')) as {
   es: {
     team: { title: Claim; members: { name: Claim; role: Claim }[] };
+    includes: { title: Claim; items: { title: Claim; description: Claim }[] };
+    how_it_works: { title: Claim; steps: { title: Claim; description: Claim; timeframe: Claim }[] };
   };
 }).es;
 const norm = (s: string) => s.replace(/\s+/g, ' ').trim();
@@ -117,3 +119,217 @@ for (const viewport of [
     });
   });
 }
+
+// Columnas por ancho: distintas posiciones `left` (o `top`) entre los elementos de una lista.
+const distinct = (values: number[], tol = 1) => {
+  const out: number[] = [];
+  for (const v of [...values].sort((a, b) => a - b)) if (!out.length || v - out[out.length - 1] > tol) out.push(v);
+  return out;
+};
+
+const INCLUDE_COLS: [number, number][] = [
+  [320, 1],
+  [390, 1],
+  [768, 2],
+  [1024, 3],
+  [1280, 3],
+];
+
+for (const [width, cols] of INCLUDE_COLS) {
+  test.describe(`Qué incluye a ${width} px`, () => {
+    test.use({ viewport: { width, height: 800 } });
+
+    test(`seis entregables en ${cols} columna(s), sin scroll horizontal`, async ({ page }) => {
+      await page.goto('/');
+      const items = await boxes(page, '#incluye li.include-item');
+      expect(items).toHaveLength(6);
+      expect(distinct(items.map((b) => b.x)).length).toBe(cols);
+      const { scrollWidth, clientWidth } = await page.evaluate(() => ({
+        scrollWidth: document.documentElement.scrollWidth,
+        clientWidth: document.documentElement.clientWidth,
+      }));
+      expect(scrollWidth).toBeLessThanOrEqual(clientWidth);
+    });
+  });
+}
+
+test.describe('Qué incluye (estructura)', () => {
+  test.use({ viewport: { width: 1280, height: 800 } });
+
+  test('tono, h2 del YAML y seis li en lista con h3 y descripción del YAML en orden', async ({ page }) => {
+    await page.goto('/');
+    const section = page.locator('main > section#incluye');
+    await expect(section).toHaveCount(1);
+    await expect(section).toHaveAttribute('data-tone', 'light');
+    const labelledby = await section.getAttribute('aria-labelledby');
+    const h2 = section.locator('h2');
+    await expect(h2).toHaveCount(1);
+    await expect(h2).toHaveAttribute('id', labelledby ?? '');
+    expect(norm((await h2.textContent()) ?? '')).toBe(norm(es.includes.title.text));
+    const list = section.locator('ul');
+    await expect(list).toHaveCount(1);
+    await expect(list).toHaveAttribute('role', 'list');
+    await expect(list.locator('> li.include-item')).toHaveCount(6);
+    const titles = (await section.locator('h3').allTextContents()).map(norm);
+    expect(titles).toEqual(es.includes.items.map((it) => norm(it.title.text)));
+    const descs = (await section.locator('p.include-desc').allTextContents()).map(norm);
+    expect(descs).toEqual(es.includes.items.map((it) => norm(it.description.text)));
+  });
+
+  test('el primer entregable muestra FALTA CONFIRMAR y el texto con AEO no llega a la página', async ({ page }) => {
+    await page.goto('/');
+    expect(es.includes.items[0].title.text).toBe('FALTA CONFIRMAR');
+    await expect(page.locator('#incluye h3').first()).toHaveText('FALTA CONFIRMAR');
+    const html = await page.content();
+    expect(html).not.toContain('Auditoría SEO + AEO completa');
+  });
+
+  test('un check SVG decorativo por entregable y ningún control interactivo', async ({ page }) => {
+    await page.goto('/');
+    const checks = page.locator('#incluye .include-check');
+    await expect(checks).toHaveCount(6);
+    await expect(page.locator('#incluye .include-check svg[aria-hidden="true"][focusable="false"]')).toHaveCount(6);
+    await expect(page.locator('#incluye a, #incluye button, #incluye [tabindex]')).toHaveCount(0);
+  });
+
+  test('estilos calculados: borde superior oscuro de 3 px, sin sombra ni puntero; disco amarillo de 32 px', async ({
+    page,
+  }) => {
+    await page.goto('/');
+    const item = page.locator('#incluye li.include-item').first();
+    const s = await item.evaluate((el) => {
+      const c = getComputedStyle(el);
+      return {
+        w: c.borderTopWidth,
+        style: c.borderTopStyle,
+        color: c.borderTopColor,
+        shadow: c.boxShadow,
+        cursor: c.cursor,
+      };
+    });
+    expect(s.w).toBe('3px');
+    expect(s.style).toBe('solid');
+    expect(s.color).toBe('rgb(33, 33, 33)');
+    expect(s.shadow).toBe('none');
+    expect(s.cursor).not.toBe('pointer');
+    const check = page.locator('#incluye .include-check').first();
+    const box = await check.boundingBox();
+    expect(Math.abs((box?.width ?? 0) - 32)).toBeLessThanOrEqual(0.5);
+    expect(Math.abs((box?.height ?? 0) - 32)).toBeLessThanOrEqual(0.5);
+    expect(await check.evaluate((el) => getComputedStyle(el).backgroundColor)).toBe('rgb(255, 198, 2)');
+  });
+});
+
+for (const width of [320, 390, 768, 1024, 1280]) {
+  test.describe(`Cómo funciona a ${width} px`, () => {
+    test.use({ viewport: { width, height: 800 } });
+
+    test('cuatro fases: en columna hasta 1023 px y en cuatro columnas con el mismo top desde 1024 px', async ({
+      page,
+    }) => {
+      await page.goto('/');
+      const steps = await boxes(page, '#como-funciona li.step');
+      expect(steps).toHaveLength(4);
+      for (const b of steps) expect(b.x + b.width).toBeLessThanOrEqual(width + 0.5);
+      if (width >= 1024) {
+        const tops = steps.map((b) => b.y);
+        expect(Math.max(...tops) - Math.min(...tops)).toBeLessThanOrEqual(1);
+        const lefts = steps.map((b) => b.x);
+        for (let i = 1; i < 4; i++) expect(lefts[i]).toBeGreaterThan(lefts[i - 1]);
+      } else {
+        const lefts = steps.map((b) => b.x);
+        expect(Math.max(...lefts) - Math.min(...lefts)).toBeLessThanOrEqual(1);
+        const tops = steps.map((b) => b.y);
+        for (let i = 1; i < 4; i++) expect(tops[i]).toBeGreaterThan(tops[i - 1]);
+      }
+      const { scrollWidth, clientWidth } = await page.evaluate(() => ({
+        scrollWidth: document.documentElement.scrollWidth,
+        clientWidth: document.documentElement.clientWidth,
+      }));
+      expect(scrollWidth).toBeLessThanOrEqual(clientWidth);
+    });
+
+    test('conector discontinuo naranja de 3 px, vertical bajo 1024 px y horizontal desde 1024 px', async ({ page }) => {
+      await page.goto('/');
+      const steps = page.locator('#como-funciona li.step');
+      const first = await steps.first().evaluate((el) => {
+        const c = getComputedStyle(el, '::after');
+        return {
+          leftStyle: c.borderLeftStyle,
+          leftW: c.borderLeftWidth,
+          leftColor: c.borderLeftColor,
+          topStyle: c.borderTopStyle,
+          topW: c.borderTopWidth,
+          topColor: c.borderTopColor,
+        };
+      });
+      if (width >= 1024) {
+        expect(first.topStyle).toBe('dashed');
+        expect(first.topW).toBe('3px');
+        expect(first.topColor).toBe('rgb(253, 105, 56)');
+      } else {
+        expect(first.leftStyle).toBe('dashed');
+        expect(first.leftW).toBe('3px');
+        expect(first.leftColor).toBe('rgb(253, 105, 56)');
+      }
+      const last = await steps.last().evaluate((el) => getComputedStyle(el, '::after').content);
+      expect(last).toBe('none');
+    });
+  });
+}
+
+test.describe('Cómo funciona (estructura)', () => {
+  test.use({ viewport: { width: 1280, height: 800 } });
+
+  test('tono dark, h2 del YAML y ol de cuatro fases con h3, descripción y plazo del YAML en orden', async ({ page }) => {
+    await page.goto('/');
+    const section = page.locator('main > section#como-funciona');
+    await expect(section).toHaveCount(1);
+    await expect(section).toHaveAttribute('data-tone', 'dark');
+    const labelledby = await section.getAttribute('aria-labelledby');
+    const h2 = section.locator('h2');
+    await expect(h2).toHaveCount(1);
+    await expect(h2).toHaveAttribute('id', labelledby ?? '');
+    expect(norm((await h2.textContent()) ?? '')).toBe(norm(es.how_it_works.title.text));
+    const list = section.locator('ol');
+    await expect(list).toHaveCount(1);
+    await expect(list).toHaveAttribute('role', 'list');
+    await expect(list.locator('> li.step')).toHaveCount(4);
+    const h3 = (await section.locator('h3').allTextContents()).map(norm);
+    expect(h3).toEqual(es.how_it_works.steps.map((s) => norm(s.title.text)));
+    const desc = (await section.locator('p.step-desc').allTextContents()).map(norm);
+    expect(desc).toEqual(es.how_it_works.steps.map((s) => norm(s.description.text)));
+    const time = (await section.locator('p.step-time').allTextContents()).map(norm);
+    expect(time).toEqual(es.how_it_works.steps.map((s) => norm(s.timeframe.text)));
+    await expect(page.locator('#como-funciona a, #como-funciona button, #como-funciona [tabindex]')).toHaveCount(0);
+  });
+
+  test('disco numerado de 48 px amarillo con número oscuro y chip de plazo amarillo', async ({ page }) => {
+    await page.goto('/');
+    const step = page.locator('#como-funciona li.step').first();
+    const disc = await step.evaluate((el) => {
+      const c = getComputedStyle(el, '::before');
+      return { w: c.width, h: c.height, bg: c.backgroundColor, color: c.color, content: c.content };
+    });
+    expect(disc.w).toBe('48px');
+    expect(disc.h).toBe('48px');
+    expect(disc.bg).toBe('rgb(255, 198, 2)');
+    expect(disc.color).toBe('rgb(33, 33, 33)');
+    expect(disc.content).toMatch(/counter\(|"\d"/);
+    const chip = await page.locator('#como-funciona p.step-time').first().evaluate((el) => {
+      const c = getComputedStyle(el);
+      return {
+        color: c.color,
+        borderW: c.borderTopWidth,
+        maxW: c.maxWidth,
+        wrap: c.overflowWrap,
+        minH: parseFloat(c.minHeight),
+      };
+    });
+    expect(chip.color).toBe('rgb(255, 198, 2)');
+    expect(chip.borderW).toBe('3px');
+    expect(chip.maxW).toBe('100%');
+    expect(chip.wrap).toBe('anywhere');
+    expect(chip.minH).toBeGreaterThanOrEqual(32);
+  });
+});

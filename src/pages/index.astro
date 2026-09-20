@@ -7,6 +7,8 @@ import Solution from '../components/sections/Solution.astro';
 import Results from '../components/sections/Results.astro';
 import Cases from '../components/sections/Cases.astro';
 import Team from '../components/sections/Team.astro';
+import Includes from '../components/sections/Includes.astro';
+import HowItWorks from '../components/sections/HowItWorks.astro';
 import AgendaSection from '../components/AgendaSection.astro';
 import { getLanding, fill, textVars } from '../lib/content';
 
@@ -26,5 +28,7 @@ const title = fill(data.meta.title_template, textVars(data), 'meta.title_templat
   <Results />
   <Cases />
   <Team />
+  <Includes />
+  <HowItWorks />
   <AgendaSection />
 </BaseLayout>
