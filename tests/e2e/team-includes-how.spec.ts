@@ -1,5 +1,6 @@
 import { test, expect, type Page } from '@playwright/test';
 import { readFileSync } from 'node:fs';
+import { gzipSync } from 'node:zlib';
 import { parse } from 'yaml';
 import { contrastRatio } from '../../scripts/lib/contrast.mjs';
 
@@ -522,8 +523,11 @@ test.describe('Lotes C y D: movimiento, peso y sin JavaScript', () => {
       SECTION_IDS,
     );
     expect(chars).toBeLessThanOrEqual(20480);
+    // Tope de HTML (plan 02-06, autorizado por el orquestador): 81920 bytes crudos y, como condición dura, 25600 bytes con gzip -9. El tope anterior de 61440 crudos era un presupuesto propio sin comprimir; el contenido de Ari no se recorta para caber en él.
     const res = await page.request.get('/');
-    expect((await res.body()).length).toBeLessThan(61440);
+    const body = await res.body();
+    expect(body.length).toBeLessThan(81920);
+    expect(gzipSync(body, { level: 9 }).length).toBeLessThan(25600);
   });
 
   test.describe('(7) sin JavaScript', () => {

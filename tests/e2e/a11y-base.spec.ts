@@ -13,6 +13,7 @@ const es = (parse(readFileSync('src/content/landing.es.yaml', 'utf8')) as {
     brand: { term: Claim };
     call: { duration: Claim };
     hero: { h1: Claim; subtitle: Claim };
+    faq: { items: unknown[] };
     agenda: { intro: Claim };
     config: { form_url: string };
   };
@@ -21,6 +22,9 @@ const resolveText = (claim: Claim) =>
   claim.text.replaceAll('{term}', es.brand.term.text).replaceAll('{duration}', es.call.duration.text);
 
 const FORM_URL = es.config.form_url;
+// Un resumen del FAQ por elemento del YAML (plan 02-06): cada uno es una parada de Tab antes del enlace de respaldo.
+const FAQ_COUNT = es.faq.items.length;
+const SUMMARIES = Array.from({ length: FAQ_COUNT }, () => 'summary');
 
 // Marcas de dato faltante que la página debe mostrar en `/`: una por reclamación del YAML cuyo texto es
 // la marca, sin contar `privacy.` (el cuerpo de la política vive en /privacidad). Se deriva del YAML: se
@@ -67,7 +71,7 @@ async function activeStop(page: Page): Promise<Stop> {
 }
 
 /** Tab repetido hasta llegar al iframe (o a un máximo de paradas). */
-async function tabUntilIframe(page: Page, max = 12): Promise<Stop[]> {
+async function tabUntilIframe(page: Page, max = 24): Promise<Stop[]> {
   const stops: Stop[] = [];
   for (let i = 0; i < max; i++) {
     await page.keyboard.press('Tab');
@@ -81,11 +85,11 @@ async function tabUntilIframe(page: Page, max = 12): Promise<Stop[]> {
 test.describe('orden de tabulación y foco a 1280 px', () => {
   test.use({ viewport: { width: 1280, height: 800 } });
 
-  test('(a) el orden es skip 1, skip 2, CTA del header, CTA del hero, CTA de La solución, enlace de respaldo y el iframe', async ({ page }) => {
+  test('(a) el orden es skip 1, skip 2, CTA del header, CTA del hero, CTA de La solución, CTA de Casos, los resúmenes del FAQ, enlace de respaldo y el iframe', async ({ page }) => {
     await page.goto('/');
     const stops = await tabUntilIframe(page);
-    const order = stops.map((s) => (s.cta ? `cta:${s.cta}` : s.tag === 'IFRAME' ? 'iframe' : `a:${s.href}`));
-    expect(order).toEqual(['a:#main', 'a:#agenda', 'cta:header', 'cta:hero', 'cta:solucion', 'cta:casos', `a:${FORM_URL}`, 'iframe']);
+    const order = stops.map((s) => (s.cta ? `cta:${s.cta}` : s.tag === 'SUMMARY' ? 'summary' : s.tag === 'IFRAME' ? 'iframe' : `a:${s.href}`));
+    expect(order).toEqual(['a:#main', 'a:#agenda', 'cta:header', 'cta:hero', 'cta:solucion', 'cta:casos', ...SUMMARIES, `a:${FORM_URL}`, 'iframe']);
   });
 
   test('(c) cada parada muestra un contorno sólido de 2 px o más', async ({ page }) => {
@@ -202,12 +206,13 @@ test.describe('orden de tabulación a 390 px', () => {
     await expect(page.locator('a[data-cta="header"]')).toBeHidden();
     const stops = await tabUntilIframe(page);
     expect(stops.some((s) => s.cta === 'header')).toBe(false);
-    expect(stops.map((s) => (s.cta ? `cta:${s.cta}` : s.tag === 'IFRAME' ? 'iframe' : `a:${s.href}`))).toEqual([
+    expect(stops.map((s) => (s.cta ? `cta:${s.cta}` : s.tag === 'SUMMARY' ? 'summary' : s.tag === 'IFRAME' ? 'iframe' : `a:${s.href}`))).toEqual([
       'a:#main',
       'a:#agenda',
       'cta:hero',
       'cta:solucion',
       'cta:casos',
+      ...SUMMARIES,
       `a:${FORM_URL}`,
       'iframe',
     ]);

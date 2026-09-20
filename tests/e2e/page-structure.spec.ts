@@ -1,5 +1,6 @@
 import { test, expect, type Page } from '@playwright/test';
 import { readFileSync } from 'node:fs';
+import { gzipSync } from 'node:zlib';
 import { parse } from 'yaml';
 import { PURPLE_RGB } from './lib/brand';
 
@@ -314,11 +315,13 @@ test.describe('collage del hero', () => {
   });
 });
 
-test('el HTML de / pesa menos de 60 KB sin comprimir', async ({ page }) => {
+test('el HTML de / pesa menos de 80 KB sin comprimir y 25 KB con gzip', async ({ page }) => {
+  // Tope de HTML (plan 02-06, autorizado por el orquestador): 81920 bytes crudos y, como condición dura, 25600 bytes con gzip -9. El tope anterior de 61440 crudos era un presupuesto propio sin comprimir; el contenido de Ari no se recorta para caber en él.
   const res = await page.request.get('/');
   expect(res.ok()).toBe(true);
   const body = await res.body();
-  expect(body.length).toBeLessThan(60 * 1024);
+  expect(body.length).toBeLessThan(80 * 1024);
+  expect(gzipSync(body, { level: 9 }).length).toBeLessThan(25 * 1024);
 });
 
 for (const mode of ['reduce', 'no-preference'] as const) {

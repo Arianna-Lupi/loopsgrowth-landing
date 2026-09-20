@@ -94,6 +94,18 @@ const landing = defineCollection({
       title: claim,
       steps: z.array(z.strictObject({ title: claim, description: claim, timeframe: claim })).length(4),
     }),
+    // Para quién es (plan 02-06): dos columnas de al menos una afirmación. El doc de Ari no trae la sección: los
+    // textos salen pending. La guarda INVERSION (scripts/lib/copy-rules.mjs) vigila las cifras de inversión.
+    for_whom: z.strictObject({
+      title: claim,
+      is_for: z.strictObject({ title: claim, items: z.array(claim).min(1) }),
+      is_not_for: z.strictObject({ title: claim, items: z.array(claim).min(1) }),
+    }),
+    // FAQ (plan 02-06): de 5 a 6 preguntas con su respuesta, en `<details>` nativos.
+    faq: z.strictObject({
+      title: claim,
+      items: z.array(z.strictObject({ question: claim, answer: claim })).min(5).max(6),
+    }),
     agenda: z.strictObject({
       title: claim,
       intro: claim,

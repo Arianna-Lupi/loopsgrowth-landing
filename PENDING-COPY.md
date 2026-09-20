@@ -39,5 +39,27 @@ Este archivo se genera con `npm run pending` desde `src/content/landing.es.yaml`
 | how_it_works.steps[1].timeframe | 2 semanas | Plazo del Copy v2; los plazos de las cuatro fases quedan pending hasta que Ari confirme (CONTEXT) | Ari |
 | how_it_works.steps[2].timeframe | 6-12 meses | Plazo del Copy v2 (coincide con Estrategia a 6-12 meses de Qué incluye); Ari confirma (CONTEXT) | Ari |
 | how_it_works.steps[3].timeframe | mes 12+ | Plazo del Copy v2; los plazos de las cuatro fases quedan pending hasta que Ari confirme (CONTEXT) | Ari |
+| for_whom.title | FALTA CONFIRMAR | Título de la sección Para quién es; el doc de Ari no trae esta sección y Ari entrega el título | Ari |
+| for_whom.is_for.title | Para quién es | Nombre tomado de CONTEXT; el doc de Ari no trae esta sección | Ari |
+| for_whom.is_for.items[0] | FALTA CONFIRMAR | Primer ítem de la columna 'es': debe comunicar el perfil de empresa que factura USD 200k o más al año; Ari entrega el texto; no publicar rangos ni cifras de inversión sin aprobación | Ari |
+| for_whom.is_for.items[1] | FALTA CONFIRMAR | Ítem 2 de la columna 'es' de Para quién es; el doc de Ari no trae esta sección, Ari entrega el texto; no publicar rangos ni cifras de inversión sin aprobación | Ari |
+| for_whom.is_for.items[2] | FALTA CONFIRMAR | Ítem 3 de la columna 'es' de Para quién es; el doc de Ari no trae esta sección, Ari entrega el texto; no publicar rangos ni cifras de inversión sin aprobación | Ari |
+| for_whom.is_not_for.title | Para quién no es | Nombre tomado de CONTEXT; el doc de Ari no trae esta sección | Ari |
+| for_whom.is_not_for.items[0] | FALTA CONFIRMAR | Ítem 1 de la columna 'no es' de Para quién es; el doc de Ari no trae esta sección, Ari entrega el texto; no publicar rangos ni cifras de inversión sin aprobación | Ari |
+| for_whom.is_not_for.items[1] | FALTA CONFIRMAR | Ítem 2 de la columna 'no es' de Para quién es; el doc de Ari no trae esta sección, Ari entrega el texto; no publicar rangos ni cifras de inversión sin aprobación | Ari |
+| for_whom.is_not_for.items[2] | FALTA CONFIRMAR | Ítem 3 de la columna 'no es' de Para quién es; el doc de Ari no trae esta sección, Ari entrega el texto; no publicar rangos ni cifras de inversión sin aprobación | Ari |
+| faq.title | FALTA CONFIRMAR | Título del FAQ; el doc de Ari no trae esta sección y Ari entrega el título | Ari |
+| faq.items[0].question | FALTA CONFIRMAR | Pregunta 1 del FAQ, tema: qué es GEO; el doc de Ari no trae esta sección y Ari entrega el texto | Ari |
+| faq.items[0].answer | FALTA CONFIRMAR | Respuesta 1 del FAQ, tema: qué es GEO; Ari entrega el texto | Ari |
+| faq.items[1].question | FALTA CONFIRMAR | Pregunta 2 del FAQ, tema: duración de la llamada; el doc de Ari no trae esta sección y Ari entrega el texto | Ari |
+| faq.items[1].answer | FALTA CONFIRMAR | Respuesta 2 del FAQ, tema: duración de la llamada; Ari entrega el texto | Ari |
+| faq.items[2].question | FALTA CONFIRMAR | Pregunta 3 del FAQ, tema: qué preparar para la llamada; el doc de Ari no trae esta sección y Ari entrega el texto | Ari |
+| faq.items[2].answer | FALTA CONFIRMAR | Respuesta 3 del FAQ, tema: qué preparar para la llamada; Ari entrega el texto | Ari |
+| faq.items[3].question | FALTA CONFIRMAR | Pregunta 4 del FAQ, tema: inversión; el doc de Ari no trae esta sección y Ari entrega el texto | Ari |
+| faq.items[3].answer | FALTA CONFIRMAR | Respuesta 4 del FAQ, tema: inversión; Ari entrega el texto; no publicar rangos ni cifras de inversión sin aprobación | Ari |
+| faq.items[4].question | FALTA CONFIRMAR | Pregunta 5 del FAQ, tema: tiempos de resultados; el doc de Ari no trae esta sección y Ari entrega el texto | Ari |
+| faq.items[4].answer | FALTA CONFIRMAR | Respuesta 5 del FAQ, tema: tiempos de resultados; Ari entrega el texto | Ari |
+| faq.items[5].question | FALTA CONFIRMAR | Pregunta 6 del FAQ, tema: si aplica a mi negocio; el doc de Ari no trae esta sección y Ari entrega el texto | Ari |
+| faq.items[5].answer | FALTA CONFIRMAR | Respuesta 6 del FAQ, tema: si aplica a mi negocio; Ari entrega el texto | Ari |
 | agenda.intro | Agenda una llamada de {duration}. Sin costo y sin compromiso. Entendemos tu negocio y te decimos con honestidad si podemos ayudarte. Si no somos el equipo correcto, también te lo decimos. | Cuerpo del CTA final del Copy v2 de Ari; la duración sale de call.duration, que está pending | Ari |
 | privacy.body[0] | FALTA CONFIRMAR | El doc de Ari no trae la política de privacidad; Ari entrega el texto legal | Ari |

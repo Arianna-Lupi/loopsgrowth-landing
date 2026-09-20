@@ -433,6 +433,117 @@ es:
           status: pending
           confirm_by: Ari
           reason: "Plazo del Copy v2; los plazos de las cuatro fases quedan pending hasta que Ari confirme (CONTEXT)"
+  for_whom:
+    title:
+      text: "FALTA CONFIRMAR"
+      status: pending
+      confirm_by: Ari
+      reason: "Título de la sección Para quién es; el doc de Ari no trae esta sección y Ari entrega el título"
+    is_for:
+      title:
+        text: "Para quién es"
+        status: pending
+        confirm_by: Ari
+        reason: "Nombre tomado de CONTEXT; el doc de Ari no trae esta sección"
+      items:
+        - text: "FALTA CONFIRMAR"
+          status: pending
+          confirm_by: Ari
+          reason: "Primer ítem de la columna 'es': debe comunicar el perfil de empresa que factura USD 200k o más al año; Ari entrega el texto; no publicar rangos ni cifras de inversión sin aprobación"
+        - text: "FALTA CONFIRMAR"
+          status: pending
+          confirm_by: Ari
+          reason: "Ítem 2 de la columna 'es' de Para quién es; el doc de Ari no trae esta sección, Ari entrega el texto; no publicar rangos ni cifras de inversión sin aprobación"
+        - text: "FALTA CONFIRMAR"
+          status: pending
+          confirm_by: Ari
+          reason: "Ítem 3 de la columna 'es' de Para quién es; el doc de Ari no trae esta sección, Ari entrega el texto; no publicar rangos ni cifras de inversión sin aprobación"
+    is_not_for:
+      title:
+        text: "Para quién no es"
+        status: pending
+        confirm_by: Ari
+        reason: "Nombre tomado de CONTEXT; el doc de Ari no trae esta sección"
+      items:
+        - text: "FALTA CONFIRMAR"
+          status: pending
+          confirm_by: Ari
+          reason: "Ítem 1 de la columna 'no es' de Para quién es; el doc de Ari no trae esta sección, Ari entrega el texto; no publicar rangos ni cifras de inversión sin aprobación"
+        - text: "FALTA CONFIRMAR"
+          status: pending
+          confirm_by: Ari
+          reason: "Ítem 2 de la columna 'no es' de Para quién es; el doc de Ari no trae esta sección, Ari entrega el texto; no publicar rangos ni cifras de inversión sin aprobación"
+        - text: "FALTA CONFIRMAR"
+          status: pending
+          confirm_by: Ari
+          reason: "Ítem 3 de la columna 'no es' de Para quién es; el doc de Ari no trae esta sección, Ari entrega el texto; no publicar rangos ni cifras de inversión sin aprobación"
+  faq:
+    title:
+      text: "FALTA CONFIRMAR"
+      status: pending
+      confirm_by: Ari
+      reason: "Título del FAQ; el doc de Ari no trae esta sección y Ari entrega el título"
+    items:
+      - question:
+          text: "FALTA CONFIRMAR"
+          status: pending
+          confirm_by: Ari
+          reason: "Pregunta 1 del FAQ, tema: qué es GEO; el doc de Ari no trae esta sección y Ari entrega el texto"
+        answer:
+          text: "FALTA CONFIRMAR"
+          status: pending
+          confirm_by: Ari
+          reason: "Respuesta 1 del FAQ, tema: qué es GEO; Ari entrega el texto"
+      - question:
+          text: "FALTA CONFIRMAR"
+          status: pending
+          confirm_by: Ari
+          reason: "Pregunta 2 del FAQ, tema: duración de la llamada; el doc de Ari no trae esta sección y Ari entrega el texto"
+        answer:
+          text: "FALTA CONFIRMAR"
+          status: pending
+          confirm_by: Ari
+          reason: "Respuesta 2 del FAQ, tema: duración de la llamada; Ari entrega el texto"
+      - question:
+          text: "FALTA CONFIRMAR"
+          status: pending
+          confirm_by: Ari
+          reason: "Pregunta 3 del FAQ, tema: qué preparar para la llamada; el doc de Ari no trae esta sección y Ari entrega el texto"
+        answer:
+          text: "FALTA CONFIRMAR"
+          status: pending
+          confirm_by: Ari
+          reason: "Respuesta 3 del FAQ, tema: qué preparar para la llamada; Ari entrega el texto"
+      - question:
+          text: "FALTA CONFIRMAR"
+          status: pending
+          confirm_by: Ari
+          reason: "Pregunta 4 del FAQ, tema: inversión; el doc de Ari no trae esta sección y Ari entrega el texto"
+        answer:
+          text: "FALTA CONFIRMAR"
+          status: pending
+          confirm_by: Ari
+          reason: "Respuesta 4 del FAQ, tema: inversión; Ari entrega el texto; no publicar rangos ni cifras de inversión sin aprobación"
+      - question:
+          text: "FALTA CONFIRMAR"
+          status: pending
+          confirm_by: Ari
+          reason: "Pregunta 5 del FAQ, tema: tiempos de resultados; el doc de Ari no trae esta sección y Ari entrega el texto"
+        answer:
+          text: "FALTA CONFIRMAR"
+          status: pending
+          confirm_by: Ari
+          reason: "Respuesta 5 del FAQ, tema: tiempos de resultados; Ari entrega el texto"
+      - question:
+          text: "FALTA CONFIRMAR"
+          status: pending
+          confirm_by: Ari
+          reason: "Pregunta 6 del FAQ, tema: si aplica a mi negocio; el doc de Ari no trae esta sección y Ari entrega el texto"
+        answer:
+          text: "FALTA CONFIRMAR"
+          status: pending
+          confirm_by: Ari
+          reason: "Respuesta 6 del FAQ, tema: si aplica a mi negocio; Ari entrega el texto"
   agenda:
     title:
       text: "Agenda tu llamada"
