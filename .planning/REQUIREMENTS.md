@@ -34,10 +34,10 @@ Requisitos para la primera entrega. Cada uno se asigna a una fase del roadmap.
 - [x] **CONT-07**: El visitante ve "Quiénes somos" con los 4 integrantes (Arianna, Verónica, Juan, Miguel), nombre, cargo y avatar ilustrado.
 - [x] **CONT-08**: El visitante ve "Qué incluye" con los seis entregables del Copy v2.
 - [x] **CONT-09**: El visitante ve "Cómo funciona" con las 4 fases y sus plazos.
-- [ ] **CONT-10**: El visitante ve un bloque "Para quién es / para quién no es" que comunica el perfil de cliente de USD 200k o más al año.
-- [ ] **CONT-11**: El visitante puede abrir un FAQ de 5 a 6 preguntas hecho con `<details>` nativo.
-- [ ] **CONT-12**: El visitante ve un footer mínimo con contacto, redes y enlace a política de privacidad.
-- [ ] **CONT-13**: El visitante ve la sección CTA final ("¿Listo para que te encuentren cuando te estén buscando?") junto al formulario.
+- [x] **CONT-10**: El visitante ve un bloque "Para quién es / para quién no es" que comunica el perfil de cliente de USD 200k o más al año.
+- [x] **CONT-11**: El visitante puede abrir un FAQ de 5 a 6 preguntas hecho con `<details>` nativo.
+- [x] **CONT-12**: El visitante ve un footer mínimo con contacto, redes y enlace a política de privacidad.
+- [x] **CONT-13**: El visitante ve la sección CTA final ("¿Listo para que te encuentren cuando te estén buscando?") junto al formulario.
 
 ### Copy
 
@@ -140,10 +140,10 @@ Qué fase cubre cada requisito. Completado al crear el roadmap.
 | CONT-07 | Phase 2 | Complete |
 | CONT-08 | Phase 2 | Complete |
 | CONT-09 | Phase 2 | Complete |
-| CONT-10 | Phase 2 | Pending |
-| CONT-11 | Phase 2 | Pending |
-| CONT-12 | Phase 2 | Pending |
-| CONT-13 | Phase 2 | Pending |
+| CONT-10 | Phase 2 | Complete |
+| CONT-11 | Phase 2 | Complete |
+| CONT-12 | Phase 2 | Complete |
+| CONT-13 | Phase 2 | Complete |
 | COPY-01 | Phase 2 | Complete |
 | DSGN-01 | Phase 2 | Complete |
 | DSGN-02 | Phase 2 | Complete |
