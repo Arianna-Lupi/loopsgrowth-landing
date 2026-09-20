@@ -369,10 +369,10 @@ es:
           text: "Directora de Proyectos"
           status: verified
       - name:
-          text: "Juan Angulo"
+          text: "Juan Carlos Angulo"
           status: pending
           confirm_by: Ari
-          reason: "Consentimiento del integrante para publicar su nombre y cargo (STATE, Fase 2); Ari confirma"
+          reason: "Consentimiento del integrante para publicar su nombre y cargo (STATE, Fase 2); el nombre completo lo indicó Juan Carlos Angulo el 2026-09-20 (el doc de Ari dice Juan Angulo) y Ari confirma"
         role:
           text: "Director técnico"
           status: verified
@@ -380,15 +380,15 @@ es:
           url:
             text: "https://juan-tech.com"
             status: verified
-            reason: "Enlace indicado por Juan Angulo el 2026-09-20; no viene del doc de Ari, que puede pedir quitarlo"
+            reason: "Enlace indicado por Juan Carlos Angulo el 2026-09-20; no viene del doc de Ari, que puede pedir quitarlo"
           label:
             text: "juan-tech.com"
             status: verified
-            reason: "Texto visible del enlace, indicado por Juan Angulo el 2026-09-20"
+            reason: "Texto visible del enlace, indicado por Juan Carlos Angulo el 2026-09-20"
           hint:
             text: "se abre en una pestaña nueva"
             status: verified
-            reason: "Complemento solo para lectores de pantalla del enlace externo; Juan Angulo, 2026-09-20"
+            reason: "Complemento solo para lectores de pantalla del enlace externo; Juan Carlos Angulo, 2026-09-20"
       - name:
           text: "Miguel Pacheco"
           status: pending

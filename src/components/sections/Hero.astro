@@ -10,6 +10,7 @@
  */
 import { Image } from 'astro:assets';
 import CtaLink from '../CtaLink.astro';
+import LangText from '../ui/LangText.astro';
 import HeroCollage from '../collage/HeroCollage.astro';
 import { getLanding, fill, textVars, ctaLabel } from '../../lib/content';
 import { CLIENT_LOGO_SIZE, CLIENT_LOGOS } from './hero-clients.mjs';
@@ -33,7 +34,7 @@ const clients = data.hero.clients.items.map((item) => {
   <div class="wrap hero-grid">
     <div class="hero-copy">
       <h1 id="hero-title">{data.hero.h1.text}</h1>
-      <p class="hero-sub">{subtitle}</p>
+      <p class="hero-sub"><LangText text={subtitle} /></p>
       <div class="hero-desc">
         {data.hero.description.map((line) => <p>{line.text}</p>)}
       </div>
@@ -232,6 +233,43 @@ const clients = data.hero.clients.items.map((item) => {
     .client-card :global(.client-logo) {
       width: 3.5rem;
       height: 3.5rem;
+    }
+  }
+
+  /* Móvil (menos de 40em, donde el CTA del header aún no se muestra): ritmo vertical compacto para que el CTA del
+     hero, que va tras los tres párrafos, caiga dentro del primer pantallazo (quick 260920-name-geo-hero-mobile).
+     Solo CSS: mismo orden, mismo copy y mismos elementos. El interlineado de los párrafos (1.6) y su ancho máximo
+     no cambian; el CTA conserva su alto de 48 px. Desde 40em todo queda como estaba. */
+  @media (max-width: 39.99em) {
+    .hero {
+      padding-top: 1.25rem;
+      padding-bottom: 3rem;
+    }
+
+    .hero-grid {
+      gap: 2rem;
+    }
+
+    /* Tamaño del h1 en móvil: de 36 px a unos 32 px (30 a 33 px según el ancho), bajo el mínimo de la escala
+       de pantalla (2.25rem) solo aquí; desde 40em vuelve `--text-display`. */
+    .hero h1 {
+      font-size: clamp(1.875rem, 1.5rem + 2.2vw, 2.25rem);
+    }
+
+    .hero-sub {
+      margin-top: 0.875rem;
+    }
+
+    .hero-desc {
+      margin-top: 1rem;
+    }
+
+    .hero-desc p + p {
+      margin-top: 0.75rem;
+    }
+
+    .hero-cta {
+      margin-top: 1.25rem;
     }
   }
 

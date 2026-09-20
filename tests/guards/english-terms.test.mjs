@@ -32,6 +32,8 @@ test('idioma: los términos del review se marcan en el copy real y con el texto 
     'marca personal referente en Meta Ads': ['Meta Ads'],
     'Meta Ads': ['Meta Ads'],
     'Link building y autoridad': ['Link building'],
+    // GEO (decisión de Juan, 2026-09-20): solo "GEO" se marca, no "SEO".
+    'SEO/GEO': ['GEO'],
   };
   for (const [text, en] of Object.entries(expected)) {
     assert.ok(texts.some((t) => t.text === text), `el YAML ya no trae "${text}"`);
@@ -51,6 +53,20 @@ test('idioma: mutaciones (palabra completa, mayúsculas, el más largo primero, 
   assert.deepEqual(splitEnglish(''), []);
   // Un término con signos de expresión regular no se interpreta como patrón.
   assert.deepEqual(enOf('e-commerce y ecommerce'), ['e-commerce']);
+});
+
+test('idioma: GEO se marca como palabra completa, también dentro de SEO/GEO y en la frase del hero', () => {
+  assert.deepEqual(splitEnglish('SEO/GEO'), [{ text: 'SEO/', en: false }, { text: 'GEO', en: true }]);
+  const hero = 'Un equipo dedicado y especializado que ejecuta tu SEO/GEO y tu visibilidad en asistentes de IA (ChatGPT, Gemini).';
+  assert.deepEqual(enOf(hero), ['GEO']);
+  assert.equal(join(splitEnglish(hero)), hero);
+  assert.deepEqual(enOf('geolocalización, Geographic y GEOX'), [], 'pegado a otras letras no cuenta');
+  assert.deepEqual(enOf('(GEO)'), ['GEO']);
+});
+
+test('idioma: el subtítulo del hero pasa por LangText', () => {
+  const hero = readFileSync('src/components/sections/Hero.astro', 'utf8');
+  assert.ok(/<p class="hero-sub"><LangText text=\{subtitle\} \/><\/p>/.test(hero), 'el subtítulo del hero debe imprimirse con LangText');
 });
 
 test('idioma: el resultado es solo datos; el HTML de un texto no se interpreta', () => {

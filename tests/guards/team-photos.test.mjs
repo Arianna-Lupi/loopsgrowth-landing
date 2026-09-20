@@ -21,7 +21,7 @@ const treatedIds = () => readdirSync(TREATED).filter((f) => f.endsWith('.png')).
 
 const GOOD = {
   id: 'juan', derived: 'treated/juan.png', source: `${TEAM_SOURCE_PREFIX}juan.avif`, downloaded: '2026-09-20',
-  dimensions: '500x625', sha256: 'a'.repeat(64), authorizedBy: 'Juan Angulo, 2026-09-20', approval: 'pendiente',
+  dimensions: '500x625', sha256: 'a'.repeat(64), authorizedBy: 'Juan Carlos Angulo, 2026-09-20', approval: 'pendiente',
   consent: 'pendiente', note: 'nota',
 };
 const gate = (over = {}) => evaluateTeamPhotoGate({
@@ -50,7 +50,7 @@ test('registro: una fila válida pasa y cada campo mal formado falla nombrando i
   }
   assert.ok(validateTeamProvenance([{ ...GOOD, note: 'a \u2013 b' }]).length > 0, 'guion corto');
   assert.ok(validateTeamProvenance([{ ...GOOD, source: 'http://aprendoclub.com/api/media/file/juan.avif' }]).length > 0, 'http');
-  assert.deepEqual(validateTeamProvenance([{ ...GOOD, approval: 'aprobada por Ari el 2026-09-21', consent: 'dado por Juan Angulo el 2026-09-20' }]), []);
+  assert.deepEqual(validateTeamProvenance([{ ...GOOD, approval: 'aprobada por Ari el 2026-09-21', consent: 'dado por Juan Carlos Angulo el 2026-09-20' }]), []);
   assert.ok(validateTeamProvenance([{ ...GOOD, approval: 'aprobada por Ari el 2026-09-19' }]).some((e) => e.includes('anterior')), 'aprobación anterior a la descarga');
   assert.ok(validateTeamProvenance([{ ...GOOD, consent: 'dado por Juan el 2026-09-19' }]).some((e) => e.includes('anterior')), 'consentimiento anterior a la descarga');
 });
@@ -73,9 +73,9 @@ test('puerta: aprobación o consentimiento pendientes bloquean en production y s
   assert.deepEqual(prod.warnings, []);
   // Solo uno de los dos pendiente sigue bloqueando (mutación por campo).
   assert.equal(gate({ env: 'production', rows: [{ ...GOOD, approval: 'aprobada por Ari el 2026-09-21' }] }).errors.length, 1);
-  assert.equal(gate({ env: 'production', rows: [{ ...GOOD, consent: 'dado por Juan Angulo el 2026-09-21' }] }).errors.length, 1);
+  assert.equal(gate({ env: 'production', rows: [{ ...GOOD, consent: 'dado por Juan Carlos Angulo el 2026-09-21' }] }).errors.length, 1);
   // Las dos dadas: sin errores ni avisos en production.
-  const ok = gate({ env: 'production', rows: [{ ...GOOD, approval: 'aprobada por Ari el 2026-09-21', consent: 'dado por Juan Angulo el 2026-09-21' }] });
+  const ok = gate({ env: 'production', rows: [{ ...GOOD, approval: 'aprobada por Ari el 2026-09-21', consent: 'dado por Juan Carlos Angulo el 2026-09-21' }] });
   assert.deepEqual(ok, { errors: [], warnings: [] });
 });
 
@@ -171,8 +171,8 @@ test('esquema y YAML: `link` opcional con url https, label y hint; solo la tarje
   const yaml = readFileSync('src/content/landing.es.yaml', 'utf8');
   const team = yaml.slice(yaml.indexOf('  team:'), yaml.indexOf('  includes:'));
   assert.equal((team.match(/^ {8}link:$/gm) ?? []).length, 1, 'un solo enlace en el equipo');
-  const juan = team.slice(team.indexOf('"Juan Angulo"'), team.indexOf('"Miguel Pacheco"'));
-  assert.ok(/text: "https:\/\/juan-tech\.com"\n\s+status: verified\n\s+reason: "[^"]*Juan Angulo el 2026-09-20/.test(juan), 'url exacta, verified y con reason de Juan');
+  const juan = team.slice(team.indexOf('"Juan Carlos Angulo"'), team.indexOf('"Miguel Pacheco"'));
+  assert.ok(/text: "https:\/\/juan-tech\.com"\n\s+status: verified\n\s+reason: "[^"]*Juan Carlos Angulo el 2026-09-20/.test(juan), 'url exacta, verified y con reason de Juan');
   assert.ok(/text: "juan-tech\.com"\n\s+status: verified/.test(juan), 'label exacto');
   assert.ok(!/[\u2013\u2014]/.test(team), 'sin guiones largos ni cortos');
   assert.ok(!/\bAEO\b/.test(team), 'sin AEO');
