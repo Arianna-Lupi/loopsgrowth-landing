@@ -4,7 +4,7 @@ Registro de las fotos reales de integrantes de Loops Growth que aparecen en "Qui
 
 ## Estado
 
-Las fotos salen de la página https://www.aprendoclub.com/quienes-somos, que no declara licencia ni derechos sobre ellas. Son fotos del propio equipo en el sitio de Ari y Juan Angulo autorizó su uso el 2026-09-20, pero la aprobación de Ari y el consentimiento de cada persona siguen PENDIENTES. La puerta de producción (`PUBLIC_ENV=production`) bloquea mientras cualquiera de las dos cosas esté pendiente; fuera de producción solo advierte.
+Las fotos salen de la página https://www.aprendoclub.com/quienes-somos, que no declara licencia ni derechos sobre ellas. Son fotos del propio equipo en el sitio de Ari y Juan Carlos Angulo autorizó su uso el 2026-09-20, pero la aprobación de Ari y el consentimiento de cada persona siguen PENDIENTES. La puerta de producción (`PUBLIC_ENV=production`) bloquea mientras cualquiera de las dos cosas esté pendiente; fuera de producción solo advierte.
 
 ## Cómo cerrar la aprobación
 
@@ -21,6 +21,6 @@ Los originales (AVIF de 500x625, ya recortados del fondo) viven en `photo-source
 
 | id | derivado | fuente | descargada | dimensiones | sha256 | autorizó | aprobación de Ari | consentimiento | nota |
 |----|----------|--------|------------|-------------|--------|----------|-------------------|----------------|------|
-| `arianna` | `treated/arianna.png` | https://aprendoclub.com/api/media/file/arianna.avif | 2026-09-20 | 500x625 | bf7dc72e823500ec02bdfc79f846034c2cba8a10dd1c110e9a9b4df98380a070 | Juan Angulo, 2026-09-20 | pendiente | pendiente | Arianna Lupi. Foto de https://www.aprendoclub.com/quienes-somos, sin licencia declarada. |
-| `veronica` | `treated/veronica.png` | https://aprendoclub.com/api/media/file/veronica.avif | 2026-09-20 | 500x625 | c86c4b0261465cd405b56be1f6cfbd12033309e076ac38bc293cd7adb86b19e3 | Juan Angulo, 2026-09-20 | pendiente | pendiente | Verónica Romero. Foto de https://www.aprendoclub.com/quienes-somos, sin licencia declarada. |
-| `juan` | `treated/juan.png` | https://aprendoclub.com/api/media/file/juan.avif | 2026-09-20 | 500x625 | 81745284d17a6ced676cbf09bde8fffd2b42af1f899385b8d4b752e554ab2f20 | Juan Angulo, 2026-09-20 | pendiente | pendiente | Juan Angulo, quien pidió esta tarea. Foto de https://www.aprendoclub.com/quienes-somos, sin licencia declarada. |
+| `arianna` | `treated/arianna.png` | https://aprendoclub.com/api/media/file/arianna.avif | 2026-09-20 | 500x625 | bf7dc72e823500ec02bdfc79f846034c2cba8a10dd1c110e9a9b4df98380a070 | Juan Carlos Angulo, 2026-09-20 | pendiente | pendiente | Arianna Lupi. Foto de https://www.aprendoclub.com/quienes-somos, sin licencia declarada. |
+| `veronica` | `treated/veronica.png` | https://aprendoclub.com/api/media/file/veronica.avif | 2026-09-20 | 500x625 | c86c4b0261465cd405b56be1f6cfbd12033309e076ac38bc293cd7adb86b19e3 | Juan Carlos Angulo, 2026-09-20 | pendiente | pendiente | Verónica Romero. Foto de https://www.aprendoclub.com/quienes-somos, sin licencia declarada. |
+| `juan` | `treated/juan.png` | https://aprendoclub.com/api/media/file/juan.avif | 2026-09-20 | 500x625 | 81745284d17a6ced676cbf09bde8fffd2b42af1f899385b8d4b752e554ab2f20 | Juan Carlos Angulo, 2026-09-20 | pendiente | pendiente | Juan Carlos Angulo, quien pidió esta tarea. Foto de https://www.aprendoclub.com/quienes-somos, sin licencia declarada. |

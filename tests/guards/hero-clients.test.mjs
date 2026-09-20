@@ -25,7 +25,7 @@ const NAMES = ['Holafly', 'HubSpot', 'Unilever', 'Alchemy', 'Ambl', 'TravelPerk'
 
 const GOOD = {
   id: 'holafly', file: 'holafly.webp', source: `${CLIENT_SOURCE_PREFIX}holafly.webp`, downloaded: '2026-09-20',
-  dimensions: '128x128', sha256: 'a'.repeat(64), authorizedBy: 'Juan Angulo, 2026-09-20', approval: 'pendiente', note: 'nota',
+  dimensions: '128x128', sha256: 'a'.repeat(64), authorizedBy: 'Juan Carlos Angulo, 2026-09-20', approval: 'pendiente', note: 'nota',
 };
 const gate = (over = {}) => evaluateClientLogoGate({
   rows: [GOOD], logos: ['holafly'], files: ['holafly'], env: 'development', hashes: {}, ...over,

@@ -33,7 +33,7 @@ Este archivo se genera con `npm run pending` desde `src/content/landing.es.yaml`
 | cases.items[4].channel | Meta Ads | Canal del caso 5 tomado de la frase del doc (subcadena de marca personal referente en Meta Ads); Ari lo confirma. | Ari |
 | team.members[0].name | Arianna Lupi | Consentimiento del integrante para publicar su nombre y cargo (STATE, Fase 2); Ari confirma | Ari |
 | team.members[1].name | Verónica Romero | Consentimiento del integrante para publicar su nombre y cargo (STATE, Fase 2); Ari confirma | Ari |
-| team.members[2].name | Juan Angulo | Consentimiento del integrante para publicar su nombre y cargo (STATE, Fase 2); Ari confirma | Ari |
+| team.members[2].name | Juan Carlos Angulo | Consentimiento del integrante para publicar su nombre y cargo (STATE, Fase 2); el nombre completo lo indicó Juan Carlos Angulo el 2026-09-20 (el doc de Ari dice Juan Angulo) y Ari confirma | Ari |
 | team.members[3].name | Miguel Pacheco | Consentimiento del integrante para publicar su nombre y cargo (STATE, Fase 2); Ari confirma | Ari |
 | includes.items[0].title | FALTA CONFIRMAR | Texto del Copy v2: 'Auditoría SEO + AEO completa'. La guarda rechaza AEO; Ari decide el término (SEO/GEO o AEO) y entrega el texto final | Ari |
 | how_it_works.steps[0].timeframe | 30 min | Plazo del Copy v2 (30 min); el embudo y el formulario hablan de 20 min (hallazgo 5 del UI-SPEC); Ari alinea con call.duration | Ari |
