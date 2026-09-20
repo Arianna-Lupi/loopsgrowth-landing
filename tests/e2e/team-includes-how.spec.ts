@@ -3,6 +3,7 @@ import { readFileSync } from 'node:fs';
 import { gzipSync } from 'node:zlib';
 import { parse } from 'yaml';
 import { contrastRatio } from '../../scripts/lib/contrast.mjs';
+import { HTML_GZIP_MAX, HTML_RAW_MAX } from './lib/budgets.mjs';
 import { expectMotionWithinBudget, expectNoMotion } from './lib/motion';
 
 // Quiénes somos, Qué incluye y Cómo funciona (plan 02-05). Los textos esperados salen del YAML y no
@@ -525,11 +526,11 @@ test.describe('Lotes C y D: movimiento, peso y sin JavaScript', () => {
       SECTION_IDS,
     );
     expect(chars).toBeLessThanOrEqual(20480);
-    // Tope de HTML (plan 02-06, autorizado por el orquestador): 81920 bytes crudos y, como condición dura, 25600 bytes con gzip -9. El tope anterior de 61440 crudos era un presupuesto propio sin comprimir; el contenido de Ari no se recorta para caber en él.
+    // Topes de HTML en tests/e2e/lib/budgets.mjs (única fuente, con su justificación).
     const res = await page.request.get('/');
     const body = await res.body();
-    expect(body.length).toBeLessThan(81920);
-    expect(gzipSync(body, { level: 9 }).length).toBeLessThan(25600);
+    expect(body.length).toBeLessThan(HTML_RAW_MAX);
+    expect(gzipSync(body, { level: 9 }).length).toBeLessThan(HTML_GZIP_MAX);
   });
 
   test.describe('(7) sin JavaScript', () => {

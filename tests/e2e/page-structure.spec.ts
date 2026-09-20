@@ -3,6 +3,7 @@ import { readFileSync } from 'node:fs';
 import { gzipSync } from 'node:zlib';
 import { parse } from 'yaml';
 import { PURPLE_RGB } from './lib/brand';
+import { HTML_GZIP_MAX, HTML_RAW_MAX } from './lib/budgets.mjs';
 import { expectMotionWithinBudget, expectNoMotion } from './lib/motion';
 
 // Estructura de la página (fase 2, plan 01). Los textos esperados salen del YAML y no se copian
@@ -345,13 +346,13 @@ test.describe('collage del hero', () => {
   });
 });
 
-test('el HTML de / pesa menos de 80 KB sin comprimir y 25 KB con gzip', async ({ page }) => {
-  // Tope de HTML (plan 02-06, autorizado por el orquestador): 81920 bytes crudos y, como condición dura, 25600 bytes con gzip -9. El tope anterior de 61440 crudos era un presupuesto propio sin comprimir; el contenido de Ari no se recorta para caber en él.
+test(`el HTML de / pesa menos de ${HTML_RAW_MAX} bytes crudos y ${HTML_GZIP_MAX} con gzip`, async ({ page }) => {
+  // Topes en tests/e2e/lib/budgets.mjs (única fuente, con su justificación).
   const res = await page.request.get('/');
   expect(res.ok()).toBe(true);
   const body = await res.body();
-  expect(body.length).toBeLessThan(80 * 1024);
-  expect(gzipSync(body, { level: 9 }).length).toBeLessThan(25 * 1024);
+  expect(body.length).toBeLessThan(HTML_RAW_MAX);
+  expect(gzipSync(body, { level: 9 }).length).toBeLessThan(HTML_GZIP_MAX);
 });
 
 for (const mode of ['reduce', 'no-preference'] as const) {

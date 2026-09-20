@@ -2,6 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
 import { gzipSync } from 'node:zlib';
+import { HTML_GZIP_MAX, HTML_RAW_MAX } from '../e2e/lib/budgets.mjs';
 import {
   ALLOWED_FILLS,
   SCENE_PIECES,
@@ -222,12 +223,12 @@ function readDist(path) {
 const spriteOf = (html) => html.match(/<svg class="collage-sprite"[\s\S]*?<\/svg>/)?.[0] ?? '';
 
 // Tope definitivo del sprite: ocho símbolos lg y nada más (plan 02-10, tarea 3).
-test('dist/index.html trae un solo sprite, pesa menos de 80 KB (25 KB con gzip) y el sprite menos de 10 KB', () => {
+test(`dist/index.html trae un solo sprite, pesa menos de ${HTML_RAW_MAX} bytes (${HTML_GZIP_MAX} con gzip) y el sprite menos de 10 KB`, () => {
   const html = readDist('dist/index.html');
   assert.equal((html.match(/class="collage-sprite"/g) ?? []).length, 1);
-  // Tope de HTML (plan 02-06, autorizado por el orquestador): 81920 bytes crudos y, como condición dura, 25600 bytes con gzip -9. El tope anterior de 61440 crudos era un presupuesto propio sin comprimir; el contenido de Ari no se recorta para caber en él.
-  assert.ok(Buffer.byteLength(html) < 81920, `dist/index.html pesa ${Buffer.byteLength(html)} bytes`);
-  assert.ok(gzipSync(Buffer.from(html), { level: 9 }).length < 25600, 'dist/index.html supera 25600 bytes con gzip');
+  // Topes de HTML en tests/e2e/lib/budgets.mjs (única fuente, con su justificación); la misma que leen los specs e2e.
+  assert.ok(Buffer.byteLength(html) < HTML_RAW_MAX, `dist/index.html pesa ${Buffer.byteLength(html)} bytes`);
+  assert.ok(gzipSync(Buffer.from(html), { level: 9 }).length < HTML_GZIP_MAX, `dist/index.html supera ${HTML_GZIP_MAX} bytes con gzip`);
   assert.ok(Buffer.byteLength(spriteOf(html)) < 10240, `sprite de ${Buffer.byteLength(spriteOf(html))} bytes`);
   assert.equal((html.match(/<symbol id="lg-/g) ?? []).length, 8);
   assert.equal((html.match(/<symbol id="/g) ?? []).length, 8, 'queda un símbolo de otro prefijo');

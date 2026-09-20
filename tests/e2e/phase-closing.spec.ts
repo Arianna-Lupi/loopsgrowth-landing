@@ -3,6 +3,7 @@ import AxeBuilder from '@axe-core/playwright';
 import { readdirSync, readFileSync } from 'node:fs';
 import { gzipSync } from 'node:zlib';
 import { parse } from 'yaml';
+import { HTML_GZIP_MAX, HTML_RAW_MAX } from './lib/budgets.mjs';
 
 // Cierre de la fase 2 (plan 02-07). 02-08 extiende este archivo. El texto esperado del CTA sale
 // del YAML: nunca una cadena escrita a mano (COPY-01).
@@ -452,13 +453,12 @@ test.describe('objetivos, sombras y área de salvado', () => {
 });
 
 test.describe('peso y peticiones', () => {
-  const HTML_RAW_MAX = 81920;
-  const HTML_GZIP_MAX = 25600;
   const COLLAGE_MAX = 42240;
   const INLINE_SCRIPT_MAX = 3072;
   const ALLOWED_HOSTS = ['localhost', 'forms.clickup.com', 'app-cdn.clickup.com'];
 
-  test('dist/index.html: por debajo de 81920 bytes crudos y de 25600 con gzip -9', () => {
+  test(`dist/index.html: por debajo de ${HTML_RAW_MAX} bytes crudos y de ${HTML_GZIP_MAX} con gzip -9`, () => {
+    // Topes en tests/e2e/lib/budgets.mjs (única fuente, con su justificación).
     const html = readFileSync('dist/index.html');
     expect(html.length, `crudo ${html.length}`).toBeLessThan(HTML_RAW_MAX);
     const gz = gzipSync(html, { level: 9 }).length;
