@@ -109,7 +109,27 @@ const data = await getLanding();
 
     .step {
       grid-template-columns: minmax(0, 1fr);
+      grid-template-rows: auto 1fr;
       row-gap: 1rem;
+    }
+
+    /* Títulos con dos líneas de reserva y plazo al pie: descripciones y chips quedan alineados entre las cuatro fases. */
+    .step-body {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .step h3 {
+      min-height: 2lh;
+    }
+
+    .step-time {
+      margin-top: auto;
+    }
+
+    .step-desc {
+      margin-bottom: 1rem;
     }
 
     /* Conector horizontal: cruza por detrás de los discos hasta el centro del siguiente. */

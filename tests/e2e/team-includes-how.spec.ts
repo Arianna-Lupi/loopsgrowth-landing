@@ -1,6 +1,7 @@
 import { test, expect, type Page } from '@playwright/test';
 import { readFileSync } from 'node:fs';
 import { parse } from 'yaml';
+import { contrastRatio } from '../../scripts/lib/contrast.mjs';
 
 // Quiénes somos, Qué incluye y Cómo funciona (plan 02-05). Los textos esperados salen del YAML y no
 // se copian a mano (COPY-01): si Ari cambia una cadena, la prueba sigue midiendo lo que la página debe
@@ -332,4 +333,253 @@ test.describe('Cómo funciona (estructura)', () => {
     expect(chip.wrap).toBe('anywhere');
     expect(chip.minH).toBeGreaterThanOrEqual(32);
   });
+});
+
+// ---------------------------------------------------------------------------------------------
+// Lote C (equipo) y lote D (incluye y cómo funciona): mediciones a cinco anchos (CONT-07, CONT-08,
+// CONT-09, DSGN-04).
+// ---------------------------------------------------------------------------------------------
+const FIVE_WIDTHS = [
+  { width: 320, height: 800 },
+  { width: 390, height: 844 },
+  { width: 768, height: 900 },
+  { width: 1024, height: 800 },
+  { width: 1280, height: 800 },
+];
+const SECTION_IDS = ['nosotros', 'incluye', 'como-funciona'];
+
+test.describe('Lotes C y D: sin desborde y espaciado de texto a cinco anchos', () => {
+  for (const vp of FIVE_WIDTHS) {
+    test(`(1) sin desborde a ${vp.width} px`, async ({ page }) => {
+      await page.setViewportSize(vp);
+      await page.goto('/');
+      const { scrollWidth, clientWidth } = await page.evaluate(() => ({
+        scrollWidth: document.documentElement.scrollWidth,
+        clientWidth: document.documentElement.clientWidth,
+      }));
+      expect(scrollWidth).toBeLessThanOrEqual(clientWidth);
+      const bad = await page.evaluate((ids) => {
+        const out: string[] = [];
+        for (const id of ids) {
+          const section = document.getElementById(id)!;
+          const r = section.getBoundingClientRect();
+          if (r.left < -0.5 || r.right > window.innerWidth + 0.5) out.push(`section#${id}`);
+          for (const el of section.querySelectorAll('*')) {
+            const b = el.getBoundingClientRect();
+            if (b.width === 0 && b.height === 0) continue;
+            if (b.right > window.innerWidth + 0.5) out.push(`#${id} ${el.tagName.toLowerCase()}.${el.getAttribute('class') ?? ''}`);
+          }
+        }
+        return out;
+      }, SECTION_IDS);
+      expect(bad).toEqual([]);
+    });
+  }
+
+  for (const width of [320, 1280]) {
+    test(`(2) espaciado de texto de SC 1.4.12 a ${width} px sin recorte ni desborde`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 800 });
+      await page.goto('/');
+      await page.addStyleTag({
+        content:
+          '* { line-height: 1.5 !important; letter-spacing: 0.12em !important; word-spacing: 0.16em !important; } p { margin-bottom: 2em !important; }',
+      });
+      const { scrollWidth, clientWidth } = await page.evaluate(() => ({
+        scrollWidth: document.documentElement.scrollWidth,
+        clientWidth: document.documentElement.clientWidth,
+      }));
+      expect(scrollWidth).toBeLessThanOrEqual(clientWidth);
+      const clipped = await page.evaluate(() => {
+        const out: string[] = [];
+        const sel = '#nosotros h3, #nosotros .team-role, #incluye h3, #incluye .include-desc, #como-funciona h3, #como-funciona .step-desc, #como-funciona .step-time';
+        for (const el of document.querySelectorAll<HTMLElement>(sel)) {
+          if (el.scrollHeight - el.clientHeight > 1) out.push(`${el.className || el.tagName}:${(el.textContent ?? '').trim().slice(0, 24)}`);
+          if (el.scrollWidth - el.clientWidth > 1) out.push(`w:${el.className || el.tagName}`);
+        }
+        return out;
+      });
+      expect(clipped).toEqual([]);
+    });
+  }
+});
+
+test.describe('Lotes C y D: contraste medido', () => {
+  test.use({ viewport: { width: 1280, height: 800 } });
+
+  test('(3) texto de 4.5 o más y bordes de 3 o más con los estilos calculados', async ({ page }) => {
+    await page.goto('/');
+    const rows = await page.evaluate(() => {
+      // Color calculado a hex (los tokens son hex, así que el navegador devuelve rgb()/rgba()).
+      const parse = (c: string) => {
+        const m = /rgba?\(([^)]+)\)/.exec(c)!;
+        const [r, g, b, a = 1] = m[1].split(/[ ,/]+/).filter(Boolean).map(Number);
+        return { r, g, b, a };
+      };
+      const hex = (o: { r: number; g: number; b: number }) =>
+        '#' + [o.r, o.g, o.b].map((v) => Math.round(v).toString(16).padStart(2, '0')).join('');
+      const bgOf = (el: Element) => {
+        for (let n: Element | null = el; n; n = n.parentElement) {
+          const c = parse(getComputedStyle(n).backgroundColor);
+          if (c.a > 0) return hex(c);
+        }
+        return '#ffffff';
+      };
+      const text = ['#nosotros h3', '#nosotros .team-role', '#incluye h3', '#incluye .include-desc', '#como-funciona h3', '#como-funciona .step-desc', '#como-funciona .step-time'];
+      const out: { what: string; fg: string; bg: string; kind: 'text' | 'border' }[] = [];
+      for (const sel of text) {
+        for (const el of document.querySelectorAll(sel)) {
+          out.push({ what: sel, fg: hex(parse(getComputedStyle(el).color)), bg: bgOf(el), kind: 'text' });
+        }
+      }
+      // Borde del chip (contra el fondo de la sección) y borde del disco de check (contra su fondo).
+      const chip = document.querySelector('#como-funciona .step-time')!;
+      out.push({ what: 'borde del chip', fg: hex(parse(getComputedStyle(chip).borderTopColor)), bg: bgOf(chip), kind: 'border' });
+      const check = document.querySelector('#incluye .include-check')!;
+      out.push({ what: 'borde del disco de check', fg: hex(parse(getComputedStyle(check).borderTopColor)), bg: bgOf(check.parentElement!), kind: 'border' });
+      return out;
+    });
+    expect(rows.length).toBeGreaterThan(20);
+    for (const r of rows) {
+      const ratio = contrastRatio(r.fg, r.bg);
+      expect(ratio, `${r.what}: ${r.fg} sobre ${r.bg}`).toBeGreaterThanOrEqual(r.kind === 'text' ? 4.5 : 3);
+    }
+  });
+});
+
+test.describe('Lote C: tarjetas del equipo', () => {
+  for (const vp of FIVE_WIDTHS) {
+    test(`(4) tarjetas pop y avatares a ${vp.width} px`, async ({ page }) => {
+      await page.setViewportSize(vp);
+      await page.goto('/');
+      const cards = page.locator('#nosotros li.team-card');
+      await expect(cards).toHaveCount(4);
+      const styles = await cards.evaluateAll((els) =>
+        els.map((el) => {
+          const c = getComputedStyle(el);
+          const shadow = c.boxShadow;
+          // box-shadow: color offX offY blur spread
+          const nums = shadow.replace(/rgba?\([^)]*\)/g, '').trim().split(/\s+/);
+          return {
+            w: c.borderTopWidth,
+            style: c.borderTopStyle,
+            color: c.borderTopColor,
+            blur: parseFloat(nums[2] ?? '-1'),
+            offX: parseFloat(nums[0] ?? '0'),
+            cursor: c.cursor,
+            radius: c.borderTopLeftRadius,
+          };
+        }),
+      );
+      for (const s of styles) {
+        expect(s.w).toBe('3px');
+        expect(s.style).toBe('solid');
+        expect(s.color).toBe('rgb(33, 33, 33)');
+        expect(s.blur).toBe(0);
+        expect(Math.abs(s.offX)).toBeGreaterThan(0);
+        expect(s.cursor).not.toBe('pointer');
+      }
+      expect(new Set(styles.map((s) => s.radius)).size).toBe(1);
+      const before = await cards.first().evaluate((el) => getComputedStyle(el).transform);
+      await cards.first().hover();
+      const after = await cards.first().evaluate((el) => getComputedStyle(el).transform);
+      expect(after).toBe(before);
+      expect(after === 'none' || after === before).toBe(true);
+      const widths = (await boxes(page, '#nosotros svg[data-collage="avatar"]')).map((b) => Math.round(b.width));
+      expect(new Set(widths).size).toBe(1);
+      expect(widths[0]).toBe(vp.width >= 640 ? 120 : 96);
+    });
+  }
+});
+
+test.describe('Lotes C y D: movimiento, peso y sin JavaScript', () => {
+  for (const media of ['reduce', 'no-preference'] as const) {
+    test(`(5) cero animaciones y cero transiciones con prefers-reduced-motion: ${media}`, async ({ page }) => {
+      await page.emulateMedia({ reducedMotion: media });
+      await page.setViewportSize({ width: 1280, height: 800 });
+      await page.goto('/');
+      expect(await page.evaluate(() => document.getAnimations().length)).toBe(0);
+      const moving = await page.evaluate((ids) => {
+        const out: string[] = [];
+        for (const id of ids) {
+          for (const el of document.getElementById(id)!.querySelectorAll('*')) {
+            for (const pseudo of [null, '::before', '::after']) {
+              const c = getComputedStyle(el, pseudo);
+              if (c.transitionDuration.split(',').some((d) => d.trim() !== '0s')) out.push(`${id} ${el.tagName}${pseudo ?? ''}`);
+              if (c.animationName !== 'none') out.push(`${id} ${el.tagName}${pseudo ?? ''} anim`);
+            }
+          }
+        }
+        return out;
+      }, SECTION_IDS);
+      expect(moving).toEqual([]);
+    });
+  }
+
+  test('(6) peso: las tres secciones y el HTML de /', async ({ page }) => {
+    await page.goto('/');
+    const chars = await page.evaluate(
+      (ids) => ids.map((id) => document.getElementById(id)!.outerHTML).join('').length,
+      SECTION_IDS,
+    );
+    expect(chars).toBeLessThanOrEqual(20480);
+    const res = await page.request.get('/');
+    expect((await res.body()).length).toBeLessThan(61440);
+  });
+
+  test.describe('(7) sin JavaScript', () => {
+    test.use({ javaScriptEnabled: false, viewport: { width: 1280, height: 800 } });
+
+    test('las tres secciones y los textos del YAML son visibles', async ({ page }) => {
+      await page.goto('/');
+      for (const id of SECTION_IDS) await expect(page.locator(`#${id}`)).toBeVisible();
+      const expected = [
+        es.team.title.text,
+        ...es.team.members.flatMap((m) => [m.name.text, m.role.text]),
+        es.includes.title.text,
+        ...es.includes.items.flatMap((i) => [i.title.text, i.description.text]),
+        es.how_it_works.title.text,
+        ...es.how_it_works.steps.flatMap((s) => [s.title.text, s.description.text, s.timeframe.text]),
+      ];
+      const shown = norm(await page.locator('#nosotros, #incluye, #como-funciona').evaluateAll((els) => els.map((e) => (e as HTMLElement).innerText).join(' ')));
+      for (const t of expected) expect(shown, t).toContain(norm(t));
+    });
+  });
+});
+
+// (8) Herramienta de capturas (Supuesto 10). Solo con PHASE2_BATCH definida; el título lleva "captura".
+// C-equipo recorta #nosotros; D-incluye-como recorta de #incluye a #como-funciona.
+test.describe('captura de secciones del lote', () => {
+  test.skip(!process.env.PHASE2_BATCH, 'define PHASE2_BATCH (C-equipo o D-incluye-como) para generar capturas');
+  const variants = [
+    { suffix: '', media: 'no-preference' as const, js: true },
+    { suffix: '-reduce', media: 'reduce' as const, js: true },
+    { suffix: '-nojs', media: 'no-preference' as const, js: false },
+  ];
+  for (const vp of FIVE_WIDTHS) {
+    for (const v of variants) {
+      test(`captura del lote ${vp.width}${v.suffix}`, async ({ browser, baseURL }) => {
+        const batch = process.env.PHASE2_BATCH!;
+        const context = await browser.newContext({
+          baseURL,
+          viewport: { width: vp.width, height: vp.height },
+          reducedMotion: v.media,
+          javaScriptEnabled: v.js,
+        });
+        await context.route('**/*', (route) => {
+          const host = new URL(route.request().url()).hostname;
+          return host === 'localhost' || host === '127.0.0.1' ? route.continue() : route.abort();
+        });
+        const page = await context.newPage();
+        await page.goto('/');
+        const [from, to] = batch === 'D-incluye-como' ? ['incluye', 'como-funciona'] : ['nosotros', 'nosotros'];
+        const clip = await page.evaluate(([a, b]) => {
+          const top = document.getElementById(a)!.getBoundingClientRect();
+          const bottom = document.getElementById(b)!.getBoundingClientRect();
+          return { x: 0, y: top.top + window.scrollY, width: window.innerWidth, height: bottom.bottom - top.top };
+        }, [from, to]);
+        await page.screenshot({ path: `test-results/phase2/${batch}-${vp.width}${v.suffix}.png`, fullPage: true, clip });
+        await context.close();
+      });
+    }
+  }
 });

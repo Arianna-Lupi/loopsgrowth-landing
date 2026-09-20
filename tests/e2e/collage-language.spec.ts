@@ -68,9 +68,13 @@ test.describe('escenas: lenguaje del moodboard', () => {
   test('cada escena existe una vez (hero, Por qué ahora, tres pegatinas y cuatro chips)', async ({ page }) => {
     await open(page, 1280);
     for (const name of NAMES) await expect(page.locator(SCENES[name]), name).toHaveCount(1);
-    // Las piezas sueltas (la lupa de Casos de éxito) no son escenas: se cuentan aparte y son exactamente una.
-    await expect(page.locator('[data-collage]:not(svg.collage-sprite):not([data-collage="piece"])')).toHaveCount(NAMES.length);
+    // Las piezas sueltas (la lupa de Casos de éxito) y los avatares de Quiénes somos (plan 02-05) no son escenas:
+    // se cuentan aparte y son exactamente una pieza y cuatro avatares.
+    await expect(
+      page.locator('[data-collage]:not(svg.collage-sprite):not([data-collage="piece"]):not([data-collage="avatar"])'),
+    ).toHaveCount(NAMES.length);
     await expect(page.locator('[data-collage="piece"]')).toHaveCount(1);
+    await expect(page.locator('[data-collage="avatar"]')).toHaveCount(4);
   });
 
   for (const name of NAMES) {

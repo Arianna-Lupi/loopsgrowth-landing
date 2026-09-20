@@ -58,6 +58,8 @@ const AVATARS = ['ojo-morado', 'ojo-amarillo', 'ojos-morado', 'ojos-amarillo'] a
 
   .team-avatar :global(svg) {
     width: 100%;
+    /* El arte oficial trae aire propio a la izquierda (unos 7 %): se compensa para que el disco alinee con el nombre. */
+    margin-inline-start: -6.7%;
   }
 
   .team-card h3 {
@@ -84,6 +86,11 @@ const AVATARS = ['ojo-morado', 'ojo-amarillo', 'ojos-morado', 'ojos-amarillo'] a
   @media (min-width: 64em) {
     .team-grid {
       grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    /* Reserva dos líneas de nombre: un nombre que baja de línea no desalinea los cargos de las otras tarjetas. */
+    .team-card h3 {
+      min-height: 2lh;
     }
   }
 </style>
