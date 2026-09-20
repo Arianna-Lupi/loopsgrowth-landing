@@ -5,13 +5,13 @@ subsystem: ui
 tags: [astro, copy, yaml, playwright, team, avatars, includes, how-it-works, visual-cycle]
 status: complete
 plan_head_before: ac77d7a4e23d1e75341ba39b3d125cc0e5dd8b6d
-# commits es el conteo medido del libro (git rev-list --count plan_head_before..HEAD): 3 commits de tareas, 2 de resúmenes parciales y este resumen final.
-commits: 6
+# commits es el conteo medido del libro (git rev-list --count plan_head_before..HEAD): 3 commits de tareas, 2 de resúmenes parciales, el resumen final y el de estado y hoja de ruta.
+commits: 7
 completed: 2026-09-20
 actuals:
   tokens: 14100
   tasks: 3
-  commits: 6
+  commits: 7
 requirements-completed: [CONT-07, CONT-08, CONT-09, COPY-01, DSGN-04]
 
 provides:
