@@ -52,11 +52,11 @@ metrics:
   duration: "tarea 4 unos 30 min; el plan completo no se midio de punta a punta (cuatro ejecutores)"
   completed: 2026-09-19
 plan_head_before: a67b4dcb6f9016cea1c0ddc596818b0ba6e1a886
-commits: 10
+commits: 11
 actuals:
   tokens: 21458
   tasks: 4
-  commits: 10
+  commits: 11
 requirements-completed: [DSGN-01, DSGN-03, DSGN-04]
 ---
 
@@ -73,7 +73,7 @@ requirements-completed: [DSGN-01, DSGN-03, DSGN-04]
 | 3. Hoja de eleccion `[data-sheet="fotos"]` y puerta de produccion | Hecha | f9ab7f6 |
 | 4. Mediciones, ciclo visual "Lote P (fotos)", documentos y cierre | Hecha | d5177fb (specs), 483d6f2 (correccion), fa0362b (documentos) |
 
-`commits: 10` se midio con `git rev-list --count a67b4dcb6f9016cea1c0ddc596818b0ba6e1a886..HEAD` (9 antes de este resumen, mas el commit de este resumen; se verifico despues de commitear). Incluye tres commits `docs(02-11)` de resumen parcial.
+`commits: 11` se midio con `git rev-list --count a67b4dcb6f9016cea1c0ddc596818b0ba6e1a886..HEAD` (9 de trabajo, el commit de este resumen y el de estado y hoja de ruta, en el que se corrigio este numero; se verifico despues de commitear). Incluye tres commits `docs(02-11)` de resumen parcial.
 
 ## Tarea 4: que se hizo
 
