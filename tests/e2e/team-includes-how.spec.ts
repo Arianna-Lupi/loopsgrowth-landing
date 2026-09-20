@@ -3,6 +3,7 @@ import { readFileSync } from 'node:fs';
 import { gzipSync } from 'node:zlib';
 import { parse } from 'yaml';
 import { contrastRatio } from '../../scripts/lib/contrast.mjs';
+import { expectMotionWithinBudget, expectNoMotion } from './lib/motion';
 
 // Quiénes somos, Qué incluye y Cómo funciona (plan 02-05). Los textos esperados salen del YAML y no
 // se copian a mano (COPY-01): si Ari cambia una cadena, la prueba sigue midiendo lo que la página debe
@@ -498,7 +499,8 @@ test.describe('Lotes C y D: movimiento, peso y sin JavaScript', () => {
       await page.emulateMedia({ reducedMotion: media });
       await page.setViewportSize({ width: 1280, height: 800 });
       await page.goto('/');
-      expect(await page.evaluate(() => document.getAnimations().length)).toBe(0);
+      if (media === 'reduce') await expectNoMotion(page);
+      else await expectMotionWithinBudget(page);
       const moving = await page.evaluate((ids) => {
         const out: string[] = [];
         for (const id of ids) {

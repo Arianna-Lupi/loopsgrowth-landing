@@ -3,6 +3,7 @@ import { rgbOfToken } from './lib/brand';
 import { CHIP_WORDS } from '../../src/components/collage/collage-rules.mjs';
 import { PHOTO_SLOTS, SCENES as SCENE_DATA } from '../../src/components/collage/scenes.mjs';
 import { PHOTOS, chosenPhoto } from '../../src/components/collage/photos.mjs';
+import { expectMotionWithinBudget, expectNoMotion } from './lib/motion';
 
 // Lenguaje del moodboard sobre el HTML construido (plan 02-10): rasgos por estructura, píldoras
 // decorativas, cajas, árbol de accesibilidad, ranuras de foto, ganchos, pesos y espaciado de texto.
@@ -62,6 +63,8 @@ const paletteOf = (root: import('@playwright/test').Locator) =>
 async function open(page: Page, width: number) {
   await page.setViewportSize({ width, height: 900 });
   await page.goto('/');
+  // Las geometrías se miden en reposo: la entrada del hero (02-07) dura 1 s y mueve las piezas mientras corre.
+  await page.waitForFunction(() => document.getAnimations().length === 0, null, { timeout: 5000 });
 }
 
 test.describe('escenas: lenguaje del moodboard', () => {
@@ -186,6 +189,8 @@ test.describe('escenas: lenguaje del moodboard', () => {
   });
 
   test('ganchos: dos pupilas path dentro del Loopy y grupos sin transform', async ({ page }) => {
+    // La entrada de 02-07 anima el transform de cada grupo mientras dura; el reposo (`reduce`) no lleva ninguno.
+    await page.emulateMedia({ reducedMotion: 'reduce' });
     await open(page, 1280);
     const pupils = await page.locator('.hero-collage .hc-pupil').evaluateAll((els) =>
       els.map((e) => ({ tag: e.tagName.toLowerCase(), inLoopy: !!e.closest('[data-piece="loopy"]') })),
@@ -199,7 +204,8 @@ test.describe('escenas: lenguaje del moodboard', () => {
     for (const reducedMotion of ['reduce', 'no-preference'] as const) {
       await page.emulateMedia({ reducedMotion });
       await open(page, 1280);
-      expect(await page.evaluate(() => document.getAnimations().length)).toBe(0);
+      if (reducedMotion === 'reduce') await expectNoMotion(page);
+      else await expectMotionWithinBudget(page);
     }
   });
 

@@ -3,6 +3,7 @@ import { readFileSync } from 'node:fs';
 import { gzipSync } from 'node:zlib';
 import { parse } from 'yaml';
 import { PURPLE_RGB } from './lib/brand';
+import { expectMotionWithinBudget, expectNoMotion } from './lib/motion';
 
 // Los textos esperados salen del YAML: nunca cadenas escritas a mano (COPY-01). Los espacios se
 // normalizan al comparar porque el HTML colapsa los espacios repetidos.
@@ -158,7 +159,8 @@ test.describe('sin movimiento en Lo que logramos juntos', () => {
     test(`cero animaciones y opacidad 1 con prefers-reduced-motion ${motion}`, async ({ page }) => {
       await page.emulateMedia({ reducedMotion: motion });
       await page.goto('/');
-      expect(await page.evaluate(() => document.getAnimations().length)).toBe(0);
+      if (motion === 'reduce') await expectNoMotion(page);
+      else await expectMotionWithinBudget(page);
       const opacities = await page
         .locator('#resultados li')
         .evaluateAll((els) => els.map((el) => getComputedStyle(el).opacity));

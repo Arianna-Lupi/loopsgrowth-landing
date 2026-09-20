@@ -4,6 +4,7 @@ import { parse } from 'yaml';
 import { findInversion } from '../../scripts/lib/copy-rules.mjs';
 import { CHIP_WORDS } from '../../src/components/collage/collage-rules.mjs';
 import { PURPLE_RGB } from './lib/brand';
+import { expectMotionWithinBudget, expectNoMotion } from './lib/motion';
 
 // Secciones de cierre y footer (plan 02-06). Los textos y las cantidades esperadas salen del YAML y
 // no se copian a mano (COPY-01): si Ari entrega un texto, la prueba sigue midiendo lo que la página
@@ -422,9 +423,12 @@ for (const motion of ['reduce', 'no-preference'] as const) {
   test(`cero animaciones en Para quién es y FAQ con movimiento ${motion}, antes y después de abrir`, async ({ page }) => {
     await page.emulateMedia({ reducedMotion: motion });
     await page.goto('/');
-    expect(await page.evaluate(() => document.getAnimations().length)).toBe(0);
+    // Con `no-preference` corre la entrada del hero (02-07) y, tras abrir, el giro de 150 ms del icono: ambos en la lista blanca.
+    if (motion === 'reduce') await expectNoMotion(page);
+    else await expectMotionWithinBudget(page);
     await page.locator('#faq summary').first().click();
-    expect(await page.evaluate(() => document.getAnimations().length)).toBe(0);
+    if (motion === 'reduce') await expectNoMotion(page);
+    else await expectMotionWithinBudget(page);
   });
 }
 

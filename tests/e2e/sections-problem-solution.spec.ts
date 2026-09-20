@@ -3,6 +3,7 @@ import { readFileSync } from 'node:fs';
 import { parse } from 'yaml';
 import { walkClaims, MISSING_MARK } from '../../scripts/lib/copy-rules.mjs';
 import { PURPLE_RGB, rgbOfToken } from './lib/brand';
+import { expectMotionWithinBudget, expectNoMotion } from './lib/motion';
 
 // Los textos esperados salen del YAML (walkClaims y el propio arreglo): nunca cadenas escritas a mano
 // (COPY-01). Los espacios se normalizan al comparar porque el HTML colapsa el espacio doble del doc de Ari.
@@ -578,7 +579,8 @@ test.describe('sin movimiento y sin JavaScript', () => {
       await page.emulateMedia({ reducedMotion });
       await page.goto('/');
       await page.locator('#problema').scrollIntoViewIfNeeded();
-      expect(await page.evaluate(() => document.getAnimations().length)).toBe(0);
+      if (reducedMotion === 'reduce') await expectNoMotion(page);
+      else await expectMotionWithinBudget(page);
     });
   }
 

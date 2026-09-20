@@ -3,6 +3,7 @@ import { test, expect, type Page } from '@playwright/test';
 import { rgbOfToken } from './lib/brand';
 import { PHOTOS, PHOTO_LOADING } from '../../src/components/collage/photos.mjs';
 import { PHOTO_SLOTS, SCENES } from '../../src/components/collage/scenes.mjs';
+import { expectMotionWithinBudget, expectNoMotion } from './lib/motion';
 
 // Fotos en media tinta del collage (plan 02-11), sobre el HTML construido. Escrito sobre el conjunto de
 // fotos elegidas del manifiesto: agregar la foto de otra ranura no exige reescribirlo.
@@ -15,6 +16,8 @@ const fillOf = (slot: string) => (SCENES[slot].layers as { kind: string; fill: s
 async function open(page: Page, width: number, height = 900) {
   await page.setViewportSize({ width, height });
   await page.goto('/');
+  // Las geometrías se miden en reposo: la entrada del hero (02-07) dura 1 s y mueve las piezas mientras corre.
+  await page.waitForFunction(() => document.getAnimations().length === 0, null, { timeout: 5000 });
 }
 /** Recorre la página en pasos para disparar las cargas diferidas y espera a que todas las img terminen. */
 async function scrollThrough(page: Page) {
@@ -202,7 +205,8 @@ test.describe('fotos en media tinta', () => {
     test(`cero animaciones con prefers-reduced-motion ${motion}`, async ({ page }) => {
       await page.emulateMedia({ reducedMotion: motion });
       await open(page, 1280);
-      expect(await page.evaluate(() => document.getAnimations().length)).toBe(0);
+      if (motion === 'reduce') await expectNoMotion(page);
+      else await expectMotionWithinBudget(page);
     });
   }
 });

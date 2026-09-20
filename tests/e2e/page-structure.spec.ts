@@ -3,6 +3,7 @@ import { readFileSync } from 'node:fs';
 import { gzipSync } from 'node:zlib';
 import { parse } from 'yaml';
 import { PURPLE_RGB } from './lib/brand';
+import { expectMotionWithinBudget, expectNoMotion } from './lib/motion';
 
 // Estructura de la página (fase 2, plan 01). Los textos esperados salen del YAML y no se copian
 // a mano: se resuelven {term} y {duration} igual que `fill()` de src/lib/content.ts.
@@ -329,7 +330,8 @@ for (const mode of ['reduce', 'no-preference'] as const) {
     await page.emulateMedia({ reducedMotion: mode });
     await page.goto('/');
     await page.waitForTimeout(400);
-    expect(await page.evaluate(() => document.getAnimations().length)).toBe(0);
+    if (mode === 'reduce') await expectNoMotion(page);
+    else await expectMotionWithinBudget(page);
     for (const sel of [HERO_SELECTORS.h1, HERO_SELECTORS.subtitle, HERO_SELECTORS.cta]) {
       await expect(page.locator(sel).first()).toHaveCSS('opacity', '1');
     }
