@@ -8,6 +8,7 @@
  * y sin colores propios, en la fila del chip.
  */
 import CollagePiece from '../collage/CollagePiece.astro';
+import LangText from './LangText.astro';
 
 interface Props {
   id: string;
@@ -25,16 +26,16 @@ const { id, figure, metric, detail, sector, period, channel, labels, wide = fals
 ---
 
 <article class="metric-card" aria-labelledby={id} data-wide={wide ? '' : undefined}>
-  <p class="metric-chip">{channel}</p>
+  <p class="metric-chip"><LangText text={channel} /></p>
   <h3 id={id} class="metric-head">
     <span class="metric-figure"><span class="metric-mark">{figure}</span></span>{' '}
-    <span class="metric-name">{metric}</span>
+    <span class="metric-name"><LangText text={metric} /></span>
   </h3>
-  {detail && <p class="metric-detail">{detail}</p>}
+  {detail && <p class="metric-detail"><LangText text={detail} /></p>}
   <dl class="metric-facts">
     <div>
       <dt>{labels.sector}</dt>
-      <dd>{sector}</dd>
+      <dd><LangText text={sector} /></dd>
     </div>
     <div>
       <dt>{labels.period}</dt>
@@ -42,7 +43,7 @@ const { id, figure, metric, detail, sector, period, channel, labels, wide = fals
     </div>
     <div>
       <dt>{labels.channel}</dt>
-      <dd>{channel}</dd>
+      <dd><LangText text={channel} /></dd>
     </div>
   </dl>
   {wide && <CollagePiece class="metric-lupa" name="lupa" tone="light" size="6rem" rotate={6} />}

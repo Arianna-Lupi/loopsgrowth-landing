@@ -5,6 +5,7 @@
  * su estado (COPY-01): el primer título es `pending` (FALTA CONFIRMAR) y se muestra igual. Sin CTA ni enlaces.
  */
 import SectionShell from '../ui/SectionShell.astro';
+import LangText from '../ui/LangText.astro';
 import { getLanding } from '../../lib/content';
 
 const data = await getLanding();
@@ -20,8 +21,8 @@ const data = await getLanding();
               <path d="M5 12l5 5l10 -10" />
             </svg>
           </span>
-          <h3>{item.title.text}</h3>
-          <p class="include-desc">{item.description.text}</p>
+          <h3><LangText text={item.title.text} /></h3>
+          <p class="include-desc"><LangText text={item.description.text} /></p>
         </li>
       ))
     }

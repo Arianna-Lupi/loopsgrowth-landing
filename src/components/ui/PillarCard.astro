@@ -6,6 +6,7 @@
  * aria-hidden. Sombra dura, sin hover, cursor, transform ni transición: la tarjeta no es interactiva.
  */
 import CollageScene from '../collage/CollageScene.astro';
+import LangText from './LangText.astro';
 
 interface Props {
   chip: 'lupa' | 'ojos' | 'loop' | 'clic';
@@ -19,13 +20,13 @@ const { chip, title, body, list } = Astro.props;
 
 <li class="pillar-card">
   <CollageScene scene={`chip-${chip}`} class="pillar-chip" />
-  <h3>{title}</h3>
-  <p class="pillar-body">{body}</p>
+  <h3><LangText text={title} /></h3>
+  <p class="pillar-body"><LangText text={body} /></p>
   {
     list && (
       <ul role="list" class="pillar-team">
         {list.map((text) => (
-          <li>{text}</li>
+          <li><LangText text={text} /></li>
         ))}
       </ul>
     )
