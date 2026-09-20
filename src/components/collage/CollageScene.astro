@@ -14,7 +14,7 @@
 import Pill from './Pill.astro';
 import CollagePhoto from './CollagePhoto.astro';
 import { SCENES, assertScene, photoFrame } from './scenes.mjs';
-import { chosenPhoto } from './photos.mjs';
+import { chosenPhoto, assertPhotoForSlot } from './photos.mjs';
 import { SCENE_PIECES, SURFACE_OF_COLOR, fillVar } from './collage-rules.mjs';
 import { loopyGeometry, loopyScheme } from './loopy.mjs';
 
@@ -23,9 +23,11 @@ interface Props {
   class?: string;
   bare?: boolean;
   variant?: string;
+  /** Id de una candidata del manifiesto: se monta en lugar de la elegida (hoja de elección). */
+  photo?: string;
 }
 
-const { scene: name, class: className, bare = false, variant } = Astro.props;
+const { scene: name, class: className, bare = false, variant, photo: photoId } = Astro.props;
 assertScene(name);
 const scene = SCENES[name];
 const n = (v: number) => Number(v.toFixed(2));
@@ -39,7 +41,8 @@ const segments = scene.groups
       .map((g: any) => ({ group: g, layers: drawn.filter((l: any) => l.group === g.name) }))
   : [{ group: null, layers: drawn }];
 const frame = photoFrame(name);
-const photo = frame ? chosenPhoto(frame.slot) : undefined;
+if (photoId && !frame) throw new Error(`La escena "${name}" no tiene ranura de foto: no admite la prop photo ("${photoId}").`);
+const photo = frame ? (photoId ? assertPhotoForSlot(photoId, frame.slot) : chosenPhoto(frame.slot)) : undefined;
 const panelGroup = scene.groups?.find((g: any) => g.name === 'panel');
 const pillGroup = scene.groups?.find((g: any) => g.name === 'pills');
 const pills = scene.layers.filter((l: any) => l.kind === 'pill');

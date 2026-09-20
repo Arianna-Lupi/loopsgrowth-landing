@@ -18,6 +18,8 @@ import { CHIP_WORDS } from '../../components/collage/collage-rules.mjs';
 import { ARTBOARDS, LOGO_TONES, LOGO_VARIANTS } from '../../components/brand/logo-variants.mjs';
 import { parseTokens } from '../../../scripts/lib/contrast.mjs';
 import { readFileSync } from 'node:fs';
+import { PHOTOS, PHOTO_SLOT_NAMES } from '../../components/collage/photos.mjs';
+import { parseLicenses } from '../../../scripts/lib/photo-licenses.mjs';
 import { isProduction } from '../../lib/site';
 import { getLanding } from '../../lib/content';
 
@@ -41,6 +43,16 @@ const SWATCHES = ['purple', 'cream', 'orange', 'yellow', 'dark', 'white'].map((s
   token: `--color-brand-${swatch}`,
   hex: theme[`--color-brand-${swatch}`],
 }));
+// Hoja de elección de fotos: cada candidata del manifiesto en su escena completa, con el estado de su fila.
+const PHOTO_ROWS = parseLicenses(readFileSync('src/assets/photos/LICENSES.md', 'utf8'));
+const PHOTO_BANDS = [
+  { slot: 'hero', tone: 'light', scene: 'hero', cls: 'sheet-photo-hero' },
+  { slot: 'whynow', tone: 'yellow', scene: 'whynow', cls: 'sheet-photo-whynow' },
+].filter((b) => PHOTO_SLOT_NAMES.includes(b.slot));
+const photoState = (id: string) => {
+  const row = PHOTO_ROWS.find((r) => r.id === id);
+  return !row ? 'sin fila' : row.approval.startsWith('aprobada') ? 'aprobada' : 'pendiente';
+};
 const FAVICON_SIZES = [16, 32, 48] as const;
 const FAVICON_SAMPLES = [
   { tone: 'light', label: 'claro' },
@@ -270,6 +282,30 @@ const AVATARS = ['ojo-morado', 'ojo-amarillo', 'ojos-morado', 'ojos-amarillo'] a
         </div>
       </div>
     </section>
+
+    {
+      PHOTO_BANDS.map(({ slot, tone, scene, cls }) => (
+        <section class="sheet-band" data-tone={tone} data-sheet="fotos" data-photo-slot-sheet={slot} aria-labelledby={`sheet-photos-${slot}`}>
+          <div class="wrap">
+            <h2 id={`sheet-photos-${slot}`}>
+              <code>
+                fotos {slot} / {tone}
+              </code>
+            </h2>
+            <ul class={`sheet-photos ${cls}`}>
+              {PHOTOS.filter((p) => p.slot === slot).map((p) => (
+                <li data-demo={`foto-${p.id}`} data-chosen={p.chosen ? 'true' : 'false'}>
+                  <CollageScene scene={scene} photo={p.id} />
+                  <code>
+                    {p.id} / {photoState(p.id)}
+                  </code>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+      ))
+    }
   </div>
 </BaseLayout>
 
@@ -417,6 +453,32 @@ const AVATARS = ['ojo-morado', 'ojo-amarillo', 'ojos-morado', 'ojos-amarillo'] a
 
   .sheet-demo-agenda {
     max-width: 30rem;
+  }
+
+  .sheet-photos {
+    list-style: none;
+    margin: 1rem 0 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+  }
+
+  .sheet-photos li {
+    display: grid;
+    gap: 0.5rem;
+    width: min(100%, 30rem);
+    min-width: 0;
+  }
+
+  .sheet-photo-whynow li {
+    width: min(100%, 20rem);
+  }
+
+  @media (max-width: 40em) {
+    .sheet-photos {
+      flex-direction: column;
+    }
   }
 
   .sheet-minis {

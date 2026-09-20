@@ -199,3 +199,43 @@ test.describe('fotos en media tinta', () => {
     });
   }
 });
+
+// Hoja de elección (plan 02-11, tarea 3): cada candidata del manifiesto en su escena completa.
+const SHEET = '/marca/hoja/';
+test.describe('hoja de fotos', () => {
+  for (const width of WIDTHS) {
+    test(`a ${width} px: una celda por foto del manifiesto con su marco, rótulo en code y sin scroll horizontal`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto(SHEET);
+      await expect(page.locator('section[data-sheet="fotos"]')).toHaveCount(2);
+      await expect(page.locator('[data-demo^="foto-"]')).toHaveCount(PHOTOS.length);
+      for (const p of PHOTOS as { id: string; slot: string }[]) {
+        const cell = page.locator(`[data-demo="foto-${p.id}"]`);
+        await expect(cell).toHaveCount(1);
+        await expect(cell.locator('[data-photo-frame]')).toHaveCount(1);
+        await expect(cell.locator('[data-photo-frame]')).toHaveAttribute('data-photo-id', p.id);
+        await expect(cell.locator('[data-photo-frame]')).toHaveAttribute('data-photo-frame', p.slot);
+        await expect(cell.locator('img')).toHaveCount(1);
+        expect(await cell.locator('img').getAttribute('alt')).toBe('');
+        const label = cell.locator('code');
+        await expect(label).toHaveCount(1);
+        await expect(label).toHaveText(new RegExp(`^${p.id} / (pendiente|aprobada)$`));
+        const box = await cell.boundingBox();
+        expect(box!.x).toBeGreaterThanOrEqual(-0.5);
+        expect(box!.x + box!.width).toBeLessThanOrEqual(width + 0.5);
+      }
+      const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+      expect(overflow).toBeLessThanOrEqual(0);
+    });
+  }
+
+  test('las celdas de hero miden hasta 30rem y las de whynow hasta 20rem', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto(SHEET);
+    const rem = await page.evaluate(() => parseFloat(getComputedStyle(document.documentElement).fontSize));
+    for (const p of PHOTOS as { id: string; slot: string }[]) {
+      const box = (await page.locator(`[data-demo="foto-${p.id}"]`).boundingBox())!;
+      expect(box.width).toBeLessThanOrEqual((p.slot === 'hero' ? 30 : 20) * rem + 0.5);
+    }
+  });
+});

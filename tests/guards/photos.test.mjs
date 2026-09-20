@@ -3,6 +3,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, readdirSync, existsSync, statSync } from 'node:fs';
+import { spawnSync } from 'node:child_process';
 import sharp from 'sharp';
 import { parseLicenses, validateLicenses, parseElection, parseLicenseSections, evaluatePhotoGate, LICENSE_NAMES } from '../../scripts/lib/photo-licenses.mjs';
 import { parseTokens, hexToRgb, contrastRaw } from '../../scripts/lib/contrast.mjs';
@@ -232,4 +233,48 @@ test('puerta: en production bloquea aprobación pendiente y candidatas sin elegi
   assert.ok(dev.warnings.length >= 2);
   const ok = evaluatePhotoGate({ rows: [{ ...GOOD, approval: 'aprobada por Ari el 2026-09-20' }], photos: [photos[0]], files: ['hero-a'], env: 'production' });
   assert.deepEqual(ok.errors, []);
+});
+
+test('puerta: una elegida sin fila bloquea siempre y una foto aprobada sin sobrantes no bloquea (mutación por regla)', () => {
+  const photos = [{ id: 'hero-a', slot: 'hero', chosen: true }];
+  for (const env of ['production', 'development']) {
+    assert.ok(evaluatePhotoGate({ rows: [], photos, files: ['hero-a'], env }).errors.some((e) => e.includes('hero-a')), `sin fila en ${env}`);
+  }
+  // pendiente en producción bloquea; la misma foto aprobada no (la prueba distingue las dos)
+  assert.ok(evaluatePhotoGate({ rows: [{ ...GOOD }], photos, files: ['hero-a'], env: 'production' }).errors.length >= 1);
+  assert.deepEqual(evaluatePhotoGate({ rows: [{ ...GOOD, approval: 'aprobada por Ari el 2026-09-20' }], photos, files: ['hero-a'], env: 'production' }).errors, []);
+  // una candidata sobrante en producción bloquea; sin ella no
+  const approved = [{ ...GOOD, approval: 'aprobada por Ari el 2026-09-20' }];
+  assert.ok(evaluatePhotoGate({ rows: approved, photos, files: ['hero-a', 'hero-b'], env: 'production' }).errors.some((e) => e.includes('hero-b')));
+  assert.equal(evaluatePhotoGate({ rows: approved, photos, files: ['hero-a', 'hero-b'], env: 'development' }).errors.length, 0);
+});
+
+test('check-photos.mjs: sale 0 sin producción, 1 en production con el estado actual y solo el valor exacto bloquea; el mensaje trae los pasos de cierre', () => {
+  const run = (value) => {
+    const env = { ...process.env };
+    delete env.PUBLIC_ENV;
+    if (value !== undefined) env.PUBLIC_ENV = value;
+    return spawnSync(process.execPath, ['scripts/check-photos.mjs'], { encoding: 'utf8', env });
+  };
+  const chosenRows = rows.filter((r) => PHOTOS.some((p) => p.chosen && p.id === r.id));
+  const blocked = chosenRows.some((r) => r.approval === 'pendiente') || PHOTOS.some((p) => !p.chosen);
+  assert.equal(run().status, 0, 'sin PUBLIC_ENV');
+  assert.equal(run('Production').status, 0, 'Production no es production');
+  const prod = run('production');
+  assert.equal(prod.status, blocked ? 1 : 0, 'production con el estado actual');
+  if (blocked) {
+    const out = prod.stdout + prod.stderr;
+    assert.ok(/FAIL/.test(out) && /Cómo cerrar la elección/.test(out) && /photos\.mjs/.test(out) && /LICENSES\.md/.test(out), out);
+  }
+  const dev = run();
+  assert.ok(/WARN/.test(dev.stdout + dev.stderr) === blocked, 'los avisos salen sin producción solo si hay pendientes');
+});
+
+test('package.json: prebuild corre check-photos y CollageScene declara la prop photo con assertPhotoForSlot', () => {
+  const pkg = JSON.parse(readFileSync('package.json', 'utf8'));
+  assert.ok(pkg.scripts.prebuild.includes('check-photos'));
+  const scene = readFileSync('src/components/collage/CollageScene.astro', 'utf8');
+  assert.ok(/photo\?:\s*string/.test(scene) && scene.includes('assertPhotoForSlot'));
+  assert.throws(() => assertPhotoForSlot('hero-a', 'whynow'), /ranura/);
+  assert.throws(() => assertPhotoForSlot('no-existe', 'hero'), /no existe/);
 });

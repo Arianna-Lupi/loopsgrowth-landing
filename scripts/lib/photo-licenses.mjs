@@ -91,12 +91,20 @@ export function sha256File(path) {
  * en otros entornos solo advierte.
  */
 export function evaluatePhotoGate({ rows, photos, files, env }) {
+  const always = [];
   const problems = [];
   for (const photo of photos.filter((p) => p.chosen)) {
     const row = rows.find((r) => r.id === photo.id);
-    if (!row || row.approval === 'pendiente') problems.push(`La foto elegida "${photo.id}" tiene la aprobación de Ari pendiente.`);
+    if (!row) always.push(`La foto elegida "${photo.id}" no tiene fila en LICENSES.md.`);
+    else if (row.approval === 'pendiente') problems.push(`La foto elegida "${photo.id}" tiene la aprobación de Ari pendiente.`);
   }
   const chosenIds = new Set(photos.filter((p) => p.chosen).map((p) => p.id));
   for (const id of files) if (!chosenIds.has(id)) problems.push(`Existe el raster de la candidata "${id}" y no está elegida (Astro lo emitiría en dist).`);
-  return env === 'production' ? { errors: problems, warnings: [] } : { errors: [], warnings: problems };
+  return env === 'production' ? { errors: [...always, ...problems], warnings: [] } : { errors: always, warnings: problems };
+}
+
+/** Pasos para cerrar la elección, tal como los describe LICENSES.md (sección "Cómo cerrar la elección"). */
+export function closingSteps(text) {
+  const body = section(text, 'Cómo cerrar la elección').trim();
+  return body || 'Consulta la sección "Cómo cerrar la elección" de src/assets/photos/LICENSES.md.';
 }

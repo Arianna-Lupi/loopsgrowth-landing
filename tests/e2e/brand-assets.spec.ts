@@ -4,6 +4,7 @@ import { parse } from 'yaml';
 import { PURPLE_RGB, rgbOfToken } from './lib/brand';
 import { ARTBOARDS, MIN_HEIGHT_PX } from '../../src/components/brand/logo-variants.mjs';
 import { CHIP_WORDS, assertPill } from '../../src/components/collage/collage-rules.mjs';
+import { PHOTOS } from '../../src/components/collage/photos.mjs';
 
 // El nombre accesible esperado sale del YAML, nunca de una cadena escrita a mano.
 const es = (parse(readFileSync('src/content/landing.es.yaml', 'utf8')) as {
@@ -308,7 +309,8 @@ const SHEET_SCENES: Record<string, string> = {
   ...Object.fromEntries(AVATAR_VARIANTS.map((v) => [`avatar-${v}`, `[data-demo="avatar-${v}"] [data-collage-scene="avatar-${v}"]`])),
 };
 const PIECES_ON_SHEET = 8 + 8 + 8 + 6; // light, yellow, purple y dark (sin Loopy)
-const ROOTS_ON_SHEET = PIECES_ON_SHEET + Object.keys(SHEET_SCENES).length;
+// más una escena completa por foto del manifiesto en la hoja de fotos (plan 02-11)
+const ROOTS_ON_SHEET = PIECES_ON_SHEET + Object.keys(SHEET_SCENES).length + PHOTOS.length;
 
 test.describe('hoja: piezas y píldoras', () => {
   test('(a) toda raíz y el sprite son decorativos: aria-hidden true; todo svg con focusable false', async ({ page }) => {
@@ -539,10 +541,10 @@ test.describe('hoja: composiciones y avatares', () => {
     });
   }
 
-  test('(f) la hoja trae identidad, paleta y favicon (de 02-09) más piezas, píldoras, composiciones y avatares', async ({ page }) => {
+  test('(f) la hoja trae identidad, paleta y favicon (de 02-09) más piezas, píldoras, composiciones, avatares y fotos', async ({ page }) => {
     await open(page, 1280, SHEET);
     const kinds = await page.locator('[data-sheet]').evaluateAll((els) => [...new Set(els.map((e) => e.getAttribute('data-sheet')))].sort());
-    expect(kinds).toEqual(['avatares', 'composiciones', 'favicon', 'identidad', 'paleta', 'piezas', 'pildoras']);
+    expect(kinds).toEqual(['avatares', 'composiciones', 'favicon', 'fotos', 'identidad', 'paleta', 'piezas', 'pildoras']);
   });
 });
 

@@ -11,8 +11,8 @@ Fotos elegidas por defecto: `hero-a` y `whynow-a` (candidatas: `hero-b` y `whyno
 ## Cómo cerrar la elección
 
 1. Juan y Ari eligen en `/marca/hoja/` una candidata por ranura.
-2. En `src/components/collage/photos.mjs`: `chosen: true` solo en la elegida de cada ranura y borrar la entrada de la otra.
-3. En este archivo: escribir en la columna de aprobación de la elegida `aprobada por <nombre> el <AAAA-MM-DD>`, borrar la fila de la otra, cambiar `Elección: abierta` por `Elección: cerrada` y actualizar "Estado".
+2. En `src/components/collage/photos.mjs` (arreglo `PHOTOS`): `chosen: true` solo en la elegida de cada ranura y borrar la entrada de la otra.
+3. En `src/assets/photos/LICENSES.md`: escribir en la columna de aprobación de la elegida `aprobada por <nombre> el <AAAA-MM-DD>`, borrar la fila de la otra, cambiar `Elección: abierta` por `Elección: cerrada` y actualizar "Estado". Todo el cierre va en un solo commit.
 4. Borrar `src/assets/photos/treated/<id>.png` de la candidata descartada y su original en `photo-sources/`.
 5. Comprobar: `node --test tests/guards/photos.test.mjs`, `PUBLIC_ENV=production node scripts/check-photos.mjs` (debe salir 0) y `npx astro build`.
 

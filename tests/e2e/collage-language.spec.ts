@@ -2,7 +2,7 @@ import { test, expect, type Page } from '@playwright/test';
 import { rgbOfToken } from './lib/brand';
 import { CHIP_WORDS } from '../../src/components/collage/collage-rules.mjs';
 import { PHOTO_SLOTS, SCENES as SCENE_DATA } from '../../src/components/collage/scenes.mjs';
-import { chosenPhoto } from '../../src/components/collage/photos.mjs';
+import { PHOTOS, chosenPhoto } from '../../src/components/collage/photos.mjs';
 
 // Lenguaje del moodboard sobre el HTML construido (plan 02-10): rasgos por estructura, píldoras
 // decorativas, cajas, árbol de accesibilidad, ranuras de foto, ganchos, pesos y espaciado de texto.
@@ -279,7 +279,8 @@ test.describe('hoja: escenas del lenguaje del moodboard', () => {
     const pills = await page.locator('[data-collage] [data-pill]').evaluateAll((els) =>
       els.map((e) => ({ text: (e.textContent ?? '').trim(), word: e.getAttribute('data-pill'), hidden: !!e.closest('[aria-hidden="true"]'), tabindex: e.getAttribute('tabindex'), lang: e.getAttribute('lang') })),
     );
-    expect(pills.length).toBe(2 + 2 + 2 + 7);
+    // hero, whynow y agenda (2 cada una), 7 chips y, en la hoja de fotos, las 2 píldoras de la escena de cada candidata
+    expect(pills.length).toBe(2 + 2 + 2 + 7 + 2 * PHOTOS.length);
     for (const p of pills) {
       expect(WORDS).toContain(p.text);
       expect(p.word).toBe(p.text);
