@@ -79,11 +79,26 @@ const landing = defineCollection({
         )
         .length(5),
     }),
-    // Cuatro integrantes exactos: la rejilla de 1, 2 y 4 columnas depende del conteo. Solo nombre y cargo:
-    // sin biografía, credencial ni enlaces hasta que Ari confirme (UI-SPEC sección 7).
+    // Cuatro integrantes exactos: la rejilla de 1, 2 y 4 columnas depende del conteo. Nombre y cargo, sin
+    // biografía ni credencial (UI-SPEC sección 7). Excepción de Juan (2026-09-20): un `link` opcional, solo en
+    // su tarjeta, con `url` (https, sin `javascript:` ni `data:`), `label` visible y `hint` para lectores de pantalla.
     team: z.strictObject({
       title: claim,
-      members: z.array(z.strictObject({ name: claim, role: claim })).length(4),
+      members: z
+        .array(
+          z.strictObject({
+            name: claim,
+            role: claim,
+            link: z
+              .strictObject({
+                url: claim.extend({ text: z.url({ protocol: /^https$/, error: 'debe ser una URL https://...' }) }),
+                label: claim,
+                hint: claim,
+              })
+              .optional(),
+          }),
+        )
+        .length(4),
     }),
     // Seis entregables y cuatro fases exactos: las rejillas de 1, 2 y 3 columnas y la lista de fases dependen del conteo.
     includes: z.strictObject({

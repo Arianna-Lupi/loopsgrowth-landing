@@ -152,3 +152,61 @@ test('originales: no se versionan (photo-sources/ ignorado) y ningún AVIF de la
   const tracked = spawnSync('git', ['ls-files', 'photo-sources', 'src/assets/team'], { encoding: 'utf8' }).stdout;
   assert.ok(!/\.avif|photo-sources/.test(tracked), tracked);
 });
+
+// (iv) Team.astro ----------------------------------------------------------------------------------
+test('Team.astro: foto local con alt vacío, ancho, alto y carga diferida; avatar Loopy de respaldo; enlace externo seguro', () => {
+  const src = readFileSync('src/components/sections/Team.astro', 'utf8');
+  assert.ok(/from 'astro:assets'/.test(src) && /<Image\b/.test(src), 'foto por astro:assets');
+  assert.ok(/alt=""/.test(src), 'alt vacío');
+  assert.ok(/loading="lazy"/.test(src) && /width=\{/.test(src) && /height=\{/.test(src), 'lazy con dimensiones');
+  assert.ok(/<Avatar\b/.test(src), 'avatar Loopy de respaldo');
+  assert.ok(/target="_blank"/.test(src) && /rel="noopener noreferrer"/.test(src), 'enlace externo seguro');
+  assert.ok(!/https?:\/\//.test(src.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\/\/.*$/gm, '').replace(/---[\s\S]*?---/, '')), 'sin URL escrita en el marcado');
+  assert.ok(!/aria-label\s*=/.test(src), 'sin aria-label que reemplace el texto visible');
+});
+
+test('esquema y YAML: `link` opcional con url https, label y hint; solo la tarjeta de Juan lo lleva, con el href y el texto exactos', () => {
+  const config = readFileSync('src/content.config.ts', 'utf8');
+  assert.ok(/link: z\s*\.strictObject\(\{[\s\S]*?url: claim\.extend\(\{ text: z\.url\(\{ protocol: \/\^https\$\/[\s\S]*?\.optional\(\)/.test(config), 'link opcional con url https en el esquema');
+  const yaml = readFileSync('src/content/landing.es.yaml', 'utf8');
+  const team = yaml.slice(yaml.indexOf('  team:'), yaml.indexOf('  includes:'));
+  assert.equal((team.match(/^ {8}link:$/gm) ?? []).length, 1, 'un solo enlace en el equipo');
+  const juan = team.slice(team.indexOf('"Juan Angulo"'), team.indexOf('"Miguel Pacheco"'));
+  assert.ok(/text: "https:\/\/juan-tech\.com"\n\s+status: verified\n\s+reason: "[^"]*Juan Angulo el 2026-09-20/.test(juan), 'url exacta, verified y con reason de Juan');
+  assert.ok(/text: "juan-tech\.com"\n\s+status: verified/.test(juan), 'label exacto');
+  assert.ok(!/[\u2013\u2014]/.test(team), 'sin guiones largos ni cortos');
+  assert.ok(!/\bAEO\b/.test(team), 'sin AEO');
+});
+
+/** Tope de peso del WebP emitido por foto del equipo (medido: unos 4 KB) y de la suma de las tres. */
+const TEAM_WEBP_MAX = 12288;
+
+test('dist: una img por foto del equipo, local, con alt vacío, 240x240, carga diferida y bajo el tope de peso', { skip: !existsSync('dist/index.html') && 'sin dist' }, () => {
+  const html = readFileSync('dist/index.html', 'utf8');
+  const imgs = (html.match(/<img\b[^>]*>/g) ?? []).filter((t) => /data-team-photo=/.test(t));
+  assert.deepEqual(imgs.map((t) => /data-team-photo="([^"]+)"/.exec(t)[1]), ids, 'orden y conjunto de fotos del equipo');
+  let total = 0;
+  for (const tag of imgs) {
+    assert.match(tag, /\balt(=""|\s|>)/);
+    assert.ok(!/\balt="[^"]/.test(tag), 'alt con texto');
+    assert.match(tag, new RegExp(`\\bwidth="${TEAM_PHOTO_OUT}"`));
+    assert.match(tag, new RegExp(`\\bheight="${TEAM_PHOTO_OUT}"`));
+    assert.match(tag, /loading="lazy"/);
+    const src = /src="([^"]+)"/.exec(tag)[1];
+    assert.ok(src.startsWith('/_astro/') && src.endsWith('.webp'), src);
+    const size = statSync(`dist${src}`).size;
+    assert.ok(size <= TEAM_WEBP_MAX, `${src}: ${size}`);
+    total += size;
+  }
+  assert.ok(total <= TEAM_WEBP_MAX * 2, `suma ${total}`);
+  assert.equal((html.match(/<img\b[^>]*data-team-photo/g) ?? []).length, TEAM_PHOTOS.length);
+  // Enlace de Juan: exacto, externo y seguro; el único enlace de la sección.
+  const section = html.slice(html.indexOf('id="nosotros"'), html.indexOf('id="incluye"'));
+  const links = section.match(/<a\b[^>]*>/g) ?? [];
+  assert.equal(links.length, 1, 'un solo enlace en Quiénes somos');
+  assert.match(links[0], /href="https:\/\/juan-tech\.com"/);
+  assert.match(links[0], /target="_blank"/);
+  assert.match(links[0], /rel="noopener noreferrer"/);
+  assert.ok(!/aria-label/.test(links[0]));
+  assert.ok(!/(src|href)="\/\//.test(section), 'sin recursos de terceros en la sección');
+});
