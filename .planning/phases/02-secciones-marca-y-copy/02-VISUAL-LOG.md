@@ -400,8 +400,8 @@ No quedan anotaciones `moderate` ni `minor` por listar. La compuerta completa de
 
 1. **Movimiento:** mirar la página en un navegador real a 390 y 1280 px alternando la preferencia de movimiento reducido del sistema, y confirmar que la entrada del hero es sutil y no falta contenido (con `reduce` no hay animaciones: lo mide `motion.spec.ts`, pero la percepción es de una persona).
 2. **VoiceOver en Safari** (y NVDA o TalkBack si se puede): que cada resumen del FAQ anuncie contraído o expandido y lea la respuesta al abrir. Recorrer con teclado el iframe real de ClickUp (entrar y salir sin trampa de foco).
-3. **Avatares Loopy:** aprobar el set (lupa, auriculares, gafas, gorro) y la asignación persona a variante.
-4. **Favicon:** aprobar la mesa 18 (un ojo con lupa) frente al isotipo de dos ojos que hoy se usa.
+3. **Avatares Loopy:** aprobar el set vigente (el Loopy oficial de 02-10: `ojo-morado`, `ojo-amarillo`, `ojos-morado`, `ojos-amarillo`, sin accesorios) y la asignación persona a variante. La versión anterior con lupa, auriculares, gafas y gorro ya no existe.
+4. **Favicon:** aprobar la mesa 18 (un ojo con lupa), que es la que hoy publica `public/favicon.svg` (02-09); el isotipo de dos ojos de 02-02 quedó como alternativa.
 5. **Variantes de logo por fondo:** el horizontal y el imagotipo solo van sobre blanco; el isotipo sobre oscuro usa la mesa 17 y el ojo sobre oscuro la 22 como excepción de marca; falta el emblema sobre oscuro.
 6. **Morado:** confirmar #4228D1 (valor de los archivos del logo, decisión de Juan del 2026-09-19) frente al #73187F que rotula el BrandBook.
 7. **Palabras de las píldoras:** `seo`, `geo` y `ads` salen del copy de Ari; `spy` y `team work` vienen del moodboard. Confirmar que se quedan.
