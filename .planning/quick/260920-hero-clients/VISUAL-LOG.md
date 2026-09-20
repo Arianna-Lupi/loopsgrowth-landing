@@ -5,7 +5,7 @@ Fecha: 2026-09-20. Rama `feature/hero-clients`. Los dos commits anteriores (e478
 ## Verbos y lentes usados
 
 - `impeccable critique` con lentes `layout` y `polish`, más `adapt` para el móvil. Aviso de método: DEGRADED, contexto único (este ejecutor no tiene herramienta de subagentes, así que la evaluación de diseño y la del detector corrieron en secuencia, no aisladas).
-- `impeccable detect` sobre `Hero.astro`: 0 hallazgos antes y después.
+- `impeccable detect` sobre `Hero.astro`: 0 hallazgos (corrido sobre el estado final).
 - `design-taste-frontend`: solo como filtro anti-plantilla. Sus reglas de "hero con máximo 4 elementos de texto", "logos solo, sin etiquetas" y "muro de logos bajo el hero" chocan con decisiones de Juan (CTA al final de los párrafos, lista de clientes bajo el CTA) y con A11Y.md (el logo lleva `alt=""`, así que el nombre visible es el nombre accesible). Manda el brief; queda registrado como desviación consciente.
 - Referencia de marca: `brand-inventory/moodboard.png` (formas planas de color, píldoras con palabra en negrita, mosaicos crema redondeados con texto morado, sombra dura). Los archivos están bajo `.planning/.../brand-inventory/` y son confidenciales: no se copian ni se versionan.
 - Herramienta: Playwright + `astro preview` en 4322 con `E2E_BLOCK_CLICKUP=1` (proxy muerto). Nunca `astro dev`.
@@ -34,7 +34,7 @@ Solo `src/components/sections/Hero.astro` (estilos) y una línea de componentes 
 
 ## Confirmación (una ronda)
 
-Capturas: `test-results/after-{320,390,768,1024,1280,1600}.png` y `after-pending-label-320.png`. Se revisaron 320, 768, 1024 y 1280 px: tarjetas uniformes, logo legible en los 12, sin desborde, nombres sin recorte, el bloque queda bajo el CTA. Suite completa en el SUMMARY.
+Capturas: `test-results/after-{320,390,768,1024,1280,1600}.png`. Se revisaron 320, 768, 1024 y 1280 px: tarjetas uniformes, logo legible en los 12, sin desborde, nombres sin recorte, el bloque queda bajo el CTA. Suite completa en el SUMMARY.
 
 ## Pliegue móvil del CTA del hero (medido en el build, sin cambios)
 
