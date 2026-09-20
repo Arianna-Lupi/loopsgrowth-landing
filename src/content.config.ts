@@ -41,7 +41,14 @@ const landing = defineCollection({
     cta: z.strictObject({ label_template: claim }),
     skip: z.strictObject({ nav_label: claim, content: claim, form: claim }),
     meta: z.strictObject({ title_template: claim }),
-    hero: z.strictObject({ h1: claim, subtitle: claim, description: z.array(claim).min(1) }),
+    hero: z.strictObject({
+      h1: claim,
+      subtitle: claim,
+      description: z.array(claim).min(1),
+      // Clientes del hero (quick 260920-hero-clients): 12 exactos, en el orden de ariannalupi.com. Cada logo sale
+      // de src/assets/clients/<nombre en minúsculas>.webp y su procedencia de src/assets/clients/PROVENANCE.md.
+      clients: z.strictObject({ label: claim, items: z.array(claim).length(12) }),
+    }),
     // Las cantidades fijas las impone el esquema: 3 dolores y 4 pilares. `why_now.items` admite 1 o más.
     problem: z.strictObject({
       title: claim,

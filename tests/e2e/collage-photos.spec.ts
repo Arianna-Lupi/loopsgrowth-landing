@@ -30,6 +30,8 @@ async function scrollThrough(page: Page) {
   await page.evaluate(() => window.scrollTo(0, 0));
 }
 
+const CLIENT_LOGO_FILE = /\/_astro\/(holafly|hubspot|unilever|alchemy|ambl|travelperk|skale|sendlane|chartmogul|holded|flodesk|piktochart)\./;
+
 test.describe('fotos en media tinta', () => {
   test('un marco por foto elegida con una sola img decorativa, dimensiones y carga según su ranura', async ({ page }) => {
     await open(page, 1280);
@@ -178,7 +180,8 @@ test.describe('fotos en media tinta', () => {
       if (res.request().resourceType() !== 'image') return;
       const url = new URL(res.url());
       if (url.origin !== origin) foreign.push(res.url());
-      if (url.pathname.startsWith('/_astro/')) sizes.push((await res.body()).length);
+      // Los logos de clientes del hero (quick 260920-hero-clients) tienen su propio presupuesto en hero-clients.spec.ts.
+      if (url.pathname.startsWith('/_astro/') && !CLIENT_LOGO_FILE.test(url.pathname)) sizes.push((await res.body()).length);
     });
     await open(page, 1280);
     await scrollThrough(page);
