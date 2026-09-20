@@ -103,9 +103,15 @@ const { faq } = data;
     fill: var(--color-brand-yellow);
   }
 
-  /* Abierto: la barra vertical desaparece y el plus queda como minus. */
+  /* La barra vertical gira sobre su propio centro: la misma barra (10 de largo, mismo trazo) queda
+     encima de la horizontal y el plus queda como minus. La transición vive en `motion.css`. */
+  .faq-icon-v {
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+
   .faq-item[open] .faq-icon-v {
-    display: none;
+    transform: rotate(90deg);
   }
 
   /* Anillo dentro de la tarjeta: el offset negativo suma el ancho del trazo y el desfase estándar. */

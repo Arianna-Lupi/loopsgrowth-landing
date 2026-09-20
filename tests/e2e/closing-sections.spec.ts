@@ -348,14 +348,24 @@ test.describe('FAQ a 1280 px', () => {
     expect(Math.round(b.y - (a.y + a.height))).toBe(16);
   });
 
-  test('icono de 24 px: la barra vertical se ve cerrado y se oculta abierto', async ({ page }) => {
+  test('icono de 24 px: la barra vertical se ve cerrado y gira a horizontal abierto (02-07 reemplaza el display:none)', async ({ page }) => {
     await page.goto('/');
     const icon = await boxOf(page, '#faq .faq-icon', 0);
     expect({ w: icon.width, h: icon.height }).toEqual({ w: 24, h: 24 });
-    const display = () => page.locator('#faq .faq-icon-v').first().evaluate((el) => getComputedStyle(el).display);
-    expect(await display()).not.toBe('none');
+    const bar = () =>
+      page.locator('#faq .faq-icon-v').first().evaluate((el) => {
+        const b = el.getBoundingClientRect();
+        return { display: getComputedStyle(el).display, w: b.width, h: b.height };
+      });
+    const closed = await bar();
+    expect(closed.display).not.toBe('none');
+    expect(closed.h).toBeGreaterThan(closed.w);
     await page.locator('#faq summary').first().click();
-    expect(await display()).toBe('none');
+    // La barra sigue en el DOM y se ve: gira sobre su centro hasta quedar horizontal (transición de 150 ms).
+    await expect.poll(async () => (await bar()).w, { timeout: 2000 }).toBeGreaterThan(0);
+    const open = await bar();
+    expect(open.display).not.toBe('none');
+    expect(open.w).toBeGreaterThanOrEqual(2 * open.h);
   });
 
   test('el anillo de foco con Tab es sólido, de 3 px, con offset negativo y queda dentro de la tarjeta', async ({ page }) => {
