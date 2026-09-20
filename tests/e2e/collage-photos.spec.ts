@@ -30,6 +30,8 @@ async function scrollThrough(page: Page) {
   await page.evaluate(() => window.scrollTo(0, 0));
 }
 
+const CLIENT_LOGO_FILE = /\/_astro\/(holafly|hubspot|unilever|alchemy|ambl|travelperk|skale|sendlane|chartmogul|holded|flodesk|piktochart)\./;
+
 test.describe('fotos en media tinta', () => {
   test('un marco por foto elegida con una sola img decorativa, dimensiones y carga según su ranura', async ({ page }) => {
     await open(page, 1280);
@@ -178,7 +180,8 @@ test.describe('fotos en media tinta', () => {
       if (res.request().resourceType() !== 'image') return;
       const url = new URL(res.url());
       if (url.origin !== origin) foreign.push(res.url());
-      if (url.pathname.startsWith('/_astro/')) sizes.push((await res.body()).length);
+      // Los logos de clientes del hero (quick 260920-hero-clients) tienen su propio presupuesto en hero-clients.spec.ts.
+      if (url.pathname.startsWith('/_astro/') && !CLIENT_LOGO_FILE.test(url.pathname)) sizes.push((await res.body()).length);
     });
     await open(page, 1280);
     await scrollThrough(page);
@@ -195,7 +198,10 @@ test.describe('fotos en media tinta', () => {
     await page.goto('/');
     for (const p of CHOSEN) {
       const img = page.locator(`[data-photo-frame="${p.slot}"] img`);
-      await img.scrollIntoViewIfNeeded();
+      // `scrollIntoViewIfNeeded` de Playwright espera fotogramas (rAF) para comprobar que el elemento está quieto y, con
+      // JavaScript desactivado, ese chequeo se queda esperando de forma intermitente (más aún desde que la página trae los
+      // retratos de Quiénes somos). El desplazamiento se hace por evaluación directa: no cambia lo que la prueba mide.
+      await img.evaluate((el) => el.scrollIntoView({ block: 'center' }));
       await expect.poll(() => img.evaluate((el: HTMLImageElement) => el.complete && el.naturalWidth > 0)).toBe(true);
     }
     await context.close();

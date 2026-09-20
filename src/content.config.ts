@@ -41,7 +41,14 @@ const landing = defineCollection({
     cta: z.strictObject({ label_template: claim }),
     skip: z.strictObject({ nav_label: claim, content: claim, form: claim }),
     meta: z.strictObject({ title_template: claim }),
-    hero: z.strictObject({ h1: claim, subtitle: claim, description: z.array(claim).min(1) }),
+    hero: z.strictObject({
+      h1: claim,
+      subtitle: claim,
+      description: z.array(claim).min(1),
+      // Clientes del hero (quick 260920-hero-clients): 12 exactos, en el orden de ariannalupi.com. Cada logo sale
+      // de src/assets/clients/<nombre en minúsculas>.webp y su procedencia de src/assets/clients/PROVENANCE.md.
+      clients: z.strictObject({ label: claim, items: z.array(claim).length(12) }),
+    }),
     // Las cantidades fijas las impone el esquema: 3 dolores y 4 pilares. `why_now.items` admite 1 o más.
     problem: z.strictObject({
       title: claim,
@@ -79,11 +86,26 @@ const landing = defineCollection({
         )
         .length(5),
     }),
-    // Cuatro integrantes exactos: la rejilla de 1, 2 y 4 columnas depende del conteo. Solo nombre y cargo:
-    // sin biografía, credencial ni enlaces hasta que Ari confirme (UI-SPEC sección 7).
+    // Cuatro integrantes exactos: la rejilla de 1, 2 y 4 columnas depende del conteo. Nombre y cargo, sin
+    // biografía ni credencial (UI-SPEC sección 7). Excepción de Juan (2026-09-20): un `link` opcional, solo en
+    // su tarjeta, con `url` (https, sin `javascript:` ni `data:`), `label` visible y `hint` para lectores de pantalla.
     team: z.strictObject({
       title: claim,
-      members: z.array(z.strictObject({ name: claim, role: claim })).length(4),
+      members: z
+        .array(
+          z.strictObject({
+            name: claim,
+            role: claim,
+            link: z
+              .strictObject({
+                url: claim.extend({ text: z.url({ protocol: /^https$/, error: 'debe ser una URL https://...' }) }),
+                label: claim,
+                hint: claim,
+              })
+              .optional(),
+          }),
+        )
+        .length(4),
     }),
     // Seis entregables y cuatro fases exactos: las rejillas de 1, 2 y 3 columnas y la lista de fases dependen del conteo.
     includes: z.strictObject({

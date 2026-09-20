@@ -177,3 +177,194 @@ export function closingSteps(text) {
   const body = section(text, 'Cómo cerrar la elección').trim();
   return body || 'Consulta la sección "Cómo cerrar la elección" de src/assets/photos/LICENSES.md.';
 }
+
+// ---------------------------------------------------------------------------------------------
+// Fotos reales del equipo (quick 260920-team-photos). Registro aparte en src/assets/team/PROVENANCE.md:
+// no son fotos de stock (sin licencia de Unsplash, Pexels o Pixabay), sino fotos del propio equipo cuya
+// aprobación de Ari y consentimiento individual quedan pendientes. Misma política de la puerta anterior:
+// pendiente bloquea `PUBLIC_ENV=production` y fuera de producción solo advierte; el registro incoherente
+// bloquea siempre.
+// ---------------------------------------------------------------------------------------------
+
+const TEAM_COLUMNS = ['id', 'derived', 'source', 'downloaded', 'dimensions', 'sha256', 'authorizedBy', 'approval', 'consent', 'note'];
+
+/** Origen permitido de las fotos del equipo: la API de medios del sitio de Ari. */
+export const TEAM_SOURCE_PREFIX = 'https://aprendoclub.com/api/media/file/';
+
+/** Filas de la tabla "Registro" de src/assets/team/PROVENANCE.md (10 columnas). */
+export function parseTeamProvenance(text) {
+  return section(text, 'Registro')
+    .split('\n')
+    .filter((line) => line.trim().startsWith('|'))
+    .map((line) => line.trim().replace(/^\||\|$/g, '').split('|').map((c) => c.trim()))
+    .filter((cells) => cells.length === TEAM_COLUMNS.length && !/^-+$/.test(cells[0].replace(/[:\s]/g, '')) && cells[0] !== 'id')
+    .map((cells) => {
+      const row = Object.fromEntries(TEAM_COLUMNS.map((c, i) => [c, cells[i]]));
+      row.id = row.id.replace(/`/g, '');
+      row.derived = row.derived.replace(/`/g, '');
+      return row;
+    });
+}
+
+/** `{ pending: true }`, `{ pending: false, who, date }` o nulo (forma `dado por <nombre> el AAAA-MM-DD`). */
+export function parseConsent(text) {
+  if (text === 'pendiente') return { pending: true };
+  const m = /^dado por (\S.*?) el (\d{4}-\d{2}-\d{2})$/.exec(text ?? '');
+  return m ? { pending: false, who: m[1], date: m[2] } : null;
+}
+
+/** Motivo por el que el consentimiento de una fila no vale, o nulo. */
+export function consentProblem(row) {
+  const consent = parseConsent(row.consent);
+  if (!consent) return 'debe ser "pendiente" o "dado por <nombre> el AAAA-MM-DD"';
+  if (consent.pending) return null;
+  if (!isCalendarDate(consent.date)) return `la fecha ${consent.date} no existe en el calendario`;
+  if (isCalendarDate(row.downloaded) && consent.date < row.downloaded) {
+    return `el consentimiento (${consent.date}) no puede ser anterior a la descarga (${row.downloaded})`;
+  }
+  return null;
+}
+
+/** Errores en español, uno por campo mal formado; lista vacía si todo está bien. */
+export function validateTeamProvenance(rows) {
+  const errors = [];
+  for (const row of rows) {
+    const bad = (field, why) => errors.push(`Foto del equipo "${row.id}", campo "${field}": ${why}.`);
+    if (!/^[a-z][a-z0-9-]*$/.test(row.id ?? '')) bad('id', 'debe ser un identificador en minúsculas');
+    if (!(row.source ?? '').startsWith(TEAM_SOURCE_PREFIX) || !/^https:\/\/\S+$/.test(row.source)) bad('source', `debe ser una URL https que empiece por ${TEAM_SOURCE_PREFIX}`);
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(row.downloaded ?? '') || !isCalendarDate(row.downloaded)) bad('downloaded', 'debe ser una fecha AAAA-MM-DD que exista');
+    if (!/^\d+x\d+$/.test(row.dimensions ?? '')) bad('dimensions', 'debe tener la forma ANCHOxALTO');
+    if (!/^[0-9a-f]{64}$/.test(row.sha256 ?? '')) bad('sha256', 'debe medir 64 hexadecimales');
+    if (!(row.authorizedBy ?? '').trim()) bad('authorizedBy', 'debe decir quién autorizó el uso');
+    const approval = approvalProblem({ approval: row.approval, downloaded: row.downloaded });
+    if (approval) bad('approval', approval);
+    const consent = consentProblem(row);
+    if (consent) bad('consent', consent);
+    for (const field of TEAM_COLUMNS) if (DASH.test(row[field] ?? '')) bad(field, 'no se admiten guiones largos ni cortos');
+  }
+  return errors;
+}
+
+/**
+ * Puerta de las fotos del equipo (función pura). `always` bloquea en todo entorno (registro o manifiesto
+ * incoherentes, derivado ausente, sha256 distinto del original de photo-sources/team/, raster huérfano);
+ * `problems` solo bloquea con `env === 'production'` (aprobación de Ari o consentimiento pendientes).
+ * `photos` es el manifiesto (`TEAM_PHOTOS`), `files` los ids de los PNG de `src/assets/team/treated/` y
+ * `originals` id -> sha256 de los originales que existan (ignorados por git, ausentes en CI).
+ */
+export function evaluateTeamPhotoGate({ rows, photos, files, env, originals }) {
+  const always = [];
+  const problems = [];
+
+  for (const photo of photos) {
+    const row = rows.find((r) => r.id === photo.id);
+    if (!row) {
+      always.push(`La foto del equipo "${photo.id}" no tiene fila en PROVENANCE.md.`);
+      continue;
+    }
+    if (row.derived !== `treated/${photo.id}.png`) always.push(`La foto del equipo "${photo.id}" declara el derivado "${row.derived}" y debe ser "treated/${photo.id}.png".`);
+    if (!files.includes(photo.id)) always.push(`La foto del equipo "${photo.id}" no tiene su derivado treated/${photo.id}.png.`);
+    if (!approvalProblem({ approval: row.approval, downloaded: row.downloaded }) && row.approval === 'pendiente') problems.push(`La foto del equipo "${photo.id}" tiene la aprobación de Ari pendiente.`);
+    if (!consentProblem(row) && row.consent === 'pendiente') problems.push(`La foto del equipo "${photo.id}" tiene el consentimiento de la persona pendiente.`);
+  }
+
+  for (const row of rows) if (!photos.some((p) => p.id === row.id)) always.push(`La fila "${row.id}" de PROVENANCE.md no tiene foto en el manifiesto de src/components/sections/team-photos.mjs.`);
+  for (const id of files) if (!photos.some((p) => p.id === id)) always.push(`Existe el raster treated/${id}.png y no está en el manifiesto (Astro lo emitiría en dist).`);
+
+  for (const row of rows) {
+    const hash = originals?.[row.id];
+    if (hash !== undefined && hash !== row.sha256) always.push(`Foto del equipo "${row.id}", campo "sha256": no coincide con el original de photo-sources/team/.`);
+  }
+
+  return env === 'production' ? { errors: [...always, ...problems], warnings: [] } : { errors: always, warnings: problems };
+}
+
+/** Pasos para cerrar la aprobación, tal como los describe PROVENANCE.md (sección "Cómo cerrar la aprobación"). */
+export function teamClosingSteps(text) {
+  const body = section(text, 'Cómo cerrar la aprobación').trim();
+  return body || 'Consulta la sección "Cómo cerrar la aprobación" de src/assets/team/PROVENANCE.md.';
+}
+
+// ---------------------------------------------------------------------------------------------
+// Logos de clientes del hero (quick 260920-hero-clients). Registro aparte en src/assets/clients/PROVENANCE.md:
+// son marcas registradas de terceros copiadas del sitio de Ari (ariannalupi.com). Misma política de la puerta
+// de las fotos: la aprobación de Ari pendiente bloquea `PUBLIC_ENV=production` y fuera de producción solo
+// advierte; el registro incoherente bloquea siempre. El archivo del repositorio ES el original, así que su
+// sha256 se comprueba siempre (no solo si existe una copia en photo-sources/).
+// ---------------------------------------------------------------------------------------------
+
+const CLIENT_COLUMNS = ['id', 'file', 'source', 'downloaded', 'dimensions', 'sha256', 'authorizedBy', 'approval', 'note'];
+
+/** Origen permitido de los logos: los recursos de marcas del sitio de Ari. */
+export const CLIENT_SOURCE_PREFIX = 'https://ariannalupi.com/assets/brands/';
+
+/** Filas de la tabla "Registro" de src/assets/clients/PROVENANCE.md (9 columnas). */
+export function parseClientProvenance(text) {
+  return section(text, 'Registro')
+    .split('\n')
+    .filter((line) => line.trim().startsWith('|'))
+    .map((line) => line.trim().replace(/^\||\|$/g, '').split('|').map((c) => c.trim()))
+    .filter((cells) => cells.length === CLIENT_COLUMNS.length && !/^-+$/.test(cells[0].replace(/[:\s]/g, '')) && cells[0] !== 'id')
+    .map((cells) => {
+      const row = Object.fromEntries(CLIENT_COLUMNS.map((c, i) => [c, cells[i]]));
+      row.id = row.id.replace(/`/g, '');
+      row.file = row.file.replace(/`/g, '');
+      return row;
+    });
+}
+
+/** Errores en español, uno por campo mal formado; lista vacía si todo está bien. */
+export function validateClientProvenance(rows) {
+  const errors = [];
+  for (const row of rows) {
+    const bad = (field, why) => errors.push(`Logo de cliente "${row.id}", campo "${field}": ${why}.`);
+    if (!/^[a-z][a-z0-9-]*$/.test(row.id ?? '')) bad('id', 'debe ser un identificador en minúsculas');
+    if (row.file !== `${row.id}.webp`) bad('file', `debe ser "${row.id}.webp"`);
+    if (row.source !== `${CLIENT_SOURCE_PREFIX}${row.id}.webp`) bad('source', `debe ser ${CLIENT_SOURCE_PREFIX}${row.id}.webp`);
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(row.downloaded ?? '') || !isCalendarDate(row.downloaded)) bad('downloaded', 'debe ser una fecha AAAA-MM-DD que exista');
+    if (!/^\d+x\d+$/.test(row.dimensions ?? '')) bad('dimensions', 'debe tener la forma ANCHOxALTO');
+    if (!/^[0-9a-f]{64}$/.test(row.sha256 ?? '')) bad('sha256', 'debe medir 64 hexadecimales');
+    if (!(row.authorizedBy ?? '').trim()) bad('authorizedBy', 'debe decir quién autorizó el uso');
+    const approval = approvalProblem({ approval: row.approval, downloaded: row.downloaded });
+    if (approval) bad('approval', approval);
+    for (const field of CLIENT_COLUMNS) if (DASH.test(row[field] ?? '')) bad(field, 'no se admiten guiones largos ni cortos');
+  }
+  return errors;
+}
+
+/**
+ * Puerta de los logos de clientes (función pura). `always` bloquea en todo entorno (registro o manifiesto
+ * incoherentes, archivo ausente, sha256 distinto del archivo real, logo huérfano); `problems` solo bloquea con
+ * `env === 'production'` (aprobación de Ari pendiente). `logos` es el manifiesto (ids en orden), `files` los ids
+ * de los webp de `src/assets/clients/` y `hashes` id -> sha256 del archivo real.
+ */
+export function evaluateClientLogoGate({ rows, logos, files, env, hashes }) {
+  const always = [];
+  const problems = [];
+
+  for (const id of logos) {
+    const row = rows.find((r) => r.id === id);
+    if (!row) {
+      always.push(`El logo de cliente "${id}" no tiene fila en PROVENANCE.md.`);
+      continue;
+    }
+    if (!files.includes(id)) always.push(`El logo de cliente "${id}" no tiene su archivo src/assets/clients/${id}.webp.`);
+    if (!approvalProblem({ approval: row.approval, downloaded: row.downloaded }) && row.approval === 'pendiente') problems.push(`El logo de cliente "${id}" tiene la aprobación de Ari pendiente.`);
+  }
+
+  for (const row of rows) if (!logos.includes(row.id)) always.push(`La fila "${row.id}" de clients/PROVENANCE.md no tiene logo en el manifiesto de src/components/sections/hero-clients.mjs.`);
+  for (const id of files) if (!logos.includes(id)) always.push(`Existe el archivo clients/${id}.webp y no está en el manifiesto (Astro lo emitiría en dist).`);
+
+  for (const row of rows) {
+    const hash = hashes?.[row.id];
+    if (hash !== undefined && hash !== row.sha256) always.push(`Logo de cliente "${row.id}", campo "sha256": no coincide con el archivo de src/assets/clients/.`);
+  }
+
+  return env === 'production' ? { errors: [...always, ...problems], warnings: [] } : { errors: always, warnings: problems };
+}
+
+/** Pasos para cerrar la aprobación, tal como los describe clients/PROVENANCE.md (sección "Cómo cerrar la aprobación"). */
+export function clientClosingSteps(text) {
+  const body = section(text, 'Cómo cerrar la aprobación').trim();
+  return body || 'Consulta la sección "Cómo cerrar la aprobación" de src/assets/clients/PROVENANCE.md.';
+}

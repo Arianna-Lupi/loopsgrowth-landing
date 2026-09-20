@@ -109,6 +109,7 @@ Botones en pastilla (`--radius-pill`), tarjetas de 1 rem (`--radius-card`), cont
 - **CtaLink**: ancla a `#agenda` con el texto visible como nombre accesible (sin `aria-label`). Alto mínimo de 48 px, borde de 3 px, sombra dura por tono. Cuatro ubicaciones: `header`, `hero`, `solucion` y `casos`. Naranja sobre `light` y `yellow`, amarillo sobre `dark` y `purple`; el texto es siempre oscuro.
 - **SectionShell**: `<section aria-labelledby data-tone>` con `.wrap`, un `<h2 class="section-title">` con barra decorativa de 48x8 px en `--bar`, lead opcional, cuerpo por slot y slot `cta` a 48 px.
 - **Tarjeta**: interior blanco (tono `light` anidado) con h3 oscuro.
+- **Tarjeta de cliente** (hero): tarjeta pop con `--border-pop`, `--shadow-pop` y `--radius-card`, fondo crema (oscuro sobre crema, 14.37) y cada logo sobre un azulejo blanco de `--radius-s`, porque los logos llegan con fondo transparente, blanco o de color. Nombre en rol Label (14 px, 600) y etiqueta de la lista también Label. Sin enlaces ni movimiento.
 
 ## Do's and Don'ts
 
