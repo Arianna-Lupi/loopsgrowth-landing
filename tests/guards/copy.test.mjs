@@ -116,6 +116,52 @@ test('3. un marcador de verificación pendiente en text bloquea producción y so
   assert.match(local.out, /VERIFICAR/);
 });
 
+// Formas reales del doc de Ari (líneas 104 y 115 de 02-ARI-COPY-V2.md): la nota con paréntesis dentro y el
+// rango. `VERIFICAR_RE` debe reconocer `[VERIFICAR: nota]` y `[VERIFICAR rango]`, no solo `[VERIFICAR]`.
+const NOTA_PILAR_4 =
+  '[VERIFICAR: solo desglosa por canal (Google vs IA) si de verdad puedes atribuirlo con datos. Si no, repórtalo junto y no inventes el split.]';
+const verificarCount = (text, status = 'verified', extra = '') =>
+  checkCopy(parse(docWith(claimYaml(text, status, extra)))).content.filter((v) => v.rule === 'VERIFICAR').length;
+
+test('3b. cada forma de la marca VERIFICAR en text da exactamente una violación', () => {
+  const forms = {
+    'la marca sin nota': 'Reducimos tu presupuesto [VERIFICAR]',
+    'la nota real del Pilar 4 (con paréntesis dentro)': `Cada mes ves qué se hizo. ${NOTA_PILAR_4}`,
+    'la marca con un rango': 'Varios clientes bajan entre 30% y 50% su presupuesto. [VERIFICAR rango]',
+    'la marca en minúsculas con nota': 'Reducimos tu presupuesto [verificar: confirmar la cifra]',
+    'una nota que salta de línea': 'Reducimos tu presupuesto [VERIFICAR: confirmar\nla cifra con Ari]',
+    'una marca sin corchete de cierre': 'Reducimos tu presupuesto [VERIFICAR: confirmar la cifra',
+  };
+  for (const [label, text] of Object.entries(forms)) {
+    assert.equal(verificarCount(text), 1, `${label}: ${JSON.stringify(text)}`);
+  }
+});
+
+test('3c. lo que no es una marca no da VERIFICAR', () => {
+  assert.equal(verificarCount('Podemos verificar cada cifra contigo.'), 0);
+  assert.equal(verificarCount('Cada cifra queda [VERIFICADO] antes de publicarse.'), 0);
+  assert.equal(verificarCount('La palabra VERIFICAR sin corchete no es una marca.'), 0);
+  // Una nota en `reason` sobre un `text` limpio no bloquea: el patrón de 02-03 guarda la nota literal ahí.
+  assert.equal(
+    verificarCount('Crecemos tu tienda.', 'pending', '      reason: "[VERIFICAR: nota de Ari]"\n      confirm_by: Ari'),
+    0,
+  );
+});
+
+test('3d. dos marcas en un mismo texto dan dos violaciones', () => {
+  assert.equal(verificarCount(`Primero. ${NOTA_PILAR_4} Después, un rango. [VERIFICAR rango]`), 2);
+});
+
+test('3e. el fixture con [VERIFICAR: nota] bloquea producción y solo advierte fuera de ella', () => {
+  const prod = run(['--file', fixture('verificar-nota'), '--json'], { env: PROD });
+  assert.equal(prod.status, 1, prod.out);
+  assert.ok(rules(prod.json).includes('VERIFICAR'), prod.out);
+  const local = run(['--file', fixture('verificar-nota')], { env: LOCAL });
+  assert.equal(local.status, 0, local.out);
+  assert.match(local.out, /WARN/);
+  assert.match(local.out, /VERIFICAR/);
+});
+
 test('4a. voseo (tenés) bloquea producción', () => {
   const res = run(['--file', fixture('voseo'), '--json'], { env: PROD });
   assert.equal(res.status, 1, res.out);

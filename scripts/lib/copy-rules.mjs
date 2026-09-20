@@ -84,7 +84,10 @@ const VOSEO_RE = new RegExp(
 );
 const VOSEO_CASE_RE = new RegExp(voseoPattern(CASE_SENSITIVE_VOSEO), 'gu');
 const AEO_RE = new RegExp(`${NOT_WORD_BEFORE}AEO${NOT_WORD_AFTER}`, 'giu');
-const VERIFICAR_RE = /\[VERIFICAR\]/gi;
+// Marca de verificación del doc de Ari: `[VERIFICAR]`, `[VERIFICAR rango]` o `[VERIFICAR: nota]` (la
+// nota puede traer paréntesis y saltos de línea). El corchete de cierre es opcional: una marca sin
+// cerrar también bloquea. Lineal: una clase negada seguida de un `]` opcional, sin cuantificadores anidados.
+const VERIFICAR_RE = /\[VERIFICAR[^\]]*\]?/gi;
 const DASH_RE = /[—–]/g;
 
 // INVERSION (hallazgo 6 del UI-SPEC y CONTEXT). El doc de Ari trae rangos de inversión mensual (4 a 5k
