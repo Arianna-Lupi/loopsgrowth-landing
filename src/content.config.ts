@@ -56,6 +56,11 @@ const landing = defineCollection({
         .array(z.strictObject({ title: claim, body: claim, list: z.array(claim).min(1).optional() }))
         .length(4),
     }),
+    // Cuatro resultados exactos: el layout 2x2 depende del conteo.
+    results: z.strictObject({
+      title: claim,
+      items: z.array(z.strictObject({ lead: claim, body: claim })).length(4),
+    }),
     agenda: z.strictObject({
       title: claim,
       intro: claim,

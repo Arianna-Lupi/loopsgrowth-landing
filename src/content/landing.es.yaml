@@ -141,6 +141,41 @@ es:
           status: pending
           confirm_by: Ari
           reason: "Cuerpo del Pilar 4 del Copy v2 (línea 104): \"Cada mes ves qué se hizo, qué se movió y cuánto te costó contra cuánto generó. Nada de \"subimos 20%\". Más bien: \"el orgánico trajo X visitas, convirtieron Y, compraron Z\". [VERIFICAR: solo desglosa por canal (Google vs IA) si de verdad puedes atribuirlo con datos. Si no, repórtalo junto y no inventes el split.]\" La nota entre corchetes pide verificar el desglose por canal; Ari lo respalda con datos o lo suaviza. No se recorta la nota para publicar el resto."
+  results:
+    title:
+      text: "Lo que cambia en 6 a 12 meses"
+      status: verified
+    items:
+      - lead:
+          text: "Tu costo por cliente baja."
+          status: verified
+        body:
+          text: "Cada cliente que llega desde orgánico cuesta una fracción de lo que cuesta por ads, y esa diferencia crece con el tiempo (el orgánico se abarata, los ads se encarecen)."
+          status: pending
+          confirm_by: Ari
+          reason: "Cuerpo del resultado 1 del Copy v2 (sección 4). Incluye la inferencia 'el orgánico se abarata' y 'una fracción', sin respaldo literal (COPY-VERIFICATION 3d); Ari lo confirma con datos o lo suaviza. No se edita el texto."
+      - lead:
+          text: "Dependes menos de los ads."
+          status: pending
+          confirm_by: Ari
+          reason: "Lead del resultado 2 del Copy v2 (sección 4). Resume el resultado cuyo rango de presupuesto no tiene respaldo; se muestra tal cual, sin cifra, y Ari decide si se mantiene cuando entregue el dato."
+        body:
+          text: "FALTA CONFIRMAR"
+          status: pending
+          confirm_by: Ari
+          reason: "Cuerpo del resultado 2 del Copy v2 (sección 4): \"Varios clientes bajan entre 30% y 50% su presupuesto de ads manteniendo el mismo tráfico. [VERIFICAR rango]\". El rango no tiene respaldo propio (COPY-VERIFICATION, detalle 2), así que la página no lo publica ni lo suaviza. Ari aporta el dato con su fuente o decide otro texto."
+      - lead:
+          text: "Apareces donde antes no estabas."
+          status: verified
+        body:
+          text: "En Google y en las respuestas de IA cuando tu cliente pide recomendaciones."
+          status: verified
+      - lead:
+          text: "El crecimiento se acumula."
+          status: verified
+        body:
+          text: "No es un pico de un mes. El contenido que rankea hoy sigue trayendo clientes el año que viene, sin volver a pagar por él."
+          status: verified
   agenda:
     title:
       text: "Agenda tu llamada"
