@@ -2,14 +2,67 @@
 phase: 02-secciones-marca-y-copy
 plan: 11
 subsystem: ui
-tags: [collage, photos, halftone, licenses, brand, moodboard, astro-assets, guards, playwright]
-status: partial
+tags: [collage, photos, halftone, licenses, brand, moodboard, astro-assets, guards, playwright, visual-cycle]
+status: complete
+requires:
+  - phase: 02-secciones-marca-y-copy
+    provides: "Plan 02-10: escenas, PHOTO_SLOTS (hero y whynow), R1 a R11, seis grupos de animacion, topes de peso"
+provides:
+  - "Dos fotos de stock con licencia en media tinta binaria (hero-a, whynow-a) y dos candidatas (hero-b, whynow-b) en la hoja /marca/hoja/"
+  - "Mecanismo completo: manifiesto photos.mjs, tratamiento reproducible treat.mjs, registro LICENSES.md, marco CollagePhoto.astro, regla R12 y puerta de produccion check-photos.mjs"
+  - "Ciclo visual Lote P (fotos) documentado con mediciones, capturas a cinco anchos y seis recortes contra el moodboard"
+affects: [02-07, 02-08, 02-04, 02-05, 02-06, fase-3]
+key-files:
+  created:
+    - scripts/photos/halftone.mjs
+    - scripts/photos/treat.mjs
+    - scripts/lib/photo-licenses.mjs
+    - scripts/check-photos.mjs
+    - src/assets/photos/LICENSES.md
+    - src/assets/photos/treated/hero-a.png
+    - src/assets/photos/treated/hero-b.png
+    - src/assets/photos/treated/whynow-a.png
+    - src/assets/photos/treated/whynow-b.png
+    - src/components/collage/photos.mjs
+    - src/components/collage/CollagePhoto.astro
+    - tests/guards/halftone.test.mjs
+    - tests/guards/photos.test.mjs
+    - tests/e2e/collage-photos.spec.ts
+  modified:
+    - .gitignore
+    - package.json
+    - src/components/collage/CollageScene.astro
+    - src/components/collage/scenes.mjs
+    - src/pages/marca/[sheet].astro
+    - tests/guards/collage-scenes.test.mjs
+    - tests/guards/brand-assets.test.mjs
+    - tests/e2e/collage-language.spec.ts
+    - tests/e2e/page-structure.spec.ts
+    - tests/e2e/brand-assets.spec.ts
+    - .planning/phases/02-secciones-marca-y-copy/02-VISUAL-LOG.md
+    - .planning/phases/02-secciones-marca-y-copy/02-UI-SPEC.md
+    - DESIGN.md
+decisions:
+  - "Se sirve png con paleta (Image de astro:assets, format png, quality 80) y no webp ni avif: gana en las cuatro fotos (medido)"
+  - "El hero queda eager: el LCP es el h1 (40 a 276 ms segun la corrida) y el CLS es 0 en las dos medidas"
+  - "Media tinta de borde duro (alfa 0 o 255), sin segundo tamano con srcset: no hay moire a los cinco anchos"
+  - "Puerta de produccion: PUBLIC_ENV=production no compila con aprobacion pendiente ni con candidatas sobrantes"
+  - "Recomendacion (no decision) para Juan y Ari: hero-a; en Por que ahora empate razonable entre whynow-a y whynow-b"
+metrics:
+  duration: "tarea 4 unos 30 min; el plan completo no se midio de punta a punta (cuatro ejecutores)"
+  completed: 2026-09-19
 plan_head_before: a67b4dcb6f9016cea1c0ddc596818b0ba6e1a886
-tasks_done: [1, 2, 3]
-tasks_remaining: [4]
+commits: 10
+actuals:
+  tokens: 21458
+  tasks: 4
+  commits: 10
+requirements-completed: [DSGN-01, DSGN-03, DSGN-04]
 ---
 
-# Phase 2 Plan 11: Recortes fotograficos en media tinta (PARCIAL, tareas 1 a 3 de 4)
+# Phase 2 Plan 11: Recortes fotograficos en media tinta Summary
+
+**Dos fotos de stock con licencia (ojo tras una lupa en el hero, mano con un telefono en Por que ahora) tratadas en media tinta binaria con la tinta oscura de marca, montadas como marco HTML con la sombra dura de su ranura, con registro de licencias, guardas, hoja de eleccion y una puerta que impide publicar sin la aprobacion de Ari.**
 
 ## Estado del plan
 
@@ -18,161 +71,138 @@ tasks_remaining: [4]
 | 1. Una foto en media tinta de punta a punta en el hero (tracer) | Hecha | f11420a |
 | 2. hero-b, whynow-a, whynow-b y Por que ahora con foto | Hecha | ababf3c |
 | 3. Hoja de eleccion `[data-sheet="fotos"]` y puerta de produccion | Hecha | f9ab7f6 |
-| 4. Ciclo visual "Lote P (fotos)", documentos y cierre | Pendiente | |
+| 4. Mediciones, ciclo visual "Lote P (fotos)", documentos y cierre | Hecha | d5177fb (specs), 483d6f2 (correccion), fa0362b (documentos) |
 
-No se corrieron `state.advance-plan`, `state.update-progress`, `roadmap.update-plan-progress` ni `requirements.mark-complete` (solo al cerrar las 4 tareas).
+`commits: 10` se midio con `git rev-list --count a67b4dcb6f9016cea1c0ddc596818b0ba6e1a886..HEAD` (9 antes de este resumen, mas el commit de este resumen; se verifico despues de commitear). Incluye tres commits `docs(02-11)` de resumen parcial.
 
-## Tarea 1: que se hizo
+## Tarea 4: que se hizo
 
-- **Foto hero-a:** Unsplash, "a close-up of a person's eye through a magnifying glass", autor Mohammed Idris Djoudi (https://unsplash.com/@idris_djoudi), pagina https://unsplash.com/photos/a-close-up-of-a-persons-eye-through-a-magnifying-glass-Yu7UxPvBVOM, descargada el 2026-09-19 (1600x2408, sha256 `59b39ecb00f45caff948de8701c9ce90ace89d607712d6f8c3f3f41fb3255925`), original en `photo-sources/hero-a.jpg` (ignorado, no versionado). Sujeto: ojo humano en primer plano detras del aro de una lupa, recortado a ojo y ceja; es la unica excepcion permitida a "sin persona identificable" y queda marcada en la nota para Ari. Aprobacion de Ari: **pendiente**. Solo se reviso 1 candidata (cumplio a la primera; el plan pedia revisar al menos 12 antes de rendirse, no aplica porque no hubo rendicion).
-- **Licencia:** ver "Acceso web" abajo. Cita en `src/assets/photos/LICENSES.md` (Unsplash License, leida el 2026-09-19); coincide con la referencia del plan, sin cambios.
-- **Tratamiento** (`scripts/photos/halftone.mjs`, `scripts/photos/treat.mjs`): recorte left 0.12, top 0.2326, ancho 0.68, alto 0.588 (proporcion 0.768), `out` 384x500, celda 6, angulo 45, contrast 1.0, brightness 165 (la foto es muy oscura: con brightness bajo la cobertura de tinta pasaba de 0.64; a 165 queda en 0.495). PNG tratado 10265 bytes, paleta de 2 colores, sin metadatos, tinta `--color-brand-dark`. Vista previa revisada con la herramienta de imagenes: el ojo, la ceja y el aro de la lupa se leen con media tinta clara, como los recortes del moodboard.
-- **Escena y componente:** `photos.mjs` (manifiesto con `hero-a`), `photoFrame()` y regla R12 en `scenes.mjs` (sin cambiar ninguna coordenada; el hero actual ya cumple R12), `CollagePhoto.astro` montado por `CollageScene.astro` entre la capa svg y las pildoras, con `data-piece-of="panel"` y los mismos `--i`, `--r` y `--r-from` del panel. `check-photos.mjs` agregado a `prebuild` (unica linea de `package.json` que cambia).
-- **Formato:** `Image` de astro:assets con `format="png"` y `quality={80}`; servido `hero-a.CYDZQLKo_n00dj.png` de 13 KB (13k segun `ls`, tope 25600). Con esta foto real el PNG pesa mas que la estimacion del plan (7.9 a 10 KB); no se midieron webp ni avif con las fotos reales (queda para la tarea 2, con las cuatro).
+- **Bloques nuevos en `tests/e2e/collage-photos.spec.ts`** (solo con `PHASE2_BATCH`): 'informe de fotos' escribe `test-results/phase2/<lote>-medicion.json` (descriptor y tiempo del LCP, CLS, bytes de cada respuesta de imagen, peticiones y bytes por tipo de recurso, a 390x844 y 1280x800) y 'captura de fotos' guarda hero, whynow y hoja a 320, 390, 768, 1024 y 1280 px, las cuatro candidatas de la hoja a 1280 y los marcos con factor 1 y 2. Todo lo que no es localhost se aborta.
+- **Skills invocadas** con la herramienta Skill por primera vez en este plan: `impeccable` (contexto sin entrevista; `critique` con `colorize` y `polish` como lente) y `design-taste-frontend` (diales 7, 3 y 4). Ver "Desviaciones" por la critica en un solo contexto.
+- **Capturas:** `P-fotos-{320,390,768,1024,1280}` (con `-reduce` y `-nojs`), `P-fotos-hero-<ancho>`, `P-fotos-whynow-<ancho>`, `P-fotos-hoja-<ancho>`, `P-fotos-foto-<id>-1280`, `P-fotos-frame-{hero,whynow}-1280-dpr{1,2}`, `P-fotos-medicion.json` y `P-fotos-compare-{1..6}.png`, en `test-results/phase2/` (no versionadas).
+- **Seis recortes lado a lado** con Pillow contra `brand-inventory/moodboard.png` (cajas y comando en `02-VISUAL-LOG.md`).
+- **Honestidad sobre el resultado:** la foto tratada se lee como un recorte impreso en blanco y negro (no como filtro ni como stock generico) y el ojo del hero se reconoce, pero es mas dura que el moodboard: la referencia es gris continuo con grano fino y la nuestra es binaria con punto grueso, mas cerca de un grabado. El marco es una tarjeta con esquina redonda y no un recorte libre que sobresale del disco (decision 4 del plan). Los rostros en azul del moodboard no se reproducen (la tinta es siempre la oscura). El rasgo 2 queda cumplido con esa reserva.
+- **Correccion en un solo lote (commit `483d6f2`, solo tratamiento):** `hero-a` con recorte mas cerrado (el iris llena el marco: left 0.26, top 0.28, ancho 0.58, alto 0.5017) y brillo de 165 a 175 (cobertura 0.495 a 0.437, PNG de 9387 bytes); `whynow-a` con menos telefono y mano mas grande (left 0.24, top 0.565, ancho 0.46, alto 0.3185, cobertura 0.247 a 0.32, PNG de 2886 bytes). Una ronda de confirmacion (1 de 1). El telefono de `whynow-a` sigue siendo una mancha oscura con ruido a 73 px de ancho: observacion abierta.
+- **Documentos:** `02-VISUAL-LOG.md` ("Lote P (fotos), ronda 0" y "ronda 1"), fe de erratas de las fotos en `02-UI-SPEC.md` y una frase de media tinta en `DESIGN.md`. Sin guiones largos ni cortos.
 
-## Tarea 2: que se hizo
-
-- **Tres fotos de Unsplash** (licencia Unsplash License, leida el 2026-09-19, misma cita de LICENSES.md; descarga del CDN `images.unsplash.com` con curl, HTTP 200; autor y URL de imagen por WebFetch de la pagina de cada foto; originales en `photo-sources/`, ignorado):
-
-| id | autor | pagina | descargada | dimensiones | sha256 | aprobacion |
-|----|-------|--------|------------|-------------|--------|------------|
-| `hero-b` | ThisisEngineering | https://unsplash.com/photos/a-person-holding-a-magnifying-glass-with-a-finger-on-it-ZJUG912sIW4 | 2026-09-19 | 1600x1067 | ver LICENSES.md | pendiente |
-| `whynow-a` | Nubelson Fernandes | https://unsplash.com/photos/a-person-holding-a-cell-phone-in-their-hand-f4swqEOv2B4 | 2026-09-19 | 1600x2845 | ver LICENSES.md | pendiente |
-| `whynow-b` | Vitaly Gariev | https://unsplash.com/photos/hands-typing-on-a-laptop-keyboard-at-a-desk-lMScFOdgRNg | 2026-09-19 | 1600x900 | ver LICENSES.md | pendiente |
-
-  Las cuatro filas (hero-a incluida) estan completas en `src/assets/photos/LICENSES.md`, todas descargadas el 2026-09-19.
-- **Sujetos:** hero-b es una mano con una lupa grande sobre una mesa de trabajo (sujeto distinto al ojo de hero-a); whynow-a es una mano tocando un telefono, recortada bajo el reloj de la pantalla para no dejar texto legible; whynow-b son manos tecleando en una laptop de perfil (sin pantalla en el recorte).
-- **Candidatas revisadas y rechazadas (a ojo):** 9 en total antes de elegir. Anteriores a la eleccion: gafas transparentes sostenidas por una mano (no es lupa), una mano con un balon de baloncesto (la busqueda la etiqueto como lupa), una laptop con pantalla de codigo SAP legible, un telefono con el logo de Threads, una ilustracion 3D de lupa (no es foto), un paisaje con una lupa diminuta, una laptop con la pantalla de Pinterest y una laptop de Shoper con la marca "MacBook Pro" y texto en pantalla imposibles de excluir con un recorte de al menos 416 px. Una busqueda de premium_photo (Unsplash+) se descarto por otra licencia. No se llego al limite de 12 por sujeto del plan porque cada sujeto tuvo una candidata que cumplio, pero **el criterio 6 (fondo claro y liso) no lo cumple del todo whynow-b** (fondo desenfocado, no liso) ni hero-b (mesa verde y madera): se avisa a Ari en la nota de la fila y se deja como candidata, no como elegida.
-- **Tratamiento** (`treat.mjs --preview`, vistas revisadas con la herramienta de imagenes):
-
-| id | recorte (left, top, ancho, alto) | out | celda | brillo | PNG | cobertura |
-|----|----------------------------------|-----|------:|-------:|----:|----------:|
-| hero-b | 0.02, 0, 0.512, 1 | 384x500 | 6 | 118 | 8092 B | 0.284 |
-| whynow-a | 0.194, 0.4675, 0.5625, 0.3894 | 208x256 | 4 | 92 | 2584 B | 0.247 |
-| whynow-b | 0.47, 0, 0.457, 1 | 208x256 | 4 | 105 | 2887 B | 0.281 |
-
-  Primer intento con brillo 128 dejaba la mano de whynow-a lavada y hero-b abstracto; se bajo el brillo y se movio el recorte a la mano.
-- **Manifiesto:** cuatro entradas; `chosen` verdadero en `hero-a` y `whynow-a`. El marco de Por que ahora aparecio sin tocar `CollageScene.astro` ni `WhyNow.astro` (el mecanismo de la tarea 1 sirve tal cual).
-- **Guardas:** bloque 'conjunto de fotos' en `photos.test.mjs` (`photoSetErrors`, elegida por ranura, dos por ranura con `abierta`, una aprobada con `cerrada`) y su prueba de mutaciones (dos elegidas, ranura sin candidatas, id sin fila, cerrada con dos por ranura y sin aprobacion); la guarda de dist ya exigia una img por foto elegida.
-- **Pruebas cambiadas:** `collage-language.spec.ts` (m) pesos, whynow 3712 y hero 8832 en el titulo; `brand-assets.spec.ts` (a) whynow 3712 y suma 32000; `collage-photos.spec.ts` suma 'dos fotos: hero eager y whynow lazy...' y, por cada ancho, 'Por que ahora conserva su caja, no cruza el h2 ni la lista y no desborda'. `sections-problem-solution.spec.ts` **no cambio**: no afirma cero img en `.whynow-art` (solo cuenta una ranura).
-
-### Rojo antes del codigo (tarea 2)
-
-Desviacion: el orden fue tratar las fotos y despues escribir las guardas del conjunto y los specs, no al reves. Lo unico observado en rojo fue la guarda de dist ('una img por foto elegida', 1 de 2) con el dist anterior tras elegir `whynow-a`; se puso en verde al reconstruir. Las pruebas de mutacion del conjunto nacieron en verde porque validan la funcion nueva contra manifiestos fabricados.
-
-### Formato: png contra webp y avif (las cuatro fotos, sharp con calidad 80)
-
-| Foto | png con paleta | webp | avif |
-|------|---------------:|-----:|-----:|
-| hero-a | 13006 | 18102 | 26165 |
-| hero-b | 10652 | 15176 | 19389 |
-| whynow-a | 3306 | 4116 | 6124 |
-| whynow-b | 3384 | 5208 | 7431 |
-
-png gana en las cuatro: se conserva `Image` con `format="png"`, sin `Picture`. (Medido con sharp directamente sobre los PNG tratados con la misma calidad, no con la llamada de Astro; los archivos servidos por Astro coinciden en peso: hero-a 13006, whynow-a 3306.)
-
-### Mediciones (tarea 2, dos fotos elegidas, ClickUp bloqueado)
+### Mediciones finales (ClickUp bloqueado, todo lo que no es localhost abortado)
 
 | Medida | Valor | Tope |
 |--------|------:|-----:|
-| PNG tratado hero-b / whynow-a / whynow-b | 8092 / 2584 / 2887 | 30720 |
-| Servido hero-a / whynow-a | 13006 / 3306 | 25600 |
-| Suma de imagenes de `/` | 16312 | 40960 |
-| `.hero-collage` outerHTML | 5490 | 8832 |
-| Raiz whynow outerHTML | 2257 | 3712 |
-| `dist/index.html` | 39495 | 42240 |
-| LCP a 390x844 / 1280x800 | H1 a 112 ms / 36 ms | texto |
-| CLS tras recorrer (390 y 1280) | 0 | 0 |
+| LCP a 390x844 / 1280x800 | H1 `#hero-title`, 172 ms / 184 ms (corrida de confirmacion) y 276 ms / 40 ms (ultima corrida; el tiempo varia con la carga de la maquina) | debe ser texto |
+| CLS a 390x844 / 1280x800 | 0 / 0 | 0 |
+| Imagen servida hero-a / whynow-a | 11812 / 3597 bytes | 25600 c/u |
+| Suma de imagenes de `/` | 15409 bytes | 40960 |
+| Peticiones y bytes totales de `/` | 8 y 124109 (documento 39497, estilos 26971, fuentes 42232, imagenes 15409) | sin tope propio |
+| `dist/index.html` | 39497 bytes | 42240 (global 61440) |
+| `<img ` y `data-piece="` en `dist/index.html` | 2 y 6 | 2 y 6 |
+| PNG tratado hero-a / whynow-a | 9387 / 2886 bytes (hero-b 8092, whynow-b 2887 sin cambio) | 30720 |
+| Cobertura de tinta hero-a / whynow-a | 0.437 / 0.320 | 0.12 a 0.55 |
 
-Nota: en el build tambien salen a `dist/_astro` las candidatas no elegidas (`hero-b`, `whynow-b`) como originales (8.1 y 2.9 KB), porque el `import.meta.glob` las incluye; no se referencian desde el HTML y desaparecen al cerrar la eleccion (la puerta de produccion ya bloquea candidatas sin elegir).
+Antes de la correccion: imagenes de 13006 y 3306 bytes (16312 en conjunto). Decision de carga: el LCP no es una img y el CLS es 0, asi que `PHOTO_LOADING.hero` sigue en `eager`. En `dist/_astro` siguen saliendo los rasters de las candidatas no elegidas (`hero-b` 10652 y `whynow-b` 3384 bytes, no referenciados desde el HTML); desaparecen al cerrar la eleccion y la puerta de produccion ya los bloquea.
 
-Guardas `node --test tests/guards/*.test.mjs` 159 de 159; `check-contrast` sale 0. Playwright con ClickUp bloqueado (preview en 4322, detenido): `collage-photos`, `collage-language`, `brand-assets`, `sections-problem-solution`, `page-structure`, `a11y-base` y `cta-focus` 254 pasadas, 55 omitidas (capturas), 0 fallos. Conteos de dist: 2 `<img>`, 2 `data-photo-frame`, 2 `data-photo-slot`, 6 `data-piece`. Sin hex en `src/components|pages|layouts`, sin `set:html`, sin `outline: none`, sin `fetchpriority|priority` en collage; `git ls-files | grep ^photo-sources` vacio.
+### Verificacion completa (todo verde)
 
-Archivos de la tarea 2: `src/assets/photos/LICENSES.md`, `src/assets/photos/treated/{hero-b,whynow-a,whynow-b}.png`, `src/components/collage/photos.mjs`, `tests/guards/photos.test.mjs`, `tests/e2e/{collage-photos,collage-language,brand-assets}.spec.ts`.
+- `node --test tests/guards/*.test.mjs`: 162 de 162. `node scripts/check-contrast.mjs`: sale 0. `node scripts/check-photos.mjs`: sale 0 con 4 `WARN`. `node scripts/list-pending.mjs --check`: sale 0 y `PENDING-COPY.md` sin cambios.
+- `E2E_BLOCK_CLICKUP=1 npx playwright test --project=chromium` (preview en 4322, detenido): 260 pasadas, 63 omitidas (capturas e informe, solo con `PHASE2_BATCH`), 0 fallos. Para DSGN-03 cuentan `collage-photos`, `page-structure`, `collage-language` y la hoja a los cinco anchos sin scroll horizontal.
+- `npm run build` con sus hooks sale 0. `PUBLIC_ENV=production PUBLIC_SITE_URL=https://example.com npx astro build`: sale 0 y `dist/marca` no existe. `PUBLIC_ENV=production node scripts/check-photos.mjs` sale 1 (aprobacion pendiente y candidatas sobrantes). Build normal final sale 0 y `dist/marca/hoja` existe.
+- Barridos: sin hex en `src/components|pages|layouts`, sin `set:html`, sin `outline: none`, sin `73187f` en src, public, tests ni scripts, sin `fetchpriority|priority` en `src/components/collage`; ningun cambio en `src/content`, `PENDING-COPY.md`, `src/layouts`, `src/styles`, `src/components/sections`, `src/components/ui` ni `package-lock.json`; `package.json` solo cambia `prebuild`; `git ls-files | grep ^photo-sources` vacio; ninguna imagen nueva fuera de `src/assets/photos/treated/`.
+
+## Tarea 1: que se hizo
+
+- **Foto hero-a:** Unsplash, "a close-up of a person's eye through a magnifying glass", autor Mohammed Idris Djoudi (https://unsplash.com/@idris_djoudi), pagina https://unsplash.com/photos/a-close-up-of-a-persons-eye-through-a-magnifying-glass-Yu7UxPvBVOM, descargada el 2026-09-19 (1600x2408, sha256 `59b39ecb00f45caff948de8701c9ce90ace89d607712d6f8c3f3f41fb3255925`), original en `photo-sources/hero-a.jpg` (ignorado, no versionado). Sujeto: ojo humano en primer plano detras del aro de una lupa, recortado a ojo y ceja; es la unica excepcion permitida a "sin persona identificable" y queda marcada en la nota para Ari. Aprobacion de Ari: **pendiente**.
+- **Licencia:** cita en `src/assets/photos/LICENSES.md` (Unsplash License, leida el 2026-09-19); coincide con la referencia del plan, sin cambios.
+- **Tratamiento** (`scripts/photos/halftone.mjs`, `scripts/photos/treat.mjs`): celda 6, angulo 45, contraste 1.0, PNG de paleta de 2 colores sin metadatos, tinta `--color-brand-dark`. Parametros finales de hero-a tras la tarea 4: recorte left 0.26, top 0.28, ancho 0.58, alto 0.5017, brillo 175.
+- **Escena y componente:** `photos.mjs` (manifiesto), `photoFrame()` y regla R12 en `scenes.mjs` (sin cambiar ninguna coordenada), `CollagePhoto.astro` montado por `CollageScene.astro` entre la capa svg y las pildoras, con `data-piece-of="panel"` y los mismos `--i`, `--r` y `--r-from` del panel. `check-photos.mjs` agregado a `prebuild`.
+
+## Tarea 2: que se hizo
+
+- **Tres fotos de Unsplash** (licencia Unsplash License, leida el 2026-09-19; originales en `photo-sources/`, ignorado):
+
+| id | autor | pagina | descargada | dimensiones | aprobacion |
+|----|-------|--------|------------|-------------|------------|
+| `hero-b` | ThisisEngineering | https://unsplash.com/photos/a-person-holding-a-magnifying-glass-with-a-finger-on-it-ZJUG912sIW4 | 2026-09-19 | 1600x1067 | pendiente |
+| `whynow-a` | Nubelson Fernandes | https://unsplash.com/photos/a-person-holding-a-cell-phone-in-their-hand-f4swqEOv2B4 | 2026-09-19 | 1600x2845 | pendiente |
+| `whynow-b` | Vitaly Gariev | https://unsplash.com/photos/hands-typing-on-a-laptop-keyboard-at-a-desk-lMScFOdgRNg | 2026-09-19 | 1600x900 | pendiente |
+
+  Las cuatro filas (hero-a incluida) estan completas, con sha256, en `src/assets/photos/LICENSES.md`.
+- **Sujetos:** hero-b mano con una lupa grande; whynow-a mano tocando un telefono, recortada bajo el reloj de la pantalla; whynow-b manos tecleando en una laptop de perfil.
+- **Candidatas rechazadas (a ojo):** 9 antes de elegir (gafas, balon, laptop con codigo legible, telefono con logo, ilustracion 3D, paisaje con lupa diminuta, pantallas con marca legible y una busqueda de Unsplash+ de otra licencia). El criterio 6 (fondo claro y liso) no lo cumple del todo `whynow-b` (fondo desenfocado) ni `hero-b` (mesa verde y madera): se avisa a Ari en la nota de la fila.
+- **Formato, png contra webp y avif** (sharp, calidad 80): hero-a 13006 / 18102 / 26165, hero-b 10652 / 15176 / 19389, whynow-a 3306 / 4116 / 6124, whynow-b 3384 / 5208 / 7431. png gana en las cuatro; se conserva `Image` con `format="png"`.
+- **Guardas del conjunto** en `photos.test.mjs` (`photoSetErrors`) con mutaciones; pruebas cambiadas: `collage-language.spec.ts`, `brand-assets.spec.ts`, `collage-photos.spec.ts`.
 
 ## Tarea 3: que se hizo
 
-- **Prop `photo` en `CollageScene.astro`:** monta la candidata por id en lugar de la elegida; `assertPhotoForSlot` falla en el build con mensaje en español si el id no existe o es de otra ranura, y una escena sin ranura de foto que reciba `photo` tambien falla.
-- **Hoja `/marca/hoja/`:** dos secciones `section[data-sheet="fotos"]` (hero sobre banda `light`, whynow sobre `yellow`), una celda `data-demo="foto-<id>"` por foto del manifiesto con la escena completa y un rotulo `code` `<id> / <estado>` (`pendiente` o `aprobada`, leido de LICENSES.md con `parseLicenses`). Celda de hero `min(100%, 30rem)`, de whynow `min(100%, 20rem)`, una columna bajo 40em. Sin frases en los rotulos. No se genera con `PUBLIC_ENV=production` (comprobado: `dist/marca` no existe).
-- **Puerta de produccion (`check-photos.mjs`):** ya existia desde la tarea 1; se completo: criterio de entorno de `check-copy.mjs` (`loadEnv` de vite mas proceso, solo el valor exacto `production` bloquea), lineas `FAIL` o `WARN`, y en un bloqueo imprime los pasos de "Como cerrar la eleccion" leidos de LICENSES.md (`closingSteps`). `evaluatePhotoGate` (firma real: `{ rows, photos, files, env }`, distinta de la del plan) ahora hace que una elegida sin fila bloquee siempre. `package.json` no cambio (ya corria la puerta en `prebuild`, tarea 1).
-- **LICENSES.md:** pasos de cierre precisados (arreglo `PHOTOS`, ruta del archivo, un solo commit); la nota de fotos reales del equipo ya estaba.
-- **Pruebas:** `photos.test.mjs` +3 (mutaciones de la puerta por regla; subproceso de `check-photos.mjs`: sale 0 sin produccion, 0 con `Production`, 1 con `production` mientras haya pendiente o candidata sobrante, y el mensaje trae `FAIL`, "Como cerrar la eleccion", `photos.mjs` y `LICENSES.md`; `prebuild` con `check-photos` y prop `photo` con `assertPhotoForSlot`); guardas 162 de 162. `collage-photos.spec.ts` +6 ('hoja de fotos': por cada uno de los cinco anchos una celda por foto con su marco, una img de alt vacio, rotulo `code` y sin scroll horizontal; ancho maximo de las celdas). `brand-assets.spec.ts`: la prueba (f) suma `fotos` y `ROOTS_ON_SHEET` suma las cuatro escenas de candidatas; `collage-language.spec.ts`: el conteo de pildoras de la hoja suma 2 por candidata (era 13, ahora 21).
+- **Prop `photo` en `CollageScene.astro`** (monta una candidata por id; `assertPhotoForSlot` falla en el build si el id no existe o es de otra ranura) y **hoja `/marca/hoja/`** con dos secciones `section[data-sheet="fotos"]`, una celda `data-demo="foto-<id>"` por foto con su rotulo `code` `<id> / <estado>`. No se genera con `PUBLIC_ENV=production`.
+- **Puerta de produccion (`check-photos.mjs`):** solo el valor exacto `production` bloquea; en un bloqueo imprime los pasos de "Como cerrar la eleccion" leidos de LICENSES.md. Mensaje actual con `PUBLIC_ENV=production` (sale 1): aprobacion pendiente de `hero-a` y `whynow-a`, y raster existente de las candidatas `hero-b` y `whynow-b`.
+- La firma de `evaluatePhotoGate` es `{ rows, photos, files, env }`, distinta de la del plan; mismo comportamiento.
 
-### Mensaje de la puerta con el estado actual (`PUBLIC_ENV=production node scripts/check-photos.mjs`, sale 1)
+## Sondeos (tarea 1)
 
-```
-FAIL check-photos: La foto elegida "hero-a" tiene la aprobación de Ari pendiente.
-FAIL check-photos: La foto elegida "whynow-a" tiene la aprobación de Ari pendiente.
-FAIL check-photos: Existe el raster de la candidata "hero-b" y no está elegida (Astro lo emitiría en dist).
-FAIL check-photos: Existe el raster de la candidata "whynow-b" y no está elegida (Astro lo emitiría en dist).
-Cómo cerrar la elección (src/assets/photos/LICENSES.md): pasos 1 a 5 de LICENSES.md
-```
-
-Sin `PUBLIC_ENV=production` sale 0 con cuatro `WARN`. `PUBLIC_ENV=production npm run build` se detiene antes en `check-copy` por textos pendientes; la puerta de fotos se ejecuta despues en la cadena de `prebuild` y con textos cerrados tambien bloqueara.
-
-### Mediciones (tarea 3, ClickUp bloqueado)
-
-`dist/index.html` 39495 bytes (tope 42240), 2 `<img `, 6 `data-piece="`; `dist/marca/hoja/index.html` con 4 `data-demo="foto-`. Guardas 162 de 162, contraste sale 0. Playwright chromium con ClickUp bloqueado (preview 4322, detenido): `collage-photos`, `brand-assets`, `collage-language`, `page-structure`, `sections-problem-solution`, `a11y-base` y `cta-focus` 259 pasadas y 55 omitidas (capturas) tras corregir dos conteos de la hoja (arriba). Sin hex en `src/components|pages|layouts`, sin `set:html`, sin `outline: none`, sin `fetchpriority|priority` en collage; sin cambios en `src/content`, `PENDING-COPY.md`, `src/layouts`, `src/styles`, `src/components/sections`, `src/components/ui` ni `package-lock.json`.
-
-### Desviaciones de la tarea 3
-
-- **Rojo:** los tres casos nuevos de guardas nacieron en rojo antes del codigo (mutaciones de la puerta, subproceso, prop `photo`). Los e2e de la hoja se escribieron despues de la hoja (no se corrieron en rojo). Los dos fallos que aparecieron al correrlos por primera vez fueron conteos de pruebas anteriores que asumian la hoja sin candidatas (`ROOTS_ON_SHEET` y las pildoras).
-- La firma de `evaluatePhotoGate` sigue siendo la de la tarea 1 (`rows, photos, files, env`), no la del plan (`chosen, treatedIds, production`); mismo comportamiento.
-- Skills `impeccable` y `design-taste-frontend` **no** invocadas en esta tarea (encargo del orquestador: solo en la tarea 4). La jerarquia de la hoja reutiliza el marcado de bandas de composiciones.
-
-## Sondeos
-
-- (a) `git status` de src, tests, scripts y public limpio y `node --test tests/guards/*.test.mjs` 139 de 139 antes de empezar.
-- (b) `PHOTO_SLOTS` y capas slot tal como los declara 02-10: hero (344, 22, 192x250, rx 22, fill cream, shadow 10,10) y whynow (204, 14, 104x128, rx 16, fill white, shadow 8,8). Sin desviaciones de nombres.
+- (a) `git status` de src, tests, scripts y public limpio y guardas 139 de 139 antes de empezar.
+- (b) `PHOTO_SLOTS` como los declara 02-10: hero (344, 22, 192x250, rx 22, fill cream, sombra 10,10) y whynow (204, 14, 104x128, rx 16, fill white, sombra 8,8). Sin desviaciones.
 - (c) `sharp` 0.35.4; `sharp.format.png.output.buffer` verdadero.
-- (d) **Acceso web:** unsplash.com/license respondio 307 y despues 401 con un desafio anti bots (Anubis) a curl; pexels.com/license 403 y pixabay.com/service/license-summary 403 a curl. La licencia de Unsplash se leyo con la herramienta de lectura web (WebFetch), que entrega fragmentos entrecomillados y no la pagina completa; la de Pexels tambien se leyo con WebFetch pero **no se uso ni se registro** porque no se eligio ninguna foto de Pexels. La pagina de la foto de Unsplash se leyo con WebFetch (autor, fecha, URL de imagen); la descarga salio de `images.unsplash.com` (CDN) con curl y un User-Agent normal, HTTP 200, sin claves ni sesion.
-- (e) Linea base antes de tocar codigo: `.hero-collage` outerHTML 5028 bytes (02-10) y `dist/index.html` 38627 bytes.
+- (d) **Acceso web:** unsplash.com/license respondio 307 y despues 401 con un desafio anti bots a curl; pexels.com/license y pixabay.com/service/license-summary 403. La licencia de Unsplash se leyo con WebFetch (fragmentos entrecomillados, no la pagina completa); la de Pexels tambien se leyo pero no se uso ni se registro. La descarga salio de `images.unsplash.com` con curl, HTTP 200, sin claves ni sesion.
+- (e) Linea base: `.hero-collage` outerHTML 5028 bytes (02-10) y `dist/index.html` 38627 bytes.
 
 ## Pruebas en rojo antes del codigo
 
-Por modulo inexistente: `tests/guards/halftone.test.mjs` (todo) y `tests/guards/photos.test.mjs` (todo, importa `photo-licenses.mjs`). Por asercion o simbolo inexistente: en `collage-scenes.test.mjs` "marco de foto: photoFrame..." y "R12: un garabato o una reticula...", en `brand-assets.test.mjs` "plan 02-11: CollagePhoto.astro y photos.mjs estan en OWNED...". Las pruebas de Playwright nuevas (`collage-photos.spec.ts`) y las modificadas (page-structure, collage-language, brand-assets) no se corrieron en rojo contra el hero sin foto: se escribieron y se confirmo directamente en verde (desviacion, ver abajo).
+Por modulo inexistente: `tests/guards/halftone.test.mjs` y `tests/guards/photos.test.mjs` (todo). Por asercion o simbolo inexistente: en `collage-scenes.test.mjs` "marco de foto: photoFrame..." y "R12: un garabato o una reticula...", en `brand-assets.test.mjs` "plan 02-11: CollagePhoto.astro y photos.mjs estan en OWNED...". En la tarea 3, tres casos nuevos de guardas (mutaciones de la puerta, subproceso, prop `photo`). Las pruebas de Playwright nuevas y modificadas no se corrieron en rojo (ver desviaciones).
 
-## Mediciones (tarea 1)
+## Desviaciones de la ejecucion
 
-| Medida | Valor | Tope / referencia |
-|--------|------:|------------------|
-| PNG tratado hero-a en el repo | 10265 bytes | 30720 |
-| Archivo servido en dist/_astro | 13 KB (`ls`) | 25600 |
-| `.hero-collage` outerHTML | 5490 bytes | 8832 (linea base 5028, +462) |
-| `dist/index.html` | 39083 bytes | 42240 (linea base 38627, +456) |
-| LCP a 390x844 | H1 a 36 ms (no es una img ni esta en `[data-collage]`) | texto |
-| LCP a 1280x800 | H1 a 32 ms | texto |
-| CLS tras recorrer la pagina (390 y 1280) | 0 | 0 |
-| Cobertura de tinta | 0.495 | 0.12 a 0.55 |
+1. **Skills invocadas solo en la tarea 4.** El plan pide invocarlas en la primera tarea de UI; el encargo del orquestador dijo usarlas solo en el ciclo visual para ahorrar contexto. Se siguio el encargo.
+2. **Critica en un solo contexto (degradada).** `impeccable critique` exige dos sub agentes aislados (revision de diseno y detector) y esta sesion no expone herramienta de sub agentes: ambos corrieron en el mismo contexto. El detector solo devolvio un aviso consultivo en `Pill.astro` (`border-radius: 0.45em`, pieza de 02-10, no de las fotos). No se guardo instantanea de critica.
+3. **R12 usa el formato `[R12]` de 02-10**, no `R12 el marco...` del plan, para conservar el formato de los errores de `assertScene`.
+4. **Rojo de Playwright no observado** en las tareas 1 a 3 (se escribieron y se confirmaron en verde; los dos fallos iniciales fueron conteos de pruebas anteriores). Los bloques nuevos de la tarea 4 son herramientas de captura: no se escribieron en rojo.
+5. **Cita de la licencia via WebFetch, no via curl** (Anubis bloquea curl): son los fragmentos entrecomillados que devolvio la herramienta de lectura web. Esta dicho en la propia seccion de LICENSES.md.
+6. **Parametros de tratamiento de partida distintos a los del plan** por fotos oscuras; documentados y reproducibles con `treat.mjs`.
+7. **Bloque 'informe de fotos' no lleva "captura" en el titulo**, asi que el `-g captura` del plan no lo ejecuta: se corre con `-g "captura|informe de fotos"` (comando en el registro visual). La primera corrida de la hoja fallo por tiempo (imagenes lazy de la hoja sin recorrer); se corrigio usando `scrollThrough` en el bloque de captura antes del segundo intento.
+8. **`playwright test` vacia `test-results/` al empezar.** La suite completa borro las capturas del Lote P ya generadas; se regeneraron con una corrida final de captura (`-g "captura|informe de fotos"`) despues de la suite, y los recortes con Pillow despues de eso (la captura de 320 px agoto los 30 s con la maquina cargada y se repitio sola con `--output` a otro directorio para no volver a vaciar `test-results/`). Quien corra la suite completa debe volver a generar las capturas.
+9. **Marcado de estado por el orquestador.** El plan decia "no marques requisitos ni avances contadores: eso lo hace el orquestador al cerrar"; el encargo de esta corrida pidio correr esas operaciones una vez despues de commitear este resumen.
+10. **`actuals.tokens`** son 21458: caracteres entre 4 de las lineas anadidas del diff de texto (sin PNG ni este resumen) de `a67b4dc..HEAD`, misma escala que `estimateTokens`; no incluye lectura, busqueda ni crear imagenes, y es muy inferior a la estimacion de 160000 (que contaba el trabajo del ejecutor, no el diff).
 
-Guardas: `node --test tests/guards/*.test.mjs` 157 de 157; `node scripts/check-contrast.mjs` sale 0. Playwright con ClickUp bloqueado (`E2E_BLOCK_CLICKUP=1`, preview en 4322, detenido con `astro preview stop`): `collage-photos` 14 pasadas; `collage-language`, `page-structure`, `brand-assets`, `sections-problem-solution`, `a11y-base` y `cta-focus` 232 pasadas, 55 omitidas (capturas), 2 fallos iniciales (rasgo `photo` nuevo en el hero) corregidos en `collage-language.spec.ts`; segunda corrida de ese archivo 66 pasadas. Sin hex en `src/components`, `src/pages` ni `src/layouts`; sin `set:html`; sin `73187f`; sin `fetchpriority` ni `priority` en `src/components/collage`; ningun original versionado (`git ls-files | grep ^photo-sources` vacio).
+## Threat flags
 
-## Archivos de la tarea 1
+Ninguno nuevo. Las superficies del modelo de amenazas (descarga de terceros, licencias, metadatos, candidatas publicadas, peso, peticiones de terceros, alt decorativo, tinta horneada) estan cubiertas por guardas y por la puerta de produccion (T-02-11-01 a T-02-11-11). T-02-11-04 sigue con la aprobacion de Ari pendiente.
 
-Creados: `scripts/photos/{halftone,treat}.mjs`, `scripts/lib/photo-licenses.mjs`, `scripts/check-photos.mjs`, `src/assets/photos/LICENSES.md`, `src/assets/photos/treated/hero-a.png`, `src/components/collage/{photos.mjs,CollagePhoto.astro}`, `tests/guards/{halftone,photos}.test.mjs`, `tests/e2e/collage-photos.spec.ts`. Modificados: `.gitignore`, `package.json` (solo `prebuild`), `src/components/collage/{CollageScene.astro,scenes.mjs}`, `tests/guards/{collage-scenes,brand-assets}.test.mjs`, `tests/e2e/{collage-language,page-structure,brand-assets}.spec.ts`.
+## Known Stubs
 
-## Desviaciones
+Ninguno. La aprobacion de Ari y la eleccion entre candidatas estan abiertas por diseno, registradas en LICENSES.md y bloqueadas por `check-photos.mjs` en produccion.
 
-1. **Skills no invocadas en la tarea 1.** El plan (paso 1) pide invocar `design-taste-frontend` e `impeccable` con la herramienta Skill en la primera tarea de UI; el encargo del orquestador dijo usarlas solo en el ciclo visual (tarea 4) para ahorrar contexto. Se siguio el encargo del orquestador. **Deben invocarse en la tarea 4** (y en la 2 si se toca diseno).
-2. **R12 usa el formato `[R12]` de 02-10** (`Escena "hero", capa "x": [R12] el marco opaco...`), no `R12 el marco...` como en el plan, para conservar el formato de todos los errores de `assertScene`. La guarda busca `R12`.
-3. **Rojo de Playwright no observado** (ver arriba).
-4. **Cita de la licencia via WebFetch, no via curl:** la cita en LICENSES.md son los fragmentos entrecomillados que devolvio la herramienta de lectura web, no el texto completo de la pagina (curl esta bloqueado por Anubis). Esta dicho en la propia seccion de LICENSES.md. Si se quiere la cita completa, leer la pagina en un navegador.
-5. **brightness/contrast** de partida distintos a los del plan por la foto oscura; documentado arriba.
-6. `params.contrast` 1.0 y `brightness` 165 son los del manifiesto; `treat.mjs` reproduce el PNG exacto desde el original con su sha256.
+## Efectos sobre planes pendientes (para el orquestador)
 
-## Para quien continua (tarea 4)
+- **02-07 (animacion de entrada):** el marco de la foto del hero es un hermano HTML del grupo `panel` con `data-piece-of="panel"` y los mismos `--i`, `--r` y `--r-from`; para que la foto entre junto con su panel, animar `[data-piece="panel"]` y `[data-piece-of="panel"]` con la misma animacion. Los seis `[data-piece]` y los ganchos `.hc-pupil` y `[data-pupil]` no cambian; ningun elemento exterior lleva transform. Hoy hay cero animaciones con `prefers-reduced-motion` reduce y no-preference.
+- **02-08 (verificacion final):** sumar a `02-ARI-FINDINGS.md` las fotos pendientes de aprobacion de Ari (LICENSES.md), el sujeto y la nota de cada una, que las cuatro muestran manos u ojo de personas reales sin permiso de modelo registrado por la fuente, y que el png sustituye a avif y webp. Los conteos de `svg[data-collage]` y de imagenes de la pagina pasan a "cero img fuera de las dos fotos". Cerrar la eleccion (pasos abajo) antes de un build de produccion.
+- **02-04 a 02-06:** `dist/index.html` de 02-10 dejaba unos 20 KB de margen; ahora quedan unos 2.7 KB hasta el tope de 42240 de este plan (39497) y unos 22 KB hasta el global de 61440. No cambia ningun contrato de sus componentes.
+- **Fase 3 (SEO, medicion y QA):** Lighthouse sobre las fotos (LCP y CLS en movil; hoy medidos solo con PerformanceObserver), registrar en `A11Y-DECISIONS.md` que las fotos son decorativas (`alt` vacio, raiz `aria-hidden`), y revisar que produccion no se publique con aprobacion pendiente (la puerta lo impide con `PUBLIC_ENV=production`).
 
-- Falta toda la tarea 4 del plan: bloques 'informe de fotos' (medicion) y 'captura de fotos' en `collage-photos.spec.ts` (solo con `PHASE2_BATCH`), captura en lote P-fotos a cinco anchos, seis recortes lado a lado con Pillow contra `brand-inventory/moodboard.png`, invocar `design-taste-frontend` e `impeccable` con la herramienta Skill (aun no invocadas en todo el plan), correcciones de fotos en un lote, "Lote P (fotos), ronda 0 y 1" al final de `02-VISUAL-LOG.md`, fe de erratas de las fotos en `02-UI-SPEC.md`, frase de media tinta en `DESIGN.md`, suite completa con barridos y SUMMARY completo. La hoja de fotos ya existe y da las capturas `[data-demo="foto-<id>"]` para comparar candidatas.
-- Mecanismo: `PHOTOS` en `photos.mjs`; `treat.mjs --id <id> [--preview dir] [--dry]`; `LICENSES.md` con Estado, Como cerrar la eleccion, Reglas de seleccion, Licencias verificadas y Registro (4 filas). Las guardas de `photos.test.mjs` cubren el conjunto, la puerta y el subproceso de `check-photos.mjs`.
-- Fuentes usadas para las fotos: WebSearch, WebFetch de la pagina de la foto y curl al CDN de Unsplash (`?fm=jpg&q=85&w=1600&auto=format&fit=max`).
-- Sujetos ya usados: ojo detras de una lupa en el hero (hero-a). (ya hechas en la tarea 2: hero-b mano con lupa, whynow-a mano con telefono, whynow-b manos en laptop).
-- Tope de peso: la suma de imagenes de `/` debe quedar en 40960 (hoy 13 KB con una foto, con la de whynow de 208x256 se espera menos de 6 KB).
-- Pruebas: la tarea 3 ya cambio la que enumera los `[data-sheet]`, `ROOTS_ON_SHEET` y el conteo de pildoras de la hoja. Queda solo la tarea 4.
+## Decisiones y preguntas para Juan y Ari
+
+1. **Ari: aprobar las fotos.** Sin la aprobacion, `PUBLIC_ENV=production` no compila. Cuatro fotos muestran manos u ojo de personas reales y la fuente no registra permiso de modelo; hay que decidir con que nombre se registra la aprobacion (`aprobada por <nombre> el <fecha>`).
+2. **Juan y Ari: elegir candidata por ranura en `/marca/hoja/`.** Recomendacion de la critica (no una decision): hero, `hero-a` (`hero-b` es ilegible a tamano de escena); Por que ahora, empate razonable: `whynow-b` se reconoce mejor a 104 px pero su fondo no es liso, `whynow-a` tiene la silueta mas limpia pero su telefono es una mancha con ruido a 73 px.
+3. **Juan: png en lugar de avif y webp.** Resuelto por medicion (png gana en las cuatro fotos, el webp pesa de 1.2 a 1.5 veces mas y el avif de 1.8 a 2.2 veces mas); se puede revertir con `Picture`.
+4. **Juan: la puerta de produccion por aprobacion pendiente y candidatas sobrantes** es un anadido del plan. Para quitarla: la linea de `prebuild` y la guarda correspondiente.
+5. **Juan: el rasgo 2 queda mas duro que el moodboard** (binario, punto grueso, marco de tarjeta y no recorte libre). Si se quiere un gris continuo con grano o un recorte que sobresalga del disco, exige una escena distinta de 02-10 y otra regla de solape; y fotos reales del equipo cambiarian el sujeto.
+6. **Juan: `sharp`** sigue siendo opcional de Astro y no esta pineado en `package.json`; pinearlo pide su propia auditoria de paquetes.
+
+## Estado de LICENSES.md y pasos para cerrar la eleccion
+
+Eleccion: abierta. Elegidas `hero-a` y `whynow-a`, aprobacion **pendiente**; candidatas `hero-b` y `whynow-b`. Pasos (tal como estan en `src/assets/photos/LICENSES.md`):
+
+1. Juan y Ari eligen en `/marca/hoja/` una candidata por ranura.
+2. En `src/components/collage/photos.mjs`: `chosen: true` solo en la elegida de cada ranura y borrar la entrada de la otra.
+3. En LICENSES.md: escribir `aprobada por <nombre> el <AAAA-MM-DD>` en la fila de la elegida, borrar la fila de la otra, cambiar `Eleccion: abierta` por `Eleccion: cerrada` y actualizar "Estado".
+4. Borrar `src/assets/photos/treated/<id>.png` de la candidata descartada y su original en `photo-sources/`.
+5. Comprobar: `node --test tests/guards/photos.test.mjs`, `PUBLIC_ENV=production node scripts/check-photos.mjs` (debe salir 0) y `npx astro build`.
+
+## Para quien continua
+
 - Servidores: ninguno levantado por esta corrida (`astro preview stop` ejecutado); el `astro dev` del usuario (pid 86100) no se toco.
-- Al cerrar el plan: correr las 4 operaciones de estado UNA vez y revisar ROADMAP.md (02-03 debe seguir `[ ]`) y STATE.md (`Plan:` no debe saltar).
+- Las capturas y recortes del Lote P estan en `test-results/phase2/` (no versionadas); el script de Pillow se dejo fuera del repositorio y el comando y las cajas estan en `02-VISUAL-LOG.md`.
+- Para regenerar un PNG: `node scripts/photos/treat.mjs --id <id> [--preview dir] [--dry]` con el original en `photo-sources/` (verifica el sha256 de LICENSES.md).
+- Al cerrar el plan se corrieron las operaciones de estado una sola vez; el orden de ejecucion pendiente es 02-03 tarea 4 y despues 02-04 a 02-08.
 
-## Preguntas abiertas para Juan y Ari
+## Self-Check: PASSED
 
-1. Ari: aprobar hero-a (ojo con lupa de Mohammed Idris Djoudi, Unsplash). Sin aprobacion la puerta de produccion (`PUBLIC_ENV=production`) bloquea el build.
-2. Juan: resuelto en la tarea 2, se sirve png (gana a webp y avif en las cuatro fotos).
-3. Ari y Juan: elegir entre hero-a y hero-b, y entre whynow-a y whynow-b, en `/marca/hoja/` (ya existe, `npm run dev` o preview) y cerrar con los pasos de LICENSES.md; advertir que las cuatro fotos muestran manos u ojo de personas reales sin permiso de modelo registrado por la fuente.
+Verificado antes de commitear: existen `src/components/collage/photos.mjs`, `src/components/collage/CollagePhoto.astro`, `src/assets/photos/LICENSES.md`, los cuatro PNG de `src/assets/photos/treated/`, `tests/e2e/collage-photos.spec.ts`, `tests/guards/photos.test.mjs` y las capturas y recortes `P-fotos-*` incluida `P-fotos-medicion.json`; los commits f11420a, ababf3c, f9ab7f6, d5177fb, 483d6f2 y fa0362b existen en la rama.
