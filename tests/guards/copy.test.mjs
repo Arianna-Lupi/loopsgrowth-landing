@@ -453,3 +453,103 @@ test('13c. una variable desconocida o una llave sin pareja falla aunque la ruta 
     assert.ok(structuralRules(res.json).includes('PLACEHOLDER'), `${text}: ${res.out}`);
   }
 });
+
+// ---------------------------------------------------------------------------------------------
+// Plan 02-06, tarea 2: guarda INVERSION (hallazgo 6 del UI-SPEC). Pruebas por mutación sobre las
+// rutas `for_whom.*` y `faq.*`. Solo se agregan pruebas al final: la 9b y la 10 son del plan 02-03.
+// El espacio de nombres evita que un export ausente rompa la carga de todo el archivo.
+import * as copyRules from '../../scripts/lib/copy-rules.mjs';
+
+const INVERSION_MARKED = ['4 a 5k al mes', '4-5k al mes', '1.5k al mes', '+1500 al mes', 'USD 1500', 'desde $2,000'];
+const INVERSION_SAFE = ['USD 200k o más al año', 'facturación de 200k al año', '6-12 meses', '2 veces al mes'];
+
+// Una afirmación bajo `for_whom.is_for.items[0]` o `faq.items[0].answer`, con el estado indicado.
+function inversionDoc(where, text, status = 'pending') {
+  const claim = (pad) =>
+    `${pad}text: ${JSON.stringify(text)}\n${pad}status: ${status}${status === 'pending' ? `\n${pad}confirm_by: Ari\n${pad}reason: "prueba"` : ''}`;
+  const body = {
+    for_whom: `  for_whom:\n    is_for:\n      items:\n        - ${claim('          ').trimStart()}\n`,
+    faq: `  faq:\n    items:\n      - question:\n          text: "Pregunta"\n          status: verified\n        answer:\n${claim('          ')}\n`,
+    cases: `  cases:\n    items:\n      - figure:\n${claim('          ')}\n`,
+  }[where];
+  return `es:\n${body}  config:\n    form_url: "https://forms.example.com/f/abc"\n`;
+}
+const inversionRun = (where, text, status, env) => run(['--file', tmpYaml(inversionDoc(where, text, status)), '--json'], { env });
+
+test('14a. INVERSION marca cada cifra de inversión pending en for_whom y en faq; bloquea en producción y avisa en local', () => {
+  for (const [i, text] of INVERSION_MARKED.entries()) {
+    const where = i % 2 === 0 ? 'for_whom' : 'faq';
+    const prod = inversionRun(where, text, 'pending', PROD);
+    assert.equal(prod.status, 1, `${where} ${text}: ${prod.out}`);
+    assert.ok(rules(prod.json).includes('INVERSION'), `${where} ${text}: ${prod.out}`);
+    assert.deepEqual(prod.json?.structural, [], `${where} ${text}`);
+    const local = inversionRun(where, text, 'pending', LOCAL);
+    assert.equal(local.status, 0, `${where} ${text}: ${local.out}`);
+    assert.ok(rules(local.json).includes('INVERSION'), `${where} ${text}: ${local.out}`);
+    const hit = local.json.content.find((v) => v.rule === 'INVERSION');
+    assert.match(hit.path, /^(for_whom|faq)\./);
+    assert.ok(hit.excerpt.length > 0);
+  }
+});
+
+test('14b. INVERSION marca la cifra en las dos rutas para cada texto, no solo alternadas', () => {
+  for (const text of INVERSION_MARKED) {
+    for (const where of ['for_whom', 'faq']) {
+      const res = inversionRun(where, `Con ${text} empezamos.`, 'pending', LOCAL);
+      assert.ok(rules(res.json).includes('INVERSION'), `${where} ${text}: ${res.out}`);
+    }
+  }
+});
+
+test('14c. la misma cadena con status verified no se marca (la aprobó una persona)', () => {
+  for (const text of INVERSION_MARKED) {
+    for (const where of ['for_whom', 'faq']) {
+      for (const env of [PROD, LOCAL]) {
+        const res = inversionRun(where, text, 'verified', env);
+        assert.equal(res.status, 0, `${where} ${text}: ${res.out}`);
+        assert.ok(!rules(res.json).includes('INVERSION'), `${where} ${text}: ${res.out}`);
+      }
+    }
+  }
+});
+
+test('14d. la misma cifra en otra ruta (cases.*: De $41K a $76K en ventas) no se marca', () => {
+  for (const text of ['De $41K a $76K en ventas', ...INVERSION_MARKED]) {
+    const res = inversionRun('cases', text, 'pending', LOCAL);
+    assert.ok(!rules(res.json).includes('INVERSION'), `${text}: ${res.out}`);
+  }
+});
+
+test('14e. el perfil de facturación y los plazos no se marcan como inversión', () => {
+  for (const text of INVERSION_SAFE) {
+    for (const where of ['for_whom', 'faq']) {
+      const res = inversionRun(where, text, 'pending', LOCAL);
+      assert.ok(!rules(res.json).includes('INVERSION'), `${where} ${text}: ${res.out}`);
+    }
+  }
+});
+
+test('14f. un separador invisible dentro de la cifra no la esconde de INVERSION', () => {
+  const res = inversionRun('for_whom', '+15​00 al mes', 'pending', LOCAL);
+  assert.ok(rules(res.json).includes('INVERSION'), res.out);
+});
+
+test('14g. INVERSION_PATH_PREFIXES y findInversion se exportan con el contrato del plan', () => {
+  assert.deepEqual(copyRules.INVERSION_PATH_PREFIXES, ['for_whom.', 'faq.']);
+  assert.ok(copyRules.INVERSION_MONTHLY_RE instanceof RegExp);
+  assert.ok(copyRules.INVERSION_CURRENCY_RE instanceof RegExp);
+  for (const text of INVERSION_MARKED) {
+    const found = copyRules.findInversion(text);
+    assert.ok(Array.isArray(found) && found.length > 0, text);
+  }
+  for (const text of INVERSION_SAFE) assert.deepEqual(copyRules.findInversion(text), [], text);
+});
+
+test('14h. con el YAML real no hay INVERSION y las rutas nuevas solo reportan PENDING y MISSING', () => {
+  const res = run(['--file', REAL_YAML, '--json'], { env: PROD });
+  assert.deepEqual(res.json?.structural, [], res.out);
+  assert.ok(!rules(res.json).includes('INVERSION'), res.out);
+  const mine = (res.json?.content ?? []).filter((v) => /^(for_whom|faq)\./.test(v.path));
+  assert.ok(mine.length > 0, 'las rutas for_whom y faq deben aparecer en el YAML real');
+  assert.ok(mine.every((v) => v.rule === 'PENDING' || v.rule === 'MISSING'), JSON.stringify(mine));
+});
