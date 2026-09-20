@@ -99,7 +99,8 @@ export const SURFACE_OF_COLOR = Object.freeze({ purple: 'purple', yellow: 'yello
  */
 export const CHIP_WORDS = Object.freeze([
   Object.freeze({ word: 'seo', lang: 'es', source: 'copy' }),
-  Object.freeze({ word: 'geo', lang: 'es', source: 'copy' }),
+  // geo: sigla de Generative Engine Optimization; lang en por decisión de Juan (2026-09-20), igual que GEO en `english-terms.mjs`.
+  Object.freeze({ word: 'geo', lang: 'en', source: 'copy' }),
   Object.freeze({ word: 'ads', lang: 'es', source: 'copy' }),
   Object.freeze({ word: 'spy', lang: 'en', source: 'moodboard' }),
   Object.freeze({ word: 'team work', lang: 'en', source: 'moodboard' }),

@@ -53,4 +53,18 @@ test.describe('idioma de las partes en /', () => {
     await expect(page.locator('#solucion')).toContainText('Miguel (Especialista SEO): keywords, contenido, link building.');
     await expect(page.locator('#incluye')).toContainText('(Core Web Vitals, velocidad, indexación, schema), para que Google y la IA puedan leerte y confiar en ti.');
   });
+
+  // GEO (decisión de Juan, 2026-09-20): en el subtítulo del hero solo "GEO" lleva lang="en"; "SEO/" no, y el texto visible es el mismo.
+  test('el subtítulo del hero marca solo GEO y se lee igual', async ({ page }) => {
+    await page.goto('/');
+    const sub = page.locator('.hero-sub');
+    await expect(sub).toHaveText('Un equipo dedicado y especializado que ejecuta tu SEO/GEO y tu visibilidad en asistentes de IA (ChatGPT, Gemini).');
+    const spans = sub.locator('[lang="en"]');
+    await expect(spans).toHaveCount(1);
+    await expect(spans).toHaveText('GEO');
+    // "SEO/" queda como texto suelto del párrafo, fuera del span.
+    const loose = await sub.evaluate((el) => [...el.childNodes].filter((n) => n.nodeType === Node.TEXT_NODE).map((n) => n.nodeValue ?? '').join('|'));
+    expect(loose).toContain('SEO/');
+    expect(loose).not.toContain('GEO');
+  });
 });

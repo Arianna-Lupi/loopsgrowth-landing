@@ -14,6 +14,9 @@ export const EN_TERMS = Object.freeze([
   'SaaS B2B',
   'Meta Ads',
   'e-commerce',
+  // GEO: sigla de Generative Engine Optimization. Se añadió por decisión de Juan (2026-09-20). Solo se envuelve
+  // "GEO" (en "SEO/GEO" el "SEO" queda fuera). El `<title>` y las metaetiquetas no admiten `lang` y no se tocan.
+  'GEO',
 ]);
 
 const escapeRegExp = (term) => term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
