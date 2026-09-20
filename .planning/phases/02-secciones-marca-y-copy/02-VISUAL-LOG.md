@@ -33,6 +33,20 @@ Protocolo por lote: (1) construir el lote completo desde el contrato; (2) una ro
 - **Conflictos resueltos a favor del contrato:** la skill de gusto pide un tema único de página (Page Theme Lock) y `impeccable` desaconseja la sombra dura fuera de un mundo neobrutalista. El brandbook y el UI-SPEC fijan cuatro tonos alternados y la sombra dura de 4 px como rasgo de marca (ya presente en la Fase 1), y Juan aprobó ambos. Se mantienen.
 - **`document`:** sin entrevista en vivo (mismo motivo que `init`). `DESIGN.md` describe lo extraído de los tokens y las decisiones ya aprobadas; no se generó el archivo lateral de tokens. Si Juan quiere afinar el lenguaje cualitativo, se corre `/impeccable document` de nuevo.
 
+## Lote 0 (marca y collage, de 02-02), consolidado
+
+Nota: consolidada desde 02-02-SUMMARY.md (decisión 9 de 02-02). Es la entrada "Registro visual, lote 0 (marca y collage)" de ese resumen, copiada sin cambios de fondo. No confundir con las rondas "Lote 0" de arriba, que son del plan 02-01 (tokens y tonos).
+
+Skills invocadas con la herramienta Skill en la tarea 1: `design-taste-frontend` (lectura: landing de captación B2B para dueños de e-commerce, lenguaje collage pop de marca, accesibilidad por encima de la estética; diales 7/3/4) e `impeccable` (verbos `shape` y `adapt` sobre el header; en las tareas 2 a 4 se aplicaron `shape`, `colorize` y `polish` en el mismo criterio, sin volver a cargar las skills). Sin `init` ni `document` (los hizo 02-01).
+
+**Ronda 1, header (tarea 1).** Capturas `lote0-logo-320.png` y `lote0-logo-1280.png`. Hallazgos: (a) el logo de 32 px pesa poco al lado del h1 de 64 px y del CTA; (b) el logo quedaba pegado arriba frente al CTA porque el contenedor `.wordmark` heredaba una caja de línea de 24 px. Correcciones en un solo lote: 40 px desde 640 px (el header no cambia de altura, el CTA ya mide 44 px) y `.wordmark` como `flex` con centrado. Confirmación: logo centrado con el CTA a 1280 px; a 320 px se mantiene en 32 px.
+
+**Ronda 2, identidad (tarea 2).** Capturas `lote0-marca-{320,390,768,1024,1280}.png`. `colorize` sobre los cuatro colores entregados, contrastes medidos: #4228d1 sobre blanco 8.55, sobre amarillo 5.43, sobre #212121 1.88 (falla: por eso el logo pasa a blanco sobre dark y purple) y sobre #73187f 1.13. El isotipo sobre dark se ve gracias al anillo crema y al iris, pero sus aros #4228d1 tienen 1.88 contra el fondo: no se debe usar sobre oscuro sin la variante de la mesa 17 del `.ai`. Favicon a 16 px (ampliado): los dos ojos y el mango se leen como formas separadas, pero el isotipo es apaisado (1.64:1) y ocupa poco alto del cuadrado; ver decisiones para Ari.
+
+**Ronda 3, primitivas (tarea 3).** Capturas `lote0-collage-primitivas-{320,390,768,1024,1280}.png`. Hallazgo de fondo: el `loop` de anillos concéntricos con punto central se leía como diana (la misma lección del hero en 02-01). Corrección: dos anillos rellenos que se solapan (regla evenodd con contorno), sin punto central. También se igualó la altura de las celdas de la hoja para alinear los rótulos. Las variables `--cf-a`, `--cf-b` y `--cf-c` y `--collage-stroke` atraviesan el `<use>`: la misma lupa sale amarilla, blanca y naranja según el tono y con contorno oscuro o blanco. Confirmación: sin hallazgos nuevos.
+
+**Ronda 4, composiciones (tarea 4).** Capturas `lote0-composiciones-{320,390,768,1024,1280}.png`. Hallazgos: en `AgendaCollage` el clic caía sobre los aros del loop y el loop tapaba el mango de la lupa. Corrección en un solo lote: loop detrás y a la derecha de la lupa, ojos arriba mirando a la derecha y clic debajo del loop. Confirmación: la lupa manda, cada pieza se ve completa y el trazo blanco de 3 px coincide con las primitivas; el clic queda cerca del lente pero no lo apunta con exactitud (se dejó así para no entrar en una tercera ronda). Punto 5 de la lista de vibra: los cuatro avatares se leen como set uniforme sobre círculos suaves, con los mismos ojos y proporciones. Punto 7: `AgendaCollage` es un elemento de collage propio de `#agenda` con el mismo trazo pop.
+
 ## Lote A, ronda 1
 
 - **Skills invocadas:** `impeccable` (context y `critique` del lote; verbos del lote `shape`, `layout`, `typeset`, `colorize` y `adapt`, sin `animate`: el plan 07 anima la entrada) y `design-taste-frontend` (lectura de diseño: landing de captación B2B para dueños de e-commerce, collage pop de marca, accesibilidad por encima de la estética; diales 7, 3 y 4; sin degradados, sin vidrio, sin animaciones infinitas). El contrato del UI-SPEC manda sobre ambas.
@@ -308,3 +322,89 @@ Protocolo por lote: (1) construir el lote completo desde el contrato; (2) una ro
   7. Posibles puntos a mirar en CIERRE1: el hero a 1280 px tiene el texto largo de la descripción en cuerpo pequeño frente al titular; La solución muestra la tarjeta de equipo mucho más alta que su vecina de crema; la tarjeta blanca de `#agenda` queda vacía con ClickUp bloqueado (esperado).
   8. A 390 px las secciones mantienen una sola columna, sin recortes visibles.
 - **Estado:** el tracer no encontró defectos que corregir. La matriz completa, el ciclo de `critique` y `polish` y la consolidación del lote 0 son de la tarea 2.
+
+## Cierre, ronda CIERRE1 (plan 02-08 tarea 2)
+
+- **Medición previa** (`tests/e2e/phase-closing.spec.ts`, commit 05919aa): matriz de desborde (`/` y `/privacidad/` a 320, 390, 640, 768, 1024 y 1280 px con `reduce` y `no-preference`: 24 pruebas), espaciado de texto SC 1.4.12 a 320 y 1280 px, sin JavaScript (12 secciones, `<details>` abre, 4 CTA), ClickUp bloqueado (12 secciones, footer, enlace de respaldo, cero `pageerror`), objetivos de 44 px, sombras y degradados, área de salvado del logo (header y footer a 390 y 1280 px) y peso y peticiones. Salieron en verde a la primera, con una sola precisión de definición: `MetricCard` pinta el marcador amarillo de la cifra con `linear-gradient(var(--mark), var(--mark))`, un relleno plano de un solo color, así que la prueba de degradados cuenta como degradado solo el `gradient` con más de un color (o que no sea lineal). No se tocó el CSS: el marcador no es un degradado a la vista.
+- **Capturas:** `PHASE2_BATCH=CIERRE1` con `page-structure.spec.ts -g "captura"` (5 anchos por base, `reduce` y sin JavaScript, ClickUp bloqueado) y la hoja de contacto de la tarea 1 (14 recortes por ancho). Se miraron: hoja de 1280 y hoja de 390, `CIERRE1-390-nojs.png` y `CIERRE1-320-reduce.png` (partidas en columnas para leerlas), y solo dos recortes individuales: `inicio-1280` y `solucion-1280`. Referencias de marca vistas con la herramienta Read: `moodboard.png` y `ai_a.png`.
+- **Skills invocadas con la herramienta Skill:** `impeccable` (setup con `impeccable context`, que cargó PRODUCT.md y DESIGN.md, y el verbo `critique` con su referencia leída) y `design-taste-frontend` (lectura declarada: landing de captación B2B para dueños de e-commerce, lenguaje collage pop de marca, con reglas de accesibilidad que mandan sobre la estética; DESIGN_VARIANCE 7, MOTION_INTENSITY 3, VISUAL_DENSITY 4; usada como lista final de antidefectos). `audit`, `polish`, `harden` y `adapt` se aplicaron con su criterio sobre la matriz medida de arriba, sin abrir sus referencias por separado. La `critique` corrió en un solo contexto porque este ejecutor no expone una herramienta de subagentes: DEGRADED single-context (sin subagente). El detector (`impeccable detect --json src`) sí corrió; la superposición en el navegador (`live-server`) no.
+- **Detector:** 3 avisos "advisory" `design-system-radius` (0.25rem en el foco del logo, 0.45em en `Pill`, 3px en el resumen del FAQ), radios fuera de la escala de DESIGN.md. No se cambian: son formas aprobadas en lotes anteriores y cambiarlas rompería medidas ya verificadas. Los anota para Juan.
+- **Hallazgos de la crítica (contra las 15 filas, los 8 rasgos y la brecha de marca de la sección 5 de 02-BRAND-INVENTORY.md):**
+  1. **Defecto real (P2):** a 320 px la etiqueta del CTA de todas las ubicaciones caía a dos líneas (el botón medía 73 px de alto; el texto de 16.6 px con relleno de 24 por lado sumaba 289 px contra 288 de ancho útil). La skill de gusto lo prohíbe (CTA wrap ban).
+  2. **Descripción del hero en cuerpo pequeño frente al titular (P3):** es el contrato del UI-SPEC (subtítulo y descripción en Body, máximo 55 ch) y una prueba lo fija (`a11y-base` (h): subtítulo en 400). No se cambia. Se anota como propuesta a Juan: subtítulo en Title (24 px) para subir la jerarquía entre el H1 de 64 px y el resto.
+  3. **Tarjeta de equipo de La solución mucho más alta que su vecina de crema (P3):** es el contrato "alto parejo por fila" (UI-SPEC y prueba de rejilla). Cuando Ari entregue el cuerpo del pilar 4 la brecha se reduce; hoy la tarjeta de crema queda con relleno vacío bajo "FALTA CONFIRMAR". No se cambia.
+  4. **Tarjeta de `#agenda` vacía con ClickUp bloqueado:** esperado; el enlace de respaldo y el aviso sin JavaScript se ven.
+  5. **Footer escaso a 1280 px:** solo tres bloques con "FALTA CONFIRMAR"; es contenido pendiente de Ari, no un defecto de layout.
+  6. **Fidelidad de marca:** se ve el lenguaje del moodboard (color plano, Loopy con lupa, píldoras `seo`, `geo`, `team work` y el recorte en media tinta del ojo). Las brechas ya conocidas de la sección 5 siguen siendo de Ari y Juan (píldoras `spy`, avatares Loopy, morado, fotos de stock), no de CSS.
+- **Correcciones (un solo lote):** `CtaLink.astro`: `padding-inline: 1rem` bajo 22.5em (360 px). Prueba nueva en `phase-closing.spec.ts`: la etiqueta de cada `a[data-cta]` cabe en una línea a 320, 390 y 1280 px. Comprobado que la prueba distingue: con el relleno viejo el botón mide 73.2 px y con el nuevo 48 px. Commit 3d97955.
+
+## Cierre, ronda CIERRE2 (confirmación)
+
+- **Corrida:** `PHASE2_BATCH=CIERRE2` con `page-structure.spec.ts` y `phase-closing.spec.ts`: 107 pruebas pasan (incluida la hoja de contacto y las 15 capturas). `CIERRE2-320-reduce.png` (recorte superior) confirma el CTA en una línea a 320 px. No se abrió ningún otro recorte.
+- **Suite de la tarea:** `npm run build` sale 0; Playwright chromium con `phase-closing`, `motion`, `page-structure` y `a11y-base`: 144 pasan y 17 en skip (las herramientas de captura y de hoja de contacto sin `PHASE2_BATCH`, como debe ser); `node --test tests/guards/*.test.mjs`: 207 pasan, 0 fallan; `node scripts/check-contrast.mjs` sale 0; `git diff d0ac3f7 -- src/content/landing.es.yaml` vacío (COPY-01).
+- **Resultado:** la lista de vibra se cumple; no hizo falta `CIERRE3`.
+
+## Cierre, los 8 rasgos de vibra (evidencia de CIERRE1 y CIERRE2, a 1280 x 800 salvo que se indique)
+
+| # | Rasgo | Veredicto | Evidencia |
+|---|-------|-----------|-----------|
+| 1 | Hero con titular enorme, un pill dominante y collage a la derecha, todo en el primer pantallazo | Cumple | H1 de 64 px morado (top 147, bottom 377); CTA naranja único (490 a 541); collage a la derecha (289 a 692, bajo los 800 px de la ventana) |
+| 2 | Bloques de tono a ancho completo con 96 px de aire desde 1024 px | Cumple | Las 12 secciones miden 96 px arriba y abajo a 1280 px (el hero, 64 px arriba y 96 abajo por contrato); alternancia blanco, oscuro, amarillo, blanco, oscuro, blanco, amarillo, blanco, oscuro, blanco, amarillo, morado (rgb 255,255,255 / 33,33,33 / 255,198,2 / 66,40,209) |
+| 3 | Tarjetas con borde de 3 px, sombra dura y radio parejo, sin sombra difusa | Cumple | `pain-card` 3 px, radio 16 px, sombra `6px 6px 0 0` naranja; `pillar-card` y `metric-card` 3 px, radio 16 px, `4px 4px 0 0` oscuro; prueba: cero sombras con desenfoque y cero degradados en `/` y `/privacidad/` |
+| 4 | La cifra es lo más grande de cada caso, con marcador amarillo | Cumple | 5 cifras de 64 px; el texto mayor del resto de cada tarjeta mide 24 px; marcador plano de un color |
+| 5 | Cuatro avatares como set uniforme sobre círculos suaves | Cumple | 4 avatares de 120 x 120 px a 1280 px |
+| 6 | FAQ como filas grandes con borde e icono más/menos | Cumple | 6 resúmenes de 77 px de alto (mínimo pedido 44 px), icono plus/minus, `<details>` que abre con y sin JavaScript |
+| 7 | Cada sección con foco claro y un elemento de collage o layout propio | Cumple | Collage en hero, problema, por qué ahora, solución, equipo, casos (lupa de Meta Ads) y `#agenda`; layouts propios en incluye (ítems abiertos con regla), cómo funciona (fases con conector), para quién (par "es" y "no es") y footer (3 bloques). Hoja de contacto de 14 recortes: ninguno se lee como plantilla genérica |
+| 8 | Cuatro CTA con el mismo texto y destino | Cumple | 4 `a[data-cta]` con "Agenda tu llamada de 30 minutos", `href="#agenda"`, relleno rgb(253,105,56); la etiqueta cabe en una línea a 320, 390 y 1280 px |
+
+## Cierre, las 15 filas de la síntesis de referencias
+
+| # | Fila | Se ve | Dónde |
+|---|------|-------|-------|
+| 1 | Header (logo y un pill de CTA) | Sí | `CIERRE1-header-1280.png`: logo a la izquierda, CTA naranja a la derecha; bajo 640 px solo el logo, como manda el UI-SPEC |
+| 2 | Hero de 2 columnas | Sí | `CIERRE1-inicio-1280.png`: H1 grande y en negrita, un CTA, `HeroCollage` (lupa gigante, ojos, clics, aros y recorte del ojo) |
+| 3 | El problema (3 columnas sobre oscuro) | Sí | Sección `problema`: 3 tarjetas blancas con sombra naranja, numeral morado y pegatina de collage |
+| 4 | Por qué ahora (bloque educativo con barra) | Sí | Amarillo, collage a la izquierda y lista de 5 afirmaciones con reglas de 3 px |
+| 5 | La solución (2x2) | Sí | 4 tarjetas pop con chip de collage; alto parejo por fila (ver hallazgo 3) |
+| 6 | Lo que logramos juntos (bloques con check sobre oscuro) | Sí | 2x2 con borde amarillo y disco de check amarillo; "FALTA CONFIRMAR" con el mismo estilo |
+| 7 | Casos de éxito (cifra dominante, chip, tarjeta ancha final) | Sí | 5 tarjetas con cifra de 64 px, chip de canal y `<dl>`; Meta Ads ancha con lupa |
+| 8 | Quiénes somos (avatares sobre círculos) | Sí | 4 avatares Loopy con nombre y cargo en Outfit 700 |
+| 9 | Qué incluye (ítems abiertos con regla) | Sí | 6 ítems con disco de check y regla superior de 3 px, sin tarjeta |
+| 10 | Cómo funciona (fases en lista ordenada) | Sí | 4 fases sobre oscuro con numeral en disco amarillo, conector discontinuo y chip de plazo |
+| 11 | Para quién es (par "es" y "no es") | Sí | Tarjeta amarilla de borde sólido con checks y tarjeta blanca de borde discontinuo con x |
+| 12 | FAQ (filas grandes con icono) | Sí | 6 filas blancas sobre amarillo con icono más/menos, `<details>` nativo |
+| 13 | CTA final y formulario | Sí | `#agenda` morada, h2 con collage a la izquierda y tarjeta blanca del iframe (vacía con ClickUp bloqueado, con enlace de respaldo) |
+| 14 | Footer (contacto, redes, privacidad) | Sí | 3 bloques con el logo horizontal; contenido en "FALTA CONFIRMAR" hasta que Ari lo entregue |
+| 15 | Ritmo global (96 px, alternancia, barra de acento) | Sí | Ver rasgo 2; barra de 48 x 8 px sobre cada h2 |
+
+La fila 16 del UI-SPEC (Movimiento) no aplica a esta tabla: su presupuesto lo vigilan `motion.spec.ts` y `motion-budget.test.mjs` (en verde).
+
+## Cierre, conteo de axe (`@axe-core/playwright` 4.13.0, etiquetas wcag2a, wcag2aa, wcag21a, wcag21aa y wcag22aa, sin iframe, ClickUp bloqueado)
+
+| Ruta y ancho | Violaciones | critical o serious | moderate o minor |
+|--------------|------------:|-------------------:|-----------------:|
+| `/` a 320 px | 0 | 0 | 0 |
+| `/` a 390 px | 0 | 0 | 0 |
+| `/` a 1280 px | 0 | 0 | 0 |
+| `/privacidad/` a 320 px | 0 | 0 | 0 |
+| `/privacidad/` a 390 px | 0 | 0 | 0 |
+| `/privacidad/` a 1280 px | 0 | 0 | 0 |
+
+No quedan anotaciones `moderate` ni `minor` por listar. La compuerta completa de accesibilidad (revisión con lector de pantalla y verificador independiente) es de la fase 3.
+
+## Cierre, medidas de peso y peticiones (`/`)
+
+`dist/index.html`: 71 843 bytes crudos (tope 81 920) y 14 274 con gzip -9 (tope 25 600). Raíces `[data-collage]` (15, ninguna anidada) más el sprite (6 135 bytes): 24 392 bytes (tope 42 240). `dist` sin archivos `.js`. Hosts pedidos por `/` y `/privacidad/` (peticiones de la página y navegación de su iframe): solo localhost, forms.clickup.com y app-cdn.clickup.com.
+
+## Cierre, pendientes para Juan (nadie más puede darlos por verificados)
+
+1. **Movimiento:** mirar la página en un navegador real a 390 y 1280 px alternando la preferencia de movimiento reducido del sistema, y confirmar que la entrada del hero es sutil y no falta contenido (con `reduce` no hay animaciones: lo mide `motion.spec.ts`, pero la percepción es de una persona).
+2. **VoiceOver en Safari** (y NVDA o TalkBack si se puede): que cada resumen del FAQ anuncie contraído o expandido y lea la respuesta al abrir. Recorrer con teclado el iframe real de ClickUp (entrar y salir sin trampa de foco).
+3. **Avatares Loopy:** aprobar el set (lupa, auriculares, gafas, gorro) y la asignación persona a variante.
+4. **Favicon:** aprobar la mesa 18 (un ojo con lupa) frente al isotipo de dos ojos que hoy se usa.
+5. **Variantes de logo por fondo:** el horizontal y el imagotipo solo van sobre blanco; el isotipo sobre oscuro usa la mesa 17 y el ojo sobre oscuro la 22 como excepción de marca; falta el emblema sobre oscuro.
+6. **Morado:** confirmar #4228D1 (valor de los archivos del logo, decisión de Juan del 2026-09-19) frente al #73187F que rotula el BrandBook.
+7. **Palabras de las píldoras:** `seo`, `geo` y `ads` salen del copy de Ari; `spy` y `team work` vienen del moodboard. Confirmar que se quedan.
+8. **Fotos de stock:** elegir la foto de cada ranura en `/marca/hoja/` (hero y por qué ahora). Muestran manos u ojo de personas reales sin autorización de imagen registrada por la fuente, y la puerta `check-photos.mjs` bloquea producción hasta que se decida.
+9. **Propuestas de la crítica (opcionales):** subtítulo del hero a tamaño Title (24 px) en lugar de Body; decidir si la tarjeta de equipo de La solución debe ocupar dos columnas para no dejar la tarjeta de crema con hueco; los tres radios fuera de la escala de DESIGN.md (0.25rem, 0.45em, 3px).
+10. **Fase 3:** Lighthouse (rendimiento y SEO), la compuerta completa de accesibilidad y el dominio.
