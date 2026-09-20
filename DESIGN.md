@@ -69,7 +69,7 @@ Generado por `impeccable document` en modo scan desde `src/styles/tokens.css`, `
 
 ## Overview
 
-Collage pop de marca: Loopy oficial (mesas 13 y 18 del `.ai`) sobre formas planas de color sin contorno, con sombra dura, garabatos de trazo de 3 px, píldoras con palabra en negrita y retícula de puntos; ningún degradado. La página alterna superficies de color completo (blanco, amarillo, oscuro) y cierra con morado. La accesibilidad es una restricción de diseño: el contraste se mide en cada build (`scripts/check-contrast.mjs`) y los pares prohibidos rompen la guarda.
+Collage pop de marca: Loopy oficial (mesas 13 y 18 del `.ai`) sobre formas planas de color sin contorno, con sombra dura, garabatos de trazo de 3 px, píldoras con palabra en negrita y retícula de puntos; ningún degradado. Dos ranuras del collage (hero y Por qué ahora) llevan recortes fotográficos en media tinta: fotos de stock con licencia, tinta oscura de marca sobre el relleno de la ranura y la misma sombra dura, siempre decorativas. La página alterna superficies de color completo (blanco, amarillo, oscuro) y cierra con morado. La accesibilidad es una restricción de diseño: el contraste se mide en cada build (`scripts/check-contrast.mjs`) y los pares prohibidos rompen la guarda.
 
 ## Colors
 

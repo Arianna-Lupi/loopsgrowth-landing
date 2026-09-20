@@ -301,6 +301,12 @@ Reglas derivadas de los tonos nuevos:
 - Peso: sprite de 8 símbolos de 10 KB o menos (hoy 6135 bytes) y `dist/index.html` de 40960 bytes o menos.
 - Las filas de la tabla para lupa, ojos, clic, loop, pegatinas, chips y avatares quedan reemplazadas. La tabla no se reescribe.
 
+**Fe de erratas de las fotos (2026-09-19).** El plan 02-11 llena las dos ranuras y matiza la regla de "ninguna imagen raster":
+- Las únicas imágenes raster son dos fotos de stock con licencia (hero y Por qué ahora, `PHOTO_SLOTS`), tratadas en media tinta binaria con la tinta del token oscuro sobre el relleno de la ranura y con la sombra dura de la ranura.
+- Cada foto es decorativa: `alt` vacío, dentro de una raíz `aria-hidden`; se sirve con `astro:assets` en png de 25600 bytes o menos, sin peticiones de terceros, y el h1 sigue siendo el LCP.
+- El registro (fuente, autor, licencia, sha256 y aprobación de Ari) vive en `src/assets/photos/LICENSES.md`; `PUBLIC_ENV=production` no compila mientras haya una aprobación pendiente o una candidata sobrante.
+- Pesos: `.hero-collage` de 8832 bytes o menos, Por qué ahora de 3712, imágenes de `/` de 40960 y `dist/index.html` de 42240 (tope global de 61440 sin cambio).
+
 Estilo: **collage pop de línea gruesa**. Formas planas de color de marca, contorno de 3 px (`var(--collage-stroke)`), sin degradados, sin sombras suaves, sin texto dentro. Todo es SVG estático en línea con `aria-hidden="true"` y `focusable="false"`; ninguna imagen raster. Los colores salen de `var(--color-brand-*)` y `var(--collage-stroke)`, nunca de un hex en el componente (regla de la Fase 1: sin hex en `src/components`).
 
 | Pieza | viewBox | Composición | Uso |
