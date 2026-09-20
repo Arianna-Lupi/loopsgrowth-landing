@@ -153,8 +153,9 @@ test('CollagePhoto.astro y CollageScene.astro: contrato de texto', () => {
 // (xi) dist -------------------------------------------------------------------------------------
 test('dist: img de las fotos elegidas, locales, con alt vacío, dimensiones y carga según su ranura', { skip: !existsSync('dist/index.html') && 'sin dist' }, () => {
   const html = readFileSync('dist/index.html', 'utf8');
-  // Las fotos del equipo (data-team-photo) las guarda tests/guards/team-photos.test.mjs.
-  const imgs = (html.match(/<img\b[^>]*>/g) ?? []).filter((t) => !/data-team-photo=/.test(t));
+  // Las fotos del equipo (data-team-photo) las guarda tests/guards/team-photos.test.mjs y los logos de clientes
+  // (data-client-logo) tests/guards/hero-clients.test.mjs.
+  const imgs = (html.match(/<img\b[^>]*>/g) ?? []).filter((t) => !/data-team-photo=|data-client-logo=/.test(t));
   const chosen = PHOTO_SLOTS.map((s) => chosenPhoto(s.name)).filter(Boolean);
   assert.equal(imgs.length, chosen.length, 'una img por foto elegida');
   let total = 0;

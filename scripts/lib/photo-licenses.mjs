@@ -284,3 +284,87 @@ export function teamClosingSteps(text) {
   const body = section(text, 'Cómo cerrar la aprobación').trim();
   return body || 'Consulta la sección "Cómo cerrar la aprobación" de src/assets/team/PROVENANCE.md.';
 }
+
+// ---------------------------------------------------------------------------------------------
+// Logos de clientes del hero (quick 260920-hero-clients). Registro aparte en src/assets/clients/PROVENANCE.md:
+// son marcas registradas de terceros copiadas del sitio de Ari (ariannalupi.com). Misma política de la puerta
+// de las fotos: la aprobación de Ari pendiente bloquea `PUBLIC_ENV=production` y fuera de producción solo
+// advierte; el registro incoherente bloquea siempre. El archivo del repositorio ES el original, así que su
+// sha256 se comprueba siempre (no solo si existe una copia en photo-sources/).
+// ---------------------------------------------------------------------------------------------
+
+const CLIENT_COLUMNS = ['id', 'file', 'source', 'downloaded', 'dimensions', 'sha256', 'authorizedBy', 'approval', 'note'];
+
+/** Origen permitido de los logos: los recursos de marcas del sitio de Ari. */
+export const CLIENT_SOURCE_PREFIX = 'https://ariannalupi.com/assets/brands/';
+
+/** Filas de la tabla "Registro" de src/assets/clients/PROVENANCE.md (9 columnas). */
+export function parseClientProvenance(text) {
+  return section(text, 'Registro')
+    .split('\n')
+    .filter((line) => line.trim().startsWith('|'))
+    .map((line) => line.trim().replace(/^\||\|$/g, '').split('|').map((c) => c.trim()))
+    .filter((cells) => cells.length === CLIENT_COLUMNS.length && !/^-+$/.test(cells[0].replace(/[:\s]/g, '')) && cells[0] !== 'id')
+    .map((cells) => {
+      const row = Object.fromEntries(CLIENT_COLUMNS.map((c, i) => [c, cells[i]]));
+      row.id = row.id.replace(/`/g, '');
+      row.file = row.file.replace(/`/g, '');
+      return row;
+    });
+}
+
+/** Errores en español, uno por campo mal formado; lista vacía si todo está bien. */
+export function validateClientProvenance(rows) {
+  const errors = [];
+  for (const row of rows) {
+    const bad = (field, why) => errors.push(`Logo de cliente "${row.id}", campo "${field}": ${why}.`);
+    if (!/^[a-z][a-z0-9-]*$/.test(row.id ?? '')) bad('id', 'debe ser un identificador en minúsculas');
+    if (row.file !== `${row.id}.webp`) bad('file', `debe ser "${row.id}.webp"`);
+    if (row.source !== `${CLIENT_SOURCE_PREFIX}${row.id}.webp`) bad('source', `debe ser ${CLIENT_SOURCE_PREFIX}${row.id}.webp`);
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(row.downloaded ?? '') || !isCalendarDate(row.downloaded)) bad('downloaded', 'debe ser una fecha AAAA-MM-DD que exista');
+    if (!/^\d+x\d+$/.test(row.dimensions ?? '')) bad('dimensions', 'debe tener la forma ANCHOxALTO');
+    if (!/^[0-9a-f]{64}$/.test(row.sha256 ?? '')) bad('sha256', 'debe medir 64 hexadecimales');
+    if (!(row.authorizedBy ?? '').trim()) bad('authorizedBy', 'debe decir quién autorizó el uso');
+    const approval = approvalProblem({ approval: row.approval, downloaded: row.downloaded });
+    if (approval) bad('approval', approval);
+    for (const field of CLIENT_COLUMNS) if (DASH.test(row[field] ?? '')) bad(field, 'no se admiten guiones largos ni cortos');
+  }
+  return errors;
+}
+
+/**
+ * Puerta de los logos de clientes (función pura). `always` bloquea en todo entorno (registro o manifiesto
+ * incoherentes, archivo ausente, sha256 distinto del archivo real, logo huérfano); `problems` solo bloquea con
+ * `env === 'production'` (aprobación de Ari pendiente). `logos` es el manifiesto (ids en orden), `files` los ids
+ * de los webp de `src/assets/clients/` y `hashes` id -> sha256 del archivo real.
+ */
+export function evaluateClientLogoGate({ rows, logos, files, env, hashes }) {
+  const always = [];
+  const problems = [];
+
+  for (const id of logos) {
+    const row = rows.find((r) => r.id === id);
+    if (!row) {
+      always.push(`El logo de cliente "${id}" no tiene fila en PROVENANCE.md.`);
+      continue;
+    }
+    if (!files.includes(id)) always.push(`El logo de cliente "${id}" no tiene su archivo src/assets/clients/${id}.webp.`);
+    if (!approvalProblem({ approval: row.approval, downloaded: row.downloaded }) && row.approval === 'pendiente') problems.push(`El logo de cliente "${id}" tiene la aprobación de Ari pendiente.`);
+  }
+
+  for (const row of rows) if (!logos.includes(row.id)) always.push(`La fila "${row.id}" de clients/PROVENANCE.md no tiene logo en el manifiesto de src/components/sections/hero-clients.mjs.`);
+  for (const id of files) if (!logos.includes(id)) always.push(`Existe el archivo clients/${id}.webp y no está en el manifiesto (Astro lo emitiría en dist).`);
+
+  for (const row of rows) {
+    const hash = hashes?.[row.id];
+    if (hash !== undefined && hash !== row.sha256) always.push(`Logo de cliente "${row.id}", campo "sha256": no coincide con el archivo de src/assets/clients/.`);
+  }
+
+  return env === 'production' ? { errors: [...always, ...problems], warnings: [] } : { errors: always, warnings: problems };
+}
+
+/** Pasos para cerrar la aprobación, tal como los describe clients/PROVENANCE.md (sección "Cómo cerrar la aprobación"). */
+export function clientClosingSteps(text) {
+  const body = section(text, 'Cómo cerrar la aprobación').trim();
+  return body || 'Consulta la sección "Cómo cerrar la aprobación" de src/assets/clients/PROVENANCE.md.';
+}

@@ -61,6 +61,49 @@ es:
       - text: "Contrata un equipo de especialistas con 8 años de experiencia, que arman tu estrategia, ejecutan, implementan y monitorean los resultados y ventas de tu web."
         status: pending
         reason: "Credencial del equipo (8 años de experiencia) del Copy v2; Ari la confirma"
+    clients:
+      label:
+        text: "Marcas que han confiado en nuestro trabajo"
+        status: pending
+        confirm_by: Ari
+        reason: "Texto nuevo, no está en el doc de Ari. En ariannalupi.com la sección dice \"Marcas que han confiado en mi trabajo\" (primera persona); aquí va en plural de agencia. Ari debe aprobarlo o reemplazarlo."
+      items:
+        - text: "Holafly"
+          status: verified
+          reason: "Cliente tomado de ariannalupi.com por indicación de Juan el 2026-09-20"
+        - text: "HubSpot"
+          status: verified
+          reason: "Cliente tomado de ariannalupi.com por indicación de Juan el 2026-09-20"
+        - text: "Unilever"
+          status: verified
+          reason: "Cliente tomado de ariannalupi.com por indicación de Juan el 2026-09-20"
+        - text: "Alchemy"
+          status: verified
+          reason: "Cliente tomado de ariannalupi.com por indicación de Juan el 2026-09-20"
+        - text: "Ambl"
+          status: verified
+          reason: "Cliente tomado de ariannalupi.com por indicación de Juan el 2026-09-20"
+        - text: "TravelPerk"
+          status: verified
+          reason: "Cliente tomado de ariannalupi.com por indicación de Juan el 2026-09-20"
+        - text: "Skale"
+          status: verified
+          reason: "Cliente tomado de ariannalupi.com por indicación de Juan el 2026-09-20"
+        - text: "Sendlane"
+          status: verified
+          reason: "Cliente tomado de ariannalupi.com por indicación de Juan el 2026-09-20"
+        - text: "ChartMogul"
+          status: verified
+          reason: "Cliente tomado de ariannalupi.com por indicación de Juan el 2026-09-20"
+        - text: "Holded"
+          status: verified
+          reason: "Cliente tomado de ariannalupi.com por indicación de Juan el 2026-09-20"
+        - text: "Flodesk"
+          status: verified
+          reason: "Cliente tomado de ariannalupi.com por indicación de Juan el 2026-09-20"
+        - text: "Piktochart"
+          status: verified
+          reason: "Cliente tomado de ariannalupi.com por indicación de Juan el 2026-09-20"
   problem:
     title:
       text: "Tu negocio no atrae clientes. Los alquila."

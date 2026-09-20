@@ -25,7 +25,7 @@ const DESCRIPTION_TEXTS = es.hero.description.map(resolveText);
 
 // Orden vertical del hero (quick 260920-hero-clients, indicación de Juan): h1, subtítulo, descripción, CTA y
 // después la lista de clientes. Antes el CTA subía sobre la descripción.
-const HERO_ORDER = ['h1', 'subtitle', 'description', 'cta'] as const;
+const HERO_ORDER = ['h1', 'subtitle', 'description', 'cta', 'clients'] as const;
 
 const PURPLE = PURPLE_RGB;
 
@@ -44,6 +44,7 @@ const HERO_SELECTORS: Record<(typeof HERO_ORDER)[number], string> = {
   subtitle: '#inicio .hero-sub',
   cta: '#inicio a[data-cta="hero"]',
   description: '#inicio .hero-desc',
+  clients: '#inicio .hero-clients',
 };
 
 const viewports = [
@@ -102,7 +103,7 @@ for (const vp of viewports) {
       expect(r.right).toBeLessThanOrEqual(vp.width);
     });
 
-    test('orden vertical del hero: h1, subtítulo, descripción, CTA', async ({ page }) => {
+    test('orden vertical del hero: h1, subtítulo, descripción, CTA, clientes', async ({ page }) => {
       await page.goto('/');
       const tops: number[] = [];
       for (const key of HERO_ORDER) tops.push((await box(page, HERO_SELECTORS[key])).top);
@@ -340,7 +341,7 @@ test.describe('collage del hero', () => {
     await expect(svg).toHaveAttribute('focusable', 'false');
     await expect(svg.locator('title')).toHaveCount(0);
     await expect(svg.locator('text')).toHaveCount(0);
-    await expect(page.locator('#inicio img')).toHaveCount(1);
+    await expect(page.locator('#inicio .hero-art img')).toHaveCount(1);
     await expect(root.locator('[data-photo-frame] img')).toHaveCount(1);
     await expect(root.locator('img')).toHaveCount(1);
     await expect(svg.locator('image')).toHaveCount(0);
