@@ -2,6 +2,8 @@ import { test, expect, type Page } from '@playwright/test';
 import { readFileSync } from 'node:fs';
 import { parse } from 'yaml';
 import { findInversion } from '../../scripts/lib/copy-rules.mjs';
+import { CHIP_WORDS } from '../../src/components/collage/collage-rules.mjs';
+import { PURPLE_RGB } from './lib/brand';
 
 // Secciones de cierre y footer (plan 02-06). Los textos y las cantidades esperadas salen del YAML y
 // no se copian a mano (COPY-01): si Ari entrega un texto, la prueba sigue midiendo lo que la página
@@ -15,7 +17,9 @@ const es = (parse(readFileSync('src/content/landing.es.yaml', 'utf8')) as {
       is_not_for: { title: Claim; items: Claim[] };
     };
     faq: { title: Claim; items: { question: Claim; answer: Claim }[] };
-    footer: { nav_label: Claim; privacy_link: Claim };
+    footer: { nav_label: Claim; privacy_link: Claim; contact_label: Claim; email: Claim; social_label: Claim; social: Claim };
+    agenda: { title: Claim; iframe_title: Claim };
+    brand: { name: Claim };
     privacy: { title: Claim; body: Claim[] };
   };
 }).es;
@@ -424,8 +428,276 @@ for (const motion of ['reduce', 'no-preference'] as const) {
   });
 }
 
+// ---------------------------------------------------------------------------------------------
+// #agenda como CTA final, footer completo y /privacidad endurecida (plan 02-06 tarea 3).
+const DARK_HEX_RGB_WHITE = 'rgb(255, 255, 255)';
+const EMAIL_RE = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)+$/;
+
+for (const width of [390, 768, 1023, 1024, 1280]) {
+  test.describe(`#agenda a ${width} px`, () => {
+    test.use({ viewport: { width, height: 900 } });
+
+    test('h2 con el texto del YAML, id, tabindex, peso, color y barra de 48x8', async ({ page }) => {
+      await page.goto('/');
+      const h2 = page.locator('#agenda-title');
+      expect(norm((await h2.textContent()) ?? '')).toBe(norm(es.agenda.title.text));
+      await expect(h2).toHaveAttribute('tabindex', '-1');
+      await expect(h2).toHaveClass(/section-title/);
+      await expect(h2).toHaveCSS('font-weight', '700');
+      await expect(h2).toHaveCSS('color', DARK_HEX_RGB_WHITE);
+      const bar = await h2.evaluate((el) => {
+        const cs = getComputedStyle(el, '::before');
+        return { w: parseFloat(cs.width), h: parseFloat(cs.height) };
+      });
+      expect(bar.w).toBeCloseTo(48, 0);
+      expect(bar.h).toBeCloseTo(8, 0);
+    });
+
+    test('padding vertical de 64 px bajo 1024 px y de 96 px desde 1024 px', async ({ page }) => {
+      await page.goto('/');
+      const expected = width >= 1024 ? 96 : 64;
+      const pad = await page.locator('#agenda').evaluate((el) => {
+        const cs = getComputedStyle(el);
+        return [parseFloat(cs.paddingTop), parseFloat(cs.paddingBottom)];
+      });
+      expect(pad).toEqual([expected, expected]);
+    });
+
+    test('collage: visible desde 1024 px y oculto debajo, sin tocar la tarjeta ni el iframe', async ({ page }) => {
+      await page.goto('/');
+      const root = page.locator('#agenda .agenda-art [data-collage="agenda"]');
+      await expect(root).toHaveCount(1);
+      if (width < 1024) {
+        await expect(root).toHaveCSS('display', 'none');
+        return;
+      }
+      await expect(root).toBeVisible();
+      const r = await boxOf(page, '#agenda .agenda-art [data-collage="agenda"]');
+      const card = await boxOf(page, '#agenda .form-embed');
+      const frame = await boxOf(page, '#agenda .form-embed iframe');
+      const overlaps = (a: Box, b: Box) =>
+        a.x < b.x + b.width && b.x < a.x + a.width && a.y < b.y + b.height && b.y < a.y + a.height;
+      expect(overlaps(r, card), 'el collage toca la tarjeta del formulario').toBe(false);
+      expect(overlaps(r, frame), 'el collage toca el iframe').toBe(false);
+      // Con el anillo de foco de 3 px a 2 px de la tarjeta, el collage queda al menos a 8 px.
+      expect(card.x - (r.x + r.width)).toBeGreaterThanOrEqual(8);
+    });
+  });
+}
+
+test.describe('#agenda a 1280 px', () => {
+  test.use({ viewport: { width: 1280, height: 900 } });
+
+  test('sin ningún CTA dentro y exactamente cuatro en la página', async ({ page }) => {
+    await page.goto('/');
+    await expect(page.locator('#agenda a[data-cta]')).toHaveCount(0);
+    const where = await page.locator('a[data-cta]').evaluateAll((els) => els.map((e) => e.getAttribute('data-cta')));
+    expect(where.sort()).toEqual(['casos', 'header', 'hero', 'solucion']);
+  });
+
+  test('iframe, tarjeta y noscript conservan sus atributos', async ({ page }) => {
+    await page.goto('/');
+    const iframe = page.locator('#agenda iframe');
+    await expect(iframe).toHaveAttribute('loading', 'lazy');
+    await expect(iframe).toHaveAttribute('title', es.agenda.iframe_title.text);
+    await expect(iframe).toHaveAttribute('referrerpolicy', /.+/);
+    await expect(page.locator('#agenda .form-embed')).toHaveCSS('border-top-width', '3px');
+    const html = await (await page.request.get('/')).text();
+    expect(html).toContain('<noscript>');
+  });
+
+  test('el collage viene después de .agenda-fallback, con capa svg decorativa y dos píldoras de la lista', async ({ page }) => {
+    await page.goto('/');
+    const order = await page.evaluate(() => {
+      const fb = document.querySelector('#agenda .agenda-fallback');
+      const art = document.querySelector('#agenda .agenda-art');
+      return !!fb && !!art && !!(fb.compareDocumentPosition(art) & Node.DOCUMENT_POSITION_FOLLOWING);
+    });
+    expect(order, 'el collage va tras .agenda-fallback').toBe(true);
+    const root = page.locator('#agenda .agenda-art [data-collage="agenda"]');
+    expect(await root.evaluate((el) => el.tagName.toLowerCase())).toBe('div');
+    await expect(root).toHaveAttribute('aria-hidden', 'true');
+    await expect(page.locator('#agenda .agenda-art')).toHaveAttribute('aria-hidden', 'true');
+    const layer = root.locator('svg.collage-layer');
+    await expect(layer).toHaveAttribute('aria-hidden', 'true');
+    await expect(layer).toHaveAttribute('focusable', 'false');
+    const words = await root.locator('[data-pill]').evaluateAll((els) => els.map((e) => e.getAttribute('data-pill')));
+    expect(words).toHaveLength(2);
+    for (const w of words) expect(CHIP_WORDS.some((c: { word: string }) => c.word === w)).toBe(true);
+    await expect(root.locator('a, button, input, select, textarea, [tabindex]')).toHaveCount(0);
+  });
+
+  test('todo lo pintado queda dentro de la caja de la raíz del collage', async ({ page }) => {
+    await page.goto('/');
+    const out = await page.evaluate(() => {
+      const root = document.querySelector('#agenda [data-collage="agenda"]') as HTMLElement;
+      const rr = root.getBoundingClientRect();
+      const tol = 0.5;
+      return [...root.querySelectorAll('[data-trait], [data-pill]')]
+        .map((el) => ({ el: el.getAttribute('data-trait') ?? el.getAttribute('data-pill'), r: el.getBoundingClientRect() }))
+        .filter(({ r }) => r.left < rr.left - tol || r.top < rr.top - tol || r.right > rr.right + tol || r.bottom > rr.bottom + tol)
+        .map(({ el }) => el);
+    });
+    expect(out).toEqual([]);
+  });
+});
+
+test.describe('footer completo', () => {
+  test.use({ viewport: { width: 1280, height: 900 } });
+
+  test('estilos base: tono light, borde de 3 px y padding de --section-y', async ({ page }) => {
+    await page.goto('/');
+    const footer = page.locator('footer.site-footer');
+    await expect(footer).toHaveAttribute('data-tone', 'light');
+    const cs = await footer.evaluate((el) => {
+      const s = getComputedStyle(el);
+      return { bw: s.borderTopWidth, bs: s.borderTopStyle, pt: parseFloat(s.paddingTop), pb: parseFloat(s.paddingBottom) };
+    });
+    expect(cs.bw).toBe('3px');
+    expect(cs.bs).toBe('solid');
+    expect(cs.pt).toBe(96);
+    expect(cs.pb).toBe(96);
+  });
+
+  test('logo: nombre accesible, mesa 06 y tono igual al del footer; sin enlace en / y con href="/" en /privacidad/', async ({ page }) => {
+    await page.goto('/');
+    const logo = page.locator('footer .brand-logo');
+    await expect(logo).toHaveAttribute('data-artboard', '06');
+    await expect(logo).toHaveAttribute('data-logo-tone', 'light');
+    expect(await logo.getAttribute('data-logo-tone')).toBe(await page.locator('footer').getAttribute('data-tone'));
+    await expect(logo.locator('[role="img"]')).toHaveAttribute('aria-label', es.brand.name.text);
+    await expect(logo.locator('a')).toHaveCount(0);
+    await page.goto(PRIVACY_PATH);
+    await expect(page.locator('footer .brand-logo a')).toHaveAttribute('href', '/');
+  });
+
+  test('contacto y redes muestran el texto del YAML en texto plano; mailto solo si parece un correo', async ({ page }) => {
+    await page.goto('/');
+    const block = page.locator('footer nav');
+    const text = norm((await block.innerText()) ?? '');
+    expect(text).toContain(norm(es.footer.contact_label.text));
+    expect(text).toContain(norm(es.footer.social_label.text));
+    expect(text).toContain(norm(es.footer.social.text));
+    const mail = page.locator('footer a[href^="mailto:"]');
+    if (EMAIL_RE.test(es.footer.email.text.trim())) {
+      await expect(mail).toHaveCount(1);
+      await expect(mail).toHaveAttribute('href', `mailto:${es.footer.email.text.trim()}`);
+    } else {
+      await expect(mail).toHaveCount(0);
+      expect(text).toContain(norm(es.footer.email.text));
+    }
+  });
+
+  test('enlace de privacidad: texto, href, 44 px, subrayado y color morado; separación de 8 px o más', async ({ page }) => {
+    await page.goto('/');
+    const link = page.locator('footer a[href="/privacidad/"]');
+    expect(norm((await link.textContent()) ?? '')).toBe(norm(es.footer.privacy_link.text));
+    const box = await boxOf(page, 'footer a[href="/privacidad/"]');
+    expect(box.height).toBeGreaterThanOrEqual(44);
+    await expect(link).toHaveCSS('color', PURPLE_RGB);
+    expect(await link.evaluate((el) => getComputedStyle(el).textDecorationLine)).toContain('underline');
+    const gaps = await page.evaluate(() => {
+      const nav = document.querySelector('footer nav') as HTMLElement;
+      const link = nav.querySelector('a[href="/privacidad/"]') as HTMLElement;
+      const labels = [...nav.querySelectorAll('.footer-label')] as HTMLElement[];
+      const lr = link.getBoundingClientRect();
+      return labels
+        .map((l) => l.getBoundingClientRect())
+        .filter((r) => r.bottom <= lr.top + 0.5 || r.top >= lr.bottom - 0.5)
+        .map((r) => (r.bottom <= lr.top + 0.5 ? lr.top - r.bottom : r.top - lr.bottom));
+    });
+    for (const g of gaps) expect(g).toBeGreaterThanOrEqual(8);
+  });
+
+  test('cero encabezados, sin "todos los derechos reservados" ni año', async ({ page }) => {
+    await page.goto('/');
+    await expect(page.locator('footer h1, footer h2, footer h3, footer h4, footer h5, footer h6')).toHaveCount(0);
+    const text = await page.locator('footer').innerText();
+    expect(text).not.toMatch(/derechos reservados/i);
+    expect(text).not.toMatch(/\b(19|20)\d{2}\b/);
+  });
+});
+
+const COLUMNS: Record<number, number> = { 390: 1, 768: 2, 1024: 3, 1280: 3 };
+for (const [w, cols] of Object.entries(COLUMNS)) {
+  test.describe(`footer a ${w} px`, () => {
+    test.use({ viewport: { width: Number(w), height: 900 } });
+
+    test(`${cols} columna(s) con la proporción del contrato y área de salvado del logo`, async ({ page }) => {
+      await page.goto('/');
+      const info = await page.evaluate(() => {
+        const brand = (document.querySelector('footer .footer-brand') as HTMLElement).getBoundingClientRect();
+        const blocks = [...document.querySelectorAll('footer .footer-block')].map((b) => b.getBoundingClientRect());
+        const logo = (document.querySelector('footer .brand-logo svg') as SVGElement).getBoundingClientRect();
+        const cols = new Set([brand, ...blocks].map((r) => Math.round(r.left))).size;
+        return {
+          cols,
+          brand: brand.width,
+          blocks: blocks.map((r) => r.width),
+          brandBox: { l: brand.left, r: brand.right, t: brand.top, b: brand.bottom },
+          blockBoxes: blocks.map((r) => ({ l: r.left, r: r.right, t: r.top, b: r.bottom })),
+          logoH: logo.height,
+        };
+      });
+      expect(info.cols).toBe(cols);
+      if (cols === 3) {
+        expect(info.brand / info.blocks[0]).toBeGreaterThan(1.2 - 0.03);
+        expect(info.brand / info.blocks[0]).toBeLessThan(1.2 + 0.03);
+        expect(Math.abs(info.blocks[0] - info.blocks[1])).toBeLessThan(1);
+      }
+      // Área de salvado: ningún bloque vecino a menos de la altura del logo (en el eje que los separa).
+      for (const b of info.blockBoxes) {
+        const gapX = Math.max(b.l - info.brandBox.r, info.brandBox.l - b.r);
+        const gapY = Math.max(b.t - info.brandBox.b, info.brandBox.t - b.b);
+        expect(Math.max(gapX, gapY), 'separación con el logo').toBeGreaterThanOrEqual(Math.min(info.logoH, 32));
+      }
+    });
+  });
+}
+
+test.describe('/privacidad con el footer completo', () => {
+  test.use({ viewport: { width: 1280, height: 900 } });
+
+  test('orden de tabulación exacto: skip, logo del header, CTA del header, logo del footer y privacidad', async ({ page }) => {
+    await page.goto(PRIVACY_PATH);
+    const stops: string[] = [];
+    for (let i = 0; i < 5; i++) {
+      await page.keyboard.press('Tab');
+      stops.push(
+        await page.evaluate(() => {
+          const el = document.activeElement as HTMLElement;
+          const where = el.closest('header') ? 'header' : el.closest('footer') ? 'footer' : el.closest('.skip') ? 'skip' : 'otro';
+          return `${where}:${el.getAttribute('data-cta') ? 'cta' : el.getAttribute('href')}`;
+        }),
+      );
+    }
+    expect(stops).toEqual(['skip:#main', 'header:/', 'header:cta', 'footer:/', 'footer:/privacidad/']);
+  });
+});
+
+for (const width of WIDTHS) {
+  test(`sin scroll horizontal en /privacidad y / con el footer completo a ${width} px`, async ({ browser, baseURL }) => {
+    const context = await browser.newContext({ baseURL, viewport: { width, height: 800 } });
+    const page = await context.newPage();
+    for (const path of [PRIVACY_PATH, '/']) {
+      await page.goto(path);
+      expect(await noHorizontalScroll(page), path).toBeLessThanOrEqual(0);
+    }
+    await context.close();
+  });
+}
+
+test.describe('correo del footer: expresión estricta', () => {
+  test('la expresión es la única fuente de mailto: y no acepta valores inyectados', async () => {
+    const src = readFileSync('src/components/SiteFooter.astro', 'utf8');
+    expect(src.match(/mailto:/g)?.length).toBe(1);
+    const built = readFileSync('dist/index.html', 'utf8');
+    if (!EMAIL_RE.test(es.footer.email.text.trim())) expect(built).not.toContain('href="mailto:');
+  });
+});
+
 // Recortes del lote (herramienta de capturas, Supuesto 10). Solo con PHASE2_BATCH definida.
-test.describe('recorte de Para quién es y FAQ', () => {
+test.describe('recorte de Para quién es, FAQ, #agenda, footer y /privacidad', () => {
   test.skip(!process.env.PHASE2_BATCH, 'define PHASE2_BATCH (por ejemplo D06) para generar los recortes');
   for (const width of [390, 1280]) {
     for (const id of ['para-quien', 'faq']) {
@@ -442,5 +714,33 @@ test.describe('recorte de Para quién es y FAQ', () => {
         await context.close();
       });
     }
+  }
+  for (const width of [390, 1280]) {
+    for (const [name, selector] of [['agenda', '#agenda'], ['footer', 'footer']] as const) {
+      test(`recorte de ${name} a ${width}`, async ({ browser, baseURL }) => {
+        const batch = process.env.PHASE2_BATCH!;
+        const context = await browser.newContext({ baseURL, viewport: { width, height: 900 } });
+        await context.route('**/*', (route) => {
+          const host = new URL(route.request().url()).hostname;
+          return host === 'localhost' || host === '127.0.0.1' ? route.continue() : route.abort();
+        });
+        const page = await context.newPage();
+        await page.goto('/');
+        await page.locator(selector).screenshot({ path: `test-results/phase2/${batch}-${name}-${width}.png` });
+        await context.close();
+      });
+    }
+    test(`recorte de /privacidad/ completa a ${width}`, async ({ browser, baseURL }) => {
+      const batch = process.env.PHASE2_BATCH!;
+      const context = await browser.newContext({ baseURL, viewport: { width, height: 900 } });
+      await context.route('**/*', (route) => {
+        const host = new URL(route.request().url()).hostname;
+        return host === 'localhost' || host === '127.0.0.1' ? route.continue() : route.abort();
+      });
+      const page = await context.newPage();
+      await page.goto(PRIVACY_PATH);
+      await page.screenshot({ path: `test-results/phase2/${batch}-privacidad-${width}.png`, fullPage: true });
+      await context.close();
+    });
   }
 });
