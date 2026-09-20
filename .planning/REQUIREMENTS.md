@@ -50,7 +50,7 @@ Requisitos para la primera entrega. Cada uno se asigna a una fase del roadmap.
 - [x] **DSGN-02**: El logo e isotipo se usan en SVG respetando el área de salvado del brandbook.
 - [x] **DSGN-03**: La página se ve y funciona de 320 px a 1280 px sin scroll horizontal.
 - [x] **DSGN-04**: Todo el trabajo de diseño web pasa por las skills `impeccable` y `design-taste-frontend`.
-- [ ] **DSGN-05**: Cualquier movimiento se desactiva con `prefers-reduced-motion: reduce`.
+- [x] **DSGN-05**: Cualquier movimiento se desactiva con `prefers-reduced-motion: reduce`.
 
 ### Accesibilidad
 
@@ -149,7 +149,7 @@ Qué fase cubre cada requisito. Completado al crear el roadmap.
 | DSGN-02 | Phase 2 | Complete |
 | DSGN-03 | Phase 2 | Complete |
 | DSGN-04 | Phase 2 | Complete |
-| DSGN-05 | Phase 2 | Pending |
+| DSGN-05 | Phase 2 | Complete |
 | A11Y-01 | Phase 3 | Pending |
 | A11Y-02 | Phase 3 | Pending |
 | SEO-01 | Phase 3 | Pending |
