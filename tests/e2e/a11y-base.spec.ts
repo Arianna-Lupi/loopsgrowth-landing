@@ -465,7 +465,14 @@ test.describe('textos de Ari visibles', () => {
     await expect(page.locator('.hero-sub')).toHaveText(SUBTITLE_TEXT);
     await expect(page.locator('.agenda-intro')).toBeVisible();
     await expect(page.locator('.agenda-intro')).toHaveText(INTRO_TEXT);
-    const body = await page.evaluate(() => document.body.innerText);
+    // innerText no incluye el contenido de un <details> cerrado (las respuestas del FAQ): se abren todos
+    // antes de leer, para que el conteo mida el texto real y no el estado de los desplegables.
+    const body = await page.evaluate(() => {
+      document.querySelectorAll('details').forEach((d) => {
+        d.open = true;
+      });
+      return document.body.innerText;
+    });
     // Aserción derivada del YAML (COPY-01): la marca aparece tantas veces como reclamaciones la traigan.
     expect(body.split(MISSING_MARK).length - 1).toBe(VISIBLE_MARKS + CHIP_DUPLICATES);
     expect(body).not.toMatch(/[{}]/);
