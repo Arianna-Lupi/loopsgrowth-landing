@@ -74,9 +74,13 @@ Un visitante entiende en segundos qué hace Loops Growth y llena el formulario d
 |----------|-----------|---------|
 | Form de ClickUp por iframe embebido | Velocidad y confiabilidad para llegar a la fecha; el form ya existe y alimenta el embudo | — Pending |
 | Solo español | Copy v2 en español, ahorra tiempo | — Pending |
-| Casos de éxito como tarjetas de métricas, sin logos ni fotos | No hay material ni permisos de uso de marcas de clientes | — Pending |
+| Casos de éxito como tarjetas de métricas, sin logos ni fotos | No hay material ni permisos de uso de marcas de clientes | Revisada 2026-09-20: el hero muestra 12 clientes de ariannalupi.com con logo y hay fotos del equipo; ambos con aprobación de Ari pendiente que bloquea producción |
 | Entrega hoy solo en local | Ari y Camila validan primero; dominio aún sin resolver | — Pending |
-| Stack: Astro como hipótesis, a validar con research | Juan lo propone; hay que confirmar contra alternativas (incl. WordPress+Astra) | — Pending |
+| Stack: Astro como hipótesis, a validar con research | Juan lo propone; hay que confirmar contra alternativas (incl. WordPress+Astra) | Confirmado: Astro 7 + Tailwind 4 estático |
+| Morado de marca #4228D1 (no #73187F) | El BrandBook dibuja #4228D1 y el logo y el moodboard lo usan; solo una etiqueta decía #73187F | Vigente 2026-09-19; Ari confirma |
+| Logos y collage con las piezas oficiales del `.ai` (Loopy) y lenguaje del moodboard | Los dibujos de los agentes no seguían la marca de Ari | Aplicado en la fase 2 (02-09 a 02-11) |
+| Repo público con git flow (`main`, `develop`, `feature/*`) en la organización Arianna-Lupi | Pedido de Juan 2026-09-20 | Vigente: github.com/Arianna-Lupi/loopsgrowth-landing |
+| Puertas de producción por copy y fotos pendientes | Nada sin confirmar de Ari sale publicado; `PUBLIC_ENV=production` no compila mientras haya pendientes | Vigente |
 
 ## Evolution
 

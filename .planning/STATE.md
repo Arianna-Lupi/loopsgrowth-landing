@@ -1,12 +1,12 @@
 ---
 gsd_state_version: "1.0"
-current_phase: 02
-current_phase_name: Secciones, marca y copy
-status: verifying
-stopped_at: Completed 02-08-PLAN.md (fase 2 ejecutada, falta verificación)
+current_phase: 03
+current_phase_name: SEO, medición mínima y QA
+status: planned
+stopped_at: Fase 3 planificada (03-01, 03-02 y 03-03 escritos); falta plan-checker y ejecución. Fase 2 verificada por código, verificación humana diferida
 last_updated: "2026-09-20T03:45:07.382Z"
-last_activity: 2026-09-19
-last_activity_desc: Plan 02-08 complete; phase 02 execution done, verification next
+last_activity: 2026-09-20
+last_activity_desc: Fase 3 planificada; git flow, fotos del equipo y clientes en el hero integrados en develop
 state_head: ac2d6546275c8ec9a826eb0cb8ff5864acf79974
 progress:
   total_phases: 4
@@ -27,10 +27,10 @@ See: .planning/PROJECT.md (updated 2026-09-18)
 
 ## Current Position
 
-Phase: 02 (Secciones, marca y copy) — EXECUTION COMPLETE
-Plan: 11 of 11
-Status: Phase complete — ready for verification
-Last activity: 2026-09-19 — Plan 02-08 complete; phase 02 execution done, verification next
+Phase: 03 (SEO, medición mínima y QA) — PLANNED
+Plan: 0 of 3 (03-01 metadatos y schema, 03-02 medición y UTM, 03-03 auditoría y accesibilidad)
+Status: Ready to execute (falta plan-checker)
+Last activity: 2026-09-20 — Fase 3 planificada; fase 2 verificada por código (verificación humana diferida)
 
 Progress: [██████████] 100%
 
@@ -91,6 +91,17 @@ Recent decisions affecting current work:
 - [Phase 02]: 02-02: --logo-clear = 1 X (BrandBook pag. 7); logo con los colores del vectorial de Ari (#4228d1), pendiente decision de Ari sobre #73187f
 - [Phase 02]: 02-02: loop del collage como dos anillos solapados (los concentricos se leian como diana); sprite montado en SiteHeader hasta que 02-07 lo mueva a BaseLayout
 
+- [Phase 02, 2026-09-19]: el morado de marca es #4228D1 (con #6C61DB y crema #F4F3E0), no #73187F. La muestra del BrandBook, el logo y el moodboard usan el azul violeta; solo la etiqueta de texto decía #73187F. Ari confirma después (cambiar el token exige recalcular contraste y re-extraer SVG). Reemplaza la decisión previa de mantener #73187F. Ver `02-BRAND-INVENTORY.md`
+- [Phase 02]: logo, imagotipo, emblema e isotipos salen de las 32 mesas oficiales del `.ai` (una versión por fondo); favicon = mesa 18 (ojo con lupa, medido a 16 px). Los dibujos hechos por los agentes en 02-01/02-02 se reemplazaron por el Loopy oficial (02-10)
+- [Phase 02]: fotos de stock con licencia comercial en media tinta (Unsplash) para las ranuras hero y whynow; la aprobación de Ari queda pendiente y la puerta `check-photos` bloquea `PUBLIC_ENV=production`
+- [Phase 02]: topes de HTML subidos de 61440 a 81920 bytes crudos con máximo 25600 en gzip (autorizado por el orquestador; constantes en `tests/e2e/lib/budgets.mjs`). El tope crudo era un presupuesto propio del UI-SPEC; lo que se descarga es unos 15 KB
+- [Phase 02, review]: WR-02 (lang=en en términos en inglés), WR-03 (mailto estricto), WR-05 (puerta de fotos), WR-07 (topes centralizados) corregidos. WR-01 (puertas solo en prebuild/postbuild), WR-04 (sitemap con /privacidad/) y WR-06 (declarar sharp) pasan a fase 3 o a decisión de Juan
+- [Repo, 2026-09-20]: repo público https://github.com/Arianna-Lupi/loopsgrowth-landing con git flow: `main` (producción, solo por PR), `develop` (integración, rama por defecto), `feature/*`, `release/*`, `hotfix/*`; merges con `--no-ff`. GSD: `git.phase_branch_template=feature/phase-{phase}-{slug}`, `milestone_branch_template=release/{milestone}-{slug}`, `branching_strategy=phase`
+- [Quick 260920]: fotos reales del equipo (aprendoclub.com) en duotono de marca y enlace a juan-tech.com en la tarjeta de Juan; Miguel Pacheco conserva el Loopy (sin foto). Aprobación de Ari y consentimiento de cada persona pendientes (puerta de producción). Ver `.planning/quick/260920-team-photos/`
+- [Quick 260920]: hero con el CTA al final de los párrafos y rejilla estática de 12 clientes de ariannalupi.com bajo el CTA (no carrusel: SC 2.2.2). Etiqueta pending para Ari; logos con procedencia y aprobación pendiente. Ver `.planning/quick/260920-hero-clients/`
+- [Phase 03, planes]: la auditoría con Lighthouse usa un modo local `--allow-pending` (flag de CLI, no variable de entorno) sobre `dist-audit/` marcado como no desplegable; el build de producción normal sigue fallando mientras haya pendientes. Hallazgo de 03-02: `form_view` usa `min(altura del bloque / 2, altura del viewport)` porque el bloque mide más de 1664 px en móvil
+- [Copy, 2026-09-20]: la tarjeta de Juan lleva su nombre completo (Juan Carlos Angulo); `GEO` y `SEO/GEO` se marcan con lang=en; el CTA del hero en móviles cortos se resuelve compactando el ritmo vertical (opción 2)
+
 ### Pending Todos
 
 None yet.
@@ -106,6 +117,11 @@ None yet.
 - [Phase 3] MEAS-02 necesita que Ari cree campos ocultos `utm_*` en el formulario de ClickUp. Sin ellos queda solo el conteo de tareas más el UTM del QR.
 - [Phase 4] Dominio sin resolver: sin URL pública no hay QR. Plan B: subdominio gratuito.
 - [Phase 1] FORM-05 pendiente: Juan hace los dos envios reales de prueba (1280 y 390 px), avisa a Ari y borra las dos tareas. El auto-resize de ClickUp no sigue al contenido: Ari verifica Autosize embed height
+
+- [Phase 2, 2026-09-20] 61 textos de Ari siguen pendientes (`PENDING-COPY.md`, `02-ARI-FINDINGS.md`) y las fotos, logos de clientes y fotos del equipo esperan su aprobación: `PUBLIC_ENV=production` no compila hasta entonces (intencional)
+- [Phase 3] Decisiones abiertas de 03-03: quién aprueba la excepción del iframe de ClickUp (EXC-001), su vencimiento (propone 2026-12-19) y si se autoriza diferir el script de ClickUp si Lighthouse queda bajo 95 (toca FORM-03)
+- [Phase 3] Robots en no productivo: 03-01 usa `Disallow: /` (revierte la decisión de la fase 1); `og:locale` es_LA es suposición; el nodo Organization va sin `logo`
+- [Repo] `sharp` se importa en scripts pero no está declarado en `package.json` (03-01 lo declara); el hito no tiene versión asignada (`null`)
 
 ## Deferred Verification
 
@@ -126,15 +142,24 @@ Items acknowledged and deferred at milestone close, most recent first:
 |----------|------|--------|-------------|-----------|
 | *(none)* | | | | |
 
-## Reanudar (2026-09-19)
+## Reanudar (2026-09-20)
 
-- Fase 1: ejecutada y verificada en codigo (`verification_deferred_human`, 6 items humanos en `01-UAT.md`). Codigo integrado en `master`.
-- Fase 2: `02-CONTEXT.md`, `02-UI-SPEC.md` (aprobado), `02-ARI-COPY-V2.md` y `02-PLANNING-BRIEF.md` listos; 7 planes escritos (`02-01` a `02-07`). Plan-checker PASO (iteracion 2, 0 bloqueadores): ahora son 8 planes (`02-01` a `02-08`, waves 1,1,2,3,4,5,6,7; el 07 original se dividio en 07 y 08). Siguiente paso: ejecutar la fase 2 con `/gsd-autonomous --from 2` (o `/gsd-execute-phase 2 --no-transition`). Antes de cada executor forzar aislamiento none. Al terminar: code review, verificador, luego fases 3 y 4.
-- Decisiones abiertas de Juan: cargar el iframe de ClickUp solo al acercarse a `#agenda` (medido: el formulario mete ~55 MB de JS descomprimido y `load` de 4,7 s; la pagina propia pesa 66 KB y da FCP de 48 ms).
-- Reglas de ejecucion aprendidas: forzar aislamiento `none` antes de cada executor (`gsd-tools query dispatch-isolation --raw --phase NN --force-isolation none`), `astro preview` en segundo plano rompe Playwright dentro de agentes (arrancarlo a mano y detenerlo con `astro preview stop`), planners grandes se estancan a los 600 s: dividir por plan.
+- Fase 1: ejecutada y verificada en código, verificación humana diferida (`01-UAT.md`, 6 ítems). Integrada en `develop`.
+- Fase 2: 11 planes ejecutados (02-01 a 02-11), code review sin Critical (`02-REVIEW.md`, `02-REVIEW-FIX.md`), verificación por código sin huecos (`02-VERIFICATION.md`, `human_needed`); ítems humanos en `02-UAT.md`. Integrada en `develop`.
+- Trabajo rápido integrado en `develop`: fotos del equipo y enlace de Juan, hero con CTA al final y clientes.
+- Fase 3: `03-01-PLAN.md`, `03-02-PLAN.md` y `03-03-PLAN.md` escritos y validados (commits 5fc52e7, 31e61e6 y 271b982) en la rama `feature/phase-03-seo-medicion-minima-y-qa`. Falta: plan-checker de los tres planes, ejecutarlos (waves 1, 2 y 3), code review, verificación.
+- Siguiente paso: sesión nueva, `/clear` y `/gsd-autonomous --from 3` (o `/gsd-execute-phase 3 --no-transition` tras pasar el checker). También pendiente: `CONTRIBUTING.md` con el flujo git flow y definir la versión del hito.
+- Reglas de ejecución aprendidas:
+  - Forzar aislamiento `none` antes de cada executor (`gsd-tools query dispatch-isolation --raw --phase NN --force-isolation none`) y `workflow.use_worktrees=false` (ya puesto).
+  - `astro preview` en segundo plano rompe Playwright dentro de agentes: arrancarlo a mano en el 4322 y detenerlo con `npx astro preview stop`. NUNCA `astro dev stop` desde un agente: apaga el servidor de desarrollo del usuario.
+  - Los planners `gsd-planner` se estancan a los 600 s: dividir por plan y, si aun así se estancan, usar un agente general con la misma tarea (funcionó para 03-01, 03-02 y 03-03).
+  - Los ejecutores se quedan sin contexto: una tarea por ejecutor, SUMMARY parcial, commits con listas explícitas de archivos (nunca `git add -A`: `brand-inventory/` es confidencial y está excluido por `.git/info/exclude`).
+  - `state.advance-plan`, `update-progress` y `roadmap.update-plan-progress` cuentan mal cuando los planes no van en orden numérico: revisar STATE y ROADMAP a mano después de cada plan.
+  - Los subagentes no pueden escribir SUMMARY.md con la herramienta Write en las tareas rápidas: devuelven el contenido y lo escribe el orquestador.
+  - El servidor de desarrollo puede quedar con el contenido en caché tras muchos cambios de rama o de YAML y dar 500 ("Falta la clave `es`"): reiniciarlo (`npx astro dev stop && npm run dev`). `astro sync` y `astro build` validan el contenido.
 
 ## Session Continuity
 
-Last session: 2026-09-20T03:45:07.329Z
-Stopped at: Completed 02-08-PLAN.md (fase 2 ejecutada, falta verificación)
-Resume file: None
+Last session: 2026-09-20
+Stopped at: Fase 3 planificada; falta plan-checker y ejecución
+Resume file: .planning/phases/03-seo-medicion-minima-y-qa/03-01-PLAN.md

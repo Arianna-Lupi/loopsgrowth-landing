@@ -11,10 +11,10 @@
   "perplexity": false,
   "jina": false,
   "git": {
-    "branching_strategy": "none",
+    "branching_strategy": "phase",
     "create_tag": true,
-    "phase_branch_template": "gsd/phase-{phase}-{slug}",
-    "milestone_branch_template": "gsd/{milestone}-{slug}",
+    "phase_branch_template": "feature/phase-{phase}-{slug}",
+    "milestone_branch_template": "release/{milestone}-{slug}",
     "quick_branch_template": null
   },
   "workflow": {
@@ -46,7 +46,8 @@
     "post_planning_gaps": true,
     "security_enforcement": true,
     "security_asvs_level": 1,
-    "security_block_on": "high"
+    "security_block_on": "high",
+    "use_worktrees": false
   },
   "ship": {
     "pr_body_sections": []
