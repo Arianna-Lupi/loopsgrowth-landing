@@ -464,7 +464,7 @@ test.describe('hoja: piezas y píldoras', () => {
 });
 
 test.describe('hoja: composiciones y avatares', () => {
-  test('(a) pesos medidos con TextEncoder sobre outerHTML: hero 8192, agenda 4096, whynow 3072, mini 1536, avatar 2560 y sprite más raíces 30720', async ({ page }) => {
+  test('(a) pesos medidos con TextEncoder sobre outerHTML: hero 8832, agenda 4096, whynow 3712, mini 1536, avatar 2560 y sprite más raíces 32000', async ({ page }) => {
     await open(page, 1280, SHEET);
     const sizes = await page.evaluate((selectors) => {
       const bytes = (html: string) => new TextEncoder().encode(html).length;
@@ -475,10 +475,10 @@ test.describe('hoja: composiciones y avatares', () => {
     }, SHEET_SCENES);
     expect(sizes.hero).toBeLessThanOrEqual(8832);
     expect(sizes.agenda).toBeLessThanOrEqual(4096);
-    expect(sizes.whynow).toBeLessThanOrEqual(3072);
+    expect(sizes.whynow).toBeLessThanOrEqual(3712);
     for (const name of MINI_SCENES) expect(sizes[name], name).toBeLessThanOrEqual(1536);
     for (const v of AVATAR_VARIANTS) expect(sizes[`avatar-${v}`], v).toBeLessThanOrEqual(2560);
-    expect(Object.values(sizes).reduce((a, b) => a + b, 0)).toBeLessThanOrEqual(30720);
+    expect(Object.values(sizes).reduce((a, b) => a + b, 0)).toBeLessThanOrEqual(32000);
   });
 
   for (const [width, visible] of [[320, false], [390, false], [768, false], [1024, true], [1280, true]] as const) {

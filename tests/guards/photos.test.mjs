@@ -173,6 +173,54 @@ test('dist: img de las fotos elegidas, locales, con alt vacío, dimensiones y ca
   assert.equal(imgs.filter((t) => /loading="eager"/.test(t)).length, chosen.filter((p) => PHOTO_LOADING[p.slot] === 'eager').length);
 });
 
+// conjunto de fotos ------------------------------------------------------------------------------
+/** Errores del conjunto según la elección: abierta = dos por ranura, cerrada = una por ranura aprobada. */
+function photoSetErrors({ photos, rows: licenseRows, election, slots }) {
+  const errors = [];
+  for (const slot of slots) {
+    const inSlot = photos.filter((p) => p.slot === slot);
+    const expected = election === 'abierta' ? 2 : 1;
+    if (inSlot.length !== expected) errors.push(`${slot}: ${inSlot.length} fotos y con la elección ${election} se esperan ${expected}`);
+    if (inSlot.filter((p) => p.chosen).length !== 1) errors.push(`${slot}: debe haber exactamente una elegida`);
+    for (const p of inSlot) {
+      const row = licenseRows.find((r) => r.id === p.id);
+      if (!row) errors.push(`${p.id}: sin fila en LICENSES.md`);
+      else if (election === 'cerrada' && !/^aprobada por .+ el \d{4}-\d{2}-\d{2}$/.test(row.approval)) errors.push(`${p.id}: elección cerrada sin aprobación`);
+    }
+  }
+  for (const r of licenseRows) if (!photos.some((p) => p.id === r.id)) errors.push(`${r.id}: fila sin entrada en el manifiesto`);
+  return errors;
+}
+
+test('conjunto de fotos: dos por ranura con la elección abierta, una elegida por ranura y una fila por foto', () => {
+  const election = parseElection(LICENSES);
+  const set = { photos: PHOTOS, rows, election, slots: PHOTO_SLOT_NAMES };
+  assert.deepEqual(photoSetErrors(set), []);
+  assert.deepEqual([...PHOTO_SLOT_NAMES].sort(), PHOTO_SLOTS.map((s) => s.name).sort());
+  if (election === 'abierta') {
+    assert.deepEqual(PHOTOS.map((p) => p.id).sort(), ['hero-a', 'hero-b', 'whynow-a', 'whynow-b']);
+    assert.equal(rows.length, 4);
+    assert.deepEqual(PHOTOS.filter((p) => p.chosen).map((p) => p.id).sort(), ['hero-a', 'whynow-a']);
+  }
+  for (const p of PHOTOS) assert.ok(PHOTO_SLOTS.some((s) => s.name === p.slot), `${p.id}: ranura`);
+});
+
+test('conjunto de fotos: mutaciones (dos elegidas, ranura sin candidatas, id sin fila, cerrada sin aprobación)', () => {
+  const base = { photos: PHOTOS, rows, election: 'abierta', slots: PHOTO_SLOT_NAMES };
+  assert.deepEqual(photoSetErrors(base), []);
+  const twoChosen = PHOTOS.map((p) => (p.id === 'hero-b' ? { ...p, chosen: true } : p));
+  assert.ok(photoSetErrors({ ...base, photos: twoChosen }).some((e) => e.includes('hero') && e.includes('elegida')));
+  const noWhynow = PHOTOS.filter((p) => p.slot !== 'whynow');
+  assert.ok(photoSetErrors({ ...base, photos: noWhynow }).some((e) => e.startsWith('whynow')));
+  const noRow = rows.filter((r) => r.id !== 'whynow-b');
+  assert.ok(photoSetErrors({ ...base, rows: noRow }).some((e) => e.includes('whynow-b')));
+  assert.ok(photoSetErrors({ ...base, election: 'cerrada' }).length > 0, 'cerrada con dos por ranura');
+  const closed = PHOTOS.filter((p) => p.chosen);
+  assert.ok(photoSetErrors({ photos: closed, rows: rows.filter((r) => closed.some((p) => p.id === r.id)), election: 'cerrada', slots: PHOTO_SLOT_NAMES }).some((e) => e.includes('aprobación')));
+  const approved = rows.filter((r) => closed.some((p) => p.id === r.id)).map((r) => ({ ...r, approval: 'aprobada por Ari el 2026-09-20' }));
+  assert.deepEqual(photoSetErrors({ photos: closed, rows: approved, election: 'cerrada', slots: PHOTO_SLOT_NAMES }), []);
+});
+
 // puerta de producción -----------------------------------------------------------------------
 test('puerta: en production bloquea aprobación pendiente y candidatas sin elegir; en otro entorno solo advierte', () => {
   const photos = [{ id: 'hero-a', slot: 'hero', chosen: true }, { id: 'hero-b', slot: 'hero', chosen: false }];

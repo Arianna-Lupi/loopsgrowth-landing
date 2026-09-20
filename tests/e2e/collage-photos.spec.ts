@@ -57,6 +57,34 @@ test.describe('fotos en media tinta', () => {
     await expect(page.locator('[data-photo-slot]')).toHaveCount(2);
   });
 
+  test('dos fotos: hero eager y whynow lazy, un marco por ranura y Por qué ahora sin cruces', async ({ page }) => {
+    await open(page, 1280);
+    await expect(page.locator('[data-photo-frame]')).toHaveCount(2);
+    await expect(page.locator('.hero-collage [data-photo-frame="hero"] img')).toHaveAttribute('loading', 'eager');
+    const wn = page.locator('#por-que-ahora .whynow-art [data-photo-frame="whynow"]');
+    await expect(wn).toHaveCount(1);
+    await expect(wn.locator('img')).toHaveCount(1);
+    await expect(wn.locator('img')).toHaveAttribute('loading', 'lazy');
+    expect(await wn.locator('img').evaluate((img: HTMLImageElement) => img.alt)).toBe('');
+  });
+
+  for (const width of WIDTHS) {
+    test(`a ${width}px Por qué ahora conserva su caja, no cruza el h2 ni la lista y no desborda`, async ({ page }) => {
+      await open(page, width);
+      const wide = width >= 1024;
+      const box = (sel: string) => page.locator(sel).first().evaluate((el) => { const b = el.getBoundingClientRect(); return { x: b.left, y: b.top, w: b.width, h: b.height }; });
+      await page.locator('#por-que-ahora').scrollIntoViewIfNeeded();
+      const art = await box('#por-que-ahora .whynow-art');
+      const h2 = await box('#por-que-ahora h2');
+      const list = await box('#por-que-ahora .whynow-list');
+      expect(Math.abs(art.w - (wide ? 320 : 224))).toBeLessThanOrEqual(1);
+      const hit = (a: typeof art, b: typeof art) => a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h;
+      expect(hit(art, h2)).toBe(false);
+      expect(hit(art, list)).toBe(false);
+      expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);
+    });
+  }
+
   for (const width of WIDTHS) {
     test(`a ${width}px el marco coincide con su ranura y no hay scroll horizontal`, async ({ page }) => {
       await open(page, width);

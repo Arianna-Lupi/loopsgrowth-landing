@@ -202,11 +202,11 @@ test.describe('escenas: lenguaje del moodboard', () => {
     });
   }
 
-  test('pesos: hero menor a 8192 bytes, cada mini menor a 1536, Por qué ahora menor a 3072 y sprite menor a 10240', async ({ page }) => {
+  test('pesos: hero menor a 8832 bytes, cada mini menor a 1536, Por qué ahora menor a 3712 y sprite menor a 10240', async ({ page }) => {
     await open(page, 1280);
     const bytes = (name: string) => page.locator(SCENES[name]).evaluate((el) => new TextEncoder().encode(el.outerHTML).length);
     expect(await bytes('hero')).toBeLessThan(8832);
-    expect(await bytes('whynow')).toBeLessThan(3072);
+    expect(await bytes('whynow')).toBeLessThan(3712);
     for (const name of MINIS) expect(await bytes(name), name).toBeLessThan(1536);
     const sprite = await page.locator('svg.collage-sprite').evaluate((el) => new TextEncoder().encode(el.outerHTML).length);
     expect(sprite).toBeLessThan(10240);
