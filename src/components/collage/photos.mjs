@@ -19,7 +19,7 @@ export const PHOTOS = [
     id: 'hero-a',
     slot: 'hero',
     chosen: true,
-    params: { crop: { left: 0.12, top: 0.2326, width: 0.68, height: 0.588 }, out: { w: 384, h: 500 }, cell: 6, angle: 45, contrast: 1.0, brightness: 165 },
+    params: { crop: { left: 0.26, top: 0.28, width: 0.58, height: 0.5017 }, out: { w: 384, h: 500 }, cell: 6, angle: 45, contrast: 1.0, brightness: 175 },
   },
   {
     id: 'hero-b',
@@ -31,7 +31,7 @@ export const PHOTOS = [
     id: 'whynow-a',
     slot: 'whynow',
     chosen: true,
-    params: { crop: { left: 0.194, top: 0.4675, width: 0.5625, height: 0.3894 }, out: { w: 208, h: 256 }, cell: 4, angle: 45, contrast: 1.0, brightness: 92 },
+    params: { crop: { left: 0.24, top: 0.565, width: 0.46, height: 0.3185 }, out: { w: 208, h: 256 }, cell: 4, angle: 45, contrast: 1.0, brightness: 92 },
   },
   {
     id: 'whynow-b',
