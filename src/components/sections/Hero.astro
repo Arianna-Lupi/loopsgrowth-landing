@@ -159,9 +159,11 @@ const clients = data.hero.clients.items.map((item) => {
     min-width: 0;
   }
 
+  /* Rol Label del sistema (14 px, 600): la etiqueta introduce la lista, no compite con el CTA ni con los párrafos. */
   .hero-clients-label {
-    font-weight: 700;
-    font-size: 1rem;
+    font-weight: 600;
+    font-size: 0.875rem;
+    line-height: 1.5;
     color: var(--on-surface);
   }
 
@@ -174,18 +176,21 @@ const clients = data.hero.clients.items.map((item) => {
     list-style: none;
   }
 
+  /* Tarjeta pop como las demás (Pilar, Métrica, Equipo): borde y sombra por token, radio de tarjeta. Fondo crema (par
+     oscuro sobre crema medido, 14.37, como las tarjetas pares de Pilares) y cada logo sobre su propio azulejo blanco:
+     cuatro logos vienen con fondo transparente y tres con fondo blanco, y así los 12 quedan sobre el mismo soporte. */
   .client-card {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 0.5rem;
     min-width: 0;
-    padding: 0.5rem 0.25rem 0.625rem;
-    border: 2px solid var(--color-brand-dark);
-    border-radius: var(--radius-m);
-    background: var(--color-brand-white);
+    padding: 0.5rem 0.125rem 0.625rem;
+    border: var(--border-pop);
+    border-radius: var(--radius-card);
+    background: var(--color-brand-cream);
     color: var(--on-surface);
-    box-shadow: 3px 3px 0 var(--color-brand-dark);
+    box-shadow: var(--shadow-pop);
     text-align: center;
   }
 
@@ -194,12 +199,13 @@ const clients = data.hero.clients.items.map((item) => {
     width: 3rem;
     height: 3rem;
     border-radius: var(--radius-s);
+    background: var(--color-brand-white);
     object-fit: cover;
   }
 
   .client-name {
     max-width: 100%;
-    font-size: 0.8125rem;
+    font-size: 0.875rem;
     font-weight: 600;
     line-height: 1.25;
     overflow-wrap: anywhere;
