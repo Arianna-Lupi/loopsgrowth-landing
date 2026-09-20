@@ -428,3 +428,184 @@ test.describe('Casos de éxito, tarjetas inertes', () => {
     expect((await res.body()).length).toBeLessThan(61440);
   });
 });
+
+// ---------------------------------------------------------------------------------------------
+// Lote C1: mediciones a cinco anchos (CONT-05, CONT-06, DSGN-04).
+// ---------------------------------------------------------------------------------------------
+const FIVE_WIDTHS = [
+  { width: 320, height: 800 },
+  { width: 390, height: 844 },
+  { width: 768, height: 900 },
+  { width: 1024, height: 800 },
+  { width: 1280, height: 800 },
+];
+const FILLER = 'FALTA CONFIRMAR';
+const BIG_FIGURE = CASES.find((c) => c.figure.text.includes('3.808%'))!.figure.text;
+
+test.describe('Lote C1: sin desborde, cifra, aire y espaciado a cinco anchos', () => {
+  for (const viewport of FIVE_WIDTHS) {
+    test.describe(`a ${viewport.width} px`, () => {
+      test.use({ viewport });
+
+      test('(p) sin scroll horizontal y rectángulos dentro de [0, innerWidth]', async ({ page }) => {
+        await page.goto('/');
+        const { scrollWidth, innerWidth } = await page.evaluate(() => ({
+          scrollWidth: document.documentElement.scrollWidth,
+          innerWidth: window.innerWidth,
+        }));
+        expect(scrollWidth).toBeLessThanOrEqual(innerWidth);
+        for (const sel of ['#resultados', '#casos', '#resultados ul[role="list"] > li', '#casos ul[role="list"] > li']) {
+          for (const b of await boxes(page, sel)) {
+            expect(b.x, sel).toBeGreaterThanOrEqual(-1);
+            expect(b.x + b.width, sel).toBeLessThanOrEqual(innerWidth + 1);
+          }
+        }
+      });
+
+      if ([390, 1024, 1280].includes(viewport.width)) test('(r) padding vertical de las dos secciones: 64 px a 390 px y 96 px desde 1024 px', async ({ page }) => {
+        await page.goto('/');
+        const expected = viewport.width === 390 ? 64 : 96;
+        for (const sel of ['#resultados', '#casos']) {
+          const pad = await page.locator(sel).evaluate((el) => {
+            const s = getComputedStyle(el);
+            return { top: parseFloat(s.paddingTop), bottom: parseFloat(s.paddingBottom) };
+          });
+          expect(pad.top, sel).toBe(expected);
+          expect(pad.bottom, sel).toBe(expected);
+        }
+      });
+
+      if ([320, 390, 1280].includes(viewport.width)) test('(u) la cifra es lo más grande de cada tarjeta y su marcador es amarillo', async ({ page }) => {
+        await page.goto('/');
+        const cards = page.locator('#casos article');
+        await expect(cards).toHaveCount(CASES.length);
+        for (let i = 0; i < CASES.length; i++) {
+          const sizes = await cards.nth(i).evaluate((card) => {
+            const fs = (sel: string) =>
+              Array.from(card.querySelectorAll(sel)).map((el) => parseFloat(getComputedStyle(el).fontSize));
+            return {
+              figure: fs('.metric-figure')[0],
+              others: [...fs('.metric-name'), ...fs('.metric-detail'), ...fs('dt'), ...fs('dd'), ...fs('.metric-chip')],
+              color: getComputedStyle(card.querySelector('.metric-figure')!).color,
+              mark: getComputedStyle(card.querySelector('.metric-mark')!).backgroundImage,
+              markColor: getComputedStyle(card.querySelector('.metric-mark')!).backgroundColor,
+            };
+          });
+          expect(sizes.others.length).toBeGreaterThanOrEqual(6);
+          for (const o of sizes.others) expect(sizes.figure).toBeGreaterThan(o);
+          expect(sizes.color).toBe(PURPLE_RGB);
+          expect(`${sizes.mark} ${sizes.markColor}`).toContain(YELLOW);
+        }
+      });
+    });
+  }
+});
+
+for (const width of [320, 1280]) {
+  test.describe(`Lote C1 a ${width} px`, () => {
+    test.use({ viewport: { width, height: 800 } });
+
+    test('(q) la cifra larga y cada dd con el relleno quedan dentro de su tarjeta', async ({ page }) => {
+      await page.goto('/');
+      const cards = page.locator('#casos article');
+      const check = async (sel: string, text: string) => {
+        const found = cards.locator(sel).filter({ hasText: text });
+        expect(await found.count(), `${sel} con ${text}`).toBeGreaterThan(0);
+        const res = await found.evaluateAll((els) =>
+          els.map((el) => {
+            const card = el.closest('article')!.getBoundingClientRect();
+            const r = el.getBoundingClientRect();
+            return {
+              inside: r.left >= card.left - 1 && r.right <= card.right + 1 && r.top >= card.top - 1 && r.bottom <= card.bottom + 1,
+              overflow: el.scrollWidth - el.clientWidth,
+            };
+          }),
+        );
+        for (const r of res) {
+          expect(r.inside, `${sel} ${text} dentro de la tarjeta`).toBe(true);
+          expect(r.overflow, `${sel} ${text} sin desborde`).toBeLessThanOrEqual(1);
+        }
+      };
+      await check('.metric-figure', BIG_FIGURE);
+      await check('dd', FILLER);
+    });
+
+    test('(s) sin JavaScript se ven todos los textos y el CTA lleva href a #agenda', async ({ browser, baseURL }) => {
+      const context = await browser.newContext({ baseURL, viewport: { width, height: 800 }, javaScriptEnabled: false });
+      await context.route('**/*', (route) => {
+        const host = new URL(route.request().url()).hostname;
+        return host === 'localhost' || host === '127.0.0.1' ? route.continue() : route.abort();
+      });
+      const page = await context.newPage();
+      await page.goto('/');
+      const flat = norm(await page.locator('#resultados').innerText());
+      for (const r of es.results.items) {
+        expect(flat).toContain(norm(r.lead.text));
+        expect(flat).toContain(norm(r.body.text));
+      }
+      expect(flat).toContain(norm(es.results.title.text));
+      const casesText = norm(await page.locator('#casos').innerText());
+      expect(casesText).toContain(norm(es.cases.title.text));
+      for (const c of CASES) {
+        expect(casesText).toContain(norm(c.figure.text));
+        expect(casesText).toContain(norm(c.metric.text));
+        expect(casesText).toContain(norm(c.sector.text));
+        if (c.detail) expect(casesText).toContain(norm(c.detail.text));
+      }
+      await expect(page.locator('#casos a[data-cta="casos"]')).toHaveAttribute('href', '#agenda');
+      await context.close();
+    });
+
+    test('(t) espaciado de texto forzado de SC 1.4.12 sin desborde ni texto fuera de su tarjeta', async ({ page }) => {
+      await page.goto('/');
+      await page.addStyleTag({
+        content:
+          '* { line-height: 1.5 !important; letter-spacing: 0.12em !important; word-spacing: 0.16em !important; } p { margin-bottom: 2em !important; }',
+      });
+      const { scrollWidth, clientWidth } = await page.evaluate(() => ({
+        scrollWidth: document.documentElement.scrollWidth,
+        clientWidth: document.documentElement.clientWidth,
+      }));
+      expect(scrollWidth).toBeLessThanOrEqual(clientWidth);
+      const out = await page.evaluate(() => {
+        const bad: string[] = [];
+        const containers = [...document.querySelectorAll('#casos article'), ...document.querySelectorAll('#resultados li')];
+        for (const box of containers) {
+          const b = box.getBoundingClientRect();
+          for (const el of box.querySelectorAll('h3, p, dt, dd, span')) {
+            const r = el.getBoundingClientRect();
+            if (r.width === 0) continue;
+            if (r.left < b.left - 1 || r.right > b.right + 1 || r.bottom > b.bottom + 1) {
+              bad.push((el.textContent ?? '').trim().slice(0, 30));
+            }
+          }
+          if (box.scrollWidth - box.clientWidth > 1) bad.push('scroll:' + (box.textContent ?? '').trim().slice(0, 20));
+        }
+        return bad;
+      });
+      expect(out).toEqual([]);
+    });
+  });
+}
+
+// (v) Capturas por sección. Solo con PHASE2_BATCH definida; el título lleva la palabra "captura".
+test.describe('captura de secciones del lote', () => {
+  test.skip(!process.env.PHASE2_BATCH, 'define PHASE2_BATCH (p. ej. C1) para generar capturas');
+  for (const vp of FIVE_WIDTHS) {
+    test(`captura de secciones ${vp.width}`, async ({ browser, baseURL }) => {
+      const context = await browser.newContext({ baseURL, viewport: { width: vp.width, height: vp.height } });
+      await context.route('**/*', (route) => {
+        const host = new URL(route.request().url()).hostname;
+        return host === 'localhost' || host === '127.0.0.1' ? route.continue() : route.abort();
+      });
+      const page = await context.newPage();
+      await page.goto('/');
+      for (const [id, name] of [['resultados', 'resultados'], ['casos', 'casos']] as const) {
+        await page.locator(`#${id}`).screenshot({
+          path: `test-results/phase2/${process.env.PHASE2_BATCH}-${name}-${vp.width}.png`,
+        });
+      }
+      await context.close();
+    });
+  }
+});
