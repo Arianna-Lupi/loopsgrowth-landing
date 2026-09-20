@@ -208,7 +208,7 @@ test('(v) CHIP_WORDS: cinco palabras con idioma y fuente; las del copy están en
     assert.ok(['es', 'en'].includes(w.lang), `${w.word}: idioma`);
     assert.ok(['copy', 'moodboard'].includes(w.source), `${w.word}: fuente`);
   }
-  assert.deepEqual(CHIP_WORDS.filter((w) => w.lang === 'en').map((w) => w.word), ['spy', 'team work']);
+  assert.deepEqual(CHIP_WORDS.filter((w) => w.lang === 'en').map((w) => w.word), ['geo', 'spy', 'team work']); // geo: decisión de Juan, 2026-09-20
   const copy = readFileSync('.planning/phases/02-secciones-marca-y-copy/02-ARI-COPY-V2.md', 'utf8').toLowerCase();
   for (const w of CHIP_WORDS.filter((x) => x.source === 'copy')) assert.ok(copy.includes(w.word), `${w.word} no está en el copy de Ari`);
 });

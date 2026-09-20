@@ -10,6 +10,7 @@
  */
 import { Image } from 'astro:assets';
 import CtaLink from '../CtaLink.astro';
+import LangText from '../ui/LangText.astro';
 import HeroCollage from '../collage/HeroCollage.astro';
 import { getLanding, fill, textVars, ctaLabel } from '../../lib/content';
 import { CLIENT_LOGO_SIZE, CLIENT_LOGOS } from './hero-clients.mjs';
@@ -33,7 +34,7 @@ const clients = data.hero.clients.items.map((item) => {
   <div class="wrap hero-grid">
     <div class="hero-copy">
       <h1 id="hero-title">{data.hero.h1.text}</h1>
-      <p class="hero-sub">{subtitle}</p>
+      <p class="hero-sub"><LangText text={subtitle} /></p>
       <div class="hero-desc">
         {data.hero.description.map((line) => <p>{line.text}</p>)}
       </div>
