@@ -362,9 +362,16 @@ test.describe('FAQ a 1280 px', () => {
     expect(closed.h).toBeGreaterThan(closed.w);
     await page.locator('#faq summary').first().click();
     // La barra sigue en el DOM y se ve: gira sobre su centro hasta quedar horizontal (transición de 150 ms).
-    await expect.poll(async () => (await bar()).w, { timeout: 2000 }).toBeGreaterThan(0);
+    // Se espera a que la transición termine (`w >= 2 * h`): medir a mitad del giro daba una caja de 8,8 px.
+    await expect
+      .poll(async () => {
+        const b = await bar();
+        return b.w >= 2 * b.h;
+      }, { timeout: 2000 })
+      .toBe(true);
     const open = await bar();
     expect(open.display).not.toBe('none');
+    expect(open.w).toBeGreaterThan(0);
     expect(open.w).toBeGreaterThanOrEqual(2 * open.h);
   });
 
