@@ -11,7 +11,6 @@ export const LICENSE_NAMES = Object.freeze({
 });
 
 const COLUMNS = ['id', 'derived', 'source', 'author', 'license', 'licenseUrl', 'downloaded', 'dimensions', 'sha256', 'approval', 'note'];
-const APPROVAL = /^(pendiente|aprobada por .+ el \d{4}-\d{2}-\d{2})$/;
 const DASH = /[\u2013\u2014]/;
 
 const section = (text, heading) => {
@@ -37,6 +36,35 @@ export function parseLicenses(text) {
     });
 }
 
+/** Fecha AAAA-MM-DD que existe en el calendario (rechaza 2026-02-31 y 2026-13-01, que `Date.parse` deja pasar). */
+export function isCalendarDate(iso) {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso ?? '');
+  if (!m) return false;
+  const [y, mo, d] = m.slice(1).map(Number);
+  if (y < 2020) return false;
+  const date = new Date(Date.UTC(y, mo - 1, d));
+  return date.getUTCFullYear() === y && date.getUTCMonth() === mo - 1 && date.getUTCDate() === d;
+}
+
+/** `{ pending: true }`, `{ pending: false, approver, date }` o nulo si el texto no es ninguna de las dos formas. */
+export function parseApproval(text) {
+  if (text === 'pendiente') return { pending: true };
+  const m = /^aprobada por (\S.*?) el (\d{4}-\d{2}-\d{2})$/.exec(text ?? '');
+  return m ? { pending: false, approver: m[1], date: m[2] } : null;
+}
+
+/** Motivo por el que la aprobación de una fila no vale, o nulo. La usan `validateLicenses` y la puerta. */
+export function approvalProblem(row) {
+  const approval = parseApproval(row.approval);
+  if (!approval) return 'debe ser "pendiente" o "aprobada por <nombre> el AAAA-MM-DD"';
+  if (approval.pending) return null;
+  if (!isCalendarDate(approval.date)) return `la fecha ${approval.date} no existe en el calendario`;
+  if (isCalendarDate(row.downloaded) && approval.date < row.downloaded) {
+    return `la aprobación (${approval.date}) no puede ser anterior a la descarga (${row.downloaded})`;
+  }
+  return null;
+}
+
 /** Errores en español, uno por campo mal formado; lista vacía si todo está bien. */
 export function validateLicenses(rows) {
   const errors = [];
@@ -51,7 +79,8 @@ export function validateLicenses(rows) {
     if (!/^\d{4}-\d{2}-\d{2}$/.test(row.downloaded ?? '')) bad('downloaded', 'debe tener la forma AAAA-MM-DD');
     if (!/^\d+x\d+$/.test(row.dimensions ?? '')) bad('dimensions', 'debe tener la forma ANCHOxALTO');
     if (!/^[0-9a-f]{64}$/.test(row.sha256 ?? '')) bad('sha256', 'debe medir 64 hexadecimales');
-    if (!APPROVAL.test(row.approval ?? '')) bad('approval', 'debe ser "pendiente" o "aprobada por <nombre> el AAAA-MM-DD"');
+    const approval = approvalProblem(row);
+    if (approval) bad('approval', approval);
     for (const field of COLUMNS) if (DASH.test(row[field] ?? '')) bad(field, 'no se admiten guiones largos ni cortos');
   }
   return errors;
@@ -86,20 +115,60 @@ export function sha256File(path) {
 }
 
 /**
- * Puerta de producción. En `production` bloquea una foto elegida con aprobación pendiente y cualquier
- * raster de una candidata no elegida (un import sin uso hace que Astro emita el original en dist);
- * en otros entornos solo advierte.
+ * Puerta de producción (función pura). Errores que bloquean en TODO entorno (`always`, estado del registro
+ * o del manifiesto incoherente) y avisos que solo bloquean con `env === 'production'` (`problems`, lo que
+ * falta para cerrar la elección: aprobación pendiente, candidatas sin descartar, elección abierta).
+ *
+ * Reglas (las mismas que promete tests/guards/photos.test.mjs):
+ * - una y solo una foto elegida por ranura (`slots`; por defecto, las ranuras que aparecen en `photos`);
+ * - cada foto elegida tiene fila, su derivado `treated/<id>.png` existe (`files`) y coincide con la columna
+ *   `derived`, y su aprobación es válida (fecha real y no anterior a la descarga);
+ * - con `election` (la línea `Elección:` de LICENSES.md; nulo si falta): `cerrada` exige una sola foto por
+ *   ranura en el manifiesto, todas las aprobaciones dadas y ninguna fila huérfana; `abierta` no pasa a producción;
+ * - con `originals` (id -> sha256 del original que exista en `photo-sources/`, ignorado por git y ausente en
+ *   CI): el sha256 registrado debe coincidir. La columna `sha256` guarda el hash del ORIGINAL, no del PNG derivado.
  */
-export function evaluatePhotoGate({ rows, photos, files, env }) {
+export function evaluatePhotoGate({ rows, photos, files, env, slots, election, originals }) {
   const always = [];
   const problems = [];
-  for (const photo of photos.filter((p) => p.chosen)) {
+  const chosen = photos.filter((p) => p.chosen);
+
+  for (const slot of slots ?? [...new Set(photos.map((p) => p.slot))]) {
+    const count = chosen.filter((p) => p.slot === slot).length;
+    if (count !== 1) always.push(`La ranura "${slot}" debe tener exactamente una foto elegida y tiene ${count}.`);
+  }
+
+  for (const photo of chosen) {
     const row = rows.find((r) => r.id === photo.id);
-    if (!row) always.push(`La foto elegida "${photo.id}" no tiene fila en LICENSES.md.`);
+    if (!row) {
+      always.push(`La foto elegida "${photo.id}" no tiene fila en LICENSES.md.`);
+      continue;
+    }
+    if (row.derived !== `treated/${photo.id}.png`) always.push(`La foto elegida "${photo.id}" declara el derivado "${row.derived}" y debe ser "treated/${photo.id}.png".`);
+    if (!files.includes(photo.id)) always.push(`La foto elegida "${photo.id}" no tiene su derivado treated/${photo.id}.png.`);
+    const approval = approvalProblem(row);
+    if (approval) always.push(`Foto "${row.id}", campo "approval": ${approval}.`);
     else if (row.approval === 'pendiente') problems.push(`La foto elegida "${photo.id}" tiene la aprobación de Ari pendiente.`);
   }
-  const chosenIds = new Set(photos.filter((p) => p.chosen).map((p) => p.id));
+
+  const chosenIds = new Set(chosen.map((p) => p.id));
   for (const id of files) if (!chosenIds.has(id)) problems.push(`Existe el raster de la candidata "${id}" y no está elegida (Astro lo emitiría en dist).`);
+
+  if (election === null) always.push('Falta la línea "Elección: abierta" o "Elección: cerrada" en LICENSES.md.');
+  else if (election === 'abierta') problems.push('La elección sigue abierta ("Elección: abierta" en LICENSES.md).');
+  else if (election === 'cerrada') {
+    for (const photo of photos.filter((p) => !p.chosen)) always.push(`Elección cerrada, pero el manifiesto conserva la candidata "${photo.id}".`);
+    for (const photo of chosen) {
+      if (rows.find((r) => r.id === photo.id)?.approval === 'pendiente') always.push(`Elección cerrada, pero la foto "${photo.id}" sigue con la aprobación pendiente.`);
+    }
+    for (const row of rows) if (!photos.some((p) => p.id === row.id)) always.push(`Elección cerrada, pero la fila "${row.id}" de LICENSES.md no tiene foto en el manifiesto.`);
+  }
+
+  for (const row of rows) {
+    const hash = originals?.[row.id];
+    if (hash !== undefined && hash !== row.sha256) always.push(`Foto "${row.id}", campo "sha256": no coincide con el original de photo-sources/.`);
+  }
+
   return env === 'production' ? { errors: [...always, ...problems], warnings: [] } : { errors: always, warnings: problems };
 }
 

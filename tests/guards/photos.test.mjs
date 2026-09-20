@@ -4,8 +4,9 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, readdirSync, existsSync, statSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import sharp from 'sharp';
-import { parseLicenses, validateLicenses, parseElection, parseLicenseSections, evaluatePhotoGate, LICENSE_NAMES } from '../../scripts/lib/photo-licenses.mjs';
+import { parseLicenses, validateLicenses, parseElection, parseLicenseSections, evaluatePhotoGate, isCalendarDate, parseApproval, LICENSE_NAMES } from '../../scripts/lib/photo-licenses.mjs';
 import { parseTokens, hexToRgb, contrastRaw } from '../../scripts/lib/contrast.mjs';
 import { inkCoverage } from '../../scripts/photos/halftone.mjs';
 import { PHOTOS, PHOTO_SLOT_NAMES, PHOTO_LOADING, chosenPhoto, photoById, assertPhotoForSlot } from '../../src/components/collage/photos.mjs';
@@ -247,6 +248,97 @@ test('puerta: una elegida sin fila bloquea siempre y una foto aprobada sin sobra
   const approved = [{ ...GOOD, approval: 'aprobada por Ari el 2026-09-20' }];
   assert.ok(evaluatePhotoGate({ rows: approved, photos, files: ['hero-a', 'hero-b'], env: 'production' }).errors.some((e) => e.includes('hero-b')));
   assert.equal(evaluatePhotoGate({ rows: approved, photos, files: ['hero-a', 'hero-b'], env: 'development' }).errors.length, 0);
+});
+
+// WR-05: la puerta hace cumplir lo que prometen las pruebas (una elegida por ranura, aprobación con fecha
+// real, derivado, coherencia con `Elección:` y sha256 del original). Cada regla con su mutación.
+const APPROVED = 'aprobada por Ari el 2026-09-20';
+const gatePhotos = [
+  { id: 'hero-a', slot: 'hero', chosen: true },
+  { id: 'whynow-a', slot: 'whynow', chosen: true },
+];
+const gateRows = (approval = APPROVED) => [
+  { ...GOOD, approval },
+  { ...GOOD, id: 'whynow-a', derived: 'treated/whynow-a.png', approval },
+];
+const gate = (over = {}) =>
+  evaluatePhotoGate({ rows: gateRows(), photos: gatePhotos, files: ['hero-a', 'whynow-a'], env: 'production', slots: ['hero', 'whynow'], ...over });
+
+test('puerta: una y solo una elegida por ranura, con la ranura sin candidatas incluida (bloquea en todo entorno)', () => {
+  assert.deepEqual(gate().errors, []);
+  for (const env of ['production', 'development']) {
+    const twoChosen = [...gatePhotos, { id: 'hero-b', slot: 'hero', chosen: true }];
+    const two = gate({ photos: twoChosen, rows: [...gateRows(), { ...GOOD, id: 'hero-b', derived: 'treated/hero-b.png', approval: APPROVED }], files: ['hero-a', 'hero-b', 'whynow-a'], env });
+    assert.ok(two.errors.some((e) => e.includes('"hero"') && e.includes('exactamente una')), `dos elegidas en ${env}`);
+    const noneChosen = gate({ photos: gatePhotos.map((p) => ({ ...p, chosen: p.slot !== 'hero' })), env });
+    assert.ok(noneChosen.errors.some((e) => e.includes('"hero"') && e.includes('tiene 0')), `ninguna elegida en ${env}`);
+    const noPhotos = gate({ photos: gatePhotos.filter((p) => p.slot !== 'whynow'), rows: gateRows().slice(0, 1), files: ['hero-a'], env });
+    assert.ok(noPhotos.errors.some((e) => e.includes('"whynow"')), `ranura sin fotos en ${env}`);
+  }
+});
+
+test('aprobación: la fecha debe existir en el calendario y no ser anterior a la descarga (registro y puerta)', () => {
+  assert.ok(isCalendarDate('2026-09-20') && isCalendarDate('2028-02-29'));
+  for (const bad of ['2026-02-31', '2026-13-01', '2026-00-10', '2026-09-00', '2027-02-29', '0001-01-01', '26-09-20']) assert.ok(!isCalendarDate(bad), bad);
+  assert.deepEqual(parseApproval('pendiente'), { pending: true });
+  assert.deepEqual(parseApproval(APPROVED), { pending: false, approver: 'Ari', date: '2026-09-20' });
+  assert.equal(parseApproval('aprobada por  el 2026-09-20'), null, 'sin nombre');
+  assert.equal(parseApproval('aprobada por Ari el 2026-09-20 y más'), null);
+  for (const approval of ['aprobada por Ari el 2026-02-31', 'aprobada por Ari el 2026-13-01', 'aprobada por Ari el 2026-09-18', 'aprobada por  el 2026-09-20']) {
+    assert.ok(validateLicenses([{ ...GOOD, approval }]).some((e) => e.includes('hero-a') && e.includes('approval')), `registro: ${approval}`);
+    for (const env of ['production', 'development']) {
+      assert.ok(gate({ rows: gateRows(approval), env }).errors.some((e) => e.includes('hero-a') && e.includes('approval')), `puerta ${env}: ${approval}`);
+    }
+  }
+  assert.deepEqual(validateLicenses([{ ...GOOD, approval: 'aprobada por Ari el 2026-09-19' }]), [], 'el mismo día de la descarga vale');
+});
+
+test('puerta: la elegida necesita su derivado y la columna `derived` de su fila', () => {
+  assert.ok(gate({ files: ['whynow-a'] }).errors.some((e) => e.includes('hero-a') && e.includes('derivado')));
+  assert.ok(gate({ rows: [{ ...GOOD, approval: APPROVED, derived: 'treated/otra.png' }, gateRows()[1]] }).errors.some((e) => e.includes('hero-a') && e.includes('treated/otra.png')));
+});
+
+test('puerta: la línea `Elección:` debe ser coherente con el manifiesto y el registro', () => {
+  const candidates = [...gatePhotos, { id: 'hero-b', slot: 'hero', chosen: false }];
+  const candidateRows = [...gateRows(), { ...GOOD, id: 'hero-b', derived: 'treated/hero-b.png', approval: 'pendiente' }];
+  // falta la línea
+  assert.ok(gate({ election: null, env: 'development' }).errors.some((e) => e.includes('Elección')));
+  // cerrada y limpia: no bloquea
+  assert.deepEqual(gate({ election: 'cerrada' }).errors, []);
+  // cerrada con una candidata en el manifiesto, con una aprobación pendiente o con una fila huérfana: bloquea también sin producción
+  for (const env of ['production', 'development']) {
+    assert.ok(gate({ election: 'cerrada', photos: candidates, rows: candidateRows, env }).errors.some((e) => e.includes('candidata "hero-b"')), `candidata en ${env}`);
+    assert.ok(gate({ election: 'cerrada', rows: gateRows('pendiente'), env }).errors.some((e) => e.includes('pendiente') && e.includes('cerrada')), `pendiente en ${env}`);
+    assert.ok(gate({ election: 'cerrada', rows: candidateRows, env }).errors.some((e) => e.includes('fila "hero-b"')), `huérfana en ${env}`);
+  }
+  // abierta: solo advierte fuera de producción y bloquea en producción, aunque todo lo demás esté aprobado
+  assert.ok(gate({ election: 'abierta' }).errors.some((e) => e.includes('sigue abierta')));
+  const dev = gate({ election: 'abierta', env: 'development' });
+  assert.deepEqual(dev.errors, []);
+  assert.ok(dev.warnings.some((w) => w.includes('sigue abierta')));
+});
+
+test('puerta: el sha256 registrado debe coincidir con el original de photo-sources/ cuando existe (mutación por id)', () => {
+  assert.deepEqual(gate({ originals: { 'hero-a': GOOD.sha256, 'whynow-a': GOOD.sha256 } }).errors, []);
+  assert.deepEqual(gate({ originals: {} }).errors, [], 'sin originales (CI) no se comprueba');
+  for (const env of ['production', 'development']) {
+    const errors = gate({ originals: { 'hero-a': 'b'.repeat(64) }, env }).errors;
+    assert.ok(errors.some((e) => e.includes('hero-a') && e.includes('sha256')), `sha256 distinto en ${env}`);
+    assert.ok(!errors.some((e) => e.includes('whynow-a') && e.includes('sha256')));
+  }
+});
+
+test('puerta: el estado real (elección abierta, aprobación pendiente) no bloquea fuera de producción y sí en production', () => {
+  const files = readdirSync(TREATED).filter((f) => f.endsWith('.png')).map((f) => f.replace(/\.png$/, ''));
+  const originals = {};
+  for (const p of PHOTOS) {
+    const src = ['jpg', 'jpeg', 'png', 'webp'].map((e) => `photo-sources/${p.id}.${e}`).find((f) => existsSync(f));
+    if (src) originals[p.id] = createHash('sha256').update(readFileSync(src)).digest('hex');
+  }
+  const input = { rows, photos: PHOTOS, files, slots: PHOTO_SLOT_NAMES, election: parseElection(LICENSES), originals };
+  assert.deepEqual(evaluatePhotoGate({ ...input, env: 'development' }).errors, []);
+  const pending = rows.filter((r) => PHOTOS.some((p) => p.chosen && p.id === r.id)).some((r) => r.approval === 'pendiente');
+  assert.equal(evaluatePhotoGate({ ...input, env: 'production' }).errors.length > 0, pending || parseElection(LICENSES) === 'abierta' || PHOTOS.some((p) => !p.chosen));
 });
 
 test('check-photos.mjs: sale 0 sin producción, 1 en production con el estado actual y solo el valor exacto bloquea; el mensaje trae los pasos de cierre', () => {
