@@ -202,6 +202,12 @@ Reglas:
 
 Sin neutrales inventados: cuatro colores de marca más blanco. Los tonos son bloques de superficie completos; las tarjetas usan un tono anidado `light` (fondo blanco) para reutilizar los mismos tokens.
 
+**Fe de erratas de color (2026-09-19).**
+- El morado vigente es `#4228D1` (decisión de Juan); el valor anterior salió de una etiqueta errónea de la página 8 del BrandBook.
+- El crema `#F4F3E0` es token de superficie (chips y píldoras), no un tono: se combina solo con morado (7.63) y oscuro (14.37).
+- Los ratios de la tabla que involucran al morado quedan reemplazados por los de `scripts/lib/contrast.mjs`: 8.55 sobre blanco, 5.43 sobre amarillo, y naranja sobre morado 2.95, prohibido en texto y UI (solo relleno decorativo con contorno).
+- Morado sobre oscuro mide 1.88 y sigue prohibido. El resto de la tabla se conserva.
+
 | Role | Value | Uso |
 |------|-------|-----|
 | Dominant | `#ffffff` (~45 % de la página por altura de sección) | Header, hero, solución, casos, incluye, para quién, footer, y el interior de toda tarjeta |
@@ -287,6 +293,19 @@ Reglas derivadas de los tonos nuevos:
 ---
 
 ## Collage and Brand Assets Contract
+
+**Fe de erratas del collage (2026-09-19).** El lenguaje vigente lo fija el plan 02-10 y reemplaza al de esta sección donde choquen:
+- Loopy oficial de las mesas 13 (dos ojos) y 18 (un ojo) con su esquema por fondo; formas planas sin contorno con sombra dura; garabatos de trazo de 3 px; píldoras de texto real con `aria-hidden` y lista cerrada de palabras (`CHIP_WORDS`); retícula de puntos; el crema como superficie.
+- Tamaños: pegatinas y chips de 96 x 80 px; Por qué ahora de 224 px (320 px desde 64em); avatares como Loopy sobre disco (`avatar-ojo-morado`, `avatar-ojo-amarillo`, `avatar-ojos-morado`, `avatar-ojos-amarillo`).
+- Dos ranuras de foto (`PHOTO_SLOTS`): hero (344, 22, 192 x 250) y whynow (204, 14, 104 x 128), vacías hasta el plan 02-11.
+- Peso: sprite de 8 símbolos de 10 KB o menos (hoy 6135 bytes) y `dist/index.html` de 40960 bytes o menos.
+- Las filas de la tabla para lupa, ojos, clic, loop, pegatinas, chips y avatares quedan reemplazadas. La tabla no se reescribe.
+
+**Fe de erratas de las fotos (2026-09-19).** El plan 02-11 llena las dos ranuras y matiza la regla de "ninguna imagen raster":
+- Las únicas imágenes raster son dos fotos de stock con licencia (hero y Por qué ahora, `PHOTO_SLOTS`), tratadas en media tinta binaria con la tinta del token oscuro sobre el relleno de la ranura y con la sombra dura de la ranura.
+- Cada foto es decorativa: `alt` vacío, dentro de una raíz `aria-hidden`; se sirve con `astro:assets` en png de 25600 bytes o menos, sin peticiones de terceros, y el h1 sigue siendo el LCP.
+- El registro (fuente, autor, licencia, sha256 y aprobación de Ari) vive en `src/assets/photos/LICENSES.md`; `PUBLIC_ENV=production` no compila mientras haya una aprobación pendiente o una candidata sobrante.
+- Pesos: `.hero-collage` de 8832 bytes o menos, Por qué ahora de 3712, imágenes de `/` de 40960 y `dist/index.html` de 42240 (tope global de 61440 sin cambio).
 
 Estilo: **collage pop de línea gruesa**. Formas planas de color de marca, contorno de 3 px (`var(--collage-stroke)`), sin degradados, sin sombras suaves, sin texto dentro. Todo es SVG estático en línea con `aria-hidden="true"` y `focusable="false"`; ninguna imagen raster. Los colores salen de `var(--color-brand-*)` y `var(--collage-stroke)`, nunca de un hex en el componente (regla de la Fase 1: sin hex en `src/components`).
 

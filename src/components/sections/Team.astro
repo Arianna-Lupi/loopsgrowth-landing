@@ -1,0 +1,96 @@
+---
+/**
+ * Quiénes somos (CONT-07). Tono yellow. Cuatro tarjetas pop con avatar Loopy, nombre y cargo, en el orden del
+ * doc de Ari. Imprime solo `.text` de cada afirmación, sin leer su estado (COPY-01): los nombres son `pending`
+ * (consentimiento del integrante) y se muestran igual. Sin biografía, credencial ni enlaces (UI-SPEC sección 7).
+ */
+import SectionShell from '../ui/SectionShell.astro';
+import Avatar from '../collage/Avatar.astro';
+import { getLanding } from '../../lib/content';
+
+const data = await getLanding();
+// Los avatares se asignan por posición desde aquí y no desde el YAML: una cadena suelta dentro de `es`
+// rompe la guarda FND-02 (BARE_STRING). Solo cambian la cantidad de ojos y el color del disco; no son retratos.
+const AVATARS = ['ojo-morado', 'ojo-amarillo', 'ojos-morado', 'ojos-amarillo'] as const;
+---
+
+<SectionShell id="nosotros" tone="yellow" title={data.team.title.text}>
+  <ul class="team-grid" role="list">
+    {
+      data.team.members.map((member, i) => (
+        <li class="team-card" data-tone="light">
+          <div class="team-avatar">
+            <Avatar variant={AVATARS[i]} />
+          </div>
+          <h3>{member.name.text}</h3>
+          <p class="team-role">{member.role.text}</p>
+        </li>
+      ))
+    }
+  </ul>
+</SectionShell>
+
+<style>
+  .team-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--card-gap);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .team-card {
+    min-width: 0;
+    padding: var(--card-pad);
+    border: var(--border-pop);
+    border-radius: var(--radius-card);
+    background: var(--surface);
+    color: var(--on-surface);
+    box-shadow: var(--shadow-pop);
+    text-align: start;
+  }
+
+  .team-avatar {
+    width: 6rem;
+    aspect-ratio: 1;
+  }
+
+  .team-avatar :global(svg) {
+    width: 100%;
+    /* El arte oficial trae aire propio a la izquierda (unos 7 %): se compensa para que el disco alinee con el nombre. */
+    margin-inline-start: -6.7%;
+  }
+
+  .team-card h3 {
+    margin-top: 1rem;
+    overflow-wrap: anywhere;
+  }
+
+  .team-role {
+    margin-top: 0.5rem;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+  }
+
+  @media (min-width: 40em) {
+    .team-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .team-avatar {
+      width: 7.5rem;
+    }
+  }
+
+  @media (min-width: 64em) {
+    .team-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    /* Reserva dos líneas de nombre: un nombre que baja de línea no desalinea los cargos de las otras tarjetas. */
+    .team-card h3 {
+      min-height: 2lh;
+    }
+  }
+</style>

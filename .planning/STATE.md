@@ -1,19 +1,19 @@
 ---
 gsd_state_version: "1.0"
-current_phase: 01
-current_phase_name: Fundaciones y formulario funcionando
+current_phase: 02
+current_phase_name: Secciones, marca y copy
 status: verifying
-stopped_at: Completed 01-04-PLAN.md (envios humanos de FORM-05 pendientes)
-last_updated: "2026-09-19T03:09:04.795Z"
-last_activity: 2026-09-18
-last_activity_desc: Phase 01 execution started
-state_head: 408b41fd926104062664c821e4a2f7cea65a6f12
+stopped_at: Completed 02-08-PLAN.md (fase 2 ejecutada, falta verificación)
+last_updated: "2026-09-20T03:45:07.382Z"
+last_activity: 2026-09-19
+last_activity_desc: Plan 02-08 complete; phase 02 execution done, verification next
+state_head: ac2d6546275c8ec9a826eb0cb8ff5864acf79974
 progress:
   total_phases: 4
   completed_phases: 0
-  total_plans: 4
-  completed_plans: 4
-  percent: 0
+  total_plans: 15
+  completed_plans: 15
+  percent: 100
 ---
 
 # Project State
@@ -23,16 +23,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-09-18)
 
 **Core value:** Un visitante entiende en segundos qué hace Loops Growth y llena el formulario de ClickUp, que está a un scroll de distancia.
-**Current focus:** Phase 01 — Fundaciones y formulario funcionando
+**Current focus:** Phase 02 — Secciones, marca y copy
 
 ## Current Position
 
-Phase: 01 (Fundaciones y formulario funcionando) — EXECUTING
-Plan: 4 of 4
+Phase: 02 (Secciones, marca y copy) — EXECUTION COMPLETE
+Plan: 11 of 11
 Status: Phase complete — ready for verification
-Last activity: 2026-09-18 — Phase 01 execution started
+Last activity: 2026-09-19 — Plan 02-08 complete; phase 02 execution done, verification next
 
-Progress: [░░░░░░░░░░] 0%
+Progress: [██████████] 100%
 
 ## Performance Metrics
 
@@ -62,6 +62,9 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 01 P02 | 37 min | 3 tasks | 22 files |
 | Phase 01 P03 | 30min | 3 tasks | 13 files |
 | Phase 01 P04 | 15min | 2 tasks | 6 files |
+| Phase 02 P01 | 3 sesiones | 3 tasks | 17 files |
+| Phase 02 P02 | unos 45 min | 4 tasks | 14 files |
+| Phase 02 P09 | n/a | 4 tasks | 48 files |
 
 ## Accumulated Context
 
@@ -84,6 +87,9 @@ Recent decisions affecting current work:
 - [Phase 01]: El enlace de respaldo y el noscript usan la geometria Tabler external-link inline (16 px, aria-hidden), sin sumar libreria de iconos — UI-SPEC pide un SVG en linea; el hueco de dependencias se cierra en Fase 2 si hace falta mas iconografia
 - [Phase 01]: Plan 01-04: la reserva del iframe de ClickUp se mide con el scrollHeight de cu-form (fase natural, min-height 0), no con style.height — El formulario usa height 100% y iframe-resizer solo reporta la altura del propio iframe; style.height devuelve el min-height vigente (medicion circular). Tokens: sm 1664px y lg 1536px
 - [Phase 01]: Plan 01-04: FORM-05 sigue pendiente; los dos envios reales son humanos (Juan) y ninguna prueba automatica llena ni envia el formulario — Un envio crea una tarea real en la Lista de ClickUp de Ari; los bloques human-check se consolidan en 01-UAT.md
+- [Phase 02]: 02-01: collage del hero como SVG en linea (lupa morada con cristal blanco, mango oscuro) con seis piezas nombradas listas para animar en el plan 07
+- [Phase 02]: 02-02: --logo-clear = 1 X (BrandBook pag. 7); logo con los colores del vectorial de Ari (#4228d1), pendiente decision de Ari sobre #73187f
+- [Phase 02]: 02-02: loop del collage como dos anillos solapados (los concentricos se leian como diana); sprite montado en SiteHeader hasta que 02-07 lo mueva a BaseLayout
 
 ### Pending Todos
 
@@ -106,6 +112,9 @@ None yet.
 | Phase | State | Resume |
 |-------|-------|--------|
 | 1 | verification_deferred_human | /gsd-verify-work 1 |
+| 2 | verification_deferred_human | /gsd-verify-work 2 |
+
+Nota (2026-09-19, fase 2): verificada por codigo sin huecos; los 5 items humanos estan en `02-UAT.md` (61 textos de Ari, eleccion y licencia de fotos, VoiceOver del FAQ, teclado en el iframe real, marca contra el moodboard). Juan decidio diferirlos y seguir con la fase 3.
 
 Nota (2026-09-19): Juan decidio seguir con las fases 2 a 4 y dejar los 6 items humanos de `01-UAT.md` pendientes (FORM-05 con dos envios reales, Autosize en ClickUp, revision de WR-05/WR-08/WR-14, LAN desde otro dispositivo).
 
@@ -126,6 +135,6 @@ Items acknowledged and deferred at milestone close, most recent first:
 
 ## Session Continuity
 
-Last session: 2026-09-19T03:09:04.774Z
-Stopped at: Completed 01-04-PLAN.md (envios humanos de FORM-05 pendientes)
+Last session: 2026-09-20T03:45:07.329Z
+Stopped at: Completed 02-08-PLAN.md (fase 2 ejecutada, falta verificación)
 Resume file: None

@@ -1,6 +1,8 @@
 import { test, expect, type Page } from '@playwright/test';
 import { readFileSync } from 'node:fs';
 import { parse } from 'yaml';
+import { walkClaims, MISSING_MARK } from '../../scripts/lib/copy-rules.mjs';
+import { PURPLE_RGB } from './lib/brand';
 
 // Los textos esperados salen del YAML y no se copian a mano: cuando Ari confirma o cambia un
 // texto (el término, la duración, el subtítulo), la prueba sigue midiendo lo que la página debe
@@ -11,6 +13,7 @@ const es = (parse(readFileSync('src/content/landing.es.yaml', 'utf8')) as {
     brand: { term: Claim };
     call: { duration: Claim };
     hero: { h1: Claim; subtitle: Claim };
+    faq: { items: unknown[] };
     agenda: { intro: Claim };
     config: { form_url: string };
   };
@@ -19,6 +22,20 @@ const resolveText = (claim: Claim) =>
   claim.text.replaceAll('{term}', es.brand.term.text).replaceAll('{duration}', es.call.duration.text);
 
 const FORM_URL = es.config.form_url;
+// Un resumen del FAQ por elemento del YAML (plan 02-06): cada uno es una parada de Tab antes del enlace de respaldo.
+const FAQ_COUNT = es.faq.items.length;
+const SUMMARIES = Array.from({ length: FAQ_COUNT }, () => 'summary');
+
+// Marcas de dato faltante que la página debe mostrar en `/`: una por reclamación del YAML cuyo texto es
+// la marca, sin contar `privacy.` (el cuerpo de la política vive en /privacidad). Se deriva del YAML: se
+// ajusta sola cuando un plan agrega o resuelve una marca (plan 02-03 es el único que reescribe esto).
+const VISIBLE_MARKS = walkClaims(parse(readFileSync('src/content/landing.es.yaml', 'utf8')))
+  .filter((n: { kind: string; path: string; claim?: { text: string } }) => n.kind === 'claim' && n.claim?.text === MISSING_MARK && !n.path.startsWith('privacy.'))
+  .length;
+// El canal de cada caso se imprime dos veces (chip y dato de Canal): las marcas de ese canal se ven el doble.
+const CHIP_DUPLICATES = (
+  parse(readFileSync('src/content/landing.es.yaml', 'utf8')) as { es: { cases: { items: { channel: Claim }[] } } }
+).es.cases.items.filter((item) => item.channel.text === MISSING_MARK).length;
 
 // Textos de Ari, tal cual (con el término y la duración ya resueltos desde el YAML).
 const H1_TEXT = resolveText(es.hero.h1);
@@ -54,7 +71,7 @@ async function activeStop(page: Page): Promise<Stop> {
 }
 
 /** Tab repetido hasta llegar al iframe (o a un máximo de paradas). */
-async function tabUntilIframe(page: Page, max = 12): Promise<Stop[]> {
+async function tabUntilIframe(page: Page, max = 24): Promise<Stop[]> {
   const stops: Stop[] = [];
   for (let i = 0; i < max; i++) {
     await page.keyboard.press('Tab');
@@ -68,11 +85,11 @@ async function tabUntilIframe(page: Page, max = 12): Promise<Stop[]> {
 test.describe('orden de tabulación y foco a 1280 px', () => {
   test.use({ viewport: { width: 1280, height: 800 } });
 
-  test('(a) el orden es skip 1, skip 2, CTA del header, CTA del hero, enlace de respaldo y el iframe', async ({ page }) => {
+  test('(a) el orden es skip 1, skip 2, CTA del header, CTA del hero, CTA de La solución, CTA de Casos, los resúmenes del FAQ, enlace de respaldo y el iframe', async ({ page }) => {
     await page.goto('/');
     const stops = await tabUntilIframe(page);
-    const order = stops.map((s) => (s.cta ? `cta:${s.cta}` : s.tag === 'IFRAME' ? 'iframe' : `a:${s.href}`));
-    expect(order).toEqual(['a:#main', 'a:#agenda', 'cta:header', 'cta:hero', `a:${FORM_URL}`, 'iframe']);
+    const order = stops.map((s) => (s.cta ? `cta:${s.cta}` : s.tag === 'SUMMARY' ? 'summary' : s.tag === 'IFRAME' ? 'iframe' : `a:${s.href}`));
+    expect(order).toEqual(['a:#main', 'a:#agenda', 'cta:header', 'cta:hero', 'cta:solucion', 'cta:casos', ...SUMMARIES, `a:${FORM_URL}`, 'iframe']);
   });
 
   test('(c) cada parada muestra un contorno sólido de 2 px o más', async ({ page }) => {
@@ -137,9 +154,9 @@ test.describe('orden de tabulación y foco a 1280 px', () => {
       };
     });
     // El enlace (fixed) queda, al menos en parte, sobre #agenda: el contorno morado de UI-SPEC no se ve ahí,
-    // así que el anillo amarillo del box-shadow (6.15 sobre morado) debe estar presente.
+    // así que el anillo amarillo del box-shadow (5.43 sobre morado) debe estar presente.
     expect(info.overAgenda).toBe(true);
-    expect(info.outlineColor).toBe('rgb(115, 24, 127)');
+    expect(info.outlineColor).toBe(PURPLE_RGB);
     expect(info.boxShadow).toContain('rgb(255, 198, 2)');
     await page.screenshot({ path: 'test-results/skip-link-focused-agenda.png', clip: { x: 0, y: 0, width: 640, height: 160 } });
   });
@@ -151,7 +168,7 @@ test.describe('orden de tabulación y foco a 1280 px', () => {
     await expect(page.locator('#main')).toBeFocused();
   });
 
-  test('(h) pesos del brandbook: skip 600; CTA, h1, h2 y wordmark 700; subtítulo y body 400', async ({ page }) => {
+  test('(h) pesos del brandbook: skip 600; CTA, h1 y h2 700; subtítulo y body 400', async ({ page }) => {
     await page.goto('/');
     await page.keyboard.press('Tab');
     const weight = (selector: string) =>
@@ -160,7 +177,6 @@ test.describe('orden de tabulación y foco a 1280 px', () => {
     expect(await weight('a[data-cta="hero"]')).toBe('700');
     expect(await weight('h1')).toBe('700');
     expect(await weight('#agenda-title')).toBe('700');
-    expect(await weight('.wordmark')).toBe('700');
     expect(await weight('.hero-sub')).toBe('400');
     expect(await weight('body')).toBe('400');
   });
@@ -189,10 +205,13 @@ test.describe('orden de tabulación a 390 px', () => {
     await expect(page.locator('a[data-cta="header"]')).toBeHidden();
     const stops = await tabUntilIframe(page);
     expect(stops.some((s) => s.cta === 'header')).toBe(false);
-    expect(stops.map((s) => (s.cta ? `cta:${s.cta}` : s.tag === 'IFRAME' ? 'iframe' : `a:${s.href}`))).toEqual([
+    expect(stops.map((s) => (s.cta ? `cta:${s.cta}` : s.tag === 'SUMMARY' ? 'summary' : s.tag === 'IFRAME' ? 'iframe' : `a:${s.href}`))).toEqual([
       'a:#main',
       'a:#agenda',
       'cta:hero',
+      'cta:solucion',
+      'cta:casos',
+      ...SUMMARIES,
       `a:${FORM_URL}`,
       'iframe',
     ]);
@@ -445,8 +464,16 @@ test.describe('textos de Ari visibles', () => {
     await expect(page.locator('.hero-sub')).toHaveText(SUBTITLE_TEXT);
     await expect(page.locator('.agenda-intro')).toBeVisible();
     await expect(page.locator('.agenda-intro')).toHaveText(INTRO_TEXT);
-    const body = await page.evaluate(() => document.body.innerText);
-    expect(body).not.toContain('FALTA CONFIRMAR');
+    // innerText no incluye el contenido de un <details> cerrado (las respuestas del FAQ): se abren todos
+    // antes de leer, para que el conteo mida el texto real y no el estado de los desplegables.
+    const body = await page.evaluate(() => {
+      document.querySelectorAll('details').forEach((d) => {
+        d.open = true;
+      });
+      return document.body.innerText;
+    });
+    // Aserción derivada del YAML (COPY-01): la marca aparece tantas veces como reclamaciones la traigan.
+    expect(body.split(MISSING_MARK).length - 1).toBe(VISIBLE_MARKS + CHIP_DUPLICATES);
     expect(body).not.toMatch(/[{}]/);
     expect(body).not.toMatch(/borrador|TBD|lorem/i);
   };

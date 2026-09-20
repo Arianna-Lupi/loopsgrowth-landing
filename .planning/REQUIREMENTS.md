@@ -11,7 +11,7 @@ Requisitos para la primera entrega. Cada uno se asigna a una fase del roadmap.
 
 - [x] **FND-01**: El sitio corre en local con `npm run dev` en `localhost:4321` y es accesible desde la red local con `--host` para que Ari y Camila lo validen.
 - [x] **FND-02**: Todo el copy vive en un único archivo `landing.es.yaml` validado por esquema, y cada afirmación tiene `status: verified | pending`.
-- [x] **FND-03**: Los tokens de marca (Purple #73187F, Wild Orange #fd6938, Sun Yellow #ffc602, Dark Gray #212121) y los pares texto/fondo aprobados se definen en un solo lugar, y un script de contraste falla si un par no cumple.
+- [x] **FND-03**: Los tokens de marca (Purple #4228D1, Wild Orange #fd6938, Sun Yellow #ffc602, Dark Gray #212121) y los pares texto/fondo aprobados se definen en un solo lugar, y un script de contraste falla si un par no cumple.
 - [x] **FND-04**: La fuente de marca se consume solo mediante la variable `--font-brand`, con Outfit como respaldo, y los glifos `áéíóúüñ¿¡` se ven correctos.
 - [x] **FND-05**: `PUBLIC_SITE_URL` y `PUBLIC_ENV` controlan canonical, sitemap y robots, y el sitio sale con `noindex` en cualquier entorno distinto de producción.
 
@@ -25,32 +25,32 @@ Requisitos para la primera entrega. Cada uno se asigna a una fase del roadmap.
 
 ### Contenido y secciones
 
-- [ ] **CONT-01**: El visitante ve un Hero con H1 en texto real (categoría, público y resultado), subtítulo, descripción y CTA principal.
-- [ ] **CONT-02**: El visitante lee la sección "El problema" con los tres dolores del Copy v2.
-- [ ] **CONT-03**: El visitante lee la sección "Por qué ahora" sobre la búsqueda en Google y en asistentes de IA.
-- [ ] **CONT-04**: El visitante ve "La solución" con los 4 pilares (auditoría, estrategia Google e IA, equipo dedicado, reportes).
-- [ ] **CONT-05**: El visitante ve "Lo que logramos juntos" con los cuatro resultados, sin cifras marcadas `[VERIFICAR]` que no estén respaldadas.
-- [ ] **CONT-06**: El visitante ve los casos de éxito como tarjetas de métrica sin logos (cifra, sector anonimizado, plazo, canal), con el caso de Meta Ads en su propia tarjeta.
-- [ ] **CONT-07**: El visitante ve "Quiénes somos" con los 4 integrantes (Arianna, Verónica, Juan, Miguel), nombre, cargo y avatar ilustrado.
-- [ ] **CONT-08**: El visitante ve "Qué incluye" con los seis entregables del Copy v2.
-- [ ] **CONT-09**: El visitante ve "Cómo funciona" con las 4 fases y sus plazos.
-- [ ] **CONT-10**: El visitante ve un bloque "Para quién es / para quién no es" que comunica el perfil de cliente de USD 200k o más al año.
-- [ ] **CONT-11**: El visitante puede abrir un FAQ de 5 a 6 preguntas hecho con `<details>` nativo.
-- [ ] **CONT-12**: El visitante ve un footer mínimo con contacto, redes y enlace a política de privacidad.
-- [ ] **CONT-13**: El visitante ve la sección CTA final ("¿Listo para que te encuentren cuando te estén buscando?") junto al formulario.
+- [x] **CONT-01**: El visitante ve un Hero con H1 en texto real (categoría, público y resultado), subtítulo, descripción y CTA principal.
+- [x] **CONT-02**: El visitante lee la sección "El problema" con los tres dolores del Copy v2.
+- [x] **CONT-03**: El visitante lee la sección "Por qué ahora" sobre la búsqueda en Google y en asistentes de IA.
+- [x] **CONT-04**: El visitante ve "La solución" con los 4 pilares (auditoría, estrategia Google e IA, equipo dedicado, reportes).
+- [x] **CONT-05**: El visitante ve "Lo que logramos juntos" con los cuatro resultados, sin cifras marcadas `[VERIFICAR]` que no estén respaldadas.
+- [x] **CONT-06**: El visitante ve los casos de éxito como tarjetas de métrica sin logos (cifra, sector anonimizado, plazo, canal), con el caso de Meta Ads en su propia tarjeta.
+- [x] **CONT-07**: El visitante ve "Quiénes somos" con los 4 integrantes (Arianna, Verónica, Juan, Miguel), nombre, cargo y avatar ilustrado.
+- [x] **CONT-08**: El visitante ve "Qué incluye" con los seis entregables del Copy v2.
+- [x] **CONT-09**: El visitante ve "Cómo funciona" con las 4 fases y sus plazos.
+- [x] **CONT-10**: El visitante ve un bloque "Para quién es / para quién no es" que comunica el perfil de cliente de USD 200k o más al año.
+- [x] **CONT-11**: El visitante puede abrir un FAQ de 5 a 6 preguntas hecho con `<details>` nativo.
+- [x] **CONT-12**: El visitante ve un footer mínimo con contacto, redes y enlace a política de privacidad.
+- [x] **CONT-13**: El visitante ve la sección CTA final ("¿Listo para que te encuentren cuando te estén buscando?") junto al formulario.
 
 ### Copy
 
-- [ ] **COPY-01**: Todo el texto sale tal cual del doc de Ari (sin humanizar ni reescribir), en español neutro; si falta un texto se pide a Ari.
+- [x] **COPY-01**: Todo el texto sale tal cual del doc de Ari (sin humanizar ni reescribir), en español neutro; si falta un texto se pide a Ari.
 - [x] **COPY-02**: El build de producción falla si queda `[VERIFICAR]`, una afirmación `pending`, voseo, guion largo o el término "AEO".
 
 ### Diseño y marca
 
-- [ ] **DSGN-01**: La página aplica el estilo collage pop del brandbook (lupas, ojos, clics) con SVG decorativo estático por defecto.
-- [ ] **DSGN-02**: El logo e isotipo se usan en SVG respetando el área de salvado del brandbook.
-- [ ] **DSGN-03**: La página se ve y funciona de 320 px a 1280 px sin scroll horizontal.
-- [ ] **DSGN-04**: Todo el trabajo de diseño web pasa por las skills `impeccable` y `design-taste-frontend`.
-- [ ] **DSGN-05**: Cualquier movimiento se desactiva con `prefers-reduced-motion: reduce`.
+- [x] **DSGN-01**: La página aplica el estilo collage pop del brandbook (lupas, ojos, clics) con SVG decorativo estático por defecto.
+- [x] **DSGN-02**: El logo e isotipo se usan en SVG respetando el área de salvado del brandbook.
+- [x] **DSGN-03**: La página se ve y funciona de 320 px a 1280 px sin scroll horizontal.
+- [x] **DSGN-04**: Todo el trabajo de diseño web pasa por las skills `impeccable` y `design-taste-frontend`.
+- [x] **DSGN-05**: Cualquier movimiento se desactiva con `prefers-reduced-motion: reduce`.
 
 ### Accesibilidad
 
@@ -131,25 +131,25 @@ Qué fase cubre cada requisito. Completado al crear el roadmap.
 | FORM-05 | Phase 1 | Pending |
 | COPY-02 | Phase 1 | Complete |
 | A11Y-03 | Phase 1 | Complete |
-| CONT-01 | Phase 2 | Pending |
-| CONT-02 | Phase 2 | Pending |
-| CONT-03 | Phase 2 | Pending |
-| CONT-04 | Phase 2 | Pending |
-| CONT-05 | Phase 2 | Pending |
-| CONT-06 | Phase 2 | Pending |
-| CONT-07 | Phase 2 | Pending |
-| CONT-08 | Phase 2 | Pending |
-| CONT-09 | Phase 2 | Pending |
-| CONT-10 | Phase 2 | Pending |
-| CONT-11 | Phase 2 | Pending |
-| CONT-12 | Phase 2 | Pending |
-| CONT-13 | Phase 2 | Pending |
-| COPY-01 | Phase 2 | Pending |
-| DSGN-01 | Phase 2 | Pending |
-| DSGN-02 | Phase 2 | Pending |
-| DSGN-03 | Phase 2 | Pending |
-| DSGN-04 | Phase 2 | Pending |
-| DSGN-05 | Phase 2 | Pending |
+| CONT-01 | Phase 2 | Complete |
+| CONT-02 | Phase 2 | Complete |
+| CONT-03 | Phase 2 | Complete |
+| CONT-04 | Phase 2 | Complete |
+| CONT-05 | Phase 2 | Complete |
+| CONT-06 | Phase 2 | Complete |
+| CONT-07 | Phase 2 | Complete |
+| CONT-08 | Phase 2 | Complete |
+| CONT-09 | Phase 2 | Complete |
+| CONT-10 | Phase 2 | Complete |
+| CONT-11 | Phase 2 | Complete |
+| CONT-12 | Phase 2 | Complete |
+| CONT-13 | Phase 2 | Complete |
+| COPY-01 | Phase 2 | Complete |
+| DSGN-01 | Phase 2 | Complete |
+| DSGN-02 | Phase 2 | Complete |
+| DSGN-03 | Phase 2 | Complete |
+| DSGN-04 | Phase 2 | Complete |
+| DSGN-05 | Phase 2 | Complete |
 | A11Y-01 | Phase 3 | Pending |
 | A11Y-02 | Phase 3 | Pending |
 | SEO-01 | Phase 3 | Pending |

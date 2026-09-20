@@ -1,4 +1,4 @@
-// Reglas de copy reutilizables (COPY-02, FND-02). Módulo puro y de solo lectura: recorre el
+// Reglas de copy reutilizables (COPY-02, FND-02, INVERSION). Módulo puro y de solo lectura: recorre el
 // documento ya parseado, nunca lo modifica ni cambia un `status` (el texto de Ari lo aprueba
 // una persona). `check-copy.mjs` y `list-pending.mjs` comparten `walkClaims`.
 
@@ -84,8 +84,52 @@ const VOSEO_RE = new RegExp(
 );
 const VOSEO_CASE_RE = new RegExp(voseoPattern(CASE_SENSITIVE_VOSEO), 'gu');
 const AEO_RE = new RegExp(`${NOT_WORD_BEFORE}AEO${NOT_WORD_AFTER}`, 'giu');
-const VERIFICAR_RE = /\[VERIFICAR\]/gi;
+// Marca de verificación del doc de Ari: `[VERIFICAR]`, `[VERIFICAR rango]` o `[VERIFICAR: nota]` (la
+// nota puede traer paréntesis y saltos de línea). El corchete de cierre es opcional: una marca sin
+// cerrar también bloquea. Lineal: una clase negada seguida de un `]` opcional, sin cuantificadores anidados.
+const VERIFICAR_RE = /\[VERIFICAR[^\]]*\]?/gi;
 const DASH_RE = /[—–]/g;
+
+// INVERSION (hallazgo 6 del UI-SPEC y CONTEXT). El doc de Ari trae rangos de inversión mensual (4 a 5k
+// al mes, 1.5k al mes, +1500 al mes) que sirven para pre-calificar al cliente, no para mostrarlos. Ari no los
+// aprobó como texto público: en `for_whom.*` y `faq.*` una afirmación que NO está `verified` no puede
+// llevar una cifra de inversión. Cuando Ari (una persona) apruebe una cifra, pasa a `verified` y la regla
+// deja de marcarla; esta guarda no aprueba nada. Alcance: solo esas dos rutas, solo cifras escritas con
+// dígitos (no "cuatro mil") y monto mensual o en moneda. La facturación anual ("USD 200k o más al año",
+// "200k al año") y los plazos ("6-12 meses", "2 veces al mes") no son inversión. Lista abierta como las demás.
+
+/** Rutas donde la guarda INVERSION revisa afirmaciones que no están `verified`. */
+export const INVERSION_PATH_PREFIXES = ['for_whom.', 'faq.'];
+
+// No sigue una letra, un dígito ni un decimal: impide que el retroceso de la expresión recorte "200k" a "200" o "20".
+const NOT_NUMBER_AFTER = '(?![\\p{L}\\p{N}_]|[.,]\\p{N})';
+// Monto "grande": miles por punto o coma (2,000), sufijo k o mil (5k, 1.5k, 5 mil) o 3 dígitos o más (1500).
+const BIG_AMOUNT = '(?:\\d{1,3}(?:[.,]\\d{3})+(?:[.,]\\d+)?|\\d+(?:[.,]\\d+)?\\s?(?:k|mil)|\\d{3,}(?:[.,]\\d+)?)';
+// Primer monto de un rango ("4 a 5k"): cualquier numero, con o sin sufijo.
+const ANY_AMOUNT = '\\d+(?:[.,]\\d+)?(?:\\s?(?:k|mil))?';
+const MONEY_WORD = '(?:USD|US\\$|\\$|dólares|dolares|pesos|MXN|COP|EUR|euros)';
+const MONTHLY_TAIL = '(?:al\\s+mes|por\\s+mes|mensuales?|/\\s?mes)';
+// Un monto (o un rango) seguido, con moneda opcional, de una expresión mensual.
+export const INVERSION_MONTHLY_RE = new RegExp(
+  `${NOT_WORD_BEFORE}(?:${ANY_AMOUNT}\\s*(?:a|-|y|hasta)\\s*)?${BIG_AMOUNT}${NOT_NUMBER_AFTER}(?:\\s*${MONEY_WORD}${NOT_WORD_AFTER})?\\s*${MONTHLY_TAIL}${NOT_WORD_AFTER}`,
+  'giu',
+);
+// Moneda con un monto ("USD 1500", "desde $2,000"), salvo que sea una cifra anual ("USD 200k o más al año").
+export const INVERSION_CURRENCY_RE = new RegExp(
+  `(?:(?<![\\p{L}\\p{N}_])(?:USD|US\\$)|\\$)\\s?\\d+(?:[.,]\\d{3})*(?:[.,]\\d+)?(?:\\s?(?:k|mil))?${NOT_NUMBER_AFTER}(?!\\s*(?:o\\s+más\\s+)?(?:al\\s+año|anual(?:es)?)${NOT_WORD_AFTER})`,
+  'giu',
+);
+
+/**
+ * Extractos de `text` donde aparece una cifra de inversión (mensual o en moneda).
+ * @param {string} text
+ */
+export function findInversion(text) {
+  const clean = cleanText(text);
+  return [...matchesOf(INVERSION_MONTHLY_RE, clean), ...matchesOf(INVERSION_CURRENCY_RE, clean)];
+}
+
+const inInversionScope = (path) => INVERSION_PATH_PREFIXES.some((prefix) => path.startsWith(prefix));
 
 const isPlainObject = (v) => v !== null && typeof v === 'object' && !Array.isArray(v);
 
@@ -193,7 +237,7 @@ const nonEmptyString = (v) => typeof v === 'string' && v.trim() !== '';
 /**
  * Valida el YAML. `structural` (BARE_STRING, BAD_STATUS, EMPTY_TEXT, BAD_KEY, BAD_META, PLACEHOLDER, INVALID_DOC)
  * es el contrato de FND-02 y falla en cualquier entorno. `content` (PENDING, MISSING, VERIFICAR,
- * VOSEO, DASH, AEO) solo bloquea en producción. `confirm_by` y `reason` son metadatos: no se
+ * VOSEO, DASH, AEO, INVERSION) solo bloquea en producción. `confirm_by` y `reason` son metadatos: no se
  * escanean con las reglas de contenido.
  * @param {unknown} doc
  */
@@ -255,6 +299,9 @@ export function checkCopy(doc) {
     for (const ex of matchesOf(VOSEO_CASE_RE, text)) content.push({ rule: 'VOSEO', path, excerpt: ex });
     for (const ex of matchesOf(DASH_RE, text)) content.push({ rule: 'DASH', path, excerpt: ex });
     for (const ex of matchesOf(AEO_RE, text)) content.push({ rule: 'AEO', path, excerpt: ex });
+    if (claim.status !== 'verified' && inInversionScope(path)) {
+      for (const ex of findInversion(text)) content.push({ rule: 'INVERSION', path, excerpt: ex });
+    }
   }
 
   return { structural, content, verified, pending };

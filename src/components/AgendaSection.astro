@@ -1,11 +1,15 @@
 ---
 /**
- * Sección #agenda: destino de todos los CTA. Tono morado, una columna debajo de
- * 1024 px y dos (5fr / 7fr) desde `lg`, con el orden del DOM igual al visual.
+ * Sección #agenda: destino de todos los CTA y cierre del recorrido (CONT-13). Tono morado, una
+ * columna debajo de 1024 px y dos (5fr / 7fr) desde `lg`, con el orden del DOM igual al visual. El
+ * titular es el del CTA final del doc de Ari, tal cual (con su errata). La columna izquierda cierra
+ * con `AgendaCollage`, decorativo y solo desde 1024 px: el arte vive dentro de su propia caja, así
+ * que nunca toca la tarjeta del formulario ni su anillo de foco. Ningún CTA vive en esta sección.
  * El enlace de respaldo y el `noscript` existen siempre: el formulario nunca
  * depende solo del iframe ni de JavaScript (FORM-03). Todo el texto sale del YAML
  * y se muestra tal cual, sea cual sea el estado de su afirmación.
  */
+import AgendaCollage from './collage/AgendaCollage.astro';
 import { getLanding, fill, textVars } from '../lib/content';
 
 const data = await getLanding();
@@ -16,7 +20,7 @@ const intro = fill(agenda.intro, textVars(data), 'agenda.intro');
 <section id="agenda" aria-labelledby="agenda-title" data-tone="purple">
   <div class="wrap agenda-grid">
     <div class="agenda-copy">
-      <h2 id="agenda-title" tabindex="-1">{agenda.title.text}</h2>
+      <h2 id="agenda-title" class="section-title" tabindex="-1">{agenda.title.text}</h2>
       <p class="agenda-intro">{intro}</p>
       <div class="agenda-fallback">
         <p class="agenda-fallback-lead">{agenda.fallback_lead.text}</p>
@@ -41,6 +45,9 @@ const intro = fill(agenda.intro, textVars(data), 'agenda.intro');
             <path d="M15 4h5v5"></path>
           </svg>
         </a>
+      </div>
+      <div class="agenda-art" aria-hidden="true">
+        <AgendaCollage class="agenda-collage" />
       </div>
     </div>
 
@@ -122,6 +129,11 @@ const intro = fill(agenda.intro, textVars(data), 'agenda.intro');
     margin-top: 1.5rem;
   }
 
+  /* Collage decorativo: solo desde 64em (el propio collage trae su display y su proporción). */
+  .agenda-art {
+    display: none;
+  }
+
   /* Enlace de respaldo: subrayado permanente, no depende del color. */
   .agenda-link {
     display: inline-flex;
@@ -181,6 +193,11 @@ const intro = fill(agenda.intro, textVars(data), 'agenda.intro');
 
     .agenda-copy {
       align-self: start;
+    }
+
+    .agenda-art {
+      display: block;
+      margin-top: 2rem;
     }
 
     .form-embed iframe {

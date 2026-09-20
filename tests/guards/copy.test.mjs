@@ -6,7 +6,7 @@ import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { parse } from 'yaml';
-import { checkCopy, walkClaims } from '../../scripts/lib/copy-rules.mjs';
+import { checkCopy, walkClaims, MISSING_MARK, findMissingMark } from '../../scripts/lib/copy-rules.mjs';
 
 const CLI = 'scripts/check-copy.mjs';
 const FIX = 'tests/guards/fixtures';
@@ -111,6 +111,52 @@ test('3. un marcador de verificación pendiente en text bloquea producción y so
   assert.equal(prod.status, 1, prod.out);
   assert.ok(rules(prod.json).includes('VERIFICAR'), prod.out);
   const local = run(['--file', fixture('verificar')], { env: LOCAL });
+  assert.equal(local.status, 0, local.out);
+  assert.match(local.out, /WARN/);
+  assert.match(local.out, /VERIFICAR/);
+});
+
+// Formas reales del doc de Ari (líneas 104 y 115 de 02-ARI-COPY-V2.md): la nota con paréntesis dentro y el
+// rango. `VERIFICAR_RE` debe reconocer `[VERIFICAR: nota]` y `[VERIFICAR rango]`, no solo `[VERIFICAR]`.
+const NOTA_PILAR_4 =
+  '[VERIFICAR: solo desglosa por canal (Google vs IA) si de verdad puedes atribuirlo con datos. Si no, repórtalo junto y no inventes el split.]';
+const verificarCount = (text, status = 'verified', extra = '') =>
+  checkCopy(parse(docWith(claimYaml(text, status, extra)))).content.filter((v) => v.rule === 'VERIFICAR').length;
+
+test('3b. cada forma de la marca VERIFICAR en text da exactamente una violación', () => {
+  const forms = {
+    'la marca sin nota': 'Reducimos tu presupuesto [VERIFICAR]',
+    'la nota real del Pilar 4 (con paréntesis dentro)': `Cada mes ves qué se hizo. ${NOTA_PILAR_4}`,
+    'la marca con un rango': 'Varios clientes bajan entre 30% y 50% su presupuesto. [VERIFICAR rango]',
+    'la marca en minúsculas con nota': 'Reducimos tu presupuesto [verificar: confirmar la cifra]',
+    'una nota que salta de línea': 'Reducimos tu presupuesto [VERIFICAR: confirmar\nla cifra con Ari]',
+    'una marca sin corchete de cierre': 'Reducimos tu presupuesto [VERIFICAR: confirmar la cifra',
+  };
+  for (const [label, text] of Object.entries(forms)) {
+    assert.equal(verificarCount(text), 1, `${label}: ${JSON.stringify(text)}`);
+  }
+});
+
+test('3c. lo que no es una marca no da VERIFICAR', () => {
+  assert.equal(verificarCount('Podemos verificar cada cifra contigo.'), 0);
+  assert.equal(verificarCount('Cada cifra queda [VERIFICADO] antes de publicarse.'), 0);
+  assert.equal(verificarCount('La palabra VERIFICAR sin corchete no es una marca.'), 0);
+  // Una nota en `reason` sobre un `text` limpio no bloquea: el patrón de 02-03 guarda la nota literal ahí.
+  assert.equal(
+    verificarCount('Crecemos tu tienda.', 'pending', '      reason: "[VERIFICAR: nota de Ari]"\n      confirm_by: Ari'),
+    0,
+  );
+});
+
+test('3d. dos marcas en un mismo texto dan dos violaciones', () => {
+  assert.equal(verificarCount(`Primero. ${NOTA_PILAR_4} Después, un rango. [VERIFICAR rango]`), 2);
+});
+
+test('3e. el fixture con [VERIFICAR: nota] bloquea producción y solo advierte fuera de ella', () => {
+  const prod = run(['--file', fixture('verificar-nota'), '--json'], { env: PROD });
+  assert.equal(prod.status, 1, prod.out);
+  assert.ok(rules(prod.json).includes('VERIFICAR'), prod.out);
+  const local = run(['--file', fixture('verificar-nota')], { env: LOCAL });
   assert.equal(local.status, 0, local.out);
   assert.match(local.out, /WARN/);
   assert.match(local.out, /VERIFICAR/);
@@ -272,19 +318,26 @@ test('9a. el YAML real sale con 0 fuera de producción y no se modifica (solo le
   assert.equal(sha(REAL_YAML), before);
 });
 
-test('9b. sobre el YAML real, producción solo reporta como PENDING las reclamaciones pending del propio YAML', () => {
+test('9b. sobre el YAML real, producción solo reporta PENDING y MISSING, derivados del propio YAML', () => {
   const before = sha(REAL_YAML);
   const res = run(['--file', REAL_YAML, '--json'], { env: PROD });
   assert.deepEqual(res.json?.structural, []);
   const violations = res.json?.content ?? [];
-  assert.ok(violations.every((v) => v.rule === 'PENDING'), JSON.stringify(violations));
+  // Solo dos reglas de contenido pueden aparecer sobre el YAML real: PENDING y MISSING (dato faltante).
+  // VOSEO, DASH, AEO y VERIFICAR nunca: el texto de Ari que las dispararía queda pending con la marca.
+  assert.ok(violations.every((v) => v.rule === 'PENDING' || v.rule === 'MISSING'), JSON.stringify(violations));
   // Lo esperado se deriva del YAML: cuando Ari confirma un texto, esta prueba no se rompe.
-  const expected = walkClaims(parse(readFileSync(REAL_YAML, 'utf8')))
-    .filter((n) => n.kind === 'claim' && n.claim.status === 'pending')
-    .map((n) => n.path)
-    .sort();
-  assert.deepEqual(violations.map((v) => v.path).sort(), expected);
-  assert.equal(res.status, expected.length > 0 ? 1 : 0, res.out);
+  const claims = walkClaims(parse(readFileSync(REAL_YAML, 'utf8'))).filter((n) => n.kind === 'claim');
+  const pending = claims.filter((n) => n.claim.status === 'pending').map((n) => n.path).sort();
+  const missing = claims.filter((n) => findMissingMark(String(n.claim.text)).length > 0).map((n) => n.path).sort();
+  const byRule = (rule) => violations.filter((v) => v.rule === rule).map((v) => v.path).sort();
+  assert.deepEqual(byRule('PENDING'), pending);
+  assert.deepEqual(byRule('MISSING'), missing);
+  // Toda reclamación con la marca de dato faltante debe estar pending: nunca se publica como verificada.
+  for (const n of claims.filter((c) => c.claim.text === MISSING_MARK)) {
+    assert.equal(n.claim.status, 'pending', `${n.path} lleva ${MISSING_MARK} y debe ser pending`);
+  }
+  assert.equal(res.status, pending.length + missing.length > 0 ? 1 : 0, res.out);
   assert.equal(sha(REAL_YAML), before);
 });
 
@@ -445,4 +498,104 @@ test('13c. una variable desconocida o una llave sin pareja falla aunque la ruta 
     assert.equal(res.status, 1, `${text}: ${res.out}`);
     assert.ok(structuralRules(res.json).includes('PLACEHOLDER'), `${text}: ${res.out}`);
   }
+});
+
+// ---------------------------------------------------------------------------------------------
+// Plan 02-06, tarea 2: guarda INVERSION (hallazgo 6 del UI-SPEC). Pruebas por mutación sobre las
+// rutas `for_whom.*` y `faq.*`. Solo se agregan pruebas al final: la 9b y la 10 son del plan 02-03.
+// El espacio de nombres evita que un export ausente rompa la carga de todo el archivo.
+import * as copyRules from '../../scripts/lib/copy-rules.mjs';
+
+const INVERSION_MARKED = ['4 a 5k al mes', '4-5k al mes', '1.5k al mes', '+1500 al mes', 'USD 1500', 'desde $2,000'];
+const INVERSION_SAFE = ['USD 200k o más al año', 'facturación de 200k al año', '6-12 meses', '2 veces al mes'];
+
+// Una afirmación bajo `for_whom.is_for.items[0]` o `faq.items[0].answer`, con el estado indicado.
+function inversionDoc(where, text, status = 'pending') {
+  const claim = (pad) =>
+    `${pad}text: ${JSON.stringify(text)}\n${pad}status: ${status}${status === 'pending' ? `\n${pad}confirm_by: Ari\n${pad}reason: "prueba"` : ''}`;
+  const body = {
+    for_whom: `  for_whom:\n    is_for:\n      items:\n        - ${claim('          ').trimStart()}\n`,
+    faq: `  faq:\n    items:\n      - question:\n          text: "Pregunta"\n          status: verified\n        answer:\n${claim('          ')}\n`,
+    cases: `  cases:\n    items:\n      - figure:\n${claim('          ')}\n`,
+  }[where];
+  return `es:\n${body}  config:\n    form_url: "https://forms.example.com/f/abc"\n`;
+}
+const inversionRun = (where, text, status, env) => run(['--file', tmpYaml(inversionDoc(where, text, status)), '--json'], { env });
+
+test('14a. INVERSION marca cada cifra de inversión pending en for_whom y en faq; bloquea en producción y avisa en local', () => {
+  for (const [i, text] of INVERSION_MARKED.entries()) {
+    const where = i % 2 === 0 ? 'for_whom' : 'faq';
+    const prod = inversionRun(where, text, 'pending', PROD);
+    assert.equal(prod.status, 1, `${where} ${text}: ${prod.out}`);
+    assert.ok(rules(prod.json).includes('INVERSION'), `${where} ${text}: ${prod.out}`);
+    assert.deepEqual(prod.json?.structural, [], `${where} ${text}`);
+    const local = inversionRun(where, text, 'pending', LOCAL);
+    assert.equal(local.status, 0, `${where} ${text}: ${local.out}`);
+    assert.ok(rules(local.json).includes('INVERSION'), `${where} ${text}: ${local.out}`);
+    const hit = local.json.content.find((v) => v.rule === 'INVERSION');
+    assert.match(hit.path, /^(for_whom|faq)\./);
+    assert.ok(hit.excerpt.length > 0);
+  }
+});
+
+test('14b. INVERSION marca la cifra en las dos rutas para cada texto, no solo alternadas', () => {
+  for (const text of INVERSION_MARKED) {
+    for (const where of ['for_whom', 'faq']) {
+      const res = inversionRun(where, `Con ${text} empezamos.`, 'pending', LOCAL);
+      assert.ok(rules(res.json).includes('INVERSION'), `${where} ${text}: ${res.out}`);
+    }
+  }
+});
+
+test('14c. la misma cadena con status verified no se marca (la aprobó una persona)', () => {
+  for (const text of INVERSION_MARKED) {
+    for (const where of ['for_whom', 'faq']) {
+      for (const env of [PROD, LOCAL]) {
+        const res = inversionRun(where, text, 'verified', env);
+        assert.equal(res.status, 0, `${where} ${text}: ${res.out}`);
+        assert.ok(!rules(res.json).includes('INVERSION'), `${where} ${text}: ${res.out}`);
+      }
+    }
+  }
+});
+
+test('14d. la misma cifra en otra ruta (cases.*: De $41K a $76K en ventas) no se marca', () => {
+  for (const text of ['De $41K a $76K en ventas', ...INVERSION_MARKED]) {
+    const res = inversionRun('cases', text, 'pending', LOCAL);
+    assert.ok(!rules(res.json).includes('INVERSION'), `${text}: ${res.out}`);
+  }
+});
+
+test('14e. el perfil de facturación y los plazos no se marcan como inversión', () => {
+  for (const text of INVERSION_SAFE) {
+    for (const where of ['for_whom', 'faq']) {
+      const res = inversionRun(where, text, 'pending', LOCAL);
+      assert.ok(!rules(res.json).includes('INVERSION'), `${where} ${text}: ${res.out}`);
+    }
+  }
+});
+
+test('14f. un separador invisible dentro de la cifra no la esconde de INVERSION', () => {
+  const res = inversionRun('for_whom', '+15​00 al mes', 'pending', LOCAL);
+  assert.ok(rules(res.json).includes('INVERSION'), res.out);
+});
+
+test('14g. INVERSION_PATH_PREFIXES y findInversion se exportan con el contrato del plan', () => {
+  assert.deepEqual(copyRules.INVERSION_PATH_PREFIXES, ['for_whom.', 'faq.']);
+  assert.ok(copyRules.INVERSION_MONTHLY_RE instanceof RegExp);
+  assert.ok(copyRules.INVERSION_CURRENCY_RE instanceof RegExp);
+  for (const text of INVERSION_MARKED) {
+    const found = copyRules.findInversion(text);
+    assert.ok(Array.isArray(found) && found.length > 0, text);
+  }
+  for (const text of INVERSION_SAFE) assert.deepEqual(copyRules.findInversion(text), [], text);
+});
+
+test('14h. con el YAML real no hay INVERSION y las rutas nuevas solo reportan PENDING y MISSING', () => {
+  const res = run(['--file', REAL_YAML, '--json'], { env: PROD });
+  assert.deepEqual(res.json?.structural, [], res.out);
+  assert.ok(!rules(res.json).includes('INVERSION'), res.out);
+  const mine = (res.json?.content ?? []).filter((v) => /^(for_whom|faq)\./.test(v.path));
+  assert.ok(mine.length > 0, 'las rutas for_whom y faq deben aparecer en el YAML real');
+  assert.ok(mine.every((v) => v.rule === 'PENDING' || v.rule === 'MISSING'), JSON.stringify(mine));
 });

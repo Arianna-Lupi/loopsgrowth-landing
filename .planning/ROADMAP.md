@@ -62,6 +62,20 @@ Plans:
   5. De 320 px a 1280 px la página se lee y funciona sin scroll horizontal, y con `prefers-reduced-motion: reduce` no hay ningún movimiento.
 
 **Plans**: TBD
+
+- [x] 02-09-PLAN.md
+- [x] 02-10-PLAN.md
+- [x] 02-11-PLAN.md
+
+- [x] 02-01-PLAN.md
+- [x] 02-02-PLAN.md
+- [x] 02-03-PLAN.md
+- [x] 02-04-PLAN.md
+- [x] 02-05-PLAN.md
+- [x] 02-06-PLAN.md
+- [x] 02-07-PLAN.md
+- [x] 02-08-PLAN.md
+
 **UI hint**: yes
 
 ### Phase 3: SEO, medición mínima y QA
@@ -106,6 +120,6 @@ Las fases se ejecutan en orden numérico: 1 → 2 → 3 → 4. Las fases 1 a 3 c
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Fundaciones y formulario funcionando | 4/4 | In Progress|  |
-| 2. Secciones, marca y copy | 0/TBD | Not started | - |
+| 2. Secciones, marca y copy | 11/11 | In Progress|  |
 | 3. SEO, medición mínima y QA | 0/TBD | Not started | - |
 | 4. Salida al evento | 0/TBD | Not started | - |

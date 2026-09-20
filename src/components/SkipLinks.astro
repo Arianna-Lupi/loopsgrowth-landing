@@ -4,15 +4,18 @@
  * y al formulario (#agenda). Fuera de pantalla con `transform`, nunca con
  * `display: none` ni `visibility: hidden`, para que el teclado y los lectores de
  * pantalla los alcancen. Al recibir foco aparecen arriba a la izquierda.
+ * El salto al formulario solo existe en `/`, donde está `#agenda`: en otras rutas el destino no
+ * existe y el CTA del header ya ofrece `/#agenda`.
  */
 import { getLanding } from '../lib/content';
 
 const { skip } = await getLanding();
+const hasAgenda = Astro.url.pathname === '/';
 ---
 
 <nav class="skip" aria-label={skip.nav_label.text}>
   <a href="#main">{skip.content.text}</a>
-  <a href="#agenda">{skip.form.text}</a>
+  {hasAgenda && <a href="#agenda">{skip.form.text}</a>}
 </nav>
 
 <style>
@@ -46,7 +49,7 @@ const { skip } = await getLanding();
     /* Anillo de dos tonos: el contorno morado de UI-SPEC se ve sobre el header claro, pero el
        enlace es `fixed` y puede quedar sobre la sección #agenda (morada), donde el morado
        desaparece. El amarillo rellena el hueco del offset: 10.22 sobre el fondo oscuro del
-       enlace y 6.15 sobre morado (pares ya aprobados). Así el foco se ve sobre cualquier tono. */
+       enlace y 5.43 sobre morado (pares ya aprobados). Así el foco se ve sobre cualquier tono. */
     box-shadow: 0 0 0 var(--focus-offset) var(--color-brand-yellow);
   }
 </style>

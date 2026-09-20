@@ -27,3 +27,11 @@ playwright-report/
 
 # jetbrains setting folder
 .idea/
+
+# originales de marca (confidenciales, no se versionan): vectorial de Ari, BrandBook y sus renders
+*.ai
+BrandBook*.pdf
+.planning/phases/*/brand-inventory/
+
+# originales descargados de terceros (fotos de stock): no se versionan, su sha256 queda en LICENSES.md
+photo-sources/

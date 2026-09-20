@@ -53,7 +53,7 @@ function resolve(value, scopes, depth = 0) {
 }
 
 /** Tonos que `tokens.css` debe declarar siempre. Si falta uno, la guarda falla. */
-export const REQUIRED_TONES = ['light', 'purple'];
+export const REQUIRED_TONES = ['light', 'purple', 'yellow', 'dark'];
 
 // Un elemento de selector que es EXACTAMENTE un atributo de tono: `[data-tone="x"]`, con comillas
 // dobles, simples o sin comillas. Cualquier otra forma que nombre `data-tone` (descendiente,
@@ -125,25 +125,32 @@ const O = '--color-brand-orange';
 const Y = '--color-brand-yellow';
 const D = '--color-brand-dark';
 const W = '--color-brand-white';
+const C = '--color-brand-cream';
 
 /**
- * Los 9 pares aprobados de UI-SPEC, por nombre de token. `min` es el umbral (4.5 en texto,
- * 3 en UI o texto grande) y `ratio` el valor medido que el CSS debe seguir produciendo.
+ * Los 14 pares aprobados (UI-SPEC de la Fase 2 con el morado oficial #4228d1 y el crema #f4f3e0), por
+ * nombre de token. `min` es el umbral (4.5 en texto, 3 en UI o texto grande) y `ratio` el valor medido
+ * con `contrastRaw` que el CSS debe seguir produciendo.
  */
 export const APPROVED_PAIRS = [
   { fg: D, bg: W, ratio: 16.1, min: 4.5, use: 'Cuerpo, h1, wordmark' },
-  { fg: P, bg: W, ratio: 9.69, min: 3, use: 'Anillo de foco sobre claro' },
-  { fg: W, bg: P, ratio: 9.69, min: 4.5, use: 'h2, intro y enlace de respaldo sobre morado' },
-  { fg: Y, bg: P, ratio: 6.15, min: 4.5, use: 'Anillo de foco y hover de enlace sobre morado' },
+  { fg: P, bg: W, ratio: 8.55, min: 4.5, use: 'h1, h2, cifras y enlaces sobre claro; anillo de foco sobre claro' },
+  { fg: W, bg: P, ratio: 8.55, min: 4.5, use: 'h2, intro y enlace de respaldo sobre morado' },
+  { fg: Y, bg: P, ratio: 5.43, min: 4.5, use: 'Anillo de foco y hover de enlace sobre morado' },
   { fg: D, bg: Y, ratio: 10.22, min: 4.5, use: 'Texto del CTA sobre amarillo' },
   { fg: D, bg: O, ratio: 5.56, min: 4.5, use: 'Texto del CTA sobre naranja' },
   { fg: Y, bg: D, ratio: 10.22, min: 4.5, use: 'Texto del skip link' },
   { fg: O, bg: D, ratio: 5.56, min: 4.5, use: 'Naranja como texto solo sobre oscuro' },
-  { fg: O, bg: P, ratio: 3.35, min: 3, use: 'Solo texto grande, íconos o bordes de UI' },
+  { fg: P, bg: Y, ratio: 5.43, min: 4.5, use: 'h2, enlaces y cifras sobre amarillo' },
+  { fg: W, bg: D, ratio: 16.1, min: 4.5, use: 'Cuerpo y h2 sobre oscuro' },
+  { fg: C, bg: P, ratio: 7.63, min: 4.5, use: 'Logo apilado y texto crema sobre morado' },
+  { fg: P, bg: C, ratio: 7.63, min: 4.5, use: 'Chips y píldoras: texto morado sobre crema' },
+  { fg: D, bg: C, ratio: 14.37, min: 4.5, use: 'Texto oscuro sobre crema' },
+  { fg: C, bg: D, ratio: 14.37, min: 4.5, use: 'Logo apilado sobre oscuro (texto crema)' },
 ];
 
 /**
- * Los 6 pares prohibidos. Fixtures negativos: la calculadora debe medirlos por debajo de
+ * Los 11 pares prohibidos. Fixtures negativos: la calculadora debe medirlos por debajo de
  * `min` (3, el umbral más bajo de todos) y ninguno puede declararse en un tono.
  */
 export const FORBIDDEN_PAIRS = [
@@ -151,8 +158,19 @@ export const FORBIDDEN_PAIRS = [
   { fg: O, bg: W, ratio: 2.89, min: 3, why: 'Naranja como texto o borde de UI sobre claro' },
   { fg: Y, bg: W, ratio: 1.58, min: 3, why: 'Amarillo solo como relleno con texto oscuro' },
   { fg: W, bg: Y, ratio: 1.58, min: 3, why: 'Blanco sobre amarillo' },
-  { fg: P, bg: D, ratio: 1.66, min: 3, why: 'El morado no va sobre fondo oscuro' },
+  { fg: P, bg: D, ratio: 1.88, min: 3, why: 'El morado no va sobre fondo oscuro' },
   { fg: O, bg: Y, ratio: 1.84, min: 3, why: 'Ni texto ni par de foco' },
+  { fg: D, bg: P, ratio: 1.88, min: 3, why: 'Nunca texto oscuro sobre morado' },
+  {
+    fg: O,
+    bg: P,
+    ratio: 2.95,
+    min: 3,
+    why: 'Naranja sobre morado ya no sirve ni como borde de UI; solo relleno decorativo del collage con contorno blanco',
+  },
+  { fg: Y, bg: C, ratio: 1.41, min: 3, why: 'Amarillo sobre crema' },
+  { fg: O, bg: C, ratio: 2.58, min: 3, why: 'Naranja sobre crema' },
+  { fg: W, bg: C, ratio: 1.12, min: 3, why: 'Blanco sobre crema' },
 ];
 
 /** Pares semánticos que cada tono debe cumplir: [texto, fondo, umbral, uso]. */
@@ -162,4 +180,7 @@ export const TONE_PAIRS = [
   ['--on-cta', '--cta-bg', 4.5, 'texto del CTA sobre su relleno'],
   ['--on-cta', '--cta-bg-hover', 4.5, 'texto del CTA sobre su relleno en hover'],
   ['--focus-ring', '--surface', 3, 'anillo de foco sobre la superficie'],
+  ['--heading', '--surface', 4.5, 'h1 y h2 sobre la superficie'],
+  ['--bar', '--surface', 3, 'barra decorativa sobre el h2, elemento de UI'],
+  ['--collage-stroke', '--surface', 3, 'contorno del collage sobre la superficie'],
 ];

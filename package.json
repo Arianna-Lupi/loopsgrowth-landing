@@ -13,7 +13,7 @@
     "astro": "astro",
     "check:contrast": "node scripts/check-contrast.mjs",
     "test:guards": "node --test tests/guards/*.test.mjs",
-    "prebuild": "node scripts/check-contrast.mjs && node scripts/check-copy.mjs",
+    "prebuild": "node scripts/check-contrast.mjs && node scripts/check-copy.mjs && node scripts/check-photos.mjs",
     "check:copy": "node scripts/check-copy.mjs",
     "postbuild": "node scripts/check-copy.mjs --dist dist",
     "pending": "node scripts/list-pending.mjs",
@@ -34,6 +34,7 @@
     "esbuild": true
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.13.0",
     "@playwright/test": "1.63.0"
   }
 }

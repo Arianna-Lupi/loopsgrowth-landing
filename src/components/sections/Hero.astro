@@ -1,0 +1,120 @@
+---
+/**
+ * Hero (CONT-01). Trae el único h1 de la página. Todo el texto sale del YAML y se
+ * imprime como nodo de texto, tal cual, sea cual sea el estado de su afirmación:
+ * este componente no lee el estado (COPY-01).
+ * Orden del DOM y visual: h1, subtítulo, CTA, descripción, collage. El CTA sube sobre la
+ * descripción por presupuesto de altura (02-01-PLAN, Supuestos, punto 1). El collage es
+ * decorativo (aria-hidden) y va al final del DOM: el lector de pantalla no lo recorre.
+ */
+import CtaLink from '../CtaLink.astro';
+import HeroCollage from '../collage/HeroCollage.astro';
+import { getLanding, fill, textVars, ctaLabel } from '../../lib/content';
+
+const data = await getLanding();
+const subtitle = fill(data.hero.subtitle, textVars(data), 'hero.subtitle');
+const label = ctaLabel(data);
+---
+
+<section id="inicio" class="hero" aria-labelledby="hero-title" data-tone="light">
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <h1 id="hero-title">{data.hero.h1.text}</h1>
+      <p class="hero-sub">{subtitle}</p>
+      <div class="hero-cta">
+        <CtaLink label={label} location="hero" />
+      </div>
+      <div class="hero-desc">
+        {data.hero.description.map((line) => <p>{line.text}</p>)}
+      </div>
+    </div>
+    <div class="hero-art">
+      <HeroCollage />
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    padding-top: 3rem;
+    padding-bottom: var(--section-y);
+    overflow-x: clip;
+    scroll-margin-top: 1.5rem;
+  }
+
+  @media (min-width: 64em) {
+    .hero {
+      padding-top: 4rem;
+    }
+  }
+
+  /* A y B: una columna. C (desde 64em): texto 7fr, collage 5fr, centrado en vertical. */
+  .hero-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 3rem;
+  }
+
+  .hero-copy,
+  .hero-art {
+    min-width: 0;
+  }
+
+  .hero-art {
+    display: flex;
+    justify-content: center;
+  }
+
+  /* La escena da su alto por proporción (560 x 520). A (menos de 640 px): 258 px de ancho, 240 de alto.
+     B (640 a 1023 px): 344 y 320. */
+  .hero-art :global(.hero-collage) {
+    width: 100%;
+    max-width: 16.15rem;
+  }
+
+  @media (min-width: 40em) {
+    .hero-art :global(.hero-collage) {
+      max-width: 21.54rem;
+    }
+  }
+
+  @media (min-width: 64em) {
+    .hero-grid {
+      grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+      align-items: center;
+    }
+
+    .hero-art :global(.hero-collage) {
+      width: min(100%, 30rem);
+      max-width: none;
+    }
+  }
+
+  .hero h1,
+  .hero p {
+    overflow-wrap: anywhere;
+  }
+
+  .hero-sub,
+  .hero-desc p {
+    max-width: 55ch;
+    font-weight: 400;
+    color: var(--on-surface);
+  }
+
+  .hero-sub {
+    margin-top: 1.5rem;
+  }
+
+  .hero-cta {
+    margin-top: 2rem;
+  }
+
+  .hero-desc {
+    margin-top: 2rem;
+  }
+
+  .hero-desc p + p {
+    margin-top: 1rem;
+  }
+</style>

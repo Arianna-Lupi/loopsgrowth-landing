@@ -49,9 +49,12 @@ La landing completa con las secciones del Copy v2 (Hero, El problema, Por qué a
 - Paso de espaciado de 96 px solo para `--section-y` desde 1024 px (viene del `py-24` de rankingonai). Levanta la regla de escala hasta 64 px. Obliga a ajustar el padding de `#agenda` de la fase 1 y su prueba e2e.
 - CTA: 4 CTA (header, hero, tras La solución, tras Casos de éxito) más la sección `#agenda`, que es el CTA final por sí misma y no lleva un enlace a sí misma.
 
-### Morado de marca y logo (decisión de Juan, 2026-09-19)
-- El morado de la página se mantiene en `#73187F` (texto del brandbook, Pantone 248 U, y base de todos los pares de contraste medidos).
-- El vectorial del logo de Ari (`LOGO_LOOPSGRWOTH.ai`) usa `#4228D1` (azul violeta), y la muestra del propio brandbook también se dibuja en `#4228D1`. El logo se usa tal cual viene en el archivo, con sus colores, y la diferencia se reporta a Ari para que confirme cuál es el morado oficial. No se recalculan tokens ni contraste por esto.
+### Morado de marca y logo (decisión de Juan, 2026-09-19; REEMPLAZADA por la de la tarde, ver `02-BRAND-INVENTORY.md`)
+- **Vigente:** el morado de la página es `#4228D1` (azul violeta), con `#6C61DB` (iris) y crema `#F4F3E0`. Es el color del logo, del isotipo, de la muestra del BrandBook (pág. 8), de la papelería y de todo el moodboard. Solo el texto de esa página dice `#73187F` (R115 G24 B127, Pantone 248 U), que se trata como error de la etiqueta. Se recalculan tokens, pares de contraste y guardas, y `#73187F` sale de la página. Ari confirma después; si dijera otra cosa se cambia el token en un solo lugar.
+- **Vigente:** el logo, imagotipo, emblema e isotipos salen de las 32 mesas del `.ai`, usando la versión oficial de cada fondo (no se recolorea un solo SVG por CSS).
+- **Vigente:** el collage se reconstruye con las piezas reales de Loopy (ojos con lupa, un ojo con lupa) y el lenguaje del moodboard (formas planas grandes, píldoras con palabra, garabatos, retícula de puntos, recortes fotográficos en media tinta). El sprite y los avatares que dibujaron los agentes en 02-02 se reemplazan.
+- **Vigente:** los recortes fotográficos usan fotos de stock con licencia comercial (decisión de Juan, 2026-09-19); cada foto lleva registrada su fuente y licencia.
+- Reemplazado (no aplicar): "El morado de la página se mantiene en `#73187F`" y "No se recalculan tokens ni contraste por esto".
 - Área de salvado del logo: el brandbook (pág. 7) dice X en los cuatro lados, con X igual a la altura del logo o del isotipo. Corrige la suposición de media altura del UI-SPEC (decisión 14), que solo vale para el logo apilado.
 
 ### Claude's Discretion

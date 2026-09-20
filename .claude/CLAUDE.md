@@ -129,18 +129,24 @@ Landing page de captación de clientes para Loops Growth, agencia de SEO/GEO (Go
 | Combinación (texto sobre fondo) | Ratio | Veredicto |
 |---------------------------------|------:|-----------|
 | `#212121` sobre blanco | 16.10 | Texto normal OK |
-| `#73187F` (morado) sobre blanco | 9.69 | Texto normal OK |
-| Blanco sobre `#73187F` | 9.69 | Texto normal OK |
+| `#4228D1` (morado) sobre blanco | 8.55 | Texto normal OK |
+| Blanco sobre `#4228D1` | 8.55 | Texto normal OK |
 | `#ffc602` (amarillo) sobre `#212121` | 10.22 | Texto normal OK |
-| `#73187F` sobre `#ffc602` | 6.15 | Texto normal OK |
+| `#4228D1` sobre `#ffc602` | 5.43 | Texto normal OK |
 | `#fd6938` (naranja) sobre `#212121` | 5.56 | Texto normal OK |
 | `#212121` sobre `#fd6938` | 5.56 | Texto normal OK (texto de botón naranja: usar oscuro) |
-| `#73187F` sobre `#fd6938` | 3.35 | Solo texto grande o UI |
+| `#fd6938` sobre `#4228D1` | 2.95 | **Falla** en texto y en UI: solo sirve como relleno decorativo con contorno |
 | `#fd6938` sobre blanco | 2.89 | **Falla** en texto y en bordes de UI (<3.0) |
 | Blanco sobre `#fd6938` | 2.89 | **Falla**: no usar texto blanco sobre naranja |
 | `#fd6938` sobre `#ffc602` | 1.84 | **Falla** |
 | `#ffc602` sobre blanco | 1.58 | **Falla**: amarillo nunca como texto o borde sobre claro |
-| `#73187F` sobre `#212121` | 1.66 | **Falla**: morado no va sobre fondo oscuro |
+| `#4228D1` sobre `#212121` | 1.88 | **Falla**: morado no va sobre fondo oscuro |
+| `#F4F3E0` (crema) sobre `#4228D1` | 7.63 | Texto normal OK |
+| `#4228D1` sobre `#F4F3E0` | 7.63 | Texto normal OK |
+| `#212121` sobre `#F4F3E0` | 14.37 | Texto normal OK |
+| `#ffc602` sobre `#F4F3E0` | 1.41 | **Falla** |
+| `#fd6938` sobre `#F4F3E0` | 2.58 | **Falla** |
+| Blanco sobre `#F4F3E0` | 1.12 | **Falla** |
 
 ## Tipografía: Hurme Geometric Sans 3
 
