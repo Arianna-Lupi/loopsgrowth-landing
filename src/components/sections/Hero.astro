@@ -3,8 +3,9 @@
  * Hero (CONT-01). Trae el único h1 de la página. Todo el texto sale del YAML y se
  * imprime como nodo de texto, tal cual, sea cual sea el estado de su afirmación:
  * este componente no lee el estado (COPY-01).
- * Orden del DOM y visual: h1, subtítulo, CTA, descripción, collage. El CTA sube sobre la
- * descripción por presupuesto de altura (02-01-PLAN, Supuestos, punto 1). El collage es
+ * Orden del DOM y visual: h1, subtítulo, descripción, CTA, collage. Por indicación de Juan
+ * (2026-09-20) el CTA va al final de los párrafos; el CTA del header sigue visible arriba en móvil
+ * (antes subía sobre la descripción por presupuesto de altura, 02-01-PLAN). El collage es
  * decorativo (aria-hidden) y va al final del DOM: el lector de pantalla no lo recorre.
  */
 import CtaLink from '../CtaLink.astro';
@@ -21,11 +22,11 @@ const label = ctaLabel(data);
     <div class="hero-copy">
       <h1 id="hero-title">{data.hero.h1.text}</h1>
       <p class="hero-sub">{subtitle}</p>
-      <div class="hero-cta">
-        <CtaLink label={label} location="hero" />
-      </div>
       <div class="hero-desc">
         {data.hero.description.map((line) => <p>{line.text}</p>)}
+      </div>
+      <div class="hero-cta">
+        <CtaLink label={label} location="hero" />
       </div>
     </div>
     <div class="hero-art">
@@ -106,11 +107,11 @@ const label = ctaLabel(data);
     margin-top: 1.5rem;
   }
 
-  .hero-cta {
+  .hero-desc {
     margin-top: 2rem;
   }
 
-  .hero-desc {
+  .hero-cta {
     margin-top: 2rem;
   }
 
