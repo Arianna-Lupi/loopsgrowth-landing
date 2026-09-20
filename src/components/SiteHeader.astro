@@ -2,7 +2,7 @@
 /**
  * Header mínimo, en el flujo normal (ni fijo ni pegado arriba) para no tapar el foco
  * (SC 2.4.11). El logo es la mesa 06 del vectorial de Ari (DSGN-02): sin enlace en `/` y con
- * enlace a `/` en cualquier otra ruta. Se conserva la clase `.wordmark` en el contenedor.
+ * enlace a `/` en cualquier otra ruta.
  * Monta el sprite del collage una sola vez por página, fuera del landmark (si BaseLayout lo
  * asume después, basta mover esa línea).
  * El CTA se oculta con `display: none` por debajo de 640 px: así sale también del
@@ -27,7 +27,7 @@ const tone = 'light';
 
 <header class="site-header" data-tone={tone}>
   <div class="wrap bar">
-    <span class="wordmark"><Logo name={data.brand.name.text} href={homeHref} tone={tone} /></span>
+    <Logo name={data.brand.name.text} href={homeHref} tone={tone} />
     <div class="header-cta">
       <CtaLink label={label} location="header" href={ctaHref} />
     </div>
@@ -44,12 +44,6 @@ const tone = 'light';
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
-  }
-
-  .wordmark {
-    display: flex;
-    align-items: center;
-    font-weight: 700;
   }
 
   .header-cta {

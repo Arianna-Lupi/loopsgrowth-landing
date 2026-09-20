@@ -168,7 +168,7 @@ test.describe('orden de tabulación y foco a 1280 px', () => {
     await expect(page.locator('#main')).toBeFocused();
   });
 
-  test('(h) pesos del brandbook: skip 600; CTA, h1, h2 y wordmark 700; subtítulo y body 400', async ({ page }) => {
+  test('(h) pesos del brandbook: skip 600; CTA, h1 y h2 700; subtítulo y body 400', async ({ page }) => {
     await page.goto('/');
     await page.keyboard.press('Tab');
     const weight = (selector: string) =>
@@ -177,7 +177,6 @@ test.describe('orden de tabulación y foco a 1280 px', () => {
     expect(await weight('a[data-cta="hero"]')).toBe('700');
     expect(await weight('h1')).toBe('700');
     expect(await weight('#agenda-title')).toBe('700');
-    expect(await weight('.wordmark')).toBe('700');
     expect(await weight('.hero-sub')).toBe('400');
     expect(await weight('body')).toBe('400');
   });

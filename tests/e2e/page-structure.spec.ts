@@ -133,6 +133,32 @@ const PAGE_ORDER: ReadonlyArray<readonly [string, Tone]> = [
   ['agenda', 'purple'],
 ];
 
+// Título (h2) de cada sección, en el orden de la página: id de sección a ruta del claim en el YAML.
+// `inicio` no aparece: su encabezado es el h1.
+const H2_SOURCE: Readonly<Record<string, string>> = {
+  problema: 'problem.title',
+  'por-que-ahora': 'why_now.title',
+  solucion: 'solution.title',
+  resultados: 'results.title',
+  casos: 'cases.title',
+  nosotros: 'team.title',
+  incluye: 'includes.title',
+  'como-funciona': 'how_it_works.title',
+  'para-quien': 'for_whom.title',
+  faq: 'faq.title',
+  agenda: 'agenda.title',
+};
+const yamlTree = (parse(readFileSync('src/content/landing.es.yaml', 'utf8')) as { es: Record<string, unknown> }).es;
+const claimAt = (path: string): Claim => {
+  const claim = path
+    .split('.')
+    .reduce<unknown>((node, key) => (node as Record<string, unknown> | undefined)?.[key], yamlTree) as
+    | Claim
+    | undefined;
+  if (typeof claim?.text !== 'string') throw new Error(`H2_SOURCE: ${path} no es un claim con text en el YAML`);
+  return claim;
+};
+
 test.describe('orden y tono de las secciones', () => {
   test('la constante PAGE_ORDER: 12 ids, ningún vecino repite tono y dark nunca toca purple', () => {
     expect(PAGE_ORDER).toHaveLength(12);
@@ -145,23 +171,26 @@ test.describe('orden y tono de las secciones', () => {
     }
   });
 
-  test('las main > section del build existen en PAGE_ORDER, en orden canónico y con su tono', async ({
+  test('las main > section son exactamente las 12 de PAGE_ORDER, en orden y con su tono', async ({
     page,
   }) => {
     await page.goto('/');
     const sections = await page
       .locator('main > section')
       .evaluateAll((els) => els.map((el) => ({ id: el.id, tone: el.getAttribute('data-tone') })));
-    expect(sections.length).toBeGreaterThan(0);
-    const ids = PAGE_ORDER.map(([id]) => id);
-    let last = -1;
-    for (const s of sections) {
-      const idx = ids.indexOf(s.id);
-      expect(idx, `id de sección desconocido: ${s.id}`).toBeGreaterThanOrEqual(0);
-      expect(idx, `${s.id} fuera del orden canónico`).toBeGreaterThan(last);
-      last = idx;
-      expect(s.tone, `tono de ${s.id}`).toBe(PAGE_ORDER[idx][1]);
-    }
+    expect(sections.map((s) => s.id)).toEqual(PAGE_ORDER.map(([id]) => id));
+    expect(sections.map((s) => s.tone)).toEqual(PAGE_ORDER.map(([, tone]) => tone));
+  });
+
+  test('hay un solo h1, dentro de #inicio, y 11 h2 con los títulos del YAML en orden', async ({ page }) => {
+    await page.goto('/');
+    await expect(page.locator('h1')).toHaveCount(1);
+    await expect(page.locator('#inicio h1')).toHaveCount(1);
+    const h2 = await page.locator('h2').evaluateAll((els) => els.map((el) => el.textContent?.trim() ?? ''));
+    expect(h2).toHaveLength(11);
+    expect(h2).toEqual(Object.values(H2_SOURCE).map((path) => resolveText(claimAt(path))));
+    // Cada h2 vive en la sección que su id de H2_SOURCE nombra.
+    for (const id of Object.keys(H2_SOURCE)) await expect(page.locator(`main > section#${id} h2`)).toHaveCount(1);
   });
 });
 

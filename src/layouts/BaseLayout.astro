@@ -26,6 +26,8 @@ const canonical = canonicalUrl(path);
     {(!isProduction || noindex) && <meta name="robots" content="noindex" />}
     {isProduction && !noindex && canonical && <link rel="canonical" href={canonical} />}
     <title>{title}</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
     <Font cssVariable="--font-brand" preload={[{ subset: "latin", style: "normal" }]} />
   </head>
   <body>
