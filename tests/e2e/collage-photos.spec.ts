@@ -1,3 +1,4 @@
+import { mkdirSync, writeFileSync } from 'node:fs';
 import { test, expect, type Page } from '@playwright/test';
 import { rgbOfToken } from './lib/brand';
 import { PHOTOS, PHOTO_LOADING } from '../../src/components/collage/photos.mjs';
@@ -238,4 +239,115 @@ test.describe('hoja de fotos', () => {
       expect(box.width).toBeLessThanOrEqual((p.slot === 'hero' ? 30 : 20) * rem + 0.5);
     }
   });
+});
+
+// Herramientas del ciclo visual (plan 02-11, tarea 4). Solo corren con PHASE2_BATCH definida (p. ej.
+// PHASE2_BATCH=P-fotos): abren un contexto propio con todo lo que no es localhost abortado y guardan
+// en test-results/phase2/ (no versionado).
+const BATCH = process.env.PHASE2_BATCH;
+const isLocal = (url: string) => ['localhost', '127.0.0.1'].includes(new URL(url).hostname);
+
+test.describe('informe de fotos', () => {
+  test.skip(!BATCH, 'define PHASE2_BATCH (p. ej. P-fotos) para medir LCP, CLS y pesos');
+  test('mide LCP, CLS, pesos por imagen y por tipo de recurso a 390x844 y 1280x800', async ({ browser, baseURL }) => {
+    const report: Record<string, unknown> = {};
+    for (const [w, h] of [[390, 844], [1280, 800]] as const) {
+      const context = await browser.newContext({ baseURL, viewport: { width: w, height: h } });
+      await context.route('**/*', (route) => (isLocal(route.request().url()) ? route.continue() : route.abort()));
+      const page = await context.newPage();
+      const responses: { url: string; type: string; bytes: number }[] = [];
+      const pending: Promise<void>[] = [];
+      page.on('response', (res) => {
+        pending.push(
+          res.body().then(
+            (b) => { responses.push({ url: new URL(res.url()).pathname, type: res.request().resourceType(), bytes: b.length }); },
+            () => undefined,
+          ),
+        );
+      });
+      await page.addInitScript(() => {
+        (window as any).__cls = 0;
+        (window as any).__lcp = [];
+        new PerformanceObserver((list) => {
+          for (const e of list.getEntries() as any[]) if (!e.hadRecentInput) (window as any).__cls += e.value;
+        }).observe({ type: 'layout-shift', buffered: true });
+        new PerformanceObserver((list) => {
+          for (const e of list.getEntries() as any[]) {
+            (window as any).__lcp.push({
+              tag: e.element?.tagName ?? 'NONE', id: e.element?.id ?? '', cls: String(e.element?.className ?? '').slice(0, 60),
+              inCollage: !!e.element?.closest?.('[data-collage]'), url: e.url ?? '', time: Math.round(e.startTime), size: e.size,
+            });
+          }
+        }).observe({ type: 'largest-contentful-paint', buffered: true });
+      });
+      await page.goto('/');
+      await page.waitForTimeout(500);
+      await scrollThrough(page);
+      await page.waitForTimeout(400);
+      await Promise.all(pending);
+      const lcpList = await page.evaluate(() => (window as any).__lcp as { tag: string }[]);
+      const cls = await page.evaluate(() => (window as any).__cls as number);
+      const byType: Record<string, { requests: number; bytes: number }> = {};
+      for (const r of responses) {
+        byType[r.type] ??= { requests: 0, bytes: 0 };
+        byType[r.type].requests += 1;
+        byType[r.type].bytes += r.bytes;
+      }
+      const images = responses.filter((r) => r.type === 'image');
+      report[`${w}x${h}`] = {
+        lcp: lcpList.at(-1) ?? null,
+        lcpCandidates: lcpList,
+        cls,
+        images,
+        imageBytes: images.reduce((a, r) => a + r.bytes, 0),
+        totalRequests: responses.length,
+        totalBytes: responses.reduce((a, r) => a + r.bytes, 0),
+        byType,
+      };
+      await context.close();
+    }
+    mkdirSync('test-results/phase2', { recursive: true });
+    writeFileSync(`test-results/phase2/${BATCH}-medicion.json`, JSON.stringify(report, null, 2));
+  });
+});
+
+test.describe('captura de fotos', () => {
+  test.skip(!BATCH, 'define PHASE2_BATCH (p. ej. P-fotos) para generar capturas de fotos');
+  const shot = (name: string) => `test-results/phase2/${BATCH}-${name}.png`;
+  for (const width of WIDTHS) {
+    test(`captura de hero, Por que ahora y hoja a ${width}px`, async ({ browser, baseURL }) => {
+      const context = await browser.newContext({ baseURL, viewport: { width, height: 900 } });
+      await context.route('**/*', (route) => (isLocal(route.request().url()) ? route.continue() : route.abort()));
+      const page = await context.newPage();
+      await page.goto('/');
+      await page.locator(ROOT_OF.hero).screenshot({ path: shot(`hero-${width}`) });
+      await page.locator(ROOT_OF.whynow).scrollIntoViewIfNeeded();
+      await page.waitForFunction(() => Array.from(document.images).every((i) => i.complete));
+      await page.locator(ROOT_OF.whynow).screenshot({ path: shot(`whynow-${width}`) });
+      await page.goto(SHEET);
+      await scrollThrough(page);
+      await page.screenshot({ path: shot(`hoja-${width}`), fullPage: true });
+      if (width === 1280) {
+        for (const p of PHOTOS as { id: string }[]) {
+          await page.locator(`[data-demo="foto-${p.id}"]`).screenshot({ path: shot(`foto-${p.id}-1280`) });
+        }
+      }
+      await context.close();
+    });
+  }
+  for (const dpr of [1, 2]) {
+    test(`captura de los marcos de hero y Por que ahora con deviceScaleFactor ${dpr}`, async ({ browser, baseURL }) => {
+      const context = await browser.newContext({ baseURL, viewport: { width: 1280, height: 900 }, deviceScaleFactor: dpr });
+      await context.route('**/*', (route) => (isLocal(route.request().url()) ? route.continue() : route.abort()));
+      const page = await context.newPage();
+      await page.goto('/');
+      for (const slot of ['hero', 'whynow']) {
+        const frame = page.locator(`${ROOT_OF[slot]} [data-photo-frame]`);
+        await frame.scrollIntoViewIfNeeded();
+        await page.waitForFunction(() => Array.from(document.images).every((i) => i.complete));
+        await frame.screenshot({ path: shot(`frame-${slot}-1280-dpr${dpr}`) });
+      }
+      await context.close();
+    });
+  }
 });
