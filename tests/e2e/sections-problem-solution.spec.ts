@@ -456,3 +456,147 @@ for (const viewport of [
     });
   });
 }
+
+// ---------------------------------------------------------------------------------------------
+// Tarea 4 (lote B): matriz de cinco anchos, ritmo de 64 y 96 px, espaciado de texto (SC 1.4.12),
+// cero animaciones, sin JavaScript y herramienta de capturas. Todo se mide con el DOM real.
+// ---------------------------------------------------------------------------------------------
+const SECTION_IDS = ['problema', 'por-que-ahora', 'solucion'] as const;
+const MATRIX = [320, 390, 768, 1024, 1280];
+
+const overlapsBox = (a: Box, b: Box) =>
+  a.x < b.x + b.width && b.x < a.x + a.width && a.y < b.y + b.height && b.y < a.y + a.height;
+
+for (const width of MATRIX) {
+  test.describe(`matriz de anchos: ${width} px`, () => {
+    test.use({ viewport: { width, height: 800 } });
+
+    test('columnas esperadas, sin scroll horizontal y nada fuera del viewport', async ({ page }) => {
+      await page.goto('/');
+
+      // Dolores: 3 columnas desde 1024 px y 1 debajo.
+      const pain = await boxes(page, '#problema .pain-card');
+      const painCols = new Set(pain.map((b) => Math.round(b.x))).size;
+      expect(painCols).toBe(width >= 1024 ? 3 : 1);
+
+      // Pilares: 2 columnas desde 640 px y 1 debajo.
+      const pillars = await boxes(page, '#solucion .pillar-card');
+      const pillarCols = new Set(pillars.map((b) => Math.round(b.x))).size;
+      expect(pillarCols).toBe(width >= 640 ? 2 : 1);
+
+      // Por qué ahora: dos columnas desde 1024 px (collage a la izquierda de la lista) y apilado debajo.
+      const art = (await boxes(page, '#por-que-ahora .whynow-art'))[0];
+      const h2 = (await boxes(page, '#por-que-ahora h2'))[0];
+      const list = (await boxes(page, '#por-que-ahora .whynow-list'))[0];
+      if (width >= 1024) {
+        expect(art.x + art.width).toBeLessThanOrEqual(list.x + 1);
+      } else {
+        expect(art.y + art.height).toBeLessThanOrEqual(list.y + 1);
+      }
+      expect(overlapsBox(art, h2)).toBe(false);
+      expect(overlapsBox(art, list)).toBe(false);
+
+      const inner = await page.evaluate(() => window.innerWidth);
+      const scroll = await page.evaluate((ids) => ids.map((id) => document.getElementById(id)!.scrollWidth), [
+        ...SECTION_IDS,
+      ]);
+      for (const sw of scroll) expect(sw).toBeLessThanOrEqual(inner);
+      expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(inner);
+
+      const all = [
+        ...pain,
+        ...pillars,
+        ...(await boxes(page, '#por-que-ahora .whynow-list > li')),
+        ...(await boxes(page, '#solucion .pillar-team > li')),
+      ];
+      for (const b of all) {
+        expect(b.x).toBeGreaterThanOrEqual(-0.5);
+        expect(b.x + b.width).toBeLessThanOrEqual(inner + 0.5);
+      }
+    });
+
+    test('ritmo vertical: 64 px bajo 1024 px y 96 px desde 1024 px', async ({ page }) => {
+      await page.goto('/');
+      const expected = width >= 1024 ? '96px' : '64px';
+      for (const id of SECTION_IDS) {
+        const pad = await page
+          .locator(`#${id}`)
+          .evaluate((el) => [getComputedStyle(el).paddingTop, getComputedStyle(el).paddingBottom]);
+        expect(pad, `#${id}`).toEqual([expected, expected]);
+      }
+    });
+  });
+}
+
+test.describe('espaciado de texto (SC 1.4.12) a 320 px', () => {
+  test.use({ viewport: { width: 320, height: 800 } });
+
+  test('con interlineado 1.5, letras 0.12em, palabras 0.16em y párrafos 2em nada se recorta ni desborda', async ({
+    page,
+  }) => {
+    await page.goto('/');
+    await page.addStyleTag({
+      content: `*{line-height:1.5 !important;letter-spacing:0.12em !important;word-spacing:0.16em !important}
+p{margin-bottom:2em !important}`,
+    });
+    const clipped = await page.evaluate(() =>
+      [...document.querySelectorAll('.pain-card, .pillar-card, .whynow-list > li')]
+        .filter((el) => el.scrollHeight > el.clientHeight + 1)
+        .map((el) => `${el.className || el.tagName}: ${el.scrollHeight}>${el.clientHeight}`),
+    );
+    expect(clipped).toEqual([]);
+    const inner = await page.evaluate(() => window.innerWidth);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(inner);
+    for (const id of SECTION_IDS) {
+      expect(await page.evaluate((i) => document.getElementById(i)!.scrollWidth, id)).toBeLessThanOrEqual(inner);
+    }
+  });
+});
+
+test.describe('sin movimiento y sin JavaScript', () => {
+  test.use({ viewport: { width: 1280, height: 800 } });
+
+  for (const reducedMotion of ['reduce', 'no-preference'] as const) {
+    test(`document.getAnimations().length es 0 con ${reducedMotion}`, async ({ page }) => {
+      await page.emulateMedia({ reducedMotion });
+      await page.goto('/');
+      await page.locator('#problema').scrollIntoViewIfNeeded();
+      expect(await page.evaluate(() => document.getAnimations().length)).toBe(0);
+    });
+  }
+
+  test.describe('con JavaScript desactivado', () => {
+    test.use({ javaScriptEnabled: false });
+
+    test('las tres secciones y el CTA solucion se ven', async ({ page }) => {
+      await page.goto('/');
+      for (const id of SECTION_IDS) await expect(page.locator(`#${id}`)).toBeVisible();
+      await expect(page.locator('#problema .pain-card')).toHaveCount(es.problem.items.length);
+      await expect(page.locator('#solucion .pillar-card')).toHaveCount(4);
+      await expect(page.locator('a[data-cta="solucion"]')).toBeVisible();
+    });
+  });
+});
+
+// Herramienta de capturas del lote (solo con PHASE2_BATCH definida, p. ej. PHASE2_BATCH=B): las tres
+// secciones a 390 y 1280 px con todo lo que no es localhost abortado (ClickUp incluido).
+test.describe('captura de secciones del lote', () => {
+  test.skip(!process.env.PHASE2_BATCH, 'define PHASE2_BATCH (p. ej. B) para generar capturas de sección');
+  for (const width of [390, 1280]) {
+    test(`captura de las tres secciones a ${width} px`, async ({ browser, baseURL }) => {
+      const context = await browser.newContext({ baseURL, viewport: { width, height: 800 } });
+      await context.route('**/*', (route) => {
+        const host = new URL(route.request().url()).hostname;
+        return host === 'localhost' || host === '127.0.0.1' ? route.continue() : route.abort();
+      });
+      const page = await context.newPage();
+      await page.goto('/');
+      for (const id of SECTION_IDS) {
+        await page.locator(`#${id}`).screenshot({
+          path: `test-results/phase2/${process.env.PHASE2_BATCH}-${id}-${width}.png`,
+        });
+      }
+      await context.close();
+    });
+  }
+});
