@@ -6,14 +6,16 @@
  * cual) más el enlace a la política de privacidad. Sin encabezados, sin JavaScript y sin texto que no
  * salga del YAML (sin "todos los derechos reservados", año ni línea de marca inventada).
  *
- * El correo se emite como enlace solo si el texto recortado cumple una expresión estricta de correo:
- * ningún signo de interrogación, coma, punto y coma, dos puntos ni espacio, para que un valor
- * inyectado no arme una URL con parámetros. Esa expresión es la única fuente de enlaces de correo.
+ * El correo se emite como enlace solo si el texto recortado cumple la expresión estricta de
+ * `src/lib/email.mjs`: ningún signo de interrogación, coma, punto y coma, dos puntos, espacio ni `%`
+ * (que el cliente decodificaría a `?` o a un salto de línea), para que un valor inyectado no arme una URL
+ * con parámetros ni cabeceras. Esa expresión es la única fuente de enlaces de correo.
  * Una, dos y tres columnas; el bloque de marca pesa 1,2 veces cada uno de los otros dos y el logo
  * conserva su área de salvado (BrandBook, página 7): la separación no baja de su altura.
  */
 import Logo from './brand/Logo.astro';
 import { getLanding } from '../lib/content';
+import { EMAIL_RE } from '../lib/email.mjs';
 
 const { footer, brand } = await getLanding();
 const onPrivacy = Astro.url.pathname.startsWith('/privacidad');
@@ -21,7 +23,6 @@ const onPrivacy = Astro.url.pathname.startsWith('/privacidad');
 const homeHref = Astro.url.pathname === '/' ? undefined : '/';
 // Un solo valor alimenta el tono del pie y el del logo, para que no puedan separarse.
 const tone = 'light';
-const EMAIL_RE = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)+$/;
 const email = footer.email.text.trim();
 const emailHref = EMAIL_RE.test(email) ? `mailto:${email}` : undefined;
 ---

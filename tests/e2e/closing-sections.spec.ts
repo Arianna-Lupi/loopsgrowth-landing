@@ -3,6 +3,7 @@ import { readFileSync } from 'node:fs';
 import { parse } from 'yaml';
 import { findInversion } from '../../scripts/lib/copy-rules.mjs';
 import { CHIP_WORDS } from '../../src/components/collage/collage-rules.mjs';
+import { EMAIL_RE } from '../../src/lib/email.mjs';
 import { PURPLE_RGB } from './lib/brand';
 import { expectMotionWithinBudget, expectNoMotion } from './lib/motion';
 
@@ -452,7 +453,6 @@ for (const motion of ['reduce', 'no-preference'] as const) {
 // ---------------------------------------------------------------------------------------------
 // #agenda como CTA final, footer completo y /privacidad endurecida (plan 02-06 tarea 3).
 const DARK_HEX_RGB_WHITE = 'rgb(255, 255, 255)';
-const EMAIL_RE = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)+$/;
 
 for (const width of [390, 768, 1023, 1024, 1280]) {
   test.describe(`#agenda a ${width} px`, () => {
@@ -720,6 +720,25 @@ test.describe('correo del footer: expresión estricta', () => {
     expect(src.match(/mailto:/g)?.length).toBe(1);
     const built = readFileSync('dist/index.html', 'utf8');
     if (!EMAIL_RE.test(es.footer.email.text.trim())) expect(built).not.toContain('href="mailto:');
+  });
+
+  test('la expresión (la misma que usa el pie) rechaza `%` y todo valor que arme parámetros o cabeceras', () => {
+    // Codificados, `%3F`, `%3A` y `%0D%0A` se decodifican en el cliente de correo a `?`, `:` y un salto de línea.
+    const injected = [
+      'a%3Fbcc%3Devil@x.com',
+      'a%0D%0ABcc%3Aevil@x.com',
+      'a%40b@x.com',
+      'a?bcc=evil@x.com',
+      'a@x.com?bcc=evil@x.com',
+      'a@x.com,evil@x.com',
+      'a@x.com;evil@x.com',
+      'a b@x.com',
+      'a@x.com\nBcc: evil@x.com',
+    ];
+    for (const value of injected) expect(EMAIL_RE.test(value), value).toBe(false);
+    for (const value of ['hola@loopsgrowth.com', 'ari.lupi+web@sub-dominio.loops-growth.co', 'a_b-c@x.io']) {
+      expect(EMAIL_RE.test(value), value).toBe(true);
+    }
   });
 });
 
