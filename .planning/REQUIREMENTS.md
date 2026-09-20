@@ -29,8 +29,8 @@ Requisitos para la primera entrega. Cada uno se asigna a una fase del roadmap.
 - [x] **CONT-02**: El visitante lee la sección "El problema" con los tres dolores del Copy v2.
 - [x] **CONT-03**: El visitante lee la sección "Por qué ahora" sobre la búsqueda en Google y en asistentes de IA.
 - [x] **CONT-04**: El visitante ve "La solución" con los 4 pilares (auditoría, estrategia Google e IA, equipo dedicado, reportes).
-- [ ] **CONT-05**: El visitante ve "Lo que logramos juntos" con los cuatro resultados, sin cifras marcadas `[VERIFICAR]` que no estén respaldadas.
-- [ ] **CONT-06**: El visitante ve los casos de éxito como tarjetas de métrica sin logos (cifra, sector anonimizado, plazo, canal), con el caso de Meta Ads en su propia tarjeta.
+- [x] **CONT-05**: El visitante ve "Lo que logramos juntos" con los cuatro resultados, sin cifras marcadas `[VERIFICAR]` que no estén respaldadas.
+- [x] **CONT-06**: El visitante ve los casos de éxito como tarjetas de métrica sin logos (cifra, sector anonimizado, plazo, canal), con el caso de Meta Ads en su propia tarjeta.
 - [ ] **CONT-07**: El visitante ve "Quiénes somos" con los 4 integrantes (Arianna, Verónica, Juan, Miguel), nombre, cargo y avatar ilustrado.
 - [ ] **CONT-08**: El visitante ve "Qué incluye" con los seis entregables del Copy v2.
 - [ ] **CONT-09**: El visitante ve "Cómo funciona" con las 4 fases y sus plazos.
@@ -135,8 +135,8 @@ Qué fase cubre cada requisito. Completado al crear el roadmap.
 | CONT-02 | Phase 2 | Complete |
 | CONT-03 | Phase 2 | Complete |
 | CONT-04 | Phase 2 | Complete |
-| CONT-05 | Phase 2 | Pending |
-| CONT-06 | Phase 2 | Pending |
+| CONT-05 | Phase 2 | Complete |
+| CONT-06 | Phase 2 | Complete |
 | CONT-07 | Phase 2 | Pending |
 | CONT-08 | Phase 2 | Pending |
 | CONT-09 | Phase 2 | Pending |
