@@ -546,7 +546,7 @@ es:
           reason: "Respuesta 6 del FAQ, tema: si aplica a mi negocio; Ari entrega el texto"
   agenda:
     title:
-      text: "Agenda tu llamada"
+      text: "¿Listo para que te encuentren cuando te estan buscando?"
       status: verified
     intro:
       text: "Agenda una llamada de {duration}. Sin costo y sin compromiso. Entendemos tu negocio y te decimos con honestidad si podemos ayudarte. Si no somos el equipo correcto, también te lo decimos."
@@ -571,6 +571,22 @@ es:
     privacy_link:
       text: "Política de privacidad"
       status: verified
+    contact_label:
+      text: "Contacto"
+      status: verified
+    email:
+      text: "FALTA CONFIRMAR"
+      status: pending
+      confirm_by: Ari
+      reason: "El doc de Ari no trae el correo de contacto del pie de página; Ari entrega la dirección"
+    social_label:
+      text: "Redes"
+      status: verified
+    social:
+      text: "FALTA CONFIRMAR"
+      status: pending
+      confirm_by: Ari
+      reason: "El doc de Ari no trae las redes del pie de página; Ari entrega cada red con su nombre y su URL"
   privacy:
     title:
       text: "Política de privacidad"

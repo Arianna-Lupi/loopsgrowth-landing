@@ -37,3 +37,16 @@ const canonical = canonicalUrl(path);
     <SiteFooter />
   </body>
 </html>
+
+<style>
+  /* Página corta (por ejemplo /privacidad): el footer llega al borde inferior de la ventana. */
+  :global(body) {
+    display: flex;
+    flex-direction: column;
+    min-height: 100dvh;
+  }
+
+  main {
+    flex: 1 0 auto;
+  }
+</style>

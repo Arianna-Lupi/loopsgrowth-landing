@@ -62,4 +62,6 @@ Este archivo se genera con `npm run pending` desde `src/content/landing.es.yaml`
 | faq.items[5].question | FALTA CONFIRMAR | Pregunta 6 del FAQ, tema: si aplica a mi negocio; el doc de Ari no trae esta sección y Ari entrega el texto | Ari |
 | faq.items[5].answer | FALTA CONFIRMAR | Respuesta 6 del FAQ, tema: si aplica a mi negocio; Ari entrega el texto | Ari |
 | agenda.intro | Agenda una llamada de {duration}. Sin costo y sin compromiso. Entendemos tu negocio y te decimos con honestidad si podemos ayudarte. Si no somos el equipo correcto, también te lo decimos. | Cuerpo del CTA final del Copy v2 de Ari; la duración sale de call.duration, que está pending | Ari |
+| footer.email | FALTA CONFIRMAR | El doc de Ari no trae el correo de contacto del pie de página; Ari entrega la dirección | Ari |
+| footer.social | FALTA CONFIRMAR | El doc de Ari no trae las redes del pie de página; Ari entrega cada red con su nombre y su URL | Ari |
 | privacy.body[0] | FALTA CONFIRMAR | El doc de Ari no trae la política de privacidad; Ari entrega el texto legal | Ari |

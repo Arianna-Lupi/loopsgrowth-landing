@@ -115,8 +115,15 @@ const landing = defineCollection({
       noscript: claim,
     }),
     // Pie de página y política de privacidad (plan 02-06). El cuerpo de la política es una lista de
-    // afirmaciones: un `<p>` por elemento. Correo y redes del pie se suman en la tarea 3.
-    footer: z.strictObject({ nav_label: claim, privacy_link: claim }),
+    // afirmaciones: un `<p>` por elemento. Correo y redes del pie son pendientes de Ari.
+    footer: z.strictObject({
+      nav_label: claim,
+      privacy_link: claim,
+      contact_label: claim,
+      email: claim,
+      social_label: claim,
+      social: claim,
+    }),
     privacy: z.strictObject({ title: claim, body: z.array(claim).min(1) }),
     config: z.strictObject({
       form_url: httpsUrlFrom('forms.clickup.com'),

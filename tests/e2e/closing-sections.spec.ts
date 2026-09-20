@@ -634,7 +634,7 @@ for (const [w, cols] of Object.entries(COLUMNS)) {
           cols,
           brand: brand.width,
           blocks: blocks.map((r) => r.width),
-          brandBox: { l: brand.left, r: brand.right, t: brand.top, b: brand.bottom },
+          brandBox: { l: logo.left, r: logo.right, t: logo.top, b: logo.bottom },
           blockBoxes: blocks.map((r) => ({ l: r.left, r: r.right, t: r.top, b: r.bottom })),
           logoH: logo.height,
         };
@@ -649,7 +649,7 @@ for (const [w, cols] of Object.entries(COLUMNS)) {
       for (const b of info.blockBoxes) {
         const gapX = Math.max(b.l - info.brandBox.r, info.brandBox.l - b.r);
         const gapY = Math.max(b.t - info.brandBox.b, info.brandBox.t - b.b);
-        expect(Math.max(gapX, gapY), 'separación con el logo').toBeGreaterThanOrEqual(Math.min(info.logoH, 32));
+        expect(Math.max(gapX, gapY), 'separación con el logo').toBeGreaterThanOrEqual(info.logoH);
       }
     });
   });
@@ -657,6 +657,12 @@ for (const [w, cols] of Object.entries(COLUMNS)) {
 
 test.describe('/privacidad con el footer completo', () => {
   test.use({ viewport: { width: 1280, height: 900 } });
+
+  test('el footer llega al borde inferior de la ventana aunque la página sea corta', async ({ page }) => {
+    await page.goto(PRIVACY_PATH);
+    const gap = await page.evaluate(() => innerHeight - document.querySelector('footer')!.getBoundingClientRect().bottom);
+    expect(Math.abs(gap), 'hueco bajo el footer').toBeLessThanOrEqual(0.5);
+  });
 
   test('orden de tabulación exacto: skip, logo del header, CTA del header, logo del footer y privacidad', async ({ page }) => {
     await page.goto(PRIVACY_PATH);
