@@ -165,11 +165,13 @@ test.describe('escenas: lenguaje del moodboard', () => {
     }
   });
 
-  test('Por qué ahora: 224 px justo bajo 64em y 320 px desde 64em', async ({ page }) => {
-    for (const [width, expected] of [[1023, 224], [1024, 320]] as const) {
+  // Lote B (02-03): desde 64em el collage ocupa el ancho de su columna con tope de 26rem (416 px).
+  test('Por qué ahora: 224 px justo bajo 64em y de 320 a 416 px desde 64em', async ({ page }) => {
+    for (const [width, min, max] of [[1023, 224, 224], [1024, 320, 416], [1280, 320, 416]] as const) {
       await open(page, width);
       const w = await page.locator(SCENES.whynow).evaluate((el) => el.getBoundingClientRect().width);
-      expect(Math.abs(w - expected), `${width}: ${w}`).toBeLessThanOrEqual(1);
+      expect(w, `${width}: ${w}`).toBeGreaterThanOrEqual(min - 1);
+      expect(w, `${width}: ${w}`).toBeLessThanOrEqual(max + 1);
     }
   });
 

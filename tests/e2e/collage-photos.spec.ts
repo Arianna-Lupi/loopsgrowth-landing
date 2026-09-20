@@ -78,7 +78,13 @@ test.describe('fotos en media tinta', () => {
       const art = await box('#por-que-ahora .whynow-art');
       const h2 = await box('#por-que-ahora h2');
       const list = await box('#por-que-ahora .whynow-list');
-      expect(Math.abs(art.w - (wide ? 320 : 224))).toBeLessThanOrEqual(1);
+      // Lote B (02-03): desde 1024 px el collage ocupa su columna con tope de 416 px (nunca menos de 320).
+      if (wide) {
+        expect(art.w).toBeGreaterThanOrEqual(319);
+        expect(art.w).toBeLessThanOrEqual(417);
+      } else {
+        expect(Math.abs(art.w - 224)).toBeLessThanOrEqual(1);
+      }
       const hit = (a: typeof art, b: typeof art) => a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h;
       expect(hit(art, h2)).toBe(false);
       expect(hit(art, list)).toBe(false);

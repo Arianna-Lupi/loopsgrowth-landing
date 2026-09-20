@@ -20,7 +20,8 @@ const data = await getLanding();
 </SectionShell>
 
 <style>
-  /* Collage de 224 px hasta 64em y de 320 px desde 64em; el alto sale de la proporción de la escena. */
+  /* Collage de 224 px hasta 64em y, desde 64em, del ancho de su columna con tope de 26rem (416 px) para
+     que llene la columna izquierda frente a la lista de seis filas; el alto sale de la proporción de la escena. */
   :global(.whynow-art) {
     width: min(100%, 14rem);
     margin-top: 2rem;
@@ -48,7 +49,7 @@ const data = await getLanding();
 
   @media (min-width: 64em) {
     :global(.whynow-art) {
-      width: min(100%, 20rem);
+      width: min(100%, 26rem);
     }
   }
 

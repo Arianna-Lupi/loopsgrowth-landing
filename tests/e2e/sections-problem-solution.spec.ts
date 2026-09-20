@@ -2,7 +2,7 @@ import { test, expect, type Page } from '@playwright/test';
 import { readFileSync } from 'node:fs';
 import { parse } from 'yaml';
 import { walkClaims, MISSING_MARK } from '../../scripts/lib/copy-rules.mjs';
-import { PURPLE_RGB } from './lib/brand';
+import { PURPLE_RGB, rgbOfToken } from './lib/brand';
 
 // Los textos esperados salen del YAML (walkClaims y el propio arreglo): nunca cadenas escritas a mano
 // (COPY-01). Los espacios se normalizan al comparar porque el HTML colapsa el espacio doble del doc de Ari.
@@ -274,14 +274,20 @@ for (const viewport of [
       });
     });
 
-    test('collage compacto de Por qué ahora: 224 px bajo 64em y 320 px desde 64em, con su ranura de foto', async ({ page }) => {
+    test('collage de Por qué ahora: 224 px bajo 64em y de 320 a 416 px desde 64em, con su ranura de foto', async ({ page }) => {
       await page.goto('/');
       const root = page.locator('#por-que-ahora .whynow-art[data-collage="whynow"]');
       await expect(root).toHaveCount(1);
       await expect(root).toHaveAttribute('aria-hidden', 'true');
       await expect(root.locator('[data-photo-slot="whynow"]')).toHaveCount(1);
       const art = (await boxes(page, '#por-que-ahora .whynow-art'))[0];
-      expect(Math.abs(art.width - (wide ? 320 : 224))).toBeLessThanOrEqual(1);
+      if (wide) {
+        // Ancho de su columna con tope de 26rem (416 px); nunca menos de 320 px.
+        expect(art.width).toBeGreaterThanOrEqual(319);
+        expect(art.width).toBeLessThanOrEqual(417);
+      } else {
+        expect(Math.abs(art.width - 224)).toBeLessThanOrEqual(1);
+      }
       expect(Math.abs(art.height - art.width)).toBeLessThanOrEqual(1);
       const h2 = (await boxes(page, '#por-que-ahora h2'))[0];
       const list = (await boxes(page, '#por-que-ahora .whynow-list'))[0];
@@ -311,6 +317,7 @@ for (const viewport of [
 }
 
 const SOFT_SHADOW = 'rgb(33, 33, 33) 4px 4px 0px 0px';
+const CREAM = rgbOfToken('cream');
 
 for (const viewport of [
   { width: 1280, height: 800 },
@@ -415,8 +422,9 @@ for (const viewport of [
         }),
       );
       expect(styles).toHaveLength(4);
-      for (const s of styles) {
-        expect(s.bg).toBe(WHITE);
+      styles.forEach((s, i) => {
+        // Ritmo en tablero: blanco en las tarjetas 1 y 3 y crema en la 2 y la 4.
+        expect(s.bg).toBe(i % 2 === 0 ? WHITE : CREAM);
         expect(s.bw).toBe('3px');
         expect(s.bc).toBe(DARK);
         expect(s.radius).toBe('16px');
@@ -430,7 +438,16 @@ for (const viewport of [
         expect(s.h3Color).toBe(DARK);
         expect(s.h3Size).toBeGreaterThanOrEqual(20);
         expect(s.h3Size).toBeLessThanOrEqual(24);
-      }
+      });
+    });
+
+    test('las filas del equipo llevan regla de 3 px arriba', async ({ page }) => {
+      await page.goto('/');
+      const tops = await page
+        .locator('#solucion .pillar-team > li')
+        .evaluateAll((els) => els.map((el) => `${getComputedStyle(el).borderTopWidth} ${getComputedStyle(el).borderTopColor}`));
+      expect(tops).toHaveLength(es.solution.items[2].list!.length);
+      for (const t of tops) expect(t).toBe(`3px ${DARK}`);
     });
 
     test('rejilla de pilares: una columna en móvil y dos en escritorio con alto parejo por fila', async ({ page }) => {

@@ -46,6 +46,11 @@ const { chip, title, body, list } = Astro.props;
     overflow-wrap: anywhere;
   }
 
+  /* Ritmo en tablero: las tarjetas 2 y 4 van sobre crema (par oscuro sobre crema aprobado, 14.37). */
+  .pillar-card:nth-child(even) {
+    background: var(--color-brand-cream);
+  }
+
   .pillar-card :global(.pillar-chip) {
     flex: none;
     width: 6rem;
@@ -60,9 +65,9 @@ const { chip, title, body, list } = Astro.props;
     color: var(--on-surface);
   }
 
+  /* Filas del equipo con la regla de 3 px de la lista de Por qué ahora; la última cierra con la del borde. */
   .pillar-team {
     display: grid;
-    gap: 0.75rem;
     margin: 1rem 0 0;
     padding: 0;
     list-style: none;
@@ -70,7 +75,13 @@ const { chip, title, body, list } = Astro.props;
 
   .pillar-team li {
     min-width: 0;
+    padding-block: 0.75rem;
+    border-top: var(--border-pop);
     font-weight: 600;
     overflow-wrap: anywhere;
+  }
+
+  .pillar-team li:last-child {
+    padding-bottom: 0;
   }
 </style>
