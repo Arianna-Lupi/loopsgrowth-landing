@@ -304,6 +304,43 @@ es:
           status: pending
           confirm_by: Ari
           reason: "Canal del caso 5 tomado de la frase del doc (subcadena de marca personal referente en Meta Ads); Ari lo confirma."
+  team:
+    title:
+      text: "Quiénes somos"
+      status: verified
+    members:
+      - name:
+          text: "Arianna Lupi"
+          status: pending
+          confirm_by: Ari
+          reason: "Consentimiento del integrante para publicar su nombre y cargo (STATE, Fase 2); Ari confirma"
+        role:
+          text: "Fundadora y estratega SEO"
+          status: verified
+      - name:
+          text: "Verónica Romero"
+          status: pending
+          confirm_by: Ari
+          reason: "Consentimiento del integrante para publicar su nombre y cargo (STATE, Fase 2); Ari confirma"
+        role:
+          text: "Directora de Proyectos"
+          status: verified
+      - name:
+          text: "Juan Angulo"
+          status: pending
+          confirm_by: Ari
+          reason: "Consentimiento del integrante para publicar su nombre y cargo (STATE, Fase 2); Ari confirma"
+        role:
+          text: "Director técnico"
+          status: verified
+      - name:
+          text: "Miguel Pacheco"
+          status: pending
+          confirm_by: Ari
+          reason: "Consentimiento del integrante para publicar su nombre y cargo (STATE, Fase 2); Ari confirma"
+        role:
+          text: "Especialista SEO"
+          status: verified
   agenda:
     title:
       text: "Agenda tu llamada"

@@ -79,6 +79,12 @@ const landing = defineCollection({
         )
         .length(5),
     }),
+    // Cuatro integrantes exactos: la rejilla de 1, 2 y 4 columnas depende del conteo. Solo nombre y cargo:
+    // sin biografía, credencial ni enlaces hasta que Ari confirme (UI-SPEC sección 7).
+    team: z.strictObject({
+      title: claim,
+      members: z.array(z.strictObject({ name: claim, role: claim })).length(4),
+    }),
     agenda: z.strictObject({
       title: claim,
       intro: claim,

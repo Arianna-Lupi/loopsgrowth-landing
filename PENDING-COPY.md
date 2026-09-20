@@ -30,4 +30,8 @@ Este archivo se genera con `npm run pending` desde `src/content/landing.es.yaml`
 | cases.items[4].sector | marca personal referente en Meta Ads | El doc trae una sola frase para el caso 5 (marca personal referente en Meta Ads); se muestra completa como sector y Ari confirma cómo se divide. | Ari |
 | cases.items[4].period | FALTA CONFIRMAR | Plazo del caso 5: el Copy v2 (sección 5) no lo da. Se lo pedimos a Ari. | Ari |
 | cases.items[4].channel | Meta Ads | Canal del caso 5 tomado de la frase del doc (subcadena de marca personal referente en Meta Ads); Ari lo confirma. | Ari |
+| team.members[0].name | Arianna Lupi | Consentimiento del integrante para publicar su nombre y cargo (STATE, Fase 2); Ari confirma | Ari |
+| team.members[1].name | Verónica Romero | Consentimiento del integrante para publicar su nombre y cargo (STATE, Fase 2); Ari confirma | Ari |
+| team.members[2].name | Juan Angulo | Consentimiento del integrante para publicar su nombre y cargo (STATE, Fase 2); Ari confirma | Ari |
+| team.members[3].name | Miguel Pacheco | Consentimiento del integrante para publicar su nombre y cargo (STATE, Fase 2); Ari confirma | Ari |
 | agenda.intro | Agenda una llamada de {duration}. Sin costo y sin compromiso. Entendemos tu negocio y te decimos con honestidad si podemos ayudarte. Si no somos el equipo correcto, también te lo decimos. | Cuerpo del CTA final del Copy v2 de Ari; la duración sale de call.duration, que está pending | Ari |
