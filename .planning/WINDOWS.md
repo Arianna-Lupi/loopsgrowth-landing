@@ -1,10 +1,10 @@
 ---
 schema_version: 1
-open_count: 5
+open_count: 6
 waived_count: 0
 fixed_count: 1
-total_count: 6
-last_updated: 2026-09-19T19:08:42.265Z
+total_count: 7
+last_updated: 2026-09-20T01:32:07.575Z
 ---
 
 # Broken Windows Ledger
@@ -21,6 +21,7 @@ last_updated: 2026-09-19T19:08:42.265Z
 | 4 | 01 | deviation | tests/e2e/form-measure.spec.ts |  | Plan 04: el auto-resize de ClickUp (iframe-resizer) no sigue al contenido del formulario (reporta la altura del propio iframe); la altura se mide con scrollHeight de cu-form y la reserva min-height es la altura efectiva. Ari verifica Autosize embed height en ClickUp; si cambia el formulario, repetir form-measure.spec.ts | open |  | 2026-09-19T03:07:49.721Z |  |
 | 5 | 02 | stub | src/content/landing.es.yaml |  | solution.title muestra FALTA CONFIRMAR (titular del doc trae la sigla que la guarda rechaza; Ari decide) | open |  | 2026-09-19T19:08:41.349Z |  |
 | 6 | 02 | stub | src/content/landing.es.yaml |  | solution.items[3].body muestra FALTA CONFIRMAR (nota VERIFICAR del Pilar 4; Ari respalda con datos o suaviza) | open |  | 2026-09-19T19:08:42.265Z |  |
+| 7 | 2 | stub | src/content/landing.es.yaml |  | results.items[1].body y canales de cases 1 a 4 y plazo del caso 5 muestran FALTA CONFIRMAR hasta que Ari entregue el dato | open |  | 2026-09-20T01:32:07.575Z |  |
 
 ````json
 [
@@ -94,6 +95,18 @@ last_updated: 2026-09-19T19:08:42.265Z
     "status": "open",
     "reason": "",
     "recorded_at": "2026-09-19T19:08:42.265Z",
+    "resolved_at": null
+  },
+  {
+    "id": 7,
+    "kind": "stub",
+    "phase": "2",
+    "file": "src/content/landing.es.yaml",
+    "line": null,
+    "description": "results.items[1].body y canales de cases 1 a 4 y plazo del caso 5 muestran FALTA CONFIRMAR hasta que Ari entregue el dato",
+    "status": "open",
+    "reason": "",
+    "recorded_at": "2026-09-20T01:32:07.575Z",
     "resolved_at": null
   }
 ]
