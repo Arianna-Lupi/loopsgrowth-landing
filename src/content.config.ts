@@ -102,6 +102,10 @@ const landing = defineCollection({
       iframe_title: claim,
       noscript: claim,
     }),
+    // Pie de página y política de privacidad (plan 02-06). El cuerpo de la política es una lista de
+    // afirmaciones: un `<p>` por elemento. Correo y redes del pie se suman en la tarea 3.
+    footer: z.strictObject({ nav_label: claim, privacy_link: claim }),
+    privacy: z.strictObject({ title: claim, body: z.array(claim).min(1) }),
     config: z.strictObject({
       form_url: httpsUrlFrom('forms.clickup.com'),
       form_script_src: httpsUrlFrom('app-cdn.clickup.com'),

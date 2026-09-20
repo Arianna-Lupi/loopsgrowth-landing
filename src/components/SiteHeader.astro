@@ -15,7 +15,10 @@ import { getLanding, ctaLabel } from '../lib/content';
 
 const data = await getLanding();
 const label = ctaLabel(data);
-const homeHref = Astro.url.pathname === '/' ? undefined : '/';
+const isHome = Astro.url.pathname === '/';
+const homeHref = isHome ? undefined : '/';
+// En otras rutas `#agenda` no existe: el CTA lleva a la home con el ancla.
+const ctaHref = isHome ? '#agenda' : '/#agenda';
 // Un solo valor alimenta el tono del header y el del logo, para que no puedan separarse.
 const tone = 'light';
 ---
@@ -26,7 +29,7 @@ const tone = 'light';
   <div class="wrap bar">
     <span class="wordmark"><Logo name={data.brand.name.text} href={homeHref} tone={tone} /></span>
     <div class="header-cta">
-      <CtaLink label={label} location="header" />
+      <CtaLink label={label} location="header" href={ctaHref} />
     </div>
   </div>
 </header>

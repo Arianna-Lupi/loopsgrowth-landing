@@ -453,6 +453,22 @@ es:
     noscript:
       text: "Para ver el formulario aquí necesitas activar JavaScript."
       status: verified
+  footer:
+    nav_label:
+      text: "Enlaces del pie de página"
+      status: verified
+    privacy_link:
+      text: "Política de privacidad"
+      status: verified
+  privacy:
+    title:
+      text: "Política de privacidad"
+      status: verified
+    body:
+      - text: "FALTA CONFIRMAR"
+        status: pending
+        confirm_by: Ari
+        reason: "El doc de Ari no trae la política de privacidad; Ari entrega el texto legal"
   config:
     form_url: "https://forms.clickup.com/90131720021/f/2ky49tun-19253/DATFKMESVSMXZY5CO5"
     form_script_src: "https://app-cdn.clickup.com/assets/js/forms-embed/v1.js"

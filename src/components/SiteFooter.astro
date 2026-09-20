@@ -1,0 +1,40 @@
+---
+/**
+ * Footer (CONT-12), fuera de `main` y montado por BaseLayout en cada ruta. Primer corte: solo el
+ * enlace de política de privacidad dentro de un `<nav aria-label>`; el logo, el contacto y las
+ * redes los suma la tarea 3 del plan 02-06. Sin encabezados, sin JavaScript y sin texto que no salga
+ * del YAML (sin "todos los derechos reservados" ni año). El tono `light` da fondo y tinta.
+ */
+import { getLanding } from '../lib/content';
+
+const { footer } = await getLanding();
+const onPrivacy = Astro.url.pathname.startsWith('/privacidad');
+---
+
+<footer class="site-footer" data-tone="light">
+  <div class="wrap">
+    <nav class="footer-nav" aria-label={footer.nav_label.text}>
+      <a class="footer-link" href="/privacidad/" aria-current={onPrivacy ? 'page' : undefined}>{footer.privacy_link.text}</a>
+    </nav>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    border-top: var(--border-pop);
+    padding-block: var(--section-y);
+  }
+
+  .footer-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--target-min);
+    overflow-wrap: anywhere;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 4px;
+  }
+
+  .footer-link:hover {
+    text-decoration-thickness: 3px;
+  }
+</style>

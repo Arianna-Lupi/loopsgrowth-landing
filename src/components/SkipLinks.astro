@@ -4,15 +4,18 @@
  * y al formulario (#agenda). Fuera de pantalla con `transform`, nunca con
  * `display: none` ni `visibility: hidden`, para que el teclado y los lectores de
  * pantalla los alcancen. Al recibir foco aparecen arriba a la izquierda.
+ * El salto al formulario solo existe en `/`, donde está `#agenda`: en otras rutas el destino no
+ * existe y el CTA del header ya ofrece `/#agenda`.
  */
 import { getLanding } from '../lib/content';
 
 const { skip } = await getLanding();
+const hasAgenda = Astro.url.pathname === '/';
 ---
 
 <nav class="skip" aria-label={skip.nav_label.text}>
   <a href="#main">{skip.content.text}</a>
-  <a href="#agenda">{skip.form.text}</a>
+  {hasAgenda && <a href="#agenda">{skip.form.text}</a>}
 </nav>
 
 <style>

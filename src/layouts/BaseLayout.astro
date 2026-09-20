@@ -3,14 +3,19 @@ import '../styles/global.css';
 import { Font } from 'astro:assets';
 import SkipLinks from '../components/SkipLinks.astro';
 import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
 import { isProduction, canonicalUrl } from '../lib/site';
 
 interface Props {
   title: string;
+  /** `noindex` en todo entorno (también en producción) y sin canonical. */
+  noindex?: boolean;
+  /** Ruta de la página, para la URL canónica. Por defecto `/`. */
+  path?: string;
 }
 
-const { title } = Astro.props;
-const canonical = canonicalUrl('/');
+const { title, noindex = false, path = '/' } = Astro.props;
+const canonical = canonicalUrl(path);
 ---
 
 <!doctype html>
@@ -18,8 +23,8 @@ const canonical = canonicalUrl('/');
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    {!isProduction && <meta name="robots" content="noindex" />}
-    {isProduction && canonical && <link rel="canonical" href={canonical} />}
+    {(!isProduction || noindex) && <meta name="robots" content="noindex" />}
+    {isProduction && !noindex && canonical && <link rel="canonical" href={canonical} />}
     <title>{title}</title>
     <Font cssVariable="--font-brand" preload={[{ subset: "latin", style: "normal" }]} />
   </head>
@@ -29,5 +34,6 @@ const canonical = canonicalUrl('/');
     <main id="main" tabindex="-1">
       <slot />
     </main>
+    <SiteFooter />
   </body>
 </html>

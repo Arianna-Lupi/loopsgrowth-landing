@@ -40,3 +40,4 @@ Este archivo se genera con `npm run pending` desde `src/content/landing.es.yaml`
 | how_it_works.steps[2].timeframe | 6-12 meses | Plazo del Copy v2 (coincide con Estrategia a 6-12 meses de Qué incluye); Ari confirma (CONTEXT) | Ari |
 | how_it_works.steps[3].timeframe | mes 12+ | Plazo del Copy v2; los plazos de las cuatro fases quedan pending hasta que Ari confirme (CONTEXT) | Ari |
 | agenda.intro | Agenda una llamada de {duration}. Sin costo y sin compromiso. Entendemos tu negocio y te decimos con honestidad si podemos ayudarte. Si no somos el equipo correcto, también te lo decimos. | Cuerpo del CTA final del Copy v2 de Ari; la duración sale de call.duration, que está pending | Ari |
+| privacy.body[0] | FALTA CONFIRMAR | El doc de Ari no trae la política de privacidad; Ari entrega el texto legal | Ari |
