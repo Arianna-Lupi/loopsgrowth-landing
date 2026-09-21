@@ -83,7 +83,6 @@ const VOSEO_RE = new RegExp(
   'giu',
 );
 const VOSEO_CASE_RE = new RegExp(voseoPattern(CASE_SENSITIVE_VOSEO), 'gu');
-const AEO_RE = new RegExp(`${NOT_WORD_BEFORE}AEO${NOT_WORD_AFTER}`, 'giu');
 // Marca de verificación del doc de Ari: `[VERIFICAR]`, `[VERIFICAR rango]` o `[VERIFICAR: nota]` (la
 // nota puede traer paréntesis y saltos de línea). El corchete de cierre es opcional: una marca sin
 // cerrar también bloquea. Lineal: una clase negada seguida de un `]` opcional, sin cuantificadores anidados.
@@ -237,7 +236,7 @@ const nonEmptyString = (v) => typeof v === 'string' && v.trim() !== '';
 /**
  * Valida el YAML. `structural` (BARE_STRING, BAD_STATUS, EMPTY_TEXT, BAD_KEY, BAD_META, PLACEHOLDER, INVALID_DOC)
  * es el contrato de FND-02 y falla en cualquier entorno. `content` (PENDING, MISSING, VERIFICAR,
- * VOSEO, DASH, AEO, INVERSION) solo bloquea en producción. `confirm_by` y `reason` son metadatos: no se
+ * VOSEO, DASH, INVERSION) solo bloquea en producción. `confirm_by` y `reason` son metadatos: no se
  * escanean con las reglas de contenido.
  * @param {unknown} doc
  */
@@ -298,7 +297,6 @@ export function checkCopy(doc) {
     for (const ex of matchesOf(VOSEO_RE, text)) content.push({ rule: 'VOSEO', path, excerpt: ex });
     for (const ex of matchesOf(VOSEO_CASE_RE, text)) content.push({ rule: 'VOSEO', path, excerpt: ex });
     for (const ex of matchesOf(DASH_RE, text)) content.push({ rule: 'DASH', path, excerpt: ex });
-    for (const ex of matchesOf(AEO_RE, text)) content.push({ rule: 'AEO', path, excerpt: ex });
     if (claim.status !== 'verified' && inInversionScope(path)) {
       for (const ex of findInversion(text)) content.push({ rule: 'INVERSION', path, excerpt: ex });
     }

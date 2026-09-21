@@ -6,6 +6,7 @@
  * Imprime solo `.text` de cada afirmación, sin leer su estado (COPY-01). Ganchos para el plan 07:
  * `faq-item`, `faq-summary`, `faq-answer`, `faq-icon` y `faq-icon-v`.
  */
+import LangText from '../ui/LangText.astro';
 import { getLanding } from '../../lib/content';
 
 const data = await getLanding();
@@ -14,13 +15,13 @@ const { faq } = data;
 
 <section id="faq" aria-labelledby="faq-title" data-tone="yellow">
   <div class="wrap faq-grid">
-    <h2 id="faq-title" class="section-title">{faq.title.text}</h2>
+    <h2 id="faq-title" class="section-title"><LangText text={faq.title.text} /></h2>
     <div class="faq-list">
       {
         faq.items.map((item) => (
           <details class="faq-item" data-tone="light">
             <summary class="faq-summary">
-              <span class="faq-question">{item.question.text}</span>
+              <span class="faq-question"><LangText text={item.question.text} /></span>
               <svg class="faq-icon" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false">
                 <circle class="faq-icon-disc" cx="12" cy="12" r="10.5" />
                 <path d="M7 12h10" />
@@ -28,7 +29,7 @@ const { faq } = data;
               </svg>
             </summary>
             <div class="faq-answer">
-              <p>{item.answer.text}</p>
+              <p><LangText text={item.answer.text} /></p>
             </div>
           </details>
         ))

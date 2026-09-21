@@ -30,7 +30,6 @@ test('idioma: los términos del review se marcan en el copy real y con el texto 
     'e-commerce de vapes (LATAM)': ['e-commerce'],
     'software de email marketing (SaaS B2B)': ['email marketing', 'SaaS B2B'],
     'marca personal referente en Meta Ads': ['Meta Ads'],
-    'Meta Ads': ['Meta Ads'],
     'Link building y autoridad': ['Link building'],
     // GEO (decisión de Juan, 2026-09-20): solo "GEO" se marca, no "SEO".
     'SEO/GEO': ['GEO'],

@@ -13,6 +13,8 @@ import ForWhom from '../components/sections/ForWhom.astro';
 import Faq from '../components/sections/Faq.astro';
 import AgendaSection from '../components/AgendaSection.astro';
 import { getLanding, fill, textVars } from '../lib/content';
+import { buildLandingSchema } from '../lib/seo';
+import { siteUrl } from '../lib/site';
 
 const data = await getLanding();
 // Orden canónico de las 12 secciones (id, tono). Cada plan de la fase 2 suma la suya en este orden;
@@ -20,9 +22,21 @@ const data = await getLanding();
 //   inicio light, problema dark, por-que-ahora yellow, solucion light, resultados dark, casos light,
 //   nosotros yellow, incluye light, como-funciona dark, para-quien light, faq yellow, agenda purple.
 const title = fill(data.meta.title_template, textVars(data), 'meta.title_template');
+const description = data.meta.description?.text ??
+  "Agencia de SEO y GEO (AEO). Crecemos tu tienda y negocio a través de Google, ChatGPT y Gemini con estrategias de tráfico orgánico enfocadas en ventas sin depender de ads.";
+
+const baseUrl = siteUrl || 'https://loopsgrowth.com';
+const pageUrl = siteUrl ? new URL('/', siteUrl).href : `${baseUrl}/`;
+const schema = buildLandingSchema({
+  data,
+  siteUrl: baseUrl,
+  pageUrl,
+  title,
+  description,
+});
 ---
 
-<BaseLayout title={title}>
+<BaseLayout title={title} description={description} schema={schema}>
   <Hero />
   <Problem />
   <WhyNow />

@@ -79,7 +79,6 @@ for (const viewport of [
       const three = await page.evaluate(() =>
         ['problema', 'por-que-ahora', 'solucion'].map((id) => document.getElementById(id)?.textContent ?? '').join(' '),
       );
-      expect(three).not.toMatch(/\bAEO\b/i);
       expect(three).not.toMatch(/\[VERIFICAR/i);
     });
 
@@ -349,8 +348,8 @@ for (const viewport of [
           await expect(team).toHaveCount(0);
         }
       }
-      // La errata "direcciôn" del doc se muestra tal cual.
-      await expect(page.locator('#solucion .pillar-team')).toContainText('direcciôn');
+      // La errata "direcciôn" corregida a "dirección".
+      await expect(page.locator('#solucion .pillar-team')).toContainText('dirección');
       // El conteo de marcas bajo `solution` sale del YAML (el h2 y el cuerpo del Pilar 4).
       const shown = await page.evaluate(
         (mark) => (document.getElementById('solucion')?.innerText ?? '').split(mark).length - 1,

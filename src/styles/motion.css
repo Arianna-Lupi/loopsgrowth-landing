@@ -33,7 +33,7 @@
     --hc-end: calc(var(--hc-step) * 5 + var(--hc-dur));
     --look: 8px;
     --look-dx: 0;
-    --look-dy: -1;
+    --look-dy: 1;
   }
 
   @media (min-width: 64em) {
