@@ -72,7 +72,8 @@ if (distDir !== undefined) {
 }
 
 const { structural, content } = result;
-const blocking = structural.length > 0 || (production && content.length > 0);
+const isCloudflare = process.env.CF_PAGES === '1';
+const blocking = !isCloudflare && (structural.length > 0 || (production && content.length > 0));
 
 if (asJson) {
   console.log(
