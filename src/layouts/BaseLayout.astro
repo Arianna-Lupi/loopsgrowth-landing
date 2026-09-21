@@ -4,18 +4,37 @@ import { Font } from 'astro:assets';
 import SkipLinks from '../components/SkipLinks.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
-import { isProduction, canonicalUrl } from '../lib/site';
+import { isProduction, canonicalUrl, siteUrl } from '../lib/site';
+import { THEME_COLOR, DEFAULT_OG_IMAGE } from '../lib/seo';
 
 interface Props {
   title: string;
+  description?: string;
   /** `noindex` en todo entorno (también en producción) y sin canonical. */
   noindex?: boolean;
   /** Ruta de la página, para la URL canónica. Por defecto `/`. */
   path?: string;
+  ogImage?: string;
+  ogType?: string;
+  schema?: Record<string, unknown>;
 }
 
-const { title, noindex = false, path = '/' } = Astro.props;
+const {
+  title,
+  description = "Agencia de SEO y GEO (AEO). Crecemos tu tienda y negocio a través de Google, ChatGPT y Gemini con estrategias de tráfico orgánico enfocadas en ventas sin depender de ads.",
+  noindex = false,
+  path = '/',
+  ogImage = DEFAULT_OG_IMAGE,
+  ogType = 'website',
+  schema,
+} = Astro.props;
+
 const canonical = canonicalUrl(path);
+const effectiveSiteUrl = siteUrl || 'https://loopsgrowth.com';
+const pageUrl = canonical || (siteUrl ? new URL(path, siteUrl).href : `${effectiveSiteUrl}${path}`);
+const fullOgImage = ogImage.startsWith('http')
+  ? ogImage
+  : `${effectiveSiteUrl}${ogImage.startsWith('/') ? '' : '/'}${ogImage}`;
 ---
 
 <!doctype html>
@@ -23,12 +42,45 @@ const canonical = canonicalUrl(path);
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    {(!isProduction || noindex) && <meta name="robots" content="noindex" />}
+    {(!isProduction || noindex) ? (
+      <meta name="robots" content="noindex" />
+    ) : (
+      <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    )}
     {isProduction && !noindex && canonical && <link rel="canonical" href={canonical} />}
     <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="author" content="Loops Growth" />
+    <meta name="theme-color" content={THEME_COLOR} />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content="Loops Growth" />
+    <meta property="og:url" content={pageUrl} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={fullOgImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={title} />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:locale" content="es_ES" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content={pageUrl} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={fullOgImage} />
+    <meta name="twitter:image:alt" content={title} />
+
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <Font cssVariable="--font-brand" preload={[{ subset: "latin", style: "normal" }]} />
+
+    {schema && (
+      <script is:inline type="application/ld+json" set:html={JSON.stringify(schema)} />
+    )}
   </head>
   <body>
     <SkipLinks />

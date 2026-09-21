@@ -31,7 +31,14 @@ if (isProduction && !site) {
 export default defineConfig({
   output: 'static',
   site,
-  integrations: isProduction && site ? [sitemap()] : [],
+  integrations:
+    isProduction && site
+      ? [
+          sitemap({
+            filter: (page) => !page.includes('/privacidad') && !page.includes('/marca/hoja'),
+          }),
+        ]
+      : [],
   vite: {
     plugins: [tailwindcss()],
   },

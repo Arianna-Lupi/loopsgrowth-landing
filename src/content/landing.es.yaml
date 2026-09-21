@@ -42,8 +42,10 @@ es:
   meta:
     title_template:
       text: "Loops Growth: agencia de {term}"
-      status: pending
-      reason: "Título provisional derivado de brand.term; la Fase 3 lo reemplaza"
+      status: verified
+    description:
+      text: "Agencia de SEO y GEO (AEO). Crecemos tu tienda y negocio a través de Google, ChatGPT y Gemini con estrategias de tráfico orgánico enfocadas en ventas sin depender de ads."
+      status: verified
   hero:
     h1:
       text: "Crecemos tu tienda a través de Google, ChatGPT y Gemini."
