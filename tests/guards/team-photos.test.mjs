@@ -162,20 +162,21 @@ test('Team.astro: foto local con alt vacío, ancho, alto y carga diferida; avata
   assert.ok(/<Avatar\b/.test(src), 'avatar Loopy de respaldo');
   assert.ok(/target="_blank"/.test(src) && /rel="noopener noreferrer"/.test(src), 'enlace externo seguro');
   assert.ok(!/https?:\/\//.test(src.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\/\/.*$/gm, '').replace(/---[\s\S]*?---/, '')), 'sin URL escrita en el marcado');
-  assert.ok(!/aria-label\s*=/.test(src), 'sin aria-label que reemplace el texto visible');
+  assert.ok(!/\baria-label\s*=/.test(src), 'sin aria-label que reemplace el texto visible');
 });
 
-test('esquema y YAML: `link` opcional con url https, label y hint; solo la tarjeta de Juan lo lleva, con el href y el texto exactos', () => {
+test('esquema y YAML: `link` opcional con URL https, label y hint; Arianna y Juan llevan sus enlaces', () => {
   const config = readFileSync('src/content.config.ts', 'utf8');
   assert.ok(/link: z\s*\.strictObject\(\{[\s\S]*?url: claim\.extend\(\{ text: z\.url\(\{ protocol: \/\^https\$\/[\s\S]*?\.optional\(\)/.test(config), 'link opcional con url https en el esquema');
   const yaml = readFileSync('src/content/landing.es.yaml', 'utf8');
   const team = yaml.slice(yaml.indexOf('  team:'), yaml.indexOf('  includes:'));
-  assert.equal((team.match(/^ {8}link:$/gm) ?? []).length, 1, 'un solo enlace en el equipo');
+  assert.equal((team.match(/^ {8}link:$/gm) ?? []).length, 2, 'dos enlaces en el equipo');
+  const arianna = team.slice(team.indexOf('"Arianna Lupi"'), team.indexOf('"Verónica Romero"'));
+  assert.ok(/text: "https:\/\/ariannalupi\.com"\n\s+status: verified/.test(arianna), 'URL exacta de Arianna');
   const juan = team.slice(team.indexOf('"Juan Carlos Angulo"'), team.indexOf('"Miguel Pacheco"'));
   assert.ok(/text: "https:\/\/juan-tech\.com"\n\s+status: verified\n\s+reason: "[^"]*Juan Carlos Angulo el 2026-09-20/.test(juan), 'url exacta, verified y con reason de Juan');
-  assert.ok(/text: "juan-tech\.com"\n\s+status: verified/.test(juan), 'label exacto');
+  assert.ok(/text: "juan-tech\.com"\n\s+status: verified/.test(juan), 'label de Juan');
   assert.ok(!/[\u2013\u2014]/.test(team), 'sin guiones largos ni cortos');
-  assert.ok(!/\bAEO\b/.test(team), 'sin AEO');
 });
 
 /** Tope de peso del WebP emitido por foto del equipo (medido: unos 4 KB) y de la suma de las tres. */
@@ -200,13 +201,16 @@ test('dist: una img por foto del equipo, local, con alt vacío, 240x240, carga d
   }
   assert.ok(total <= TEAM_WEBP_MAX * 2, `suma ${total}`);
   assert.equal((html.match(/<img\b[^>]*data-team-photo/g) ?? []).length, TEAM_PHOTOS.length);
-  // Enlace de Juan: exacto, externo y seguro; el único enlace de la sección.
+  // Tarjetas de Arianna y Juan: enlaces completos, externos y seguros.
   const section = html.slice(html.indexOf('id="nosotros"'), html.indexOf('id="incluye"'));
   const links = section.match(/<a\b[^>]*>/g) ?? [];
-  assert.equal(links.length, 1, 'un solo enlace en Quiénes somos');
-  assert.match(links[0], /href="https:\/\/juan-tech\.com"/);
-  assert.match(links[0], /target="_blank"/);
-  assert.match(links[0], /rel="noopener noreferrer"/);
-  assert.ok(!/aria-label/.test(links[0]));
+  assert.equal(links.length, 2, 'dos enlaces en Quiénes somos');
+  assert.match(links[0], /href="https:\/\/ariannalupi\.com"/);
+  assert.match(links[1], /href="https:\/\/juan-tech\.com"/);
+  for (const link of links) {
+    assert.match(link, /target="_blank"/);
+    assert.match(link, /rel="noopener noreferrer"/);
+    assert.ok(!/\baria-label=/.test(link));
+  }
   assert.ok(!/(src|href)="\/\//.test(section), 'sin recursos de terceros en la sección');
 });

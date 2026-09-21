@@ -139,10 +139,8 @@ es:
         status: verified
   solution:
     title:
-      text: "FALTA CONFIRMAR"
-      status: pending
-      confirm_by: Ari
-      reason: "Titular del Copy v2 (línea 79): \"Un equipo que ejecuta SEO y AEO, no que te asesora.\" La guarda de copy rechaza la sigla de tres letras que trae; Ari decide qué término usar (hallazgos 1 y 4 del UI-SPEC). No se edita el texto de Ari."
+      text: "Un equipo que ejecuta SEO y AEO, no que te asesora."
+      status: verified
     lead:
       text: "La mayoría de agencias te entrega recomendaciones y te deja el trabajo pesado a ti. Nosotros funcionamos como tu equipo interno de crecimiento: hacemos el trabajo, mes a mes, y respondemos por el resultado."
       status: verified
@@ -180,10 +178,8 @@ es:
           text: "Reportes que hablan de ventas, no de posiciones"
           status: verified
         body:
-          text: "FALTA CONFIRMAR"
-          status: pending
-          confirm_by: Ari
-          reason: "Cuerpo del Pilar 4 del Copy v2 (línea 104): \"Cada mes ves qué se hizo, qué se movió y cuánto te costó contra cuánto generó. Nada de \"subimos 20%\". Más bien: \"el orgánico trajo X visitas, convirtieron Y, compraron Z\". [VERIFICAR: solo desglosa por canal (Google vs IA) si de verdad puedes atribuirlo con datos. Si no, repórtalo junto y no inventes el split.]\" La nota entre corchetes pide verificar el desglose por canal; Ari lo respalda con datos o lo suaviza. No se recorta la nota para publicar el resto."
+          text: "Cada mes ves qué se hizo, qué se movió y cuánto te costó contra cuánto generó. Nada de \"subimos 20%\". Más bien: \"el orgánico trajo X visitas, convirtieron Y, compraron Z\"."
+          status: verified
   results:
     title:
       text: "Lo que cambia en 6 a 12 meses"
@@ -203,10 +199,8 @@ es:
           confirm_by: Ari
           reason: "Lead del resultado 2 del Copy v2 (sección 4). Resume el resultado cuyo rango de presupuesto no tiene respaldo; se muestra tal cual, sin cifra, y Ari decide si se mantiene cuando entregue el dato."
         body:
-          text: "FALTA CONFIRMAR"
-          status: pending
-          confirm_by: Ari
-          reason: "Cuerpo del resultado 2 del Copy v2 (sección 4): \"Varios clientes bajan entre 30% y 50% su presupuesto de ads manteniendo el mismo tráfico. [VERIFICAR rango]\". El rango no tiene respaldo propio (COPY-VERIFICATION, detalle 2), así que la página no lo publica ni lo suaviza. Ari aporta el dato con su fuente o decide otro texto."
+          text: "Varios clientes bajan entre 30% y 50% su presupuesto de ads manteniendo el mismo tráfico."
+          status: verified
       - lead:
           text: "Apareces donde antes no estabas."
           status: verified
@@ -221,19 +215,14 @@ es:
           status: verified
   cases:
     title:
-      text: "Casos de exito"
-      status: pending
-      confirm_by: Ari
-      reason: "Rótulo de la sección 5 del Copy v2 (el doc no trae titular para casos), con la errata sin tilde en exito. Ari confirma el titular y la ortografía."
+      text: "Casos de éxito"
+      status: verified
     labels:
       sector:
         text: "Sector"
         status: verified
       period:
         text: "Plazo"
-        status: verified
-      channel:
-        text: "Canal"
         status: verified
     items:
       - figure:
@@ -250,14 +239,10 @@ es:
           status: verified
         period:
           text: "6 meses"
-          status: pending
-          confirm_by: Ari
-          reason: "Plazo tomado del detalle del caso en el Copy v2 (sección 5); el UI-SPEC pide que Ari confirme los cinco plazos."
-        channel:
-          text: "FALTA CONFIRMAR"
-          status: pending
-          confirm_by: Ari
-          reason: "Canal del caso 1: el Copy v2 (sección 5) no lo nombra. Se lo pedimos a Ari; el chip y el dato de Canal muestran el relleno hasta que lo entregue."
+          status: verified
+        pill:
+          text: "E-commerce"
+          status: verified
       - figure:
           text: "+237%"
           status: verified
@@ -272,14 +257,10 @@ es:
           status: verified
         period:
           text: "6 meses"
-          status: pending
-          confirm_by: Ari
-          reason: "Plazo tomado del detalle del caso en el Copy v2 (sección 5); el UI-SPEC pide que Ari confirme los cinco plazos."
-        channel:
-          text: "FALTA CONFIRMAR"
-          status: pending
-          confirm_by: Ari
-          reason: "Canal del caso 2: el Copy v2 (sección 5) no lo nombra. Se lo pedimos a Ari; el chip y el dato de Canal muestran el relleno hasta que lo entregue."
+          status: verified
+        pill:
+          text: "Educación y Salud"
+          status: verified
       - figure:
           text: "x3"
           status: verified
@@ -294,14 +275,10 @@ es:
           status: verified
         period:
           text: "6 meses"
-          status: pending
-          confirm_by: Ari
-          reason: "Plazo tomado del detalle del caso en el Copy v2 (sección 5); el UI-SPEC pide que Ari confirme los cinco plazos."
-        channel:
-          text: "FALTA CONFIRMAR"
-          status: pending
-          confirm_by: Ari
-          reason: "Canal del caso 3: el Copy v2 (sección 5) no lo nombra (el detalle habla de tráfico orgánico, pero no dice cuál fue el canal del caso). Se lo pedimos a Ari; el chip y el dato de Canal muestran el relleno hasta que lo entregue."
+          status: verified
+        pill:
+          text: "SaaS B2B"
+          status: verified
       - figure:
           text: "+3.808%"
           status: verified
@@ -316,40 +293,34 @@ es:
           status: verified
         period:
           text: "12 meses"
-          status: pending
-          confirm_by: Ari
-          reason: "Plazo tomado del detalle del caso 4 en el Copy v2 (sección 5); el UI-SPEC pide que Ari confirme los cinco plazos."
-        channel:
-          text: "FALTA CONFIRMAR"
-          status: pending
-          confirm_by: Ari
-          reason: "Canal del caso 4: el Copy v2 (sección 5) no lo nombra. Se lo pedimos a Ari; el chip y el dato de Canal muestran el relleno hasta que lo entregue."
+          status: verified
+        pill:
+          text: "App móvil"
+          status: verified
       - figure:
           text: "+500%"
           status: verified
         metric:
-          text: "en crecimiento de trafico organico"
-          status: pending
-          confirm_by: Ari
-          reason: "Métrica del caso 5 del Copy v2 (sección 5), tal como está en el doc, con la errata sin tilde en trafico y organico. El caso es de Meta Ads y la métrica habla de tráfico orgánico: Ari confirma la métrica y la ortografía. El doc no trae línea de detalle para este caso y termina sin punto final."
+          text: "en crecimiento de tráfico orgánico"
+          status: verified
+        detail:
+          text: "En tres meses crecimos el tráfico orgánico a través de buscadores un 500% de una marca personal referente de Facebook y Meta Ads en Latinoamérica a través de: creación de contenido, optimización de páginas existentes y alinear esfuerzos de YouTube con SEO."
+          status: verified
         sector:
           text: "marca personal referente en Meta Ads"
-          status: pending
-          confirm_by: Ari
-          reason: "El doc trae una sola frase para el caso 5 (marca personal referente en Meta Ads); se muestra completa como sector y Ari confirma cómo se divide."
+          status: verified
         period:
-          text: "FALTA CONFIRMAR"
-          status: pending
-          confirm_by: Ari
-          reason: "Plazo del caso 5: el Copy v2 (sección 5) no lo da. Se lo pedimos a Ari."
-        channel:
-          text: "Meta Ads"
-          status: pending
-          confirm_by: Ari
-          reason: "Canal del caso 5 tomado de la frase del doc (subcadena de marca personal referente en Meta Ads); Ari lo confirma."
+          text: "3 meses"
+          status: verified
+        pill:
+          text: "Marca personal"
+          status: verified
   team:
     title:
       text: "Quiénes somos"
+      status: verified
+    intro:
+      text: "Somos un equipo ágil especializado en crecimiento orgánico a través de Google y plataformas de IA. Combinamos experiencia (8+ años), ejecución rigurosa y un contacto directo que responde por el resultado. No damos recomendaciones y desaparecemos: hacemos el trabajo y nos hacemos responsables del resultado."
       status: verified
     members:
       - name:
@@ -360,6 +331,16 @@ es:
         role:
           text: "Fundadora y estratega SEO"
           status: verified
+        link:
+          url:
+            text: "https://ariannalupi.com"
+            status: verified
+          label:
+            text: "Arianna Lupi"
+            status: verified
+          hint:
+            text: "se abre en una pestaña nueva"
+            status: verified
       - name:
           text: "Verónica Romero"
           status: pending
@@ -403,10 +384,8 @@ es:
       status: verified
     items:
       - title:
-          text: "FALTA CONFIRMAR"
-          status: pending
-          confirm_by: Ari
-          reason: "Texto del Copy v2: 'Auditoría SEO + AEO completa'. La guarda rechaza AEO; Ari decide el término (SEO/GEO o AEO) y entrega el texto final"
+          text: "Auditoría SEO + AEO completa"
+          status: verified
         description:
           text: "para que sepas exactamente dónde ganar antes de gastar un peso."
           status: verified
@@ -491,115 +470,91 @@ es:
           reason: "Plazo del Copy v2; los plazos de las cuatro fases quedan pending hasta que Ari confirme (CONTEXT)"
   for_whom:
     title:
-      text: "FALTA CONFIRMAR"
-      status: pending
-      confirm_by: Ari
-      reason: "Título de la sección Para quién es; el doc de Ari no trae esta sección y Ari entrega el título"
+      text: "Para quién es"
+      status: verified
     is_for:
       title:
-        text: "Para quién es"
-        status: pending
-        confirm_by: Ari
-        reason: "Nombre tomado de CONTEXT; el doc de Ari no trae esta sección"
+        text: "Este servicio es para ti si:"
+        status: verified
       items:
-        - text: "FALTA CONFIRMAR"
-          status: pending
-          confirm_by: Ari
-          reason: "Primer ítem de la columna 'es': debe comunicar el perfil de empresa que factura USD 200k o más al año; Ari entrega el texto; no publicar rangos ni cifras de inversión sin aprobación"
-        - text: "FALTA CONFIRMAR"
-          status: pending
-          confirm_by: Ari
-          reason: "Ítem 2 de la columna 'es' de Para quién es; el doc de Ari no trae esta sección, Ari entrega el texto; no publicar rangos ni cifras de inversión sin aprobación"
-        - text: "FALTA CONFIRMAR"
-          status: pending
-          confirm_by: Ari
-          reason: "Ítem 3 de la columna 'es' de Para quién es; el doc de Ari no trae esta sección, Ari entrega el texto; no publicar rangos ni cifras de inversión sin aprobación"
+        - text: "Tienes un negocio que ya vende y quieres convertir el tráfico orgánico en una fuente de crecimiento."
+          status: verified
+        - text: "Dependes demasiado de Google Ads u otros canales pagados y quieres construir un canal orgánico que se acumule con el tiempo."
+          status: verified
+        - text: "Sabes que necesitas SEO, pero no tienes el equipo, el conocimiento o el tiempo para ejecutarlo internamente."
+          status: verified
+        - text: "Tu web ya tiene una base de negocio y estás dispuesto a invertir en una estrategia de 6 a 12 meses, no en resultados de una semana."
+          status: verified
+        - text: "Quieres aparecer no solo en Google, sino también en las respuestas de herramientas como ChatGPT y Gemini cuando tus potenciales clientes están buscando qué comprar."
+          status: verified
     is_not_for:
       title:
-        text: "Para quién no es"
-        status: pending
-        confirm_by: Ari
-        reason: "Nombre tomado de CONTEXT; el doc de Ari no trae esta sección"
+        text: "Este servicio probablemente no es para ti si:"
+        status: verified
       items:
-        - text: "FALTA CONFIRMAR"
-          status: pending
-          confirm_by: Ari
-          reason: "Ítem 1 de la columna 'no es' de Para quién es; el doc de Ari no trae esta sección, Ari entrega el texto; no publicar rangos ni cifras de inversión sin aprobación"
-        - text: "FALTA CONFIRMAR"
-          status: pending
-          confirm_by: Ari
-          reason: "Ítem 2 de la columna 'no es' de Para quién es; el doc de Ari no trae esta sección, Ari entrega el texto; no publicar rangos ni cifras de inversión sin aprobación"
-        - text: "FALTA CONFIRMAR"
-          status: pending
-          confirm_by: Ari
-          reason: "Ítem 3 de la columna 'no es' de Para quién es; el doc de Ari no trae esta sección, Ari entrega el texto; no publicar rangos ni cifras de inversión sin aprobación"
+        - text: "Estás buscando resultados de SEO en 30 días o una solución rápida para aumentar tus ventas."
+          status: verified
+        - text: "Solo quieres una auditoría o una lista de recomendaciones para que tu equipo las ejecute después."
+          status: verified
+        - text: "No estás dispuesto a hacer cambios en tu web, contenido o estrategia cuando sean necesarios para crecer."
+          status: verified
+        - text: "Tu negocio todavía no tiene una oferta validada o un modelo de ventas sobre el que podamos construir una estrategia de adquisición orgánica."
+          status: verified
+        - text: "Buscas reemplazar completamente la publicidad paga de un día para otro. SEO y GEO son canales que se construyen y acumulan con el tiempo."
+          status: verified
   faq:
     title:
-      text: "FALTA CONFIRMAR"
-      status: pending
-      confirm_by: Ari
-      reason: "Título del FAQ; el doc de Ari no trae esta sección y Ari entrega el título"
+      text: "Preguntas frecuentes"
+      status: verified
     items:
       - question:
-          text: "FALTA CONFIRMAR"
-          status: pending
-          confirm_by: Ari
-          reason: "Pregunta 1 del FAQ, tema: qué es GEO; el doc de Ari no trae esta sección y Ari entrega el texto"
+          text: "¿Cuánto tiempo tarda en dar resultados el SEO?"
+          status: verified
         answer:
-          text: "FALTA CONFIRMAR"
-          status: pending
-          confirm_by: Ari
-          reason: "Respuesta 1 del FAQ, tema: qué es GEO; Ari entrega el texto"
+          text: "SEO y GEO son estrategias de crecimiento a medio y largo plazo.\nNuestro plan está pensado para trabajar en un horizonte de 6 a 12 meses: durante los primeros meses construimos las bases, después empezamos a ver crecimiento y, con el tiempo, ese crecimiento se acumula."
+          status: verified
       - question:
-          text: "FALTA CONFIRMAR"
-          status: pending
-          confirm_by: Ari
-          reason: "Pregunta 2 del FAQ, tema: duración de la llamada; el doc de Ari no trae esta sección y Ari entrega el texto"
+          text: "¿Tengo que dejar de invertir en Ads si contrato Loops Growth?"
+          status: verified
         answer:
-          text: "FALTA CONFIRMAR"
-          status: pending
-          confirm_by: Ari
-          reason: "Respuesta 2 del FAQ, tema: duración de la llamada; Ari entrega el texto"
+          text: "No.\nNuestro objetivo no es apagar tus campañas de un día para otro, sino ayudarte a construir un canal orgánico que reduzca progresivamente la dependencia de la publicidad paga.\nSEO y Ads pueden trabajar juntos: mientras Ads puede generar resultados de forma inmediata, el SEO construye un activo que puede seguir generando tráfico y clientes con el tiempo."
+          status: verified
       - question:
-          text: "FALTA CONFIRMAR"
-          status: pending
-          confirm_by: Ari
-          reason: "Pregunta 3 del FAQ, tema: qué preparar para la llamada; el doc de Ari no trae esta sección y Ari entrega el texto"
+          text: "¿Qué diferencia hay entre ustedes y una agencia SEO tradicional?"
+          status: verified
         answer:
-          text: "FALTA CONFIRMAR"
-          status: pending
-          confirm_by: Ari
-          reason: "Respuesta 3 del FAQ, tema: qué preparar para la llamada; Ari entrega el texto"
+          text: "No nos limitamos a entregarte una estrategia y una lista de tareas.\nFuncionamos como un equipo especializado de SEO/GEO: analizamos tu negocio, definimos la estrategia, priorizamos oportunidades y ejecutamos el trabajo técnico, de contenido y autoridad."
+          status: verified
       - question:
-          text: "FALTA CONFIRMAR"
-          status: pending
-          confirm_by: Ari
-          reason: "Pregunta 4 del FAQ, tema: inversión; el doc de Ari no trae esta sección y Ari entrega el texto"
+          text: "¿También trabajan GEO para ChatGPT y Gemini?"
+          status: verified
         answer:
-          text: "FALTA CONFIRMAR"
-          status: pending
-          confirm_by: Ari
-          reason: "Respuesta 4 del FAQ, tema: inversión; Ari entrega el texto; no publicar rangos ni cifras de inversión sin aprobación"
+          text: "Sí.\nTrabajamos SEO y GEO como parte de una misma estrategia para aumentar las posibilidades de que tu marca aparezca tanto en los resultados de búsqueda tradicionales como en las respuestas de asistentes de IA.\nLa estrategia incluye contenido, estructura, autoridad y otras optimizaciones que ayudan a que estas plataformas puedan encontrar, interpretar y considerar tu negocio como una fuente relevante."
+          status: verified
       - question:
-          text: "FALTA CONFIRMAR"
-          status: pending
-          confirm_by: Ari
-          reason: "Pregunta 5 del FAQ, tema: tiempos de resultados; el doc de Ari no trae esta sección y Ari entrega el texto"
+          text: "¿Necesito tener un equipo de marketing o SEO interno?"
+          status: verified
         answer:
-          text: "FALTA CONFIRMAR"
-          status: pending
-          confirm_by: Ari
-          reason: "Respuesta 5 del FAQ, tema: tiempos de resultados; Ari entrega el texto"
+          text: "No necesariamente.\nPrecisamente una de las razones por las que trabajamos con empresas es porque necesitan la capacidad de un equipo especializado sin tener que construirlo internamente.\nSi ya tienes un equipo de marketing, trabajamos con él cuando sea necesario para implementar cambios y coordinar esfuerzos."
+          status: verified
       - question:
-          text: "FALTA CONFIRMAR"
-          status: pending
-          confirm_by: Ari
-          reason: "Pregunta 6 del FAQ, tema: si aplica a mi negocio; el doc de Ari no trae esta sección y Ari entrega el texto"
+          text: "¿Qué pasa si ya tengo una estrategia SEO?"
+          status: verified
         answer:
-          text: "FALTA CONFIRMAR"
-          status: pending
-          confirm_by: Ari
-          reason: "Respuesta 6 del FAQ, tema: si aplica a mi negocio; Ari entrega el texto"
+          text: "Perfecto. No partimos necesariamente desde cero.\nPrimero analizamos dónde estás, qué se ha hecho, qué está funcionando y qué oportunidades existen. A partir de ahí definimos qué mantener, qué mejorar y qué deberíamos priorizar."
+          status: verified
+      - question:
+          text: "¿Trabajan con cualquier tipo de negocio?"
+          status: verified
+        answer:
+          text: "No necesariamente.\nAntes de comenzar hacemos una llamada para entender tu negocio, objetivos, situación actual y potencial de crecimiento orgánico.\nSi creemos que podemos aportar valor, avanzamos con una auditoría y propuesta. Si no somos el equipo adecuado para tu caso, también te lo diremos."
+          status: verified
+      - question:
+          text: "¿Cuánto cuesta trabajar con Loops Growth?"
+          status: verified
+        answer:
+          text: "La inversión depende del tamaño del proyecto, la situación actual de tu web y el nivel de trabajo necesario.\nDespués de analizar tu negocio y las principales oportunidades, presentamos una propuesta con el alcance, prioridades e inversión.\nNo trabajamos con un paquete idéntico para todos los negocios."
+          status: verified
   agenda:
     title:
       text: "¿Listo para que te encuentren cuando te estan buscando?"

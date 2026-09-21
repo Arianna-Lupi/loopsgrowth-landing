@@ -35,3 +35,12 @@ BrandBook*.pdf
 
 # originales descargados de terceros (fotos de stock): no se versionan, su sha256 queda en LICENSES.md
 photo-sources/
+
+# AI tooling, planning & agent metadata
+.planning/
+.claude/
+.gsd/
+.bg-shell/
+*.gemini.md
+GEMINI.md
+

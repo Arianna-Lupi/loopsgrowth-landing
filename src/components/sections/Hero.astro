@@ -246,10 +246,6 @@ const clients = data.hero.clients.items.map((item) => {
       padding-bottom: 3rem;
     }
 
-    .hero-grid {
-      gap: 2rem;
-    }
-
     /* Tamaño del h1 en móvil: de 36 px a unos 32 px (30 a 33 px según el ancho), bajo el mínimo de la escala
        de pantalla (2.25rem) solo aquí; desde 40em vuelve `--text-display`. */
     .hero h1 {
@@ -273,20 +269,75 @@ const clients = data.hero.clients.items.map((item) => {
     }
   }
 
+  /* En pantallas móviles y tablets (< 64em), la imagen con el logo va debajo del H1 */
+  @media (max-width: 63.99em) {
+    .hero-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .hero-copy {
+      display: contents;
+    }
+
+    .hero h1 {
+      order: 1;
+    }
+
+    .hero-art {
+      order: 2;
+      display: flex;
+      justify-content: center;
+      margin-top: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .hero-sub {
+      order: 3;
+    }
+
+    .hero-desc {
+      order: 4;
+    }
+
+    .hero-cta {
+      order: 5;
+    }
+
+    .hero-clients {
+      order: 6;
+      margin-top: 2.5rem;
+    }
+  }
+
   @media (min-width: 64em) {
     .hero-copy {
+      display: block;
       grid-column: 1;
       grid-row: 1;
+    }
+
+    .hero h1,
+    .hero-sub,
+    .hero-desc,
+    .hero-cta {
+      order: initial;
     }
 
     .hero-art {
       grid-column: 2;
       grid-row: 1;
+      order: initial;
+      margin-top: 0;
+      margin-bottom: 0;
     }
 
     .hero-clients {
       grid-column: 1 / -1;
       grid-row: 2;
+      order: initial;
+      margin-top: 0;
     }
   }
 </style>

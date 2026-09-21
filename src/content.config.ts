@@ -72,7 +72,7 @@ const landing = defineCollection({
     // opcional porque el caso de Meta Ads no trae línea de detalle en el doc.
     cases: z.strictObject({
       title: claim,
-      labels: z.strictObject({ sector: claim, period: claim, channel: claim }),
+      labels: z.strictObject({ sector: claim, period: claim, channel: claim.optional() }),
       items: z
         .array(
           z.strictObject({
@@ -81,16 +81,17 @@ const landing = defineCollection({
             detail: claim.optional(),
             sector: claim,
             period: claim,
-            channel: claim,
+            channel: claim.optional(),
+            pill: claim.optional(),
           }),
         )
         .length(5),
     }),
-    // Cuatro integrantes exactos: la rejilla de 1, 2 y 4 columnas depende del conteo. Nombre y cargo, sin
-    // biografía ni credencial (UI-SPEC sección 7). Excepción de Juan (2026-09-20): un `link` opcional, solo en
-    // su tarjeta, con `url` (https, sin `javascript:` ni `data:`), `label` visible y `hint` para lectores de pantalla.
+    // Cuatro integrantes exactos: la rejilla de 1, 2 y 4 columnas depende del conteo. La introducción presenta al
+    // equipo. Las tarjetas con `link` son enlaces completos, con URL https y un complemento solo para lectores.
     team: z.strictObject({
       title: claim,
+      intro: claim,
       members: z
         .array(
           z.strictObject({
@@ -123,10 +124,10 @@ const landing = defineCollection({
       is_for: z.strictObject({ title: claim, items: z.array(claim).min(1) }),
       is_not_for: z.strictObject({ title: claim, items: z.array(claim).min(1) }),
     }),
-    // FAQ (plan 02-06): de 5 a 6 preguntas con su respuesta, en `<details>` nativos.
+    // FAQ (plan 02-06): preguntas con su respuesta, en `<details>` nativos.
     faq: z.strictObject({
       title: claim,
-      items: z.array(z.strictObject({ question: claim, answer: claim })).min(5).max(6),
+      items: z.array(z.strictObject({ question: claim, answer: claim })).min(5).max(10),
     }),
     agenda: z.strictObject({
       title: claim,

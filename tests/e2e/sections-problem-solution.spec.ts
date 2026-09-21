@@ -79,7 +79,6 @@ for (const viewport of [
       const three = await page.evaluate(() =>
         ['problema', 'por-que-ahora', 'solucion'].map((id) => document.getElementById(id)?.textContent ?? '').join(' '),
       );
-      expect(three).not.toMatch(/\bAEO\b/i);
       expect(three).not.toMatch(/\[VERIFICAR/i);
     });
 

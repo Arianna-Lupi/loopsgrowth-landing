@@ -17,16 +17,18 @@ interface Props {
   detail?: string;
   sector: string;
   period: string;
-  channel: string;
-  labels: { sector: string; period: string; channel: string };
+  pill?: string;
+  channel?: string;
+  labels: { sector: string; period: string; channel?: string };
   wide?: boolean;
 }
 
-const { id, figure, metric, detail, sector, period, channel, labels, wide = false } = Astro.props;
+const { id, figure, metric, detail, sector, period, pill, channel, labels, wide = false } = Astro.props;
+const chip = pill || channel;
 ---
 
 <article class="metric-card" aria-labelledby={id} data-wide={wide ? '' : undefined}>
-  <p class="metric-chip"><LangText text={channel} /></p>
+  {chip && <p class="metric-chip"><LangText text={chip} /></p>}
   <h3 id={id} class="metric-head">
     <span class="metric-figure"><span class="metric-mark">{figure}</span></span>{' '}
     <span class="metric-name"><LangText text={metric} /></span>
@@ -40,10 +42,6 @@ const { id, figure, metric, detail, sector, period, channel, labels, wide = fals
     <div>
       <dt>{labels.period}</dt>
       <dd>{period}</dd>
-    </div>
-    <div>
-      <dt>{labels.channel}</dt>
-      <dd><LangText text={channel} /></dd>
     </div>
   </dl>
   {wide && <CollagePiece class="metric-lupa" name="lupa" tone="light" size="6rem" rotate={6} />}

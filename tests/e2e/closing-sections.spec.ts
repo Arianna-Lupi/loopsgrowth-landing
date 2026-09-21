@@ -286,7 +286,7 @@ test.describe('FAQ a 1280 px', () => {
   test('un details por elemento del YAML, con pregunta y respuesta tal cual y en orden', async ({ page }) => {
     await page.goto('/');
     expect(FAQ_ITEMS.length).toBeGreaterThanOrEqual(5);
-    expect(FAQ_ITEMS.length).toBeLessThanOrEqual(6);
+    expect(FAQ_ITEMS.length).toBeLessThanOrEqual(10);
     expect(norm((await page.locator('#faq h2').textContent()) ?? '')).toBe(norm(es.faq.title.text));
     await expect(page.locator('#faq details')).toHaveCount(FAQ_ITEMS.length);
     const questions = (await page.locator('#faq summary').allTextContents()).map(norm);
