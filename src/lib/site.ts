@@ -1,10 +1,16 @@
 // Superficie de entorno (FND-05). Solo `PUBLIC_ENV` exactamente igual a `production` indexa.
 // Cualquier otro valor (vacío, `Production`, `local`, `preview`) se trata como no productivo.
+// En Cloudflare Pages en rama main se activa producción con la URL canónica por defecto.
+
+const isCloudflareProd =
+  typeof process !== 'undefined' &&
+  process.env?.CF_PAGES === '1' &&
+  process.env?.CF_PAGES_BRANCH === 'main';
 
 const rawEnv = import.meta.env.PUBLIC_ENV;
 const rawSiteUrl = (import.meta.env.PUBLIC_SITE_URL ?? '').trim();
 
-export const isProduction: boolean = rawEnv === 'production';
+export const isProduction: boolean = rawEnv === 'production' || isCloudflareProd;
 
 function parseSiteUrl(value: string): string | undefined {
   if (!value) return undefined;
@@ -17,7 +23,8 @@ function parseSiteUrl(value: string): string | undefined {
 }
 
 /** URL absoluta http o https del sitio, o `undefined` si falta o es inválida. */
-export const siteUrl: string | undefined = parseSiteUrl(rawSiteUrl);
+export const siteUrl: string | undefined =
+  parseSiteUrl(rawSiteUrl) ?? (isCloudflareProd ? 'https://loopsgrowth.com' : undefined);
 
 /** URL canónica absoluta de una ruta, o `undefined` si no hay `PUBLIC_SITE_URL`. */
 export function canonicalUrl(path: string): string | undefined {
