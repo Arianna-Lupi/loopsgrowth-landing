@@ -115,7 +115,7 @@ test.describe('/privacidad a 1280 px', () => {
   test('orden de tabulación: skip, CTA del header y enlace de privacidad, sin tabindex positivo', async ({ page }) => {
     await page.goto(PRIVACY_PATH);
     const stops: string[] = [];
-    for (let i = 0; i < 6; i++) {
+    for (let i = 0; i < 8; i++) {
       await page.keyboard.press('Tab');
       stops.push(
         await page.evaluate(() => {
@@ -687,8 +687,18 @@ test.describe('/privacidad con el footer completo', () => {
 
   test('orden de tabulación exacto: skip, logo del header, CTA del header, logo del footer y privacidad', async ({ page }) => {
     await page.goto(PRIVACY_PATH);
+    const expected = ['skip:#main', 'header:/', 'header:cta', 'footer:/'];
+    if (EMAIL_RE.test(es.footer.email.text.trim())) {
+      expected.push(`footer:mailto:${es.footer.email.text.trim()}`);
+    }
+    const socialLink = page.locator('footer nav a:has-text("LinkedIn")');
+    if ((await socialLink.count()) > 0) {
+      expected.push(`footer:${await socialLink.getAttribute('href')}`);
+    }
+    expected.push('footer:/privacidad/');
+
     const stops: string[] = [];
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < expected.length; i++) {
       await page.keyboard.press('Tab');
       stops.push(
         await page.evaluate(() => {
@@ -698,7 +708,7 @@ test.describe('/privacidad con el footer completo', () => {
         }),
       );
     }
-    expect(stops).toEqual(['skip:#main', 'header:/', 'header:cta', 'footer:/', 'footer:/privacidad/']);
+    expect(stops).toEqual(expected);
   });
 });
 

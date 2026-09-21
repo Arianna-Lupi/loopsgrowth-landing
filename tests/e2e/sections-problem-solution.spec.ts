@@ -348,8 +348,8 @@ for (const viewport of [
           await expect(team).toHaveCount(0);
         }
       }
-      // La errata "direcciôn" del doc se muestra tal cual.
-      await expect(page.locator('#solucion .pillar-team')).toContainText('direcciôn');
+      // La errata "direcciôn" corregida a "dirección".
+      await expect(page.locator('#solucion .pillar-team')).toContainText('dirección');
       // El conteo de marcas bajo `solution` sale del YAML (el h2 y el cuerpo del Pilar 4).
       const shown = await page.evaluate(
         (mark) => (document.getElementById('solucion')?.innerText ?? '').split(mark).length - 1,

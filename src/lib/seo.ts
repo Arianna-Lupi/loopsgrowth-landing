@@ -33,8 +33,12 @@ export function buildLandingSchema(params: LandingSchemaParams): Record<string, 
     image: `${baseUrl}/og-image.png`,
     description:
       'Agencia de crecimiento orgánico a través de Google, ChatGPT y Gemini.',
-    email: 'hola@loopsgrowth.com',
-    sameAs: ['https://ariannalupi.com', 'https://juan-tech.com'],
+    email: 'hello@ariannalupi.com',
+    sameAs: [
+      'https://ariannalupi.com',
+      'https://juan-tech.com',
+      'https://www.linkedin.com/in/arianna-lupi/',
+    ],
     founder: {
       '@type': 'Person',
       name: 'Arianna Lupi',
