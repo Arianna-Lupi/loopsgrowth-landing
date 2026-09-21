@@ -12,7 +12,7 @@ import { expectMotionWithinBudget, expectNoMotion } from './lib/motion';
 type Claim = { text: string; status: string };
 const es = (parse(readFileSync('src/content/landing.es.yaml', 'utf8')) as {
   es: {
-    team: { title: Claim; members: { name: Claim; role: Claim; link?: { url: Claim; label: Claim; hint: Claim } }[] };
+    team: { title: Claim; intro: Claim; members: { name: Claim; role: Claim; link?: { url: Claim; label: Claim; hint: Claim } }[] };
     includes: { title: Claim; items: { title: Claim; description: Claim }[] };
     how_it_works: { title: Claim; steps: { title: Claim; description: Claim; timeframe: Claim }[] };
   };
@@ -65,14 +65,15 @@ for (const viewport of [
       expect(names).toEqual(es.team.members.map((m) => norm(m.name.text)));
       const roles = (await section.locator('p.team-role').allTextContents()).map(norm);
       expect(roles).toEqual(es.team.members.map((m) => norm(m.role.text)));
-      // Sin biografía ni ningún otro párrafo (CONT-07): cuatro cargos y la fila del enlace de Juan.
+      // La introducción más los cuatro cargos, sin URL ni biografías por tarjeta.
       await expect(section.locator('p')).toHaveCount(5);
-      await expect(section.locator('p:not(.team-role):not(.team-link-row)')).toHaveCount(0);
+      await expect(section.locator('p.section-lead')).toHaveText(es.team.intro.text);
     });
 
-    test('un solo enlace, el de Juan; ningún botón ni tabindex dentro de la sección', async ({ page }) => {
+    test('Arianna y Juan tienen tarjetas enlazadas; ningún botón ni tabindex dentro de la sección', async ({ page }) => {
       await page.goto('/');
-      await expect(page.locator('#nosotros a')).toHaveCount(1);
+      await expect(page.locator('#nosotros a')).toHaveCount(2);
+      await expect(page.locator('#nosotros li.team-card').first().locator('a')).toHaveCount(1);
       await expect(page.locator('#nosotros li.team-card').nth(JUAN_CARD).locator('a')).toHaveCount(1);
       await expect(page.locator('#nosotros button, #nosotros [tabindex]')).toHaveCount(0);
     });
@@ -181,12 +182,12 @@ test.describe('Qué incluye (estructura)', () => {
     expect(descs).toEqual(es.includes.items.map((it) => norm(it.description.text)));
   });
 
-  test('el primer entregable muestra FALTA CONFIRMAR y el texto con AEO no llega a la página', async ({ page }) => {
+  test('el primer entregable muestra la auditoría SEO + AEO confirmada', async ({ page }) => {
     await page.goto('/');
-    expect(es.includes.items[0].title.text).toBe('FALTA CONFIRMAR');
-    await expect(page.locator('#incluye h3').first()).toHaveText('FALTA CONFIRMAR');
+    expect(es.includes.items[0].title.text).toBe('Auditoría SEO + AEO completa');
+    await expect(page.locator('#incluye h3').first()).toHaveText('Auditoría SEO + AEO completa');
     const html = await page.content();
-    expect(html).not.toContain('Auditoría SEO + AEO completa');
+    expect(html).toContain('Auditoría SEO + AEO completa');
   });
 
   test('un check SVG decorativo por entregable y ningún control interactivo', async ({ page }) => {
@@ -474,13 +475,13 @@ test.describe('Lote C: tarjetas del equipo', () => {
           };
         }),
       );
-      for (const s of styles) {
+      for (const [i, s] of styles.entries()) {
         expect(s.w).toBe('3px');
         expect(s.style).toBe('solid');
         expect(s.color).toBe('rgb(33, 33, 33)');
         expect(s.blur).toBe(0);
         expect(Math.abs(s.offX)).toBeGreaterThan(0);
-        expect(s.cursor).not.toBe('pointer');
+        expect(s.cursor).toBe(i === 0 || i === JUAN_CARD ? 'pointer' : 'auto');
       }
       expect(new Set(styles.map((s) => s.radius)).size).toBe(1);
       const before = await cards.first().evaluate((el) => getComputedStyle(el).transform);
@@ -500,6 +501,7 @@ test.describe('Lote C: tarjetas del equipo', () => {
 // "sin enlaces" de UI-SPEC sección 7). Los textos y el href salen del YAML.
 // ---------------------------------------------------------------------------------------------
 const juanLink = es.team.members[JUAN_CARD].link!;
+const ariannaLink = es.team.members[0].link!;
 
 test.describe('Quiénes somos: retratos y enlace de Juan', () => {
   for (const vp of FIVE_WIDTHS) {
@@ -594,40 +596,21 @@ test.describe('Quiénes somos: retratos y enlace de Juan', () => {
     await expect(card.locator('img, a')).toHaveCount(0);
   });
 
-  test('el enlace de Juan: href, texto, target y rel exactos; nombre accesible con el texto visible primero', async ({ page }) => {
+  test('las tarjetas enlazadas: href, target y rel exactos; el nombre accesible es el visible', async ({ page }) => {
     await page.goto('/');
     expect(juanLink.url.text).toBe('https://juan-tech.com');
-    expect(juanLink.label.text).toBe('juan-tech.com');
-    const link = page.locator('#nosotros li.team-card').nth(JUAN_CARD).locator('a');
-    await expect(link).toHaveCount(1);
-    await expect(link).toHaveAttribute('href', juanLink.url.text);
-    await expect(link).toHaveAttribute('target', '_blank');
-    await expect(link).toHaveAttribute('rel', 'noopener noreferrer');
-    await expect(link).not.toHaveAttribute('aria-label', /.*/);
-    await expect(link).not.toHaveAttribute('aria-labelledby', /.*/);
-    await expect(link).not.toHaveAttribute('download', /.*/);
-    // Texto visible = etiqueta; el complemento para lectores de pantalla mide 1 px y está recortado.
-    const visible = await link.evaluate((a) => {
-      const hint = a.querySelector('.team-link-hint') as HTMLElement;
-      const hb = hint.getBoundingClientRect();
-      const clone = a.cloneNode(true) as HTMLElement;
-      clone.querySelector('.team-link-hint')?.remove();
-      return { text: (clone.textContent ?? '').replace(/\s+/g, ' ').trim(), hint: hint.textContent, hw: hb.width, hh: hb.height };
-    });
-    expect(visible.text).toBe(juanLink.label.text);
-    expect(visible.hint).toBe(juanLink.hint.text);
-    expect(visible.hw).toBeLessThanOrEqual(1);
-    expect(visible.hh).toBeLessThanOrEqual(1);
-    // Nombre accesible: empieza por el texto visible (SC 2.5.3) y suma el complemento.
-    const named = page.getByRole('link', { name: `${juanLink.label.text} ${juanLink.hint.text}` });
-    await expect(named).toHaveCount(1);
-    await expect(page.getByRole('link', { name: juanLink.label.text })).toHaveCount(1);
-    // Icono decorativo.
-    await expect(link.locator('svg')).toHaveAttribute('aria-hidden', 'true');
-    // Subrayado permanente: no depende del color.
-    expect(await link.evaluate((a) => getComputedStyle(a).textDecorationLine)).toBe('underline');
-    // Sin lang propio: es un dominio, no un pasaje en otro idioma.
-    await expect(link).not.toHaveAttribute('lang', /.*/);
+    expect(ariannaLink.url.text).toBe('https://ariannalupi.com');
+    for (const [card, data] of [[0, ariannaLink], [JUAN_CARD, juanLink]] as const) {
+      const link = page.locator('#nosotros li.team-card').nth(card).locator('a');
+      await expect(link).toHaveCount(1);
+      await expect(link).toHaveAttribute('href', data.url.text);
+      await expect(link).toHaveAttribute('target', '_blank');
+      await expect(link).toHaveAttribute('rel', 'noopener noreferrer');
+      await expect(link).not.toHaveAttribute('aria-label', /.*/);
+      await expect(link).toHaveAttribute('aria-labelledby', `team-member-${card}`);
+      await expect(page.getByRole('link', { name: es.team.members[card].name.text })).toHaveCount(1);
+      expect(await link.evaluate((a) => getComputedStyle(a).textDecorationLine)).toBe('underline');
+    }
   });
 
   test('el enlace de Juan recibe el foco por teclado con anillo visible de 3 px de contraste 3:1', async ({ page }) => {

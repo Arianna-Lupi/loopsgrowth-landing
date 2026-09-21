@@ -30,7 +30,7 @@ const RAW_HTML_RE = /\bset:html\b|\binnerHTML\b|\bdangerouslySetInnerHTML\b/;
 const HEX_RE = /#(?:[0-9a-fA-F]{8}|[0-9a-fA-F]{6}|[0-9a-fA-F]{4}|[0-9a-fA-F]{3})(?![\w-])/g;
 const OUTLINE_OFF_RE = /\boutline\s*:\s*(?:none|0)(?![\w.%-])|\boutline-style\s*:\s*none\b/;
 const LINE_HEIGHT_IMPORTANT_RE = /\bline-height\s*:[^;}]*!important/i;
-const SCRIPT_RE = /<script\b/g;
+const SCRIPT_RE = /<script\b(?![^>]*\btype\s*=\s*["']application\/ld\+json["'])/gi;
 
 const stripComments = (text) => text.replace(/\/\*[\s\S]*?\*\//g, '').replace(/<!--[\s\S]*?-->/g, '');
 // Además de los comentarios de bloque y HTML, las líneas que son solo `//` (una nota que menciona
@@ -57,7 +57,8 @@ export function scan(files) {
     const code = isCode(path) ? stripAll(text) : '';
 
     if (isCode(path) && !RAW_HTML_ALLOW.includes(path)) {
-      const m = RAW_HTML_RE.exec(code);
+      const codeWithoutLdJson = code.replace(/<script\b[^>]*\btype\s*=\s*["']application\/ld\+json["'][^>]*\bset:html\b[^>]*\/?>/gi, '');
+      const m = RAW_HTML_RE.exec(codeWithoutLdJson);
       if (m) add(1, path, `HTML en bruto (${m[0]}) en la línea ${lineOf(code, m.index)}`);
     }
 
@@ -198,6 +199,7 @@ test('regla 4: line-height con !important se marca, sin !important no', () => {
 
 test('regla 5: un <script> fuera de AgendaSection, o uno de más dentro, se marca', () => {
   assert.deepEqual(rulesOf(COMPONENT, '<script>console.log(1)</script>'), [5]);
+  assert.deepEqual(rulesOf(COMPONENT, '<script is:inline type="application/ld+json">{}</script>'), []);
   const agenda = 'src/components/AgendaSection.astro';
   assert.deepEqual(rulesOf(agenda, '<script is:inline></script><script></script>'), []);
   assert.deepEqual(rulesOf(agenda, '<script></script><script></script><script></script>'), [5]);

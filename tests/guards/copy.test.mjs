@@ -268,10 +268,10 @@ test('5b. guion medio U+2013 bloquea producción', () => {
   assert.ok(rules(res.json).includes('DASH'), res.out);
 });
 
-test('6a. el término AEO como palabra completa bloquea producción', () => {
+test('6a. el término AEO como palabra completa está permitido', () => {
   const res = run(['--file', fixture('aeo'), '--json'], { env: PROD });
-  assert.equal(res.status, 1, res.out);
-  assert.ok(rules(res.json).includes('AEO'), res.out);
+  assert.equal(res.status, 0, res.out);
+  assert.ok(!rules(res.json).includes('AEO'), res.out);
 });
 
 test('6b. una palabra que solo contiene AEO dentro de otra no se marca', () => {
@@ -324,7 +324,7 @@ test('9b. sobre el YAML real, producción solo reporta PENDING y MISSING, deriva
   assert.deepEqual(res.json?.structural, []);
   const violations = res.json?.content ?? [];
   // Solo dos reglas de contenido pueden aparecer sobre el YAML real: PENDING y MISSING (dato faltante).
-  // VOSEO, DASH, AEO y VERIFICAR nunca: el texto de Ari que las dispararía queda pending con la marca.
+  // VOSEO, DASH y VERIFICAR nunca llegan al YAML publicado.
   assert.ok(violations.every((v) => v.rule === 'PENDING' || v.rule === 'MISSING'), JSON.stringify(violations));
   // Lo esperado se deriva del YAML: cuando Ari confirma un texto, esta prueba no se rompe.
   const claims = walkClaims(parse(readFileSync(REAL_YAML, 'utf8'))).filter((n) => n.kind === 'claim');
@@ -591,11 +591,11 @@ test('14g. INVERSION_PATH_PREFIXES y findInversion se exportan con el contrato d
   for (const text of INVERSION_SAFE) assert.deepEqual(copyRules.findInversion(text), [], text);
 });
 
-test('14h. con el YAML real no hay INVERSION y las rutas nuevas solo reportan PENDING y MISSING', () => {
+test('14h. con el YAML real no hay INVERSION y las rutas de for_whom y faq existen', () => {
   const res = run(['--file', REAL_YAML, '--json'], { env: PROD });
   assert.deepEqual(res.json?.structural, [], res.out);
   assert.ok(!rules(res.json).includes('INVERSION'), res.out);
-  const mine = (res.json?.content ?? []).filter((v) => /^(for_whom|faq)\./.test(v.path));
+  const claims = walkClaims(parse(readFileSync(REAL_YAML, 'utf8'))).filter((n) => n.kind === 'claim');
+  const mine = claims.filter((v) => /^(for_whom|faq)\./.test(v.path));
   assert.ok(mine.length > 0, 'las rutas for_whom y faq deben aparecer en el YAML real');
-  assert.ok(mine.every((v) => v.rule === 'PENDING' || v.rule === 'MISSING'), JSON.stringify(mine));
 });

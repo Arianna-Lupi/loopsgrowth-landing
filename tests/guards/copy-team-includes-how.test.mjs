@@ -46,14 +46,7 @@ test('(c) toda afirmación pending tiene reason no vacío', () => {
   assert.deepEqual(missing, []);
 });
 
-test('(d) si el reason menciona AEO, el text es exactamente FALTA CONFIRMAR', () => {
-  const offenders = mine
-    .filter((n) => n.claim && /\bAEO\b/.test(n.claim.reason ?? '') && n.claim.text !== MISSING_MARK)
-    .map((n) => n.path);
-  assert.deepEqual(offenders, []);
-});
-
-test('(e) cantidades del contrato', () => {
+test('(d) cantidades del contrato', () => {
   for (const [path, expected] of COUNTS) {
     const list = lookup(path);
     assert.ok(Array.isArray(list), `${path} no es una lista`);

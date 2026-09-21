@@ -12,7 +12,11 @@ import { getLanding, ctaLabel } from '../../lib/content';
 const data = await getLanding();
 const label = ctaLabel(data);
 const { labels } = data.cases;
-const cardLabels = { sector: labels.sector.text, period: labels.period.text, channel: labels.channel.text };
+const cardLabels = {
+  sector: labels.sector.text,
+  period: labels.period.text,
+  ...(labels.channel ? { channel: labels.channel.text } : {}),
+};
 // La tarjeta ancha se decide por posición: la quinta del doc es la de Meta Ads.
 const WIDE_INDEX = 4;
 ---
@@ -29,7 +33,8 @@ const WIDE_INDEX = 4;
             detail={item.detail?.text}
             sector={item.sector.text}
             period={item.period.text}
-            channel={item.channel.text}
+            pill={item.pill?.text}
+            channel={item.channel?.text}
             labels={cardLabels}
             wide={i === WIDE_INDEX}
           />

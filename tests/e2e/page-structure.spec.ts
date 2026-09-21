@@ -289,12 +289,11 @@ for (const vp of WIDTHS) {
 test.describe('primer pantallazo', () => {
   test.describe('390x844', () => {
     test.use({ viewport: { width: 390, height: 844 } });
-    // El CTA del hero va al final de los párrafos (quick 260920-hero-clients) y el ritmo móvil compacto
-    // (quick 260920-name-geo-hero-mobile) lo devuelve al primer pantallazo: entero, con su alto de 48 px.
-    // El header oculta su CTA bajo 40em, así que arriba solo están h1, subtítulo y este CTA.
-    test('el h1, el subtítulo y el CTA del hero quedan completos en el primer pantallazo', async ({ page }) => {
+    // Por feedback del cliente (2026-09-21), la imagen con el logo va debajo del h1 en móvil:
+    // en el primer pantallazo quedan h1 y el arte del hero.
+    test('el h1 y el arte del hero quedan completos en el primer pantallazo', async ({ page }) => {
       await page.goto('/');
-      for (const sel of [HERO_SELECTORS.h1, HERO_SELECTORS.subtitle, HERO_SELECTORS.cta]) {
+      for (const sel of [HERO_SELECTORS.h1, '.hero-art']) {
         const r = await box(page, sel);
         expect(r.top, `${sel} top`).toBeGreaterThanOrEqual(0);
         expect(r.bottom, `${sel} bottom`).toBeLessThanOrEqual(844);
@@ -304,21 +303,16 @@ test.describe('primer pantallazo', () => {
     });
   });
 
-  // Pliegue móvil fijado por la medida real (quick 260920-name-geo-hero-mobile): el CTA del hero, con h1, subtítulo y
-  // los párrafos encima, cae entero dentro del primer pantallazo en estos teléfonos. 375x667 entra con margen
-  // corto (el CTA baja hasta 657 px). En 360x640 y 320x568 sigue por debajo del pliegue: no se exige.
+  // Con la imagen bajo el h1 en móvil, el CTA del hero conserva su objetivo táctil de 44 px y ritmo tipográfico.
   for (const [width, height] of [[360, 740], [390, 844], [412, 915], [375, 667]] as const) {
-    test.describe(`${width}x${height}: CTA del hero dentro del primer pantallazo`, () => {
+    test.describe(`${width}x${height}: CTA del hero y ritmo tipográfico`, () => {
       test.use({ viewport: { width, height } });
-      test('el CTA entero queda dentro del alto del pantallazo, sin scroll, con 44 px de objetivo', async ({ page }) => {
+      test('el CTA tiene 44 px de objetivo y los párrafos cumplen ritmo', async ({ page }) => {
         await page.goto('/');
         const r = await box(page, HERO_SELECTORS.cta);
-        expect(r.top, 'top del CTA').toBeGreaterThanOrEqual(0);
-        expect(r.bottom, 'bottom del CTA').toBeLessThanOrEqual(height);
         expect(r.bottom - r.top, 'alto del CTA').toBeGreaterThanOrEqual(44);
         expect(r.left).toBeGreaterThanOrEqual(0);
         expect(r.right).toBeLessThanOrEqual(width);
-        expect(await page.evaluate(() => window.scrollY)).toBe(0);
         // Ritmo compacto sin romper A11Y.md: interlineado de los párrafos >= 1.5 y ancho máximo <= 80ch.
         const rhythm = await page.evaluate(() => {
           const p = document.querySelector('#inicio .hero-desc p') as HTMLElement;

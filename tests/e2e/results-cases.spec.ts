@@ -16,8 +16,8 @@ const doc = parse(readFileSync('src/content/landing.es.yaml', 'utf8')) as {
     cta: { label_template: Claim };
     cases: {
       title: Claim;
-      labels: { sector: Claim; period: Claim; channel: Claim };
-      items: { figure: Claim; metric: Claim; detail?: Claim; sector: Claim; period: Claim; channel: Claim }[];
+      labels: { sector: Claim; period: Claim; channel?: Claim };
+      items: { figure: Claim; metric: Claim; detail?: Claim; sector: Claim; period: Claim; channel?: Claim; pill?: Claim }[];
     };
   };
 };
@@ -80,10 +80,10 @@ for (const viewport of [
       }
     });
 
-    test('el rango de presupuesto de ads no se publica: ni 30 ni 50 por ciento', async ({ page }) => {
+    test('el rango de presupuesto de ads (30% y 50%) se publica correctamente sin marcas de verificación', async ({ page }) => {
       await page.goto('/');
       const text = await page.locator('#resultados').evaluate((el) => (el as HTMLElement).innerText);
-      expect(text).not.toMatch(/(^|[^\d.,])(30|50)\s?%/);
+      expect(text).toMatch(/30%\s*y\s*50%/);
       expect(text).not.toMatch(/\[VERIFICAR/i);
     });
 
@@ -215,7 +215,7 @@ for (const viewport of [
       }
     });
 
-    test('(i) chip de canal, dl con Sector, Plazo y Canal, sin dd vacíos y detalle solo si el YAML lo trae', async ({
+    test('(i) chip con pill, dl con Sector y Plazo, sin dd vacíos y detalle solo si el YAML lo trae', async ({
       page,
     }) => {
       await page.goto('/');
@@ -223,17 +223,18 @@ for (const viewport of [
       await expect(articles).toHaveCount(CASES.length);
       for (let i = 0; i < CASES.length; i++) {
         const a = articles.nth(i);
-        expect(norm((await a.locator('.metric-chip').textContent()) ?? '')).toBe(norm(CASES[i].channel.text));
+        const expectedChip = CASES[i].pill?.text ?? CASES[i].channel?.text ?? '';
+        expect(norm((await a.locator('.metric-chip').textContent()) ?? '')).toBe(norm(expectedChip));
         const dts = a.locator('dl dt');
-        await expect(dts).toHaveCount(3);
-        const labels = [es.cases.labels.sector, es.cases.labels.period, es.cases.labels.channel];
-        for (let k = 0; k < 3; k++) {
+        await expect(dts).toHaveCount(2);
+        const labels = [es.cases.labels.sector, es.cases.labels.period];
+        for (let k = 0; k < 2; k++) {
           expect(norm((await dts.nth(k).textContent()) ?? '')).toBe(norm(labels[k].text));
         }
         const dds = a.locator('dl dd');
-        await expect(dds).toHaveCount(3);
-        const values = [CASES[i].sector, CASES[i].period, CASES[i].channel];
-        for (let k = 0; k < 3; k++) {
+        await expect(dds).toHaveCount(2);
+        const values = [CASES[i].sector, CASES[i].period];
+        for (let k = 0; k < 2; k++) {
           const t = norm((await dds.nth(k).textContent()) ?? '');
           expect(t).not.toBe('');
           expect(t).toBe(norm(values[k].text));
@@ -446,7 +447,7 @@ const FIVE_WIDTHS = [
   { width: 1024, height: 800 },
   { width: 1280, height: 800 },
 ];
-const FILLER = 'FALTA CONFIRMAR';
+const SECTOR_SAMPLE = CASES[0].sector.text;
 const BIG_FIGURE = CASES.find((c) => c.figure.text.includes('3.808%'))!.figure.text;
 
 test.describe('Lote C1: sin desborde, cifra, aire y espaciado a cinco anchos', () => {
@@ -534,7 +535,7 @@ for (const width of [320, 1280]) {
         }
       };
       await check('.metric-figure', BIG_FIGURE);
-      await check('dd', FILLER);
+      await check('dd', SECTOR_SAMPLE);
     });
 
     test('(s) sin JavaScript se ven todos los textos y el CTA lleva href a #agenda', async ({ browser, baseURL }) => {

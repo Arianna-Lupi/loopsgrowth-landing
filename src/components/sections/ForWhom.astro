@@ -7,6 +7,7 @@
  * (FALTA CONFIRMAR) y se muestran igual. Las tarjetas no son interactivas: sin CTA, enlaces ni hover.
  */
 import SectionShell from '../ui/SectionShell.astro';
+import LangText from '../ui/LangText.astro';
 import { getLanding } from '../../lib/content';
 
 const data = await getLanding();
@@ -23,14 +24,14 @@ const columns = [
     {
       columns.map((col) => (
         <div class={`fw-card ${col.cls}`} data-tone={col.tone}>
-          <h3 id={col.id}>{col.data.title.text}</h3>
+          <h3 id={col.id}><LangText text={col.data.title.text} /></h3>
           <ul class="fw-list" role="list" aria-labelledby={col.id}>
             {col.data.items.map((item) => (
               <li class="fw-item">
                 <svg class="fw-icon" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false">
                   {col.icon === 'check' ? <path d="M5 12l5 5l10 -10" /> : <path d="M6 6l12 12M18 6l-12 12" />}
                 </svg>
-                <span class="fw-text">{item.text}</span>
+                <span class="fw-text"><LangText text={item.text} /></span>
               </li>
             ))}
           </ul>

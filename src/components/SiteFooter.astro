@@ -47,7 +47,14 @@ const emailHref = EMAIL_RE.test(email) ? `mailto:${email}` : undefined;
       </div>
       <div class="footer-block">
         <p class="footer-label">{footer.social_label.text}</p>
-        <p class="footer-value">{footer.social.text}</p>
+        <a
+          class="footer-link"
+          href="https://www.linkedin.com/in/arianna-lupi/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {footer.social.text}
+        </a>
         <a class="footer-link" href="/privacidad/" aria-current={onPrivacy ? 'page' : undefined}>{footer.privacy_link.text}</a>
       </div>
     </nav>
