@@ -55,6 +55,7 @@ const landing = defineCollection({
     // Las cantidades fijas las impone el esquema: 3 dolores y 4 pilares. `why_now.items` admite 1 o más.
     problem: z.strictObject({
       title: claim,
+      subtitle: claim.optional(),
       items: z.array(claim).length(3),
       closing: claim,
     }),

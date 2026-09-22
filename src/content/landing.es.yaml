@@ -103,17 +103,20 @@ es:
           reason: "Cliente tomado de ariannalupi.com por indicación de Juan el 2026-09-20"
   problem:
     title:
-      text: "Tu negocio no atrae clientes. Los alquila."
+      text: "Tu cliente te busca en Google y, cada vez más, le pregunta a un asistente de IA."
+      status: verified
+    subtitle:
+      text: "Trabajamos para que tus clientes te encuentren en el momento que te estan buscando, con contenido y optimizaciones y estrategias que terminan en ventas sin depender de ads."
       status: verified
     items:
-      - text: "Subiste el presupuesto y el costo por cliente subió igual. Más dinero, mismo resultado. Y cada año pagas más por el mismo cliente."
+      - text: "Tu cliente te busca en Google y, cada vez más, le pregunta a un asistente de IA. Posicionamos tu tienda donde se toman las decisiones de compra."
         status: verified
-      - text: "Sabes que el orgánico es la salida. Pero no tienes el equipo ni el tiempo para ejecutarlo."
+      - text: "Trabajamos para que tus clientes te encuentren en el momento que te estan buscando, con contenido y optimizaciones y estrategias que terminan en ventas sin depender de ads."
         status: verified
-      - text: "El problema no es que no sepas que necesitas SEO. Es que sin alguien ejecutándolo en serio, la lista de \"deberíamos hacer esto\" no se mueve  y el negocio se vuelve más dependiente cada trimestre de un canal que se encarece solo."
+      - text: "Contrata un equipo de especialistas con 8 años de experiencia, que arman tu estrategia, ejecutan, implementan y monitorean los resultados y ventas de tu web."
         status: verified
     closing:
-      text: "Mientras tu competencia aparece gratis donde tú pagas por estar."
+      text: "Contrata un equipo de especialistas con 8 años de experiencia, que arman tu estrategia, ejecutan, implementan y monitorean los resultados y ventas de tu web."
       status: verified
   why_now:
     title:
@@ -558,7 +561,7 @@ es:
       text: "Contacto"
       status: verified
     email:
-      text: "hello@ariannalupi.com"
+      text: "hello@loopsgrowth.com"
       status: verified
     social_label:
       text: "Redes"
