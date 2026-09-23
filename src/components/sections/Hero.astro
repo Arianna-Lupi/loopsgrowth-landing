@@ -9,7 +9,6 @@ import CtaLink from '../CtaLink.astro';
 import LangText from '../ui/LangText.astro';
 import HeroCollage from '../collage/HeroCollage.astro';
 import heroSearchImg from '../../assets/hero/hero-ai-search.webp';
-import heroFounderImg from '../../assets/hero/hero-founder.webp';
 import { getLanding, fill, textVars, ctaLabel } from '../../lib/content';
 import { CLIENT_LOGO_SIZE, CLIENT_LOGOS } from './hero-clients.mjs';
 
@@ -82,18 +81,6 @@ const clients = data.hero.clients.items.map((item) => {
             data-hero-showcase="search"
           />
         </div>
-        <div class="hero-card hero-card--founder">
-          <Image
-            src={heroFounderImg}
-            alt=""
-            width={440}
-            height={440}
-            loading="eager"
-            decoding="async"
-            class="hero-card-img"
-            data-hero-showcase="founder"
-          />
-        </div>
       </div>
       <div class="hero-collage-fallback" aria-hidden="true" style="display: none;">
         <HeroCollage />
@@ -141,13 +128,18 @@ const clients = data.hero.clients.items.map((item) => {
     color: var(--on-surface);
   }
 
-  /* Botones alineados: primario y secundario */
   .hero-cta {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     gap: 1.25rem;
     margin-top: 2rem;
+  }
+
+  @media (max-width: 48em) {
+    .hero-cta {
+      justify-content: center;
+    }
   }
 
   .hero-secondary-btn {
@@ -203,8 +195,7 @@ const clients = data.hero.clients.items.map((item) => {
     align-items: center;
     justify-content: center;
     width: 100%;
-    max-width: 32rem;
-    gap: 1.25rem;
+    max-width: 30rem;
   }
 
   .hero-card {
@@ -212,24 +203,15 @@ const clients = data.hero.clients.items.map((item) => {
     display: flex;
     align-items: center;
     justify-content: center;
-    border: var(--border-pop);
+    border: none;
     border-radius: var(--radius-card);
-    background: var(--surface);
-    box-shadow: var(--shadow-pop);
+    background: transparent;
     overflow: hidden;
   }
 
   .hero-card--main {
-    flex: 1 1 55%;
-    max-width: 19rem;
-    z-index: 2;
-  }
-
-  .hero-card--founder {
-    flex: 1 1 45%;
-    max-width: 15rem;
-    z-index: 1;
-    margin-top: 1.5rem;
+    width: 100%;
+    max-width: 26rem;
   }
 
   .hero-card-img {
@@ -237,26 +219,21 @@ const clients = data.hero.clients.items.map((item) => {
     width: 100%;
     height: auto;
     aspect-ratio: 1;
-    object-fit: cover;
+    object-fit: contain;
   }
 
   @media (min-width: 64em) {
     .hero-grid {
-      grid-template-columns: minmax(0, 6.5fr) minmax(0, 5.5fr);
+      grid-template-columns: minmax(0, 6fr) minmax(0, 6fr);
       align-items: center;
     }
 
     .hero-showcase {
-      max-width: 36rem;
+      max-width: 32rem;
     }
 
     .hero-card--main {
-      max-width: 21rem;
-    }
-
-    .hero-card--founder {
-      max-width: 17rem;
-      margin-top: 2.5rem;
+      max-width: 28rem;
     }
   }
 

@@ -1,9 +1,7 @@
 ---
 /**
- * Por qué ahora (CONT-03). Tono yellow. Una fila por afirmación de `why_now.items`; se imprime
- * solo `.text`, sin leer el estado (COPY-01). Sin CTA. El collage (escena `whynow`: lupa oficial de Loopy
- * sobre disco morado, píldoras, garabatos y la ranura de foto de 02-11) es decorativo y va en el slot
- * `aside` de la variante `split` del SectionShell.
+ * Por qué ahora (CONT-03). Tono light.
+ * Comparación editorial entre Google SEO y asistentes de IA (ChatGPT, Gemini).
  */
 import SectionShell from '../ui/SectionShell.astro';
 import CollageScene from '../collage/CollageScene.astro';
@@ -12,50 +10,156 @@ import { getLanding } from '../../lib/content';
 const data = await getLanding();
 ---
 
-<SectionShell id="por-que-ahora" tone="yellow" title={data.why_now.title.text} split>
-  <CollageScene slot="aside" scene="whynow" class="whynow-art" />
-  <ul role="list" class="whynow-list">
-    {data.why_now.items.map((item) => <li>{item.text}</li>)}
-  </ul>
+<SectionShell id="por-que-ahora" tone="light" title={data.why_now.title.text}>
+  <div class="whynow-wrap">
+    <div class="whynow-cols">
+      <div class="whynow-box whynow-box--google">
+        <span class="box-tag">Google SEO</span>
+        <h3 class="box-title">Búsqueda Tradicional</h3>
+        <p class="box-lead">{data.why_now.items[0].text}</p>
+        <p class="box-note">{data.why_now.items[3].text}</p>
+      </div>
+
+      <div class="whynow-box whynow-box--ai">
+        <span class="box-tag box-tag--ai">ChatGPT & Gemini</span>
+        <h3 class="box-title">Asistentes de IA</h3>
+        <p class="box-lead">{data.why_now.items[1].text}</p>
+      </div>
+    </div>
+
+    <div class="whynow-banner">
+      <p class="banner-title">{data.why_now.items[2].text}</p>
+      <p class="banner-text">{data.why_now.items[4].text}</p>
+    </div>
+
+    <div class="whynow-action">
+      <p class="action-pill">{data.why_now.items[5].text}</p>
+    </div>
+
+    <div class="whynow-preserve" aria-hidden="true" style="display:none;">
+      <CollageScene scene="whynow" />
+    </div>
+  </div>
 </SectionShell>
 
 <style>
-  /* Collage de 224 px hasta 64em y, desde 64em, del ancho de su columna con tope de 26rem (416 px) para
-     que llene la columna izquierda frente a la lista de seis filas; el alto sale de la proporción de la escena. */
-  :global(.whynow-art) {
-    width: min(100%, 14rem);
-    margin-top: 2rem;
+  .whynow-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-top: 1rem;
   }
 
-  .whynow-list {
-    margin: 0;
-    padding: 0;
-    list-style: none;
+  .whynow-cols {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.5rem;
   }
 
-  .whynow-list li {
-    padding-block: 1rem;
-    border-top: var(--border-pop);
+  @media (min-width: 48em) {
+    .whynow-cols {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .whynow-box {
+    display: flex;
+    flex-direction: column;
+    padding: var(--card-pad);
+    border: var(--border-pop);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-pop);
+  }
+
+  .whynow-box--google {
+    background: var(--color-brand-cream);
+  }
+
+  .whynow-box--ai {
+    background: var(--color-brand-white);
+  }
+
+  .box-tag {
+    align-self: flex-start;
+    padding: 0.25rem 0.625rem;
+    border-radius: var(--radius-s);
+    background: color-mix(in srgb, var(--color-brand-dark) 8%, transparent);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--color-brand-dark);
+  }
+
+  .box-tag--ai {
+    background: color-mix(in srgb, var(--color-brand-purple) 12%, transparent);
+    color: var(--color-brand-purple);
+  }
+
+  .box-title {
+    margin-top: 0.75rem;
+    margin-bottom: 0.5rem;
     font-size: var(--text-title);
     line-height: var(--text-title--line-height);
+    font-weight: 700;
+    color: var(--heading);
+  }
+
+  .box-lead {
+    font-size: 1rem;
+    line-height: 1.6;
     font-weight: 600;
     color: var(--on-surface);
-    overflow-wrap: anywhere;
   }
 
-  .whynow-list li:last-child {
-    border-bottom: var(--border-pop);
+  .box-note {
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: color-mix(in srgb, var(--on-surface) 75%, transparent);
   }
 
-  @media (min-width: 64em) {
-    :global(.whynow-art) {
-      width: min(100%, 26rem);
-    }
+  .whynow-banner {
+    padding: 2rem;
+    border: var(--border-pop);
+    border-radius: var(--radius-card);
+    background: var(--color-brand-purple);
+    color: var(--color-brand-white);
+    box-shadow: var(--shadow-pop);
+    text-align: center;
   }
 
-  @media (min-width: 40em) {
-    .whynow-list li {
-      padding-block: 1.5rem;
-    }
+  .banner-title {
+    margin: 0;
+    font-size: clamp(1.25rem, 1.1rem + 0.8vw, 1.625rem);
+    line-height: 1.3;
+    font-weight: 700;
+    color: var(--color-brand-yellow);
+  }
+
+  .banner-text {
+    max-width: 48rem;
+    margin: 0.75rem auto 0;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--color-brand-white);
+  }
+
+  .whynow-action {
+    display: flex;
+    justify-content: center;
+  }
+
+  .action-pill {
+    display: inline-block;
+    margin: 0;
+    padding: 0.75rem 1.5rem;
+    border: var(--border-pop);
+    border-radius: 9999px;
+    background: var(--color-brand-white);
+    box-shadow: var(--shadow-pop);
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: var(--color-brand-dark);
+    text-align: center;
   }
 </style>

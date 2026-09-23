@@ -17,8 +17,8 @@ const cardLabels = {
   period: labels.period.text,
   ...(labels.channel ? { channel: labels.channel.text } : {}),
 };
-// La tarjeta ancha se decide por posición: la quinta del doc es la de Meta Ads.
-const WIDE_INDEX = 4;
+// La cuarta tarjeta (índice 3) es la de Meta Ads.
+const WIDE_INDEX = 3;
 ---
 
 <SectionShell id="casos" tone="light" title={data.cases.title.text}>
@@ -60,23 +60,10 @@ const WIDE_INDEX = 4;
     min-width: 0;
   }
 
-  @media (min-width: 40em) {
+  @media (min-width: 48em) {
     .cases-grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .case-item[data-wide] {
-      grid-column: 1 / -1;
-    }
-  }
-
-  @media (min-width: 64em) {
-    .cases-grid {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-
-    .case-item[data-wide] {
-      grid-column: span 2;
+      gap: 1.5rem;
     }
   }
 </style>

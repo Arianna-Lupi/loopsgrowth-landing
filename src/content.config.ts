@@ -89,7 +89,7 @@ const landing = defineCollection({
             pill: claim.optional(),
           }),
         )
-        .length(5),
+        .length(4),
     }),
     // Cuatro integrantes exactos: la rejilla de 1, 2 y 4 columnas depende del conteo. La introducción presenta al
     // equipo. Las tarjetas con `link` son enlaces completos, con URL https y un complemento solo para lectores.

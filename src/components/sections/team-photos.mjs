@@ -19,8 +19,8 @@ export const TEAM_DISC_COLORS = Object.freeze(['yellow', 'orange', 'cream']);
 
 /** @type {{ id: string, index: number, disc: string, gamma: number, crop: { left: number, top: number, size: number } }[]} */
 export const TEAM_PHOTOS = [
-  { id: 'arianna', index: 0, disc: 'orange', gamma: 1.5, crop: { left: 100, top: 40, size: 350 } },
-  { id: 'veronica', index: 1, disc: 'yellow', gamma: 0.6, crop: { left: 140, top: 50, size: 340 } },
+  { id: 'arianna', index: 0, disc: 'orange', gamma: 1.5, crop: { left: 75, top: 40, size: 350 } },
+  { id: 'veronica', index: 1, disc: 'yellow', gamma: 0.6, crop: { left: 75, top: 50, size: 340 } },
   { id: 'juan', index: 2, disc: 'cream', gamma: 1.15, crop: { left: 90, top: 45, size: 380 } },
   { id: 'miguel', index: 3, disc: 'yellow', gamma: 1.0, crop: { left: 50, top: 40, size: 400 } },
 ];

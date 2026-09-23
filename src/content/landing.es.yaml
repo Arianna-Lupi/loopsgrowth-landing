@@ -159,7 +159,7 @@ es:
           text: "Un equipo dedicado que ejecuta"
           status: verified
         body:
-          text: "No somos consultores. Somos las personas que hacen el trabajo:"
+          text: "No somos consultores que te entregan recomendaciones y se van: somos el equipo especializado que ejecuta, implementa y monitorea los resultados mes a mes."
           status: verified
         list:
           - text: "Juan (Director Técnico): auditorías, Core Web Vitals, arquitectura."
@@ -234,24 +234,6 @@ es:
           status: verified
         pill:
           text: "E-commerce"
-          status: verified
-      - figure:
-          text: "+237%"
-          status: verified
-        metric:
-          text: "en tráfico"
-          status: verified
-        detail:
-          text: "De 1.267 a 4.230 clics mensuales en 6 meses, que se tradujeron en 552 inscripciones de calidad."
-          status: verified
-        sector:
-          text: "academia de salud (EE.UU.)"
-          status: verified
-        period:
-          text: "6 meses"
-          status: verified
-        pill:
-          text: "Educación y Salud"
           status: verified
       - figure:
           text: "x3"
