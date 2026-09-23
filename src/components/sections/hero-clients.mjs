@@ -6,8 +6,8 @@
 /** Lado en píxeles de cada logo (webp cuadrado de origen, sin recodificar). */
 export const CLIENT_LOGO_SIZE = 128;
 
-/** Ids en el orden en que se muestran; cada id es el nombre del cliente en minúsculas. */
+/** Ids en el orden en que se muestran; cada id es el nombre del cliente en minúsculas y separado por guiones. */
 export const CLIENT_LOGOS = Object.freeze([
-  'holafly', 'hubspot', 'unilever', 'alchemy', 'ambl', 'travelperk',
-  'skale', 'sendlane', 'chartmogul', 'holded', 'flodesk', 'piktochart',
+  'flodesk', 'piktochart', 'sendlane', 'ambl', 'chartmogul', 'felipe-vergara',
 ]);
+

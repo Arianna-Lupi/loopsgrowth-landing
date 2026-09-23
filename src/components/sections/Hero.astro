@@ -19,7 +19,7 @@ const label = ctaLabel(data);
 // Cada cliente se empareja con su logo por el nombre en minúsculas (src/assets/clients/<nombre>.webp).
 const logos = import.meta.glob('../../assets/clients/*.webp', { eager: true, import: 'default' }) as Record<string, ImageMetadata>;
 const clients = data.hero.clients.items.map((item) => {
-  const id = item.text.toLowerCase();
+  const id = item.text.toLowerCase().replace(/\s+/g, '-');
   const src = logos[`../../assets/clients/${id}.webp`];
   if (!src || !CLIENT_LOGOS.includes(id)) throw new Error(`Cliente "${item.text}" sin logo en src/assets/clients/ o fuera del manifiesto (ids: ${CLIENT_LOGOS.join(', ')}).`);
   return { name: item.text, id, src };

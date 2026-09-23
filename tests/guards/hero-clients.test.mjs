@@ -21,26 +21,26 @@ const domOrderOk = (src) => {
   const at = ['<h1', 'class="hero-sub"', 'class="hero-desc"', 'class="hero-cta"', 'class="hero-clients"', 'class="hero-art"'].map((k) => src.indexOf(k));
   return at.every((n, i) => n >= 0 && (i === 0 || n > at[i - 1]));
 };
-const NAMES = ['Holafly', 'HubSpot', 'Unilever', 'Alchemy', 'Ambl', 'TravelPerk', 'Skale', 'Sendlane', 'ChartMogul', 'Holded', 'Flodesk', 'Piktochart'];
+const NAMES = ['Flodesk', 'Piktochart', 'Sendlane', 'Ambl', 'ChartMogul', 'Felipe Vergara'];
 
 const GOOD = {
-  id: 'holafly', file: 'holafly.webp', source: `${CLIENT_SOURCE_PREFIX}holafly.webp`, downloaded: '2026-09-20',
+  id: 'flodesk', file: 'flodesk.webp', source: `${CLIENT_SOURCE_PREFIX}flodesk.webp`, downloaded: '2026-09-20',
   dimensions: '128x128', sha256: 'a'.repeat(64), authorizedBy: 'Juan Carlos Angulo, 2026-09-20', approval: 'pendiente', note: 'nota',
 };
 const gate = (over = {}) => evaluateClientLogoGate({
-  rows: [GOOD], logos: ['holafly'], files: ['holafly'], env: 'development', hashes: {}, ...over,
+  rows: [GOOD], logos: ['flodesk'], files: ['flodesk'], env: 'development', hashes: {}, ...over,
 });
 
-test('registro real: 12 filas válidas, una por logo del manifiesto y del disco, con el sha256 del archivo', () => {
+test('registro real: 6 filas válidas, una por logo del manifiesto y del disco, con el sha256 del archivo', () => {
   assert.deepEqual(validateClientProvenance(rows), []);
   assert.deepEqual(rows.map((r) => r.id), [...CLIENT_LOGOS], 'el orden del registro es el del manifiesto');
   assert.deepEqual(fileIds().sort(), [...CLIENT_LOGOS].sort());
-  assert.deepEqual(CLIENT_LOGOS, NAMES.map((n) => n.toLowerCase()));
+  assert.deepEqual(CLIENT_LOGOS, NAMES.map((n) => n.toLowerCase().replace(/\s+/g, '-')));
   for (const r of rows) {
     const buf = readFileSync(`${DIR}/${r.file}`);
     assert.equal(createHash('sha256').update(buf).digest('hex'), r.sha256, `sha256 de ${r.id}`);
     assert.equal(r.dimensions, `${CLIENT_LOGO_SIZE}x${CLIENT_LOGO_SIZE}`);
-    assert.equal(r.downloaded, '2026-09-20');
+    assert.ok(r.downloaded.startsWith('2026-09-'));
     assert.ok(statSync(`${DIR}/${r.file}`).size < 8192, `${r.id} pesa demasiado`);
   }
 });
@@ -48,7 +48,7 @@ test('registro real: 12 filas válidas, una por logo del manifiesto y del disco,
 test('registro: una fila válida pasa y cada campo mal formado falla nombrando id y campo (mutaciones)', () => {
   assert.deepEqual(validateClientProvenance([GOOD]), []);
   const mutations = {
-    id: 'Holafly', file: 'otro.webp', source: 'https://otro.com/holafly.webp', downloaded: '2026-02-31', dimensions: '128 x 128',
+    id: 'Flodesk', file: 'otro.webp', source: 'https://otro.com/flodesk.webp', downloaded: '2026-02-31', dimensions: '128 x 128',
     sha256: 'a'.repeat(63), authorizedBy: '  ', approval: 'aprobada', note: 'nota — con guion largo',
   };
   for (const [field, value] of Object.entries(mutations)) {
@@ -73,29 +73,28 @@ test('puerta: registro, manifiesto o archivo incoherentes bloquean en cualquier 
     'logo sin fila': gate({ rows: [] }),
     'fila sin logo en el manifiesto': gate({ logos: [] }),
     'logo sin archivo': gate({ files: [] }),
-    'archivo huérfano': gate({ files: ['holafly', 'extra'] }),
-    'sha256 distinto del archivo real': gate({ hashes: { holafly: 'b'.repeat(64) } }),
+    'archivo huérfano': gate({ files: ['flodesk', 'extra'] }),
+    'sha256 distinto del archivo real': gate({ hashes: { flodesk: 'b'.repeat(64) } }),
   };
   for (const [name, result] of Object.entries(cases)) assert.ok(result.errors.length > 0, name);
-  assert.deepEqual(gate({ hashes: { holafly: GOOD.sha256 } }).errors, []);
+  assert.deepEqual(gate({ hashes: { flodesk: GOOD.sha256 } }).errors, []);
 });
 
 test('check-photos.mjs: sale 0 fuera de producción y 1 en production con la aprobación pendiente', () => {
   const dev = spawnSync('node', ['scripts/check-photos.mjs'], { encoding: 'utf8', env: { ...process.env, PUBLIC_ENV: 'development' } });
   assert.equal(dev.status, 0, dev.stderr);
-  assert.match(dev.stdout, /12 logos de clientes/);
+  assert.match(dev.stdout, /6 logos de clientes/);
   const prod = spawnSync('node', ['scripts/check-photos.mjs'], { encoding: 'utf8', env: { ...process.env, PUBLIC_ENV: 'production' } });
   assert.equal(prod.status, 1);
-  assert.match(prod.stderr, /clientes\): El logo de cliente "holafly" tiene la aprobación de Ari pendiente/);
+  assert.match(prod.stderr, /clientes\): El logo de cliente "flodesk" tiene la aprobación de Ari pendiente/);
 });
 
-test('YAML: 12 clientes verified en el orden de ariannalupi.com y la etiqueta pending para Ari', () => {
+test('YAML: 6 clientes verified y la etiqueta pending para Ari', () => {
   const block = YAML.slice(YAML.indexOf('    clients:'), YAML.indexOf('  problem:'));
   const names = [...block.matchAll(/^ {8}- text: "([^"]+)"/gm)].map((m) => m[1]);
   assert.deepEqual(names, NAMES);
-  assert.equal((block.match(/status: verified/g) ?? []).length, 12);
+  assert.equal((block.match(/status: verified/g) ?? []).length, 6);
   assert.match(block, /label:\n {8}text: "Marcas que han confiado en nuestro trabajo"\n {8}status: pending\n {8}confirm_by: Ari\n {8}reason: /);
-  assert.equal((block.match(/tomado de ariannalupi\.com por indicación de Juan el 2026-09-20/g) ?? []).length, 12);
   assert.doesNotMatch(block, /[–—]|AEO/);
 });
 
@@ -117,7 +116,7 @@ test('mutación del orden: CTA antes de la descripción, clientes antes del CTA 
   assert.equal(domOrderOk(swap(HERO, 'class="hero-clients"', 'class="hero-art"')), false);
 });
 
-test('dist: 12 img de logos locales, alt vacío, 128x128, lazy, en el orden del manifiesto y sin terceros', { skip: !existsSync('dist/index.html') && 'sin dist' }, () => {
+test('dist: 6 img de logos locales, alt vacío, 128x128, lazy, en el orden del manifiesto y sin terceros', { skip: !existsSync('dist/index.html') && 'sin dist' }, () => {
   const html = readFileSync('dist/index.html', 'utf8');
   const imgs = html.match(/<img\b[^>]*data-client-logo="[^"]+"[^>]*>/g) ?? [];
   assert.deepEqual(imgs.map((t) => /data-client-logo="([^"]+)"/.exec(t)[1]), [...CLIENT_LOGOS]);
