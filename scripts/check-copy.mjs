@@ -72,8 +72,8 @@ if (distDir !== undefined) {
 }
 
 const { structural, content } = result;
-const isCloudflare = process.env.CF_PAGES === '1';
-const blocking = !isCloudflare && (structural.length > 0 || (production && content.length > 0));
+const isHostedDeploy = process.env.CF_PAGES === '1' || process.env.HOSTINGER === '1';
+const blocking = !isHostedDeploy && (structural.length > 0 || (production && content.length > 0));
 
 if (asJson) {
   console.log(
