@@ -33,7 +33,7 @@ export function buildLandingSchema(params: LandingSchemaParams): Record<string, 
     image: `${baseUrl}/og-image.png`,
     description:
       'Agencia de crecimiento orgánico a través de Google, ChatGPT y Gemini.',
-    email: 'hello@ariannalupi.com',
+    email: 'hello@loopsgrowth.com',
     sameAs: [
       'https://ariannalupi.com',
       'https://juan-tech.com',

@@ -55,12 +55,13 @@ const intro = fill(agenda.intro, textVars(data), 'agenda.intro');
       <div class="form-embed">
         <iframe
           class="clickup-embed clickup-dynamic-height"
-          src={config.form_url}
+          data-src={config.form_url}
           title={agenda.iframe_title.text}
           width="100%"
           loading="lazy"
           referrerpolicy="strict-origin-when-cross-origin"></iframe>
-        <script is:inline async defer src={config.form_script_src}></script>
+        <script is:inline async defer data-src={config.form_script_src}></script>
+
       </div>
       <noscript>
         <div class="agenda-noscript">

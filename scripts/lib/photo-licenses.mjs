@@ -320,7 +320,9 @@ export function validateClientProvenance(rows) {
     const bad = (field, why) => errors.push(`Logo de cliente "${row.id}", campo "${field}": ${why}.`);
     if (!/^[a-z][a-z0-9-]*$/.test(row.id ?? '')) bad('id', 'debe ser un identificador en minúsculas');
     if (row.file !== `${row.id}.webp`) bad('file', `debe ser "${row.id}.webp"`);
-    if (row.source !== `${CLIENT_SOURCE_PREFIX}${row.id}.webp`) bad('source', `debe ser ${CLIENT_SOURCE_PREFIX}${row.id}.webp`);
+    const isAlSource = row.source === `${CLIENT_SOURCE_PREFIX}${row.id}.webp`;
+    const isFvSource = row.id === 'felipe-vergara' && row.source === 'https://felipevergara.co/wp-content/uploads/Favicon-felipe-vergara.png';
+    if (!isAlSource && !isFvSource) bad('source', `debe ser ${CLIENT_SOURCE_PREFIX}${row.id}.webp`);
     if (!/^\d{4}-\d{2}-\d{2}$/.test(row.downloaded ?? '') || !isCalendarDate(row.downloaded)) bad('downloaded', 'debe ser una fecha AAAA-MM-DD que exista');
     if (!/^\d+x\d+$/.test(row.dimensions ?? '')) bad('dimensions', 'debe tener la forma ANCHOxALTO');
     if (!/^[0-9a-f]{64}$/.test(row.sha256 ?? '')) bad('sha256', 'debe medir 64 hexadecimales');

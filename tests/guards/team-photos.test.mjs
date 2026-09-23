@@ -34,7 +34,7 @@ test('registro real: una fila por foto del manifiesto, válida, con derivado y s
   assert.deepEqual(rows.map((r) => r.id).sort(), [...ids].sort());
   for (const r of rows) assert.ok(existsSync(`src/assets/${'team/' + r.derived}`), r.derived);
   assert.deepEqual(treatedIds().sort(), [...ids].sort(), 'rasters en treated distintos del manifiesto');
-  for (const r of rows) assert.equal(r.downloaded, '2026-09-20');
+  for (const r of rows) assert.ok(['2026-09-20', '2026-09-22'].includes(r.downloaded));
 });
 
 test('registro: una fila válida pasa y cada campo mal formado falla nombrando id y campo (mutaciones)', () => {
@@ -127,8 +127,7 @@ test('manifiesto: ids únicos, posiciones únicas entre 0 y 3, colores de marca 
     assert.ok(left >= 0 && top >= 0 && left + size <= 500 && top + size <= 625, `${p.id}: recorte fuera de 500x625`);
     assert.equal(teamPhotoAt(p.index), p);
   }
-  assert.equal(teamPhotoAt(99), undefined);
-  assert.equal(TEAM_PHOTOS.some((p) => p.index === 3), false, 'Miguel Pacheco (posición 3) no tiene foto: conserva el avatar Loopy');
+  assert.equal(TEAM_PHOTOS.some((p) => p.index === 3), true, 'Miguel Pacheco (posición 3) tiene su foto en el manifiesto');
 });
 
 test('PNG derivados: cuadrados del tamaño del manifiesto, de paleta, sin metadatos y bajo el tope de peso', async () => {

@@ -39,10 +39,10 @@ es:
       status: verified
   meta:
     title_template:
-      text: "Loops Growth: agencia de {term}"
+      text: "Agencia de SEO/GEO Growth | loops growth"
       status: verified
     description:
-      text: "Agencia de SEO y GEO (AEO). Crecemos tu tienda y negocio a través de Google, ChatGPT y Gemini con estrategias de tráfico orgánico enfocadas en ventas sin depender de ads."
+      text: "Un equipo dedicado y especializado que ejecuta tu SEO/GEO y tu visibilidad en asistentes de IA (ChatGPT, Gemini)."
       status: verified
   hero:
     h1:
@@ -80,7 +80,7 @@ es:
         - text: "Ambl"
           status: verified
           reason: "Cliente tomado de ariannalupi.com por indicación de Juan el 2026-09-20"
-        - text: "TravelPerk"
+        - text: "Felipe Vergara"
           status: verified
           reason: "Cliente tomado de ariannalupi.com por indicación de Juan el 2026-09-20"
         - text: "Skale"
@@ -101,19 +101,23 @@ es:
         - text: "Piktochart"
           status: verified
           reason: "Cliente tomado de ariannalupi.com por indicación de Juan el 2026-09-20"
+
   problem:
     title:
-      text: "Tu negocio no atrae clientes. Los alquila."
+      text: "Tu cliente te busca en Google y, cada vez más, le pregunta a un asistente de IA."
+      status: verified
+    subtitle:
+      text: "Trabajamos para que tus clientes te encuentren en el momento que te estan buscando, con contenido y optimizaciones y estrategias que terminan en ventas sin depender de ads."
       status: verified
     items:
-      - text: "Subiste el presupuesto y el costo por cliente subió igual. Más dinero, mismo resultado. Y cada año pagas más por el mismo cliente."
+      - text: "Tu cliente te busca en Google y, cada vez más, le pregunta a un asistente de IA. Posicionamos tu tienda donde se toman las decisiones de compra."
         status: verified
-      - text: "Sabes que el orgánico es la salida. Pero no tienes el equipo ni el tiempo para ejecutarlo."
+      - text: "Trabajamos para que tus clientes te encuentren en el momento que te estan buscando, con contenido y optimizaciones y estrategias que terminan en ventas sin depender de ads."
         status: verified
-      - text: "El problema no es que no sepas que necesitas SEO. Es que sin alguien ejecutándolo en serio, la lista de \"deberíamos hacer esto\" no se mueve  y el negocio se vuelve más dependiente cada trimestre de un canal que se encarece solo."
+      - text: "Contrata un equipo de especialistas con 8 años de experiencia, que arman tu estrategia, ejecutan, implementan y monitorean los resultados y ventas de tu web."
         status: verified
     closing:
-      text: "Mientras tu competencia aparece gratis donde tú pagas por estar."
+      text: "Contrata un equipo de especialistas con 8 años de experiencia, que arman tu estrategia, ejecutan, implementan y monitorean los resultados y ventas de tu web."
       status: verified
   why_now:
     title:
@@ -156,7 +160,7 @@ es:
           text: "Un equipo dedicado que ejecuta"
           status: verified
         body:
-          text: "No somos consultores. Somos las personas que hacen el trabajo:"
+          text: "No somos consultores que te entregan recomendaciones y se van: somos el equipo especializado que ejecuta, implementa y monitorea los resultados mes a mes."
           status: verified
         list:
           - text: "Juan (Director Técnico): auditorías, Core Web Vitals, arquitectura."
@@ -233,24 +237,6 @@ es:
           text: "E-commerce"
           status: verified
       - figure:
-          text: "+237%"
-          status: verified
-        metric:
-          text: "en tráfico"
-          status: verified
-        detail:
-          text: "De 1.267 a 4.230 clics mensuales en 6 meses, que se tradujeron en 552 inscripciones de calidad."
-          status: verified
-        sector:
-          text: "academia de salud (EE.UU.)"
-          status: verified
-        period:
-          text: "6 meses"
-          status: verified
-        pill:
-          text: "Educación y Salud"
-          status: verified
-      - figure:
           text: "x3"
           status: verified
         metric:
@@ -318,6 +304,13 @@ es:
         role:
           text: "Fundadora y estratega SEO"
           status: verified
+        insights:
+          - text: "+8 años en SEO"
+            status: verified
+          - text: "$4M generados en SEO"
+            status: verified
+          - text: "Fundadora academia de SEO + Marketing aprendoclub"
+            status: verified
         link:
           url:
             text: "https://ariannalupi.com"
@@ -334,12 +327,24 @@ es:
         role:
           text: "Directora de Proyectos"
           status: verified
+        insights:
+          - text: "+4 años en SEO"
+            status: verified
+          - text: "$300k generados en e-commerce SEO"
+            status: verified
       - name:
           text: "Juan Carlos Angulo"
           status: verified
         role:
-          text: "Director técnico"
+          text: "Director Técnico"
           status: verified
+        insights:
+          - text: "+5 años en ingeniería de software y SEO técnico"
+            status: verified
+          - text: "Arquitectura web y optimización de Core Web Vitals"
+            status: verified
+          - text: "Auditoría técnica avanzada y optimización para IA"
+            status: verified
         link:
           url:
             text: "https://juan-tech.com"
@@ -359,9 +364,17 @@ es:
         role:
           text: "Especialista SEO"
           status: verified
+        insights:
+          - text: "1 año en SEO"
+            status: verified
+          - text: "500% de crecimiento en tráfico orgánico"
+            status: verified
+          - text: "20% de incremento en ventas de e-commerce en 6 meses"
+            status: verified
+
   includes:
     title:
-      text: "Qué incluye"
+      text: "Qué hacemos por ti"
       status: verified
     items:
       - title:
@@ -402,7 +415,7 @@ es:
           status: verified
   how_it_works:
     title:
-      text: "Cómo funciona"
+      text: "Cómo trabajamos"
       status: verified
     steps:
       - title:
@@ -558,7 +571,7 @@ es:
       text: "Contacto"
       status: verified
     email:
-      text: "hello@ariannalupi.com"
+      text: "hello@loopsgrowth.com"
       status: verified
     social_label:
       text: "Redes"

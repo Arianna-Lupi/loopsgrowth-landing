@@ -1,52 +1,146 @@
 ---
 /**
- * El problema (CONT-02). Tono dark. Todo el texto sale del YAML y se imprime como nodo de texto,
- * tal cual: este componente no lee `status`, `reason` ni `confirm_by` (COPY-01). Sin CTA.
- * Tres dolores en tarjetas blancas (los párrafos 1 a 3 del doc) y la frase final (párrafo 4).
+ * Sección bajo clientes / Bloqueadores de crecimiento (Inspo 2).
+ * Tono dark. Encabezado centrado con el titular principal y lead explicativo,
+ * seguido de 3 columnas con insignias hexagonales y texto de impacto.
+ * Cierra con la afirmación destacada del equipo con 8 años de experiencia.
  */
 import SectionShell from '../ui/SectionShell.astro';
-import PainCard from '../ui/PainCard.astro';
+import CollageScene from '../collage/CollageScene.astro';
 import { getLanding } from '../../lib/content';
 
 const data = await getLanding();
-// Pegatinas en el orden de los dolores: anuncios pagados, búsqueda orgánica, la competencia que te ve.
-const STICKERS = ['clic', 'lupa', 'ojos'] as const;
 ---
 
-<SectionShell id="problema" tone="dark" title={data.problem.title.text}>
-  <ul role="list" class="pain-grid">
-    {data.problem.items.map((item, i) => <PainCard sticker={STICKERS[i]} text={item.text} />)}
-  </ul>
-  <p class="pain-closing">{data.problem.closing.text}</p>
+<SectionShell id="problema" tone="dark" title={data.problem.title.text} lead={data.problem.subtitle?.text}>
+  <div class="blocker-container">
+    <div class="blocker-grid">
+      <div class="blocker-col">
+        <CollageScene scene="sticker-lupa" class="blocker-sticker" />
+        <h3 class="blocker-heading">Google y Asistentes de IA</h3>
+        <p class="blocker-text">
+          {data.problem.items[0].text}
+        </p>
+      </div>
+
+      <div class="blocker-col">
+        <CollageScene scene="sticker-clic" class="blocker-sticker" />
+        <h3 class="blocker-heading">Ventas sin depender de Ads</h3>
+        <p class="blocker-text">
+          {data.problem.items[1].text}
+        </p>
+      </div>
+
+      <div class="blocker-col">
+        <CollageScene scene="sticker-ojos" class="blocker-sticker" />
+        <h3 class="blocker-heading">Equipo con 8 años</h3>
+        <p class="blocker-text">
+          {data.problem.items[2].text}
+        </p>
+      </div>
+    </div>
+
+    <div class="blocker-callout">
+      <p class="blocker-callout-text">{data.problem.closing.text}</p>
+    </div>
+  </div>
 </SectionShell>
 
 <style>
-  /* `--card-shadow` se evalúa aquí, en el tono dark (naranja), y lo heredan las tarjetas de tono light. */
-  .pain-grid {
-    --card-shadow: var(--pop-shadow-color);
-    counter-reset: pain;
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    gap: var(--card-gap);
-    margin: 0;
-    padding: 0;
-    list-style: none;
+  #problema :global(.section-head) {
+    text-align: center;
+    max-width: 52rem;
+    margin-inline: auto;
   }
 
-  @media (min-width: 64em) {
-    .pain-grid {
+  #problema :global(.section-title) {
+    font-size: clamp(2rem, 1.6rem + 2vw, 2.75rem);
+    line-height: 1.2;
+    color: var(--heading);
+  }
+
+  #problema :global(.section-lead) {
+    margin-inline: auto;
+    margin-top: 1.25rem;
+    font-size: 1.125rem;
+    line-height: 1.6;
+    max-width: 62ch;
+    color: color-mix(in srgb, var(--on-surface) 80%, transparent);
+  }
+
+  .blocker-container {
+    width: 100%;
+    margin-top: 1.5rem;
+  }
+
+  .blocker-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2.5rem;
+    margin: 0;
+    padding: 0;
+  }
+
+  @media (min-width: 48em) {
+    .blocker-grid {
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      align-items: stretch;
+      gap: 2rem;
     }
   }
 
-  .pain-closing {
-    max-width: 40ch;
-    margin-top: 3rem;
+  @media (min-width: 64em) {
+    .blocker-grid {
+      gap: 3.5rem;
+    }
+  }
+
+  .blocker-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    min-width: 0;
+  }
+
+  .blocker-sticker {
+    width: 6rem;
+    height: 5rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .blocker-heading {
+    margin: 0;
     font-size: var(--text-title);
     line-height: var(--text-title--line-height);
     font-weight: 700;
-    color: var(--on-surface);
-    overflow-wrap: anywhere;
+    color: var(--heading);
+  }
+
+  .blocker-text {
+    margin-top: 0.75rem;
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: color-mix(in srgb, var(--on-surface) 80%, transparent);
+    max-width: 40ch;
+  }
+
+  .blocker-callout {
+    margin-top: 3.5rem;
+    padding: 1.5rem 2rem;
+    border: var(--border-pop);
+    border-radius: var(--radius-card);
+    background: color-mix(in srgb, var(--color-brand-purple) 22%, var(--surface));
+    box-shadow: var(--shadow-pop);
+    text-align: center;
+    max-width: 52rem;
+    margin-inline: auto;
+  }
+
+  .blocker-callout-text {
+    margin: 0;
+    font-size: 1.125rem;
+    line-height: 1.5;
+    font-weight: 700;
+    color: var(--color-brand-white);
   }
 </style>
