@@ -23,7 +23,6 @@ const CHIPS = ['lupa', 'ojos', 'loop', 'clic'] as const;
           chip={CHIPS[i]}
           title={item.title.text}
           body={item.body.text}
-          list={item.list?.map((member) => member.text)}
         />
       ))
     }

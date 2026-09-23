@@ -48,13 +48,14 @@ const landing = defineCollection({
       h1: claim,
       subtitle: claim,
       description: z.array(claim).min(1),
-      // Clientes del hero (quick 260920-hero-clients): 12 exactos, en el orden de ariannalupi.com. Cada logo sale
-      // de src/assets/clients/<nombre en minúsculas>.webp y su procedencia de src/assets/clients/PROVENANCE.md.
+      // Clientes del hero (quick 260920-hero-clients): 12 exactos. Cada logo sale
+      // de src/assets/clients/<id>.webp y su procedencia de src/assets/clients/PROVENANCE.md.
       clients: z.strictObject({ label: claim, items: z.array(claim).length(12) }),
     }),
     // Las cantidades fijas las impone el esquema: 3 dolores y 4 pilares. `why_now.items` admite 1 o más.
     problem: z.strictObject({
       title: claim,
+      subtitle: claim.optional(),
       items: z.array(claim).length(3),
       closing: claim,
     }),
@@ -88,7 +89,7 @@ const landing = defineCollection({
             pill: claim.optional(),
           }),
         )
-        .length(5),
+        .length(4),
     }),
     // Cuatro integrantes exactos: la rejilla de 1, 2 y 4 columnas depende del conteo. La introducción presenta al
     // equipo. Las tarjetas con `link` son enlaces completos, con URL https y un complemento solo para lectores.
@@ -100,6 +101,7 @@ const landing = defineCollection({
           z.strictObject({
             name: claim,
             role: claim,
+            insights: z.array(claim).optional(),
             link: z
               .strictObject({
                 url: claim.extend({ text: z.url({ protocol: /^https$/, error: 'debe ser una URL https://...' }) }),
@@ -108,6 +110,7 @@ const landing = defineCollection({
               })
               .optional(),
           }),
+
         )
         .length(4),
     }),

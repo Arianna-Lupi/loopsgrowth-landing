@@ -13,7 +13,7 @@ const data = await getLanding();
 const { faq } = data;
 ---
 
-<section id="faq" aria-labelledby="faq-title" data-tone="yellow">
+<section id="faq" aria-labelledby="faq-title" data-tone="light">
   <div class="wrap faq-grid">
     <h2 id="faq-title" class="section-title"><LangText text={faq.title.text} /></h2>
     <div class="faq-list">
@@ -63,6 +63,8 @@ const { faq } = data;
   .faq-item {
     border: var(--border-pop);
     border-radius: var(--radius-card);
+    background: var(--color-brand-cream);
+    box-shadow: var(--shadow-pop);
     overflow: visible;
   }
 
