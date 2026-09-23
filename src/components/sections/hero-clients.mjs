@@ -8,6 +8,8 @@ export const CLIENT_LOGO_SIZE = 128;
 
 /** Ids en el orden en que se muestran; cada id es el nombre del cliente en minúsculas y separado por guiones. */
 export const CLIENT_LOGOS = Object.freeze([
-  'flodesk', 'piktochart', 'sendlane', 'ambl', 'chartmogul', 'felipe-vergara',
+  'holafly', 'hubspot', 'unilever', 'alchemy', 'ambl', 'felipe-vergara',
+  'skale', 'sendlane', 'chartmogul', 'holded', 'flodesk', 'piktochart',
 ]);
+
 

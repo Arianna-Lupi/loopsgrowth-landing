@@ -42,12 +42,12 @@ const fullOgImage = ogImage.startsWith('http')
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    {(!isProduction || noindex) ? (
+    {noindex ? (
       <meta name="robots" content="noindex" />
     ) : (
       <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
     )}
-    {isProduction && !noindex && canonical && <link rel="canonical" href={canonical} />}
+    {!noindex && <link rel="canonical" href={canonical || `${effectiveSiteUrl}${path}`} />}
     <title>{title}</title>
     <meta name="description" content={description} />
     <meta name="author" content="Loops Growth" />
