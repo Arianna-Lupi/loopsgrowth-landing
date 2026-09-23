@@ -7,8 +7,6 @@ import { loadEnv } from 'vite';
 // Superficie de entorno (FND-05). Solo el valor exacto `production` indexa;
 // cualquier otro valor (incluido `Production` o vacío) se trata como no productivo.
 const env = { ...loadEnv('production', process.cwd(), 'PUBLIC_'), ...process.env };
-const isCloudflareProd = process.env.CF_PAGES === '1' && process.env.CF_PAGES_BRANCH === 'main';
-const isProduction = env.PUBLIC_ENV === 'production' || isCloudflareProd;
 
 /** @param {string | undefined} value */
 function parseSiteUrl(value) {
@@ -22,24 +20,17 @@ function parseSiteUrl(value) {
   }
 }
 
-const site = parseSiteUrl(env.PUBLIC_SITE_URL) ?? (isCloudflareProd ? 'https://loopsgrowth.com' : undefined);
-
-if (env.PUBLIC_ENV === 'production' && !site) {
-  throw new Error('PUBLIC_ENV=production requiere PUBLIC_SITE_URL con una URL absoluta');
-}
+const site = parseSiteUrl(env.PUBLIC_SITE_URL) ?? 'https://loopsgrowth.com';
 
 // https://astro.build/config
 export default defineConfig({
   output: 'static',
   site,
-  integrations:
-    isProduction && site
-      ? [
-          sitemap({
-            filter: (page) => !page.includes('/privacidad') && !page.includes('/marca/hoja'),
-          }),
-        ]
-      : [],
+  integrations: [
+    sitemap({
+      filter: (page) => !page.includes('/privacidad') && !page.includes('/marca/hoja'),
+    }),
+  ],
   vite: {
     plugins: [tailwindcss()],
   },
