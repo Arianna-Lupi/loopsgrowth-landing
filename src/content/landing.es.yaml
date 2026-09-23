@@ -304,6 +304,13 @@ es:
         role:
           text: "Fundadora y estratega SEO"
           status: verified
+        insights:
+          - text: "+8 años en SEO"
+            status: verified
+          - text: "$4M generados en SEO"
+            status: verified
+          - text: "Fundadora academia de SEO + Marketing aprendoclub"
+            status: verified
         link:
           url:
             text: "https://ariannalupi.com"
@@ -320,12 +327,24 @@ es:
         role:
           text: "Directora de Proyectos"
           status: verified
+        insights:
+          - text: "+4 años en SEO"
+            status: verified
+          - text: "$300k generados en e-commerce SEO"
+            status: verified
       - name:
           text: "Juan Carlos Angulo"
           status: verified
         role:
           text: "Director Técnico"
           status: verified
+        insights:
+          - text: "+5 años en ingeniería de software y SEO técnico"
+            status: verified
+          - text: "Arquitectura web y optimización de Core Web Vitals"
+            status: verified
+          - text: "Auditoría técnica avanzada y optimización para IA"
+            status: verified
         link:
           url:
             text: "https://juan-tech.com"
@@ -345,6 +364,14 @@ es:
         role:
           text: "Especialista SEO"
           status: verified
+        insights:
+          - text: "1 año en SEO"
+            status: verified
+          - text: "500% de crecimiento en tráfico orgánico"
+            status: verified
+          - text: "20% de incremento en ventas de e-commerce en 6 meses"
+            status: verified
+
   includes:
     title:
       text: "Qué hacemos por ti"

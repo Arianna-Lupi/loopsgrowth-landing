@@ -13,8 +13,10 @@
 import { Image } from 'astro:assets';
 import SectionShell from '../ui/SectionShell.astro';
 import Avatar from '../collage/Avatar.astro';
+import LangText from '../ui/LangText.astro';
 import { getLanding } from '../../lib/content';
 import { TEAM_PHOTOS, TEAM_PHOTO_OUT, teamPhotoAt } from './team-photos.mjs';
+
 
 const data = await getLanding();
 // Los avatares y las fotos se asignan por posición desde aquí y no desde el YAML: una cadena suelta dentro
@@ -69,7 +71,17 @@ const photoSrc = (id: string) => {
             </div>
             <h3 id={`team-member-${i}`}>{member.name.text}</h3>
             <p class="team-role">{member.role.text}</p>
+            {member.insights && member.insights.length > 0 && (
+              <ul class="team-insights" role="list">
+                {member.insights.map((insight) => (
+                  <li class="team-insight-item">
+                    <LangText text={insight.text} />
+                  </li>
+                ))}
+              </ul>
+            )}
           </li>
+
         );
       })
     }
@@ -160,6 +172,36 @@ const photoSrc = (id: string) => {
     font-weight: 600;
     overflow-wrap: anywhere;
   }
+
+  .team-insights {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin: 1.25rem 0 0;
+    padding: 1rem 0 0;
+    border-top: 1px solid color-mix(in srgb, var(--on-surface) 15%, transparent);
+    list-style: none;
+    font-size: 0.875rem;
+    line-height: 1.4;
+    flex-grow: 1;
+  }
+
+  .team-insight-item {
+    position: relative;
+    padding-inline-start: 1.25rem;
+    color: var(--on-surface);
+    font-weight: 500;
+  }
+
+  .team-insight-item::before {
+    content: "•";
+    position: absolute;
+    inset-inline-start: 0;
+    color: var(--color-brand-purple);
+    font-size: 1.25rem;
+    line-height: 1;
+  }
+
 
   /* Solo para lectores de pantalla: ocupa 1 px y no aporta ancho ni altura visibles. */
   .team-link-hint {

@@ -101,6 +101,7 @@ const landing = defineCollection({
           z.strictObject({
             name: claim,
             role: claim,
+            insights: z.array(claim).optional(),
             link: z
               .strictObject({
                 url: claim.extend({ text: z.url({ protocol: /^https$/, error: 'debe ser una URL https://...' }) }),
@@ -109,6 +110,7 @@ const landing = defineCollection({
               })
               .optional(),
           }),
+
         )
         .length(4),
     }),
