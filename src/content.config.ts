@@ -140,8 +140,23 @@ const landing = defineCollection({
       intro: claim,
       fallback_lead: claim,
       fallback_link: claim,
-      iframe_title: claim,
       noscript: claim,
+      form: z.strictObject({
+        required_note: claim,
+        select_placeholder: claim,
+        submit: claim,
+        sending: claim,
+        error_required: claim,
+        error_email: claim,
+        error_summary: claim,
+        error_send: claim,
+        success_title: claim,
+        success_body: claim,
+        labels: z.strictObject({
+          name: claim, email: claim, company: claim, website: claim, sector: claim,
+          country: claim, structure: claim, revenue: claim, doingSeo: claim, budget: claim, source: claim,
+        }),
+      }),
     }),
     // Pie de página y política de privacidad (plan 02-06). El cuerpo de la política es una lista de
     // afirmaciones: un `<p>` por elemento. Correo y redes del pie son pendientes de Ari.
@@ -156,7 +171,6 @@ const landing = defineCollection({
     privacy: z.strictObject({ title: claim, body: z.array(claim).min(1) }),
     config: z.strictObject({
       form_url: httpsUrlFrom('forms.clickup.com'),
-      form_script_src: httpsUrlFrom('app-cdn.clickup.com'),
     }),
   }),
 });
