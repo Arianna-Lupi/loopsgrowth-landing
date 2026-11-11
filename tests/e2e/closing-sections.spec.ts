@@ -20,7 +20,7 @@ const es = (parse(readFileSync('src/content/landing.es.yaml', 'utf8')) as {
     };
     faq: { title: Claim; items: { question: Claim; answer: Claim }[] };
     footer: { nav_label: Claim; privacy_link: Claim; contact_label: Claim; email: Claim; social_label: Claim; social: Claim };
-    agenda: { title: Claim; iframe_title: Claim };
+    agenda: { title: Claim };
     brand: { name: Claim };
     privacy: { title: Claim; body: Claim[] };
   };
@@ -484,7 +484,7 @@ for (const width of [390, 768, 1023, 1024, 1280]) {
       expect(pad).toEqual([expected, expected]);
     });
 
-    test('collage: visible desde 1024 px y oculto debajo, sin tocar la tarjeta ni el iframe', async ({ page }) => {
+    test('collage: visible desde 1024 px y oculto debajo, sin tocar la tarjeta ni el formulario', async ({ page }) => {
       await page.goto('/');
       const root = page.locator('#agenda .agenda-art [data-collage="agenda"]');
       await expect(root).toHaveCount(1);
@@ -495,11 +495,11 @@ for (const width of [390, 768, 1023, 1024, 1280]) {
       await expect(root).toBeVisible();
       const r = await boxOf(page, '#agenda .agenda-art [data-collage="agenda"]');
       const card = await boxOf(page, '#agenda .form-embed');
-      const frame = await boxOf(page, '#agenda .form-embed iframe');
+      const frame = await boxOf(page, '#agenda .form-embed form');
       const overlaps = (a: Box, b: Box) =>
         a.x < b.x + b.width && b.x < a.x + a.width && a.y < b.y + b.height && b.y < a.y + a.height;
       expect(overlaps(r, card), 'el collage toca la tarjeta del formulario').toBe(false);
-      expect(overlaps(r, frame), 'el collage toca el iframe').toBe(false);
+      expect(overlaps(r, frame), 'el collage toca el formulario').toBe(false);
       // Con el anillo de foco de 3 px a 2 px de la tarjeta, el collage queda al menos a 8 px.
       expect(card.x - (r.x + r.width)).toBeGreaterThanOrEqual(8);
     });
@@ -516,12 +516,12 @@ test.describe('#agenda a 1280 px', () => {
     expect(where.sort()).toEqual(['casos', 'header', 'hero', 'solucion']);
   });
 
-  test('iframe, tarjeta y noscript conservan sus atributos', async ({ page }) => {
+  test('formulario, tarjeta y noscript conservan sus atributos', async ({ page }) => {
     await page.goto('/');
-    const iframe = page.locator('#agenda iframe');
-    await expect(iframe).toHaveAttribute('loading', 'lazy');
-    await expect(iframe).toHaveAttribute('title', es.agenda.iframe_title.text);
-    await expect(iframe).toHaveAttribute('referrerpolicy', /.+/);
+    const form = page.locator('#agenda form#lead-form');
+    await expect(form).toHaveAttribute('novalidate', '');
+    await expect(form).toHaveAttribute('data-endpoint', /\/api\/lead$/);
+    await expect(page.locator('#agenda iframe')).toHaveCount(0);
     await expect(page.locator('#agenda .form-embed')).toHaveCSS('border-top-width', '3px');
     const html = await (await page.request.get('/')).text();
     expect(html).toContain('<noscript>');

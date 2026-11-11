@@ -13,8 +13,8 @@ import { fileURLToPath } from 'node:url';
 //      `collage-rules.mjs`) ni `src/assets`.
 //   3. Sin `outline` en `none` o `0` y sin `outline-style: none` (el foco visible es de A11Y.md).
 //   4. Sin `line-height` con `!important` (el espaciado de texto del usuario debe poder ganar, SC 1.4.12).
-//   5. Los únicos `<script` de `src` son los dos de `AgendaSection.astro` y `src/scripts` solo contiene
-//      `cta-focus.ts`.
+//   5. Los únicos `<script` de `src` es el de `AgendaSection.astro` y `src/scripts` solo contiene
+//      `cta-focus.ts` y `lead-form.ts` (formulario propio de leads).
 // Cada regla se prueba por mutación con cadenas sintéticas: una regla que no muerde es una regla falsa.
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
@@ -22,9 +22,9 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 /** Rutas (relativas a la raíz, con `/`) autorizadas a inyectar HTML en bruto. Vacía a propósito. */
 export const RAW_HTML_ALLOW = [];
 /** Cantidad de `<script` permitida por archivo. */
-export const SCRIPT_ALLOW = { 'src/components/AgendaSection.astro': 2 };
+export const SCRIPT_ALLOW = { 'src/components/AgendaSection.astro': 1 };
 /** Únicos archivos permitidos dentro de `src/scripts`. */
-export const SCRIPTS_DIR_ALLOW = ['src/scripts/cta-focus.ts'];
+export const SCRIPTS_DIR_ALLOW = ['src/scripts/cta-focus.ts', 'src/scripts/lead-form.ts'];
 
 const RAW_HTML_RE = /\bset:html\b|\binnerHTML\b|\bdangerouslySetInnerHTML\b/;
 const HEX_RE = /#(?:[0-9a-fA-F]{8}|[0-9a-fA-F]{6}|[0-9a-fA-F]{4}|[0-9a-fA-F]{3})(?![\w-])/g;
@@ -201,13 +201,14 @@ test('regla 5: un <script> fuera de AgendaSection, o uno de más dentro, se marc
   assert.deepEqual(rulesOf(COMPONENT, '<script>console.log(1)</script>'), [5]);
   assert.deepEqual(rulesOf(COMPONENT, '<script is:inline type="application/ld+json">{}</script>'), []);
   const agenda = 'src/components/AgendaSection.astro';
-  assert.deepEqual(rulesOf(agenda, '<script is:inline></script><script></script>'), []);
-  assert.deepEqual(rulesOf(agenda, '<script></script><script></script><script></script>'), [5]);
-  assert.deepEqual(rulesOf(agenda, '<script></script>'), [5]);
+  assert.deepEqual(rulesOf(agenda, '<script></script>'), []);
+  assert.deepEqual(rulesOf(agenda, '<script></script><script></script>'), [5]);
+  assert.deepEqual(rulesOf(agenda, ''), [5]);
 });
 
-test('regla 5: src/scripts solo admite cta-focus.ts', () => {
+test('regla 5: src/scripts solo admite cta-focus.ts y lead-form.ts', () => {
   assert.deepEqual(rulesOf('src/scripts/cta-focus.ts', 'export {};'), []);
+  assert.deepEqual(rulesOf('src/scripts/lead-form.ts', 'export {};'), []);
   assert.deepEqual(rulesOf('src/scripts/otro.ts', 'export {};'), [5]);
 });
 

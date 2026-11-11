@@ -38,7 +38,7 @@ npm run preview
 - **Accesibilidad y movimiento**: CSS `@media (prefers-reduced-motion)` nativo sin dependencias de animación (`src/styles/motion.css`).
 - **Tipografía**: Fuentes locales optimizadas (`Outfit`) sin llamadas externas a Google Fonts.
 - **Gestión de contenidos**: Contenido centralizado en [`src/content/landing.es.yaml`](src/content/landing.es.yaml) con validación mediante esquema tipado en [`src/content.config.ts`](src/content.config.ts).
-- **Formulario de conversión**: Integración embebida y accesible de ClickUp en la sección `#agenda` con carga diferida (`lazy`, `defer`) y respaldo completo con `noscript` para usuarios sin JavaScript.
+- **Formulario de conversión**: Formulario propio y accesible en la sección `#agenda` que envía a `/api/lead`. Un Worker de Cloudflare (`worker/`) crea la tarea en la Lista Onboarding de ClickUp y manda un email a hello@loopsgrowth.com (Resend). Detalles de despliegue en `worker/README.md`. El enlace de respaldo al formulario de ClickUp se mantiene.
 
 ---
 
