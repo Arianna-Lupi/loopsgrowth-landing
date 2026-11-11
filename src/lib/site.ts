@@ -20,3 +20,6 @@ export const siteUrl: string = parseSiteUrl(rawSiteUrl) ?? 'https://loopsgrowth.
 export function canonicalUrl(path: string): string {
   return new URL(path, siteUrl).href;
 }
+
+/** Clave pública (sitekey) del widget de Turnstile del formulario de leads. El secreto vive solo en el Worker. */
+export const TURNSTILE_SITEKEY = '0x4AAAAAAF9E3GqQCLZLgBIL';

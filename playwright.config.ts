@@ -11,8 +11,6 @@ import { defineConfig, devices } from '@playwright/test';
 // siempre construye y levanta uno propio. Reutilizar un servidor previo es solo para local, y
 // `tests/global-setup.ts` falla si `dist` es más viejo que `src/`, para no validar un build viejo:
 // reconstruye (`npx astro build`) y reinicia el preview tras cada cambio de código.
-const LIVE_SPECS = /form-(live|measure)\.spec\.ts$/;
-
 export default defineConfig({
   testDir: 'tests/e2e',
   reporter: 'list',
@@ -21,16 +19,12 @@ export default defineConfig({
     baseURL: 'http://localhost:4322',
     ...devices['Desktop Chrome'],
   },
-  // Dos proyectos: `chromium` no depende de que ClickUp responda y `live` reúne los specs que
-  // necesitan el formulario real (forms.clickup.com y app-cdn.clickup.com). Ojo: `chromium` NO
-  // corre sin red por sí solo, el iframe sigue pidiendo `forms.clickup.com`; solo garantiza que
-  // sus pruebas pasan aunque esa petición falle o tarde. Si ClickUp cae, solo `live` falla.
+  // El formulario es propio (envía a /api/lead), así que ninguna prueba depende de ClickUp.
   // Con `E2E_BLOCK_CLICKUP=1` (`npm run test:e2e:isolated`) el navegador usa un proxy muerto: todo
-  // lo que no es localhost falla, y así se comprueba de verdad que `chromium` no depende de ClickUp.
+  // lo que no es localhost falla, y así se comprueba que la página no pide nada externo.
   projects: [
     {
       name: 'chromium',
-      testIgnore: LIVE_SPECS,
       use: {
         viewport: { width: 1280, height: 800 },
         // Playwright fuerza el proxy también para localhost salvo que se excluya: `bypass` deja el
@@ -39,11 +33,6 @@ export default defineConfig({
           ? { proxy: { server: 'http://127.0.0.1:9', bypass: 'localhost,127.0.0.1' } }
           : {}),
       },
-    },
-    {
-      name: 'live',
-      testMatch: LIVE_SPECS,
-      use: { viewport: { width: 1280, height: 800 } },
     },
   ],
   webServer: {

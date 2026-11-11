@@ -28,6 +28,8 @@ const TEAM_LINK_URLS = es.team.members.filter((m) => m.link).map((m) => `a:${m.l
 // Un resumen del FAQ por elemento del YAML (plan 02-06): cada uno es una parada de Tab antes del enlace de respaldo.
 const FAQ_COUNT = es.faq.items.length;
 const SUMMARIES = Array.from({ length: FAQ_COUNT }, () => 'summary');
+// El formulario propio de #agenda: 5 campos de texto y 6 selects, todos paradas de Tab.
+const FIELDS = Array.from({ length: 11 }, () => 'field');
 
 // Marcas de dato faltante que la página debe mostrar en `/`: una por reclamación del YAML cuyo texto es
 // la marca, sin contar `privacy.` (el cuerpo de la política vive en /privacidad). Se deriva del YAML: se
@@ -53,6 +55,7 @@ type Stop = {
   outlineWidth: number;
   width: number;
   height: number;
+  submit: boolean;
 };
 
 /** Describe el elemento que tiene el foco ahora mismo. */
@@ -69,18 +72,19 @@ async function activeStop(page: Page): Promise<Stop> {
       outlineWidth: parseFloat(cs.outlineWidth),
       width: box.width,
       height: box.height,
+      submit: el.classList.contains('lead-submit'),
     };
   });
 }
 
-/** Tab repetido hasta llegar al iframe (o a un máximo de paradas). */
-async function tabUntilIframe(page: Page, max = 24): Promise<Stop[]> {
+/** Tab repetido hasta llegar al botón de envío del formulario (o a un máximo de paradas). */
+async function tabUntilIframe(page: Page, max = 48): Promise<Stop[]> {
   const stops: Stop[] = [];
   for (let i = 0; i < max; i++) {
     await page.keyboard.press('Tab');
     const stop = await activeStop(page);
     stops.push(stop);
-    if (stop.tag === 'IFRAME') break;
+    if (stop.submit) break;
   }
   return stops;
 }
@@ -91,18 +95,15 @@ test.describe('orden de tabulación y foco a 1280 px', () => {
   test('(a) el orden es skip 1, skip 2, CTA del header, CTA del hero, CTA de La solución, CTA de Casos, el enlace de Juan en Quiénes somos, los resúmenes del FAQ, enlace de respaldo y el iframe', async ({ page }) => {
     await page.goto('/');
     const stops = await tabUntilIframe(page);
-    const order = stops.map((s) => (s.cta ? `cta:${s.cta}` : s.tag === 'SUMMARY' ? 'summary' : s.tag === 'IFRAME' ? 'iframe' : `a:${s.href}`));
-    expect(order).toEqual(['a:#main', 'a:#agenda', 'cta:header', 'cta:hero', 'cta:solucion', 'cta:casos', ...TEAM_LINK_URLS, ...SUMMARIES, `a:${FORM_URL}`, 'iframe']);
+    const order = stops.map((s) => (s.cta ? `cta:${s.cta}` : s.tag === 'SUMMARY' ? 'summary' : s.submit ? 'submit' : s.tag === 'INPUT' || s.tag === 'SELECT' ? 'field' : `a:${s.href}`));
+    expect(order).toEqual(['a:#main', 'a:#agenda', 'cta:header', 'cta:hero', 'cta:solucion', 'cta:casos', ...TEAM_LINK_URLS, ...SUMMARIES, `a:${FORM_URL}`, ...FIELDS, 'submit']);
   });
 
   test('(c) cada parada muestra un contorno sólido de 2 px o más', async ({ page }) => {
     await page.goto('/');
     const stops = await tabUntilIframe(page);
     expect(stops.length).toBeGreaterThanOrEqual(6);
-    // Al entrar al iframe, Chromium deja `document.activeElement` en el IFRAME pero el
-    // elemento no coincide con `:focus` ni `:focus-visible` (el foco vive en el documento
-    // de ClickUp), así que el contorno del interior es de ClickUp y no medible desde aquí.
-    for (const stop of stops.filter((s) => s.tag !== 'IFRAME')) {
+    for (const stop of stops) {
       expect(stop.outlineStyle, `${stop.tag} ${stop.href ?? stop.cta ?? ''}`).not.toBe('none');
       expect(stop.outlineWidth, `${stop.tag} ${stop.href ?? stop.cta ?? ''}`).toBeGreaterThanOrEqual(2);
     }
@@ -110,7 +111,7 @@ test.describe('orden de tabulación y foco a 1280 px', () => {
 
   test('(d) skip links, CTA y enlace de respaldo miden 44 px o más (48 px de alto el CTA del hero)', async ({ page }) => {
     await page.goto('/');
-    const stops = (await tabUntilIframe(page)).filter((s) => s.tag !== 'IFRAME');
+    const stops = await tabUntilIframe(page);
     for (const stop of stops) {
       expect(stop.width, `ancho de ${stop.href ?? stop.cta}`).toBeGreaterThanOrEqual(44);
       expect(stop.height, `alto de ${stop.href ?? stop.cta}`).toBeGreaterThanOrEqual(44);
@@ -208,7 +209,7 @@ test.describe('orden de tabulación a 390 px', () => {
     await expect(page.locator('a[data-cta="header"]')).toBeHidden();
     const stops = await tabUntilIframe(page);
     expect(stops.some((s) => s.cta === 'header')).toBe(false);
-    expect(stops.map((s) => (s.cta ? `cta:${s.cta}` : s.tag === 'SUMMARY' ? 'summary' : s.tag === 'IFRAME' ? 'iframe' : `a:${s.href}`))).toEqual([
+    expect(stops.map((s) => (s.cta ? `cta:${s.cta}` : s.tag === 'SUMMARY' ? 'summary' : s.submit ? 'submit' : s.tag === 'INPUT' || s.tag === 'SELECT' ? 'field' : `a:${s.href}`))).toEqual([
       'a:#main',
       'a:#agenda',
       'cta:hero',
@@ -217,7 +218,8 @@ test.describe('orden de tabulación a 390 px', () => {
       ...TEAM_LINK_URLS,
       ...SUMMARIES,
       `a:${FORM_URL}`,
-      'iframe',
+      ...FIELDS,
+      'submit',
     ]);
   });
 });
@@ -227,7 +229,7 @@ test.describe('objetivos táctiles a 390 px', () => {
 
   test('(d) CTA del hero y enlace de respaldo miden 44 px o más', async ({ page }) => {
     await page.goto('/');
-    const stops = (await tabUntilIframe(page)).filter((s) => s.tag !== 'IFRAME');
+    const stops = await tabUntilIframe(page);
     for (const stop of stops) {
       expect(stop.width, `ancho de ${stop.href ?? stop.cta}`).toBeGreaterThanOrEqual(44);
       expect(stop.height, `alto de ${stop.href ?? stop.cta}`).toBeGreaterThanOrEqual(44);
@@ -271,7 +273,7 @@ test.describe('sección #agenda: desbordes y espaciado de texto', () => {
 });
 
 test.describe('sección #agenda: estructura', () => {
-  test('(c) enlace de respaldo con target y rel seguros; el iframe tiene título', async ({ page }) => {
+  test('(c) enlace de respaldo con target y rel seguros; el formulario tiene nombre accesible', async ({ page }) => {
     await page.goto('/');
     const link = page.locator('#agenda .agenda-fallback a');
     await expect(link).toHaveAttribute('href', FORM_URL);
@@ -279,8 +281,7 @@ test.describe('sección #agenda: estructura', () => {
     const rel = (await link.getAttribute('rel')) ?? '';
     expect(rel).toContain('noopener');
     expect(rel).toContain('noreferrer');
-    const title = await page.locator('#agenda iframe').getAttribute('title');
-    expect((title ?? '').trim().length).toBeGreaterThan(0);
+    await expect(page.locator('#agenda form#lead-form')).toHaveAttribute('aria-labelledby', 'agenda-title');
     await expect(page.locator('#agenda .agenda-fallback-lead')).toHaveText(
       '¿El formulario no carga o prefieres abrirlo aparte?',
     );
@@ -358,21 +359,58 @@ test.describe('sección #agenda: estructura', () => {
     expect(card.shadow).toContain('4px 4px 0px');
   });
 
-  test('(e2) el iframe reserva min-height por breakpoint y no fija height', async ({ page }) => {
-    const iframeHeights = () =>
-      page.locator('#agenda iframe').evaluate((el) => {
-        const cs = getComputedStyle(el);
-        return { minHeight: cs.minHeight, inline: el.getAttribute('height'), styleHeight: (el as HTMLElement).style.height };
-      });
-    // Los valores los mide el Plan 04 (FORM-04) y viven en tokens.css: el test los lee de ahí.
-    const tokens = readFileSync('src/styles/tokens.css', 'utf8');
-    const token = (name: string) => `${tokens.match(new RegExp(`--form-min-h-${name}:\\s*(\\d+)px`))?.[1]}px`;
-    await page.setViewportSize({ width: 390, height: 844 });
+  test('(e2) cada campo del formulario tiene etiqueta asociada, es obligatorio y apunta a su mensaje de error', async ({ page }) => {
     await page.goto('/');
-    expect((await iframeHeights()).minHeight).toBe(token('sm'));
-    await page.setViewportSize({ width: 1024, height: 800 });
-    expect((await iframeHeights()).minHeight).toBe(token('lg'));
-    expect((await iframeHeights()).inline).toBeNull();
+    const controls = page.locator('#lead-form .lead-field input, #lead-form .lead-field select');
+    await expect(controls).toHaveCount(11);
+    const report = await controls.evaluateAll((els) =>
+      els.map((el) => ({
+        id: el.id,
+        label: document.querySelector(`label[for="${el.id}"]`)?.textContent?.trim() ?? '',
+        required: el.getAttribute('aria-required'),
+        err: document.getElementById(el.getAttribute('aria-describedby') ?? '') !== null,
+      })),
+    );
+    for (const r of report) {
+      expect(r.label.length, `etiqueta de ${r.id}`).toBeGreaterThan(0);
+      expect(r.required, `aria-required de ${r.id}`).toBe('true');
+      expect(r.err, `mensaje de error de ${r.id}`).toBe(true);
+    }
+  });
+
+  test('(e3) enviar vacío muestra errores por campo, resumen enfocado y aria-invalid en el primer campo', async ({ page }) => {
+    await page.goto('/');
+    await page.locator('#lead-form .lead-submit').click();
+    await expect(page.locator('#lead-summary')).toBeVisible();
+    await expect(page.locator('#lf-name')).toHaveAttribute('aria-invalid', 'true');
+    await expect(page.locator('#lf-name')).toBeFocused();
+    await expect(page.locator('#lf-name-err')).toBeVisible();
+  });
+
+  test('(e4) envío válido llama a /api/lead y muestra el mensaje de éxito con foco', async ({ page }) => {
+    let body: Record<string, string> | null = null;
+    await page.route('**/api/lead', async (route) => {
+      body = route.request().postDataJSON();
+      await route.fulfill({ status: 200, contentType: 'application/json', body: '{"ok":true}' });
+    });
+    // Turnstile de mentira: el script real nunca se pide en las pruebas.
+    await page.route('https://challenges.cloudflare.com/**', (route) =>
+      route.fulfill({
+        contentType: 'application/javascript',
+        body: "window.turnstile={render:(el,o)=>{setTimeout(()=>o.callback('token-de-prueba'),0);return 'w1';},reset(){}};",
+      }),
+    );
+    await page.goto('/');
+    for (const [id, value] of Object.entries({ name: 'Ana Prueba', email: 'ana@ejemplo.com', company: 'Ejemplo SA', website: 'www.ejemplo.com', sector: 'Moda' })) {
+      await page.locator(`#lf-${id}`).fill(value);
+    }
+    for (const id of ['country', 'structure', 'revenue', 'doingSeo', 'budget', 'source']) {
+      await page.locator(`#lf-${id}`).selectOption({ index: 1 });
+    }
+    await page.locator('#lead-form .lead-submit').click();
+    await expect(page.locator('#lead-success')).toBeVisible();
+    await expect(page.locator('#lead-success')).toBeFocused();
+    expect(body).toMatchObject({ name: 'Ana Prueba', email: 'ana@ejemplo.com', hp: '', turnstileToken: 'token-de-prueba' });
   });
 
   test('(j) pesos de la sección: enlace de respaldo 700; intro y frase de respaldo 400', async ({ page }) => {

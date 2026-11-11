@@ -1,0 +1,19 @@
+{
+  "$schema": "../node_modules/wrangler/config-schema.json",
+  "name": "loopsgrowth-leads",
+  "main": "src/index.ts",
+  "account_id": "2440cecb1195a265bd32c8f80f465977",
+  "compatibility_date": "2026-09-20",
+  "workers_dev": false,
+  // Mismo origen que la landing: sin CORS en producción.
+  "routes": [
+    { "pattern": "loopsgrowth.com/api/lead", "zone_name": "loopsgrowth.com" },
+    { "pattern": "www.loopsgrowth.com/api/lead", "zone_name": "loopsgrowth.com" }
+  ],
+  "vars": {
+    "ALLOWED_ORIGINS": "https://loopsgrowth.com,https://www.loopsgrowth.com",
+    "LEAD_TO_EMAIL": "hello@loopsgrowth.com",
+    "LEAD_FROM_EMAIL": "Loops Growth <leads@alertas.loopsgrowth.com>"
+  }
+  // Secretos (wrangler secret put): CLICKUP_API_TOKEN, RESEND_API_KEY, TURNSTILE_SECRET (opcional)
+}

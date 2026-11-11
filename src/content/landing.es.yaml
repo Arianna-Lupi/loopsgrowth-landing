@@ -554,12 +554,52 @@ es:
     fallback_link:
       text: "Abre el formulario en una pestaña nueva"
       status: verified
-    iframe_title:
-      text: "Formulario para agendar tu llamada con Loops Growth"
-      status: verified
     noscript:
       text: "Para ver el formulario aquí necesitas activar JavaScript."
       status: verified
+    form:
+      required_note:
+        text: "Todos los campos son obligatorios."
+        status: verified
+      select_placeholder:
+        text: "Selecciona una opción"
+        status: verified
+      submit:
+        text: "Enviar solicitud"
+        status: verified
+      sending:
+        text: "Enviando..."
+        status: verified
+      error_required:
+        text: "Este campo es obligatorio."
+        status: verified
+      error_email:
+        text: "Escribe un correo válido, por ejemplo tu@email.com."
+        status: verified
+      error_summary:
+        text: "Revisa los campos marcados e inténtalo de nuevo."
+        status: verified
+      error_send:
+        text: "No pudimos enviar tu solicitud. Inténtalo otra vez o usa el enlace de respaldo."
+        status: verified
+      success_title:
+        text: "Listo, recibimos tu solicitud"
+        status: verified
+      success_body:
+        text: "Uno de nuestros especialistas te escribirá para agendar tu llamada."
+        status: verified
+      labels:
+        name: { text: "Nombre", status: verified }
+        email: { text: "Correo electrónico", status: verified }
+        company: { text: "Nombre de la compañía", status: verified }
+        website: { text: "Sitio web", status: verified }
+        sector: { text: "Sector / Industria", status: verified }
+        country: { text: "País", status: verified }
+        structure: { text: "Tipo de estructura", status: verified }
+        revenue: { text: "Facturación anual de tu empresa", status: verified }
+        doingSeo: { text: "¿Actualmente están haciendo SEO?", status: verified }
+        budget: { text: "¿Cuánto podrías destinar específicamente a SEO y GEO al mes? (USD)", status: verified }
+        source: { text: "¿De dónde nos conoces?", status: verified }
   footer:
     nav_label:
       text: "Enlaces del pie de página"
@@ -588,4 +628,3 @@ es:
         status: verified
   config:
     form_url: "https://forms.clickup.com/90131720021/f/2ky49tun-19253/DATFKMESVSMXZY5CO5"
-    form_script_src: "https://app-cdn.clickup.com/assets/js/forms-embed/v1.js"

@@ -30,7 +30,7 @@ const svg = `
 
   <!-- Logo (Apilado) -->
   <g transform="translate(80, 60) scale(0.45)">
-    <svg viewBox="162.61 269.04 482.39 267.49">
+    <svg width="482.39" height="267.49" viewBox="162.61 269.04 482.39 267.49">
       ${apiladoContent}
     </svg>
   </g>
@@ -68,8 +68,8 @@ const svg = `
   </g>
 
   <!-- Loopy Mascot on Right -->
-  <g transform="translate(780, 120) scale(0.88)">
-    <svg viewBox="176.65 188.12 437.35 449.1">
+  <g transform="translate(850, 140) scale(0.78)">
+    <svg width="437.35" height="449.1" viewBox="176.65 188.12 437.35 449.1">
       ${ojoContent}
     </svg>
   </g>
