@@ -1,0 +1,77 @@
+{
+  "listId": "901327450201",
+  "text": {
+    "company": "63729091-4285-4252-9e59-b657f150b5b7",
+    "email": "fc5adc4e-c9d5-47c8-99be-8f36df9b5e4f",
+    "website": "7ff72e20-eed9-4576-8ce3-c23f9bf66405",
+    "sector": "0079d27c-412d-44ea-b1b6-b289ab177782"
+  },
+  "labels": {
+    "country": {
+      "fieldId": "47205bd9-01eb-4b40-bd91-b21466fce8cd",
+      "options": [
+        ["Venezuela", "e6cebe45-c257-4170-8859-70d1e2a98804"],
+        ["Colombia", "e1215f8d-a263-45f4-a24d-dcf92bebc0ca"],
+        ["Argentina", "85df6236-2920-4770-9751-c35e51d81ed4"],
+        ["México", "d3c3bc4e-cb0e-45d2-b2a0-0aa5b42cf83b"],
+        ["Chile", "a8bf29bf-e95b-43a9-a56f-f1d28da51b04"],
+        ["Perú", "62f168c0-2421-45bd-aa53-a06b9a10941e"],
+        ["Ecuador", "80af7829-49c5-4a65-9346-2c8899ecd899"],
+        ["España", "944ce678-2ff7-4432-8353-ba321e854907"],
+        ["Brasil", "34604258-6010-4de1-9343-09de4a895473"],
+        ["Estados Unidos", "043bc90f-cc9a-4479-bb48-64142327df96"],
+        ["Otro", "fd8b9f08-9717-4436-ba06-7c30f6c94bb6"]
+      ]
+    },
+    "structure": {
+      "fieldId": "b61170cf-3749-4fa7-8288-7ad03e3c92db",
+      "options": [
+        ["Freelancer / Independiente", "869a3734-914f-453a-8033-899af861acea"],
+        ["Agencia digital", "b2cee439-46f8-4494-b82a-4b0d78f256dc"],
+        ["Empresa (10-50 personas)", "ecfa384e-3442-4d6e-a743-a2b32d167a0b"],
+        ["Corporación (50+ personas)", "4ad3c31b-3180-48d3-861d-208a7d5e4a74"],
+        ["E-commerce", "2378f957-6fae-4a99-b933-49076e6cc313"],
+        ["Startup / Proyecto propio", "7e4a941e-6c79-40a6-ad45-7fc8f8285adb"]
+      ]
+    },
+    "revenue": {
+      "fieldId": "7eb150d8-a7d6-466a-be55-b68b019fbbd5",
+      "options": [
+        ["Menos de $25k USD", "b42745d1-28fb-4392-9bfa-4016dfc603b6"],
+        ["$25k - $50k USD", "a4dc2f8c-1219-4052-a39e-1c56605a0f74"],
+        ["$50k - $100k USD", "5aa90c9d-9d02-4515-8e06-e4687b69f170"],
+        ["$100k - $250k USD", "6158cb8b-ebfc-44d8-9c5d-6c7e295aa4bc"],
+        ["$250k - $500k USD", "d598e9bf-6856-40f5-b72a-ae09515f33fb"],
+        ["$500k - $1M USD", "2df9c7fa-9248-4f60-8bf0-cf2dc0b4d9e9"],
+        ["$1M - $3M USD", "beeaac8b-6608-4a29-9f3f-a550a4d2d842"]
+      ]
+    },
+    "doingSeo": {
+      "fieldId": "88a10919-7ca0-4181-9275-bbe1a9384795",
+      "options": [
+        ["Sí, estamos haciendo SEO", "621d60d6-278d-445e-93e6-8b55e399fc29"],
+        ["Sí, pero de forma básica", "cea34ad3-64bc-4e0e-91c2-df71d366d45f"],
+        ["No, es nuevo para nosotros", "5264662b-502b-4d1d-ab80-7c02a21633e6"]
+      ]
+    },
+    "budget": {
+      "fieldId": "0aaf0d26-f0e8-4e46-937f-203be50bef9c",
+      "options": [
+        ["$1,000 - $1,500", "691a3701-3214-4579-bf46-9ab44442be02"],
+        ["$1,500 - $3,000", "ba501a16-16e6-4099-8fac-1fb67106a1db"],
+        ["+ $5,000", "1a5a1cb5-b620-4aa7-852a-ea7dce2e9dfb"]
+      ]
+    },
+    "source": {
+      "fieldId": "7a52c963-4fa7-4812-a238-f7e288dd9ef7",
+      "options": [
+        ["Búsqueda en Google", "86bcfd57-c518-4073-ae3d-9ba5ea7b4b78"],
+        ["LinkedIn", "9182db74-5cdc-4e5a-8b44-27da9e98ec76"],
+        ["Instagram / TikTok", "0c88f60a-32d6-42f6-ac2a-0655fccd6f34"],
+        ["Recomendación personal", "68536ee4-159f-4483-ba77-e67ab8b612d0"],
+        ["Podcast / YouTube", "c4efd35d-39b2-4893-89cf-b81157a82929"],
+        ["Evento / Conferencia", "9e19e939-7728-498a-88b1-0cbbe284f3c2"]
+      ]
+    }
+  }
+}
