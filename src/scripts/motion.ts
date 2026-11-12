@@ -11,43 +11,45 @@ async function start(): Promise<void> {
   const [{ gsap }, { ScrollTrigger }] = await Promise.all([import('gsap'), import('gsap/ScrollTrigger')]);
   gsap.registerPlugin(ScrollTrigger);
 
-  // Lenis: inercia de scroll solo con ratón o trackpad.
-  if (window.matchMedia('(pointer: fine)').matches) {
-    const { default: Lenis } = await import('lenis');
-    const lenis = new Lenis({ lerp: 0.1, anchors: { offset: -24 }, autoRaf: false });
-    lenis.on('scroll', ScrollTrigger.update);
-    gsap.ticker.add((t) => lenis.raf(t * 1000));
-    gsap.ticker.lagSmoothing(0);
-  }
-
   const ease = 'power3.out';
+  const root = document.documentElement;
+  const hidden = { opacity: 0 };
+  const shown = { opacity: 1, clearProps: 'transform' };
+
+  // Hero: entrada al cargar. El h1 y la imagen (candidatos a LCP) solo mueven transform; nunca se ocultan.
+  const hero = gsap.timeline({ defaults: { ease, duration: 0.9 } });
+  hero
+    .from('#hero-title', { y: 32, duration: 0.8 })
+    .fromTo('.hero-sub', { ...hidden, y: 24 }, { ...shown, y: 0, duration: 0.7 }, '-=0.5')
+    .fromTo('.hero-cta', { ...hidden, y: 24, scale: 0.96 }, { ...shown, y: 0, scale: 1, duration: 0.7, ease: 'back.out(1.6)' }, '-=0.45')
+    .from('.hero-card--main', { y: 48, scale: 0.92, rotate: -2, duration: 1.1, ease: 'back.out(1.3)' }, 0.1)
+    .fromTo('.hero-clients .client-card', { ...hidden, y: 24 }, { ...shown, y: 0, duration: 0.6, stagger: 0.07 }, '-=0.6');
 
   // Cabeceras de sección: suben y aparecen (el h1 queda fuera).
   gsap.utils.toArray<HTMLElement>('main section:not(#inicio) h2, main section:not(#inicio) h2 + p').forEach((el) => {
-    gsap.from(el, {
-      y: 28,
-      opacity: 0,
-      duration: 0.8,
-      ease,
-      scrollTrigger: { trigger: el, start: 'top 88%', once: true },
-    });
+    gsap.fromTo(
+      el,
+      { ...hidden, y: 28 },
+      { ...shown, y: 0, duration: 0.8, ease, scrollTrigger: { trigger: el, start: 'top 90%', once: true } },
+    );
   });
 
   // Tarjetas y pasos: entran en cascada por grupo.
-  const groups: string[] = ['.client-card', '.case-item', '.team-card', '.include-item', '.step', '.fw-item'];
-  groups.forEach((sel) => {
+  ['.case-item', '.team-card', '.include-item', '.step', '.fw-item'].forEach((sel) => {
     const items = gsap.utils.toArray<HTMLElement>(sel);
     if (!items.length) return;
     ScrollTrigger.batch(items, {
-      start: 'top 90%',
+      start: 'top 92%',
       once: true,
       onEnter: (batch) =>
-        gsap.from(batch, { y: 36, opacity: 0, scale: 0.97, duration: 0.7, ease, stagger: 0.09, overwrite: true }),
+        gsap.fromTo(batch, { ...hidden, y: 36, scale: 0.97 }, { ...shown, y: 0, scale: 1, duration: 0.7, ease, stagger: 0.09, overwrite: true }),
     });
   });
 
+  root.setAttribute('data-motion-ready', '');
+
   // Parallax suave del arte del hero (solo transform, sin opacity).
-  const art = document.querySelector<HTMLElement>('.hero-card--main');
+  const art = document.querySelector<HTMLElement>('.hero-showcase');
   if (art && window.matchMedia('(min-width: 64em)').matches) {
     gsap.to(art, {
       y: 36,
@@ -63,10 +65,17 @@ async function start(): Promise<void> {
     btn.addEventListener('pointerenter', up);
     btn.addEventListener('pointerleave', down);
   });
+
+  // Lenis: inercia de scroll solo con ratón o trackpad.
+  if (window.matchMedia('(pointer: fine)').matches) {
+    const { default: Lenis } = await import('lenis');
+    const lenis = new Lenis({ lerp: 0.1, anchors: { offset: -24 }, autoRaf: false });
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add((t) => lenis.raf(t * 1000));
+    gsap.ticker.lagSmoothing(0);
+  }
 }
 
 if (query.matches) {
-  const run = () => void start();
-  if ('requestIdleCallback' in window) requestIdleCallback(run, { timeout: 1500 });
-  else setTimeout(run, 200);
+  void start();
 }

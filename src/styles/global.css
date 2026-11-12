@@ -100,3 +100,22 @@
     color: var(--color-brand-dark);
   }
 }
+
+/* Movimiento (src/scripts/motion.ts): estado inicial oculto solo mientras GSAP está por revelarlo.
+   `data-motion` lo pone un script inline únicamente con prefers-reduced-motion: no-preference. */
+@media (prefers-reduced-motion: no-preference) {
+  html[data-motion]:not([data-motion-ready='off']) :is(
+      main section:not(#inicio) h2,
+      main section:not(#inicio) h2 + p,
+      .hero-sub,
+      .hero-cta,
+      .client-card,
+      .case-item,
+      .team-card,
+      .include-item,
+      .step,
+      .fw-item
+    ) {
+    opacity: 0;
+  }
+}

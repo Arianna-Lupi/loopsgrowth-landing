@@ -81,6 +81,16 @@ const fullOgImage = ogImage.startsWith('http')
     {schema && (
       <script is:inline type="application/ld+json" set:html={JSON.stringify(schema)} />
     )}
+    <script is:inline>
+      // Marca el movimiento activo antes del primer pintado para ocultar los elementos que GSAP revelará.
+      // Si motion.ts no avisa en 4 s (falla de red o de script), se quita la marca y todo se muestra.
+      (function () {
+        var d = document.documentElement;
+        if (!matchMedia('(prefers-reduced-motion: no-preference)').matches) return;
+        d.setAttribute('data-motion', '');
+        setTimeout(function () { if (!d.hasAttribute('data-motion-ready')) d.removeAttribute('data-motion'); }, 4000);
+      })();
+    </script>
   </head>
   <body>
     <SkipLinks />

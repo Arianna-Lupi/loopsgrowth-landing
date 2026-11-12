@@ -22,7 +22,7 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 /** Rutas (relativas a la raíz, con `/`) autorizadas a inyectar HTML en bruto. Vacía a propósito. */
 export const RAW_HTML_ALLOW = [];
 /** Cantidad de `<script` permitida por archivo. */
-export const SCRIPT_ALLOW = { 'src/components/AgendaSection.astro': 1, 'src/layouts/BaseLayout.astro': 1 };
+export const SCRIPT_ALLOW = { 'src/components/AgendaSection.astro': 1, 'src/layouts/BaseLayout.astro': 2 };
 /** Únicos archivos permitidos dentro de `src/scripts`. */
 export const SCRIPTS_DIR_ALLOW = ['src/scripts/cta-focus.ts', 'src/scripts/lead-form.ts', 'src/scripts/motion.ts'];
 
