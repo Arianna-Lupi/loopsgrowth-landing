@@ -1,0 +1,33 @@
+name: Deploy Worker de leads (Cloudflare)
+
+# Redespliega loopsgrowth-leads solo cuando cambia el Worker o las opciones de campos que comparte con la landing.
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'worker/**'
+      - 'src/lib/lead-options.json'
+      - '.github/workflows/deploy-worker.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-worker
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy con wrangler
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: 2440cecb1195a265bd32c8f80f465977
+          workingDirectory: worker
+          command: deploy -c wrangler.jsonc
