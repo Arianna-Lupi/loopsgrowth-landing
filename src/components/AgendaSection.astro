@@ -31,6 +31,24 @@ const textFields = [
 ] as const;
 const selectKeys = ['country', 'structure', 'revenue', 'doingSeo', 'budget', 'source'] as const;
 type Key = (typeof textFields)[number]['key'] | (typeof selectKeys)[number];
+
+// Confeti decorativo del mensaje de éxito: [x, y, giro, color de marca].
+const confetti = [
+  [-150, -130, 200, 'var(--color-brand-orange)'], [-110, -170, -160, 'var(--color-brand-yellow)'],
+  [-60, -190, 120, 'var(--color-brand-purple)'], [-10, -200, -220, 'var(--color-brand-orange)'],
+  [40, -185, 180, 'var(--color-brand-yellow)'], [95, -165, -140, 'var(--color-brand-purple)'],
+  [140, -125, 240, 'var(--color-brand-orange)'], [-170, -70, -90, 'var(--color-brand-purple)'],
+  [165, -60, 100, 'var(--color-brand-yellow)'], [-130, -30, 150, 'var(--color-brand-yellow)'],
+  [125, -20, -200, 'var(--color-brand-purple)'], [-30, -150, 60, 'var(--color-brand-purple)'],
+] as const;
+
+// Pasos del formulario conversacional: dos de texto y seis de una sola pregunta con opciones tipo tarjeta.
+const byKey = (keys: string[]) => textFields.filter((f) => keys.includes(f.key));
+const steps = [
+  { title: form.step_contact.text, fields: byKey(['name', 'email']) },
+  { title: form.step_business.text, fields: byKey(['company', 'website', 'sector']) },
+  ...selectKeys.map((k) => ({ title: form.labels[k].text, radio: k })),
+];
 ---
 
 <section id="agenda" aria-labelledby="agenda-title" data-tone="purple">
@@ -82,45 +100,53 @@ type Key = (typeof textFields)[number]['key'] | (typeof selectKeys)[number];
           data-msg-summary={form.error_summary.text}
           data-msg-send={form.error_send.text}
           data-msg-sending={form.sending.text}
+          data-step-word={form.step_word.text}
+          data-step-of={form.step_of.text}
         >
-          <p class="lead-note">{form.required_note.text}</p>
+          <div class="lead-progress">
+            <p id="lead-progress-text" class="lead-progress-text" aria-live="polite"></p>
+            <div class="lead-bar" aria-hidden="true"><span id="lead-bar-fill"></span></div>
+          </div>
           <p id="lead-summary" class="lead-summary" role="alert" tabindex="-1" hidden></p>
 
-          {textFields.map((f) => (
-            <div class="lead-field">
-              <label for={`lf-${f.key}`}>{form.labels[f.key as Key].text}</label>
-              <input
-                id={`lf-${f.key}`}
-                name={f.key}
-                type={f.type}
-                autocomplete={f.autocomplete}
-                inputmode={'inputmode' in f ? f.inputmode : undefined}
-                required
-                aria-required="true"
-                aria-describedby={`lf-${f.key}-err`}
-                maxlength="200"
-              />
-              <p id={`lf-${f.key}-err`} class="lead-error" hidden></p>
-            </div>
-          ))}
-
-          {selectKeys.map((k) => (
-            <div class="lead-field">
-              <label for={`lf-${k}`}>{form.labels[k].text}</label>
-              <select
-                id={`lf-${k}`}
-                name={k}
-                required
-                aria-required="true"
-                aria-describedby={`lf-${k}-err`}
-              >
-                <option value="">{form.select_placeholder.text}</option>
-                {leadOptions.labels[k].options.map(([label]) => (
-                  <option value={label}>{label}</option>
-                ))}
-              </select>
-              <p id={`lf-${k}-err`} class="lead-error" hidden></p>
-            </div>
+          {steps.map((step, i) => (
+            <fieldset class="lead-step" data-step={i} hidden={i !== 0}>
+              <legend class="lead-legend" tabindex="-1">{step.title}</legend>
+              {'fields' in step ? (
+                step.fields.map((f) => (
+                  <div class="lead-field">
+                    <label for={`lf-${f.key}`}>{form.labels[f.key as Key].text}</label>
+                    <input
+                      id={`lf-${f.key}`}
+                      name={f.key}
+                      type={f.type}
+                      autocomplete={f.autocomplete}
+                      inputmode={'inputmode' in f ? f.inputmode : undefined}
+                      required
+                      aria-required="true"
+                      aria-describedby={`lf-${f.key}-err`}
+                      maxlength="200"
+                    />
+                    <p id={`lf-${f.key}-err`} class="lead-error" hidden></p>
+                  </div>
+                ))
+              ) : (
+                <div class="lead-chips" role="radiogroup" aria-required="true" aria-describedby={`lf-${step.radio}-err`}>
+                  {leadOptions.labels[step.radio].options.map(([label], j) => (
+                    <label class="lead-chip" style={`--i:${j}`}>
+                      <input
+                        type="radio"
+                        name={step.radio}
+                        value={label}
+                        id={j === 0 ? `lf-${step.radio}` : undefined}
+                      />
+                      <span>{label}</span>
+                    </label>
+                  ))}
+                </div>
+              )}
+              {'radio' in step && <p id={`lf-${step.radio}-err`} class="lead-error" hidden />}
+            </fieldset>
           ))}
 
           <!-- Honeypot: oculto a personas y a lectores de pantalla; un bot lo rellena. -->
@@ -131,11 +157,20 @@ type Key = (typeof textFields)[number]['key'] | (typeof selectKeys)[number];
 
           <div id="lead-turnstile" class="lead-turnstile"></div>
 
-          <button type="submit" class="lead-submit">{form.submit.text}</button>
+          <div class="lead-actions">
+            <button type="button" class="lead-back" hidden>{form.back.text}</button>
+            <button type="button" class="lead-next">{form.next.text}</button>
+            <button type="submit" class="lead-submit" hidden>{form.submit.text}</button>
+          </div>
           <p id="lead-status" class="lead-status" role="status" aria-live="polite"></p>
         </form>
 
         <div id="lead-success" class="lead-success" tabindex="-1" hidden>
+          <div class="lead-confetti" aria-hidden="true">
+            {confetti.map((c) => (
+              <i style={`--x:${c[0]}px;--y:${c[1]}px;--r:${c[2]}deg;--c:${c[3]}`}></i>
+            ))}
+          </div>
           <h3>{form.success_title.text}</h3>
           <p>{form.success_body.text}</p>
         </div>
@@ -258,9 +293,51 @@ type Key = (typeof textFields)[number]['key'] | (typeof selectKeys)[number];
     color: var(--color-brand-dark);
   }
 
-  .lead-note {
-    margin: 0 0 1rem;
-    font-weight: 400;
+  .lead-progress {
+    margin-bottom: 1.5rem;
+  }
+
+  .lead-progress-text {
+    margin: 0 0 0.5rem;
+    font-weight: 600;
+  }
+
+  .lead-bar {
+    height: 12px;
+    border: 2px solid var(--color-brand-dark);
+    border-radius: var(--radius-pill);
+    background: var(--color-brand-cream);
+    overflow: hidden;
+  }
+
+  .lead-bar span {
+    display: block;
+    height: 100%;
+    width: var(--lead-progress, 0%);
+    background: var(--color-brand-purple);
+  }
+
+  .lead-step {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    min-width: 0;
+  }
+
+  .lead-legend {
+    display: block;
+    width: 100%;
+    margin: 0 0 1.25rem;
+    padding: 0;
+    font-size: var(--text-title);
+    font-weight: 700;
+    line-height: 1.25;
+    color: var(--color-brand-purple);
+  }
+
+  .lead-legend:focus-visible {
+    outline: var(--focus-width) solid var(--color-brand-purple);
+    outline-offset: var(--focus-offset);
   }
 
   .lead-field {
@@ -273,8 +350,7 @@ type Key = (typeof textFields)[number]['key'] | (typeof selectKeys)[number];
     font-weight: 600;
   }
 
-  .lead-field input,
-  .lead-field select {
+  .lead-field input {
     display: block;
     width: 100%;
     min-height: var(--target-min);
@@ -286,9 +362,59 @@ type Key = (typeof textFields)[number]['key'] | (typeof selectKeys)[number];
     font: inherit;
   }
 
+  .lead-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .lead-chip {
+    position: relative;
+    display: inline-flex;
+  }
+
+  .lead-chip input {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  .lead-chip span {
+    display: inline-flex;
+    align-items: center;
+    min-height: 3rem;
+    padding: 0.5rem 1.25rem;
+    border: var(--border-pop);
+    border-radius: var(--radius-pill);
+    background: var(--color-brand-cream);
+    color: var(--color-brand-dark);
+    box-shadow: 3px 3px 0 var(--color-brand-dark);
+    font-weight: 600;
+    pointer-events: none;
+  }
+
+  .lead-chip:hover span {
+    background: var(--color-brand-white);
+  }
+
+  .lead-chip input:checked + span {
+    background: var(--color-brand-yellow);
+    font-weight: 700;
+  }
+
+  .lead-chip input:checked + span::before {
+    content: '\2713';
+    margin-right: 0.5rem;
+    font-weight: 700;
+  }
+
+  .lead-chip input:focus-visible + span,
   .lead-field input:focus-visible,
-  .lead-field select:focus-visible,
-  .lead-submit:focus-visible,
+  .lead-actions button:focus-visible,
   .lead-summary:focus-visible,
   .lead-success:focus-visible {
     outline: var(--focus-width) solid var(--color-brand-purple);
@@ -301,7 +427,7 @@ type Key = (typeof textFields)[number]['key'] | (typeof selectKeys)[number];
   }
 
   .lead-error {
-    margin: 0.375rem 0 0;
+    margin: 0.5rem 0 0;
     font-weight: 700;
     color: var(--color-brand-purple);
   }
@@ -315,6 +441,217 @@ type Key = (typeof textFields)[number]['key'] | (typeof selectKeys)[number];
     font-weight: 700;
   }
 
+  .lead-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+  }
+
+  .lead-actions [hidden] {
+    display: none;
+  }
+
+  .lead-success {
+    position: relative;
+    min-height: 16rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+
+  .lead-success[hidden] {
+    display: none;
+  }
+
+  .lead-success p {
+    margin: 0;
+  }
+
+  .lead-confetti {
+    position: absolute;
+    left: 50%;
+    top: 3rem;
+    width: 0;
+    height: 0;
+  }
+
+  .lead-confetti i {
+    position: absolute;
+    width: 10px;
+    height: 16px;
+    border: 2px solid var(--color-brand-dark);
+    border-radius: 2px;
+    background: var(--c);
+    opacity: 0;
+  }
+
+  /* Todo el movimiento del formulario vive bajo `no-preference`: con `reduce` no hay ninguno. */
+  @media (prefers-reduced-motion: no-preference) {
+    .lead-step.is-forward {
+      animation: lead-in-right 380ms var(--ease-out);
+    }
+
+    .lead-step.is-back {
+      animation: lead-in-left 380ms var(--ease-out);
+    }
+
+    .lead-bar span {
+      transition: width 520ms cubic-bezier(0.3, 1.5, 0.5, 1);
+    }
+
+    .lead-step:not([hidden]) .lead-chip {
+      animation: lead-chip-in 420ms var(--ease-out) backwards;
+      animation-delay: calc(var(--i, 0) * 40ms);
+    }
+
+    .lead-chip span {
+      transition:
+        transform var(--dur-1) var(--ease-out),
+        box-shadow var(--dur-1) var(--ease-out),
+        background-color var(--dur-1) var(--ease-out);
+    }
+
+    .lead-chip:hover span {
+      transform: translate(-2px, -2px);
+      box-shadow: 5px 5px 0 var(--color-brand-dark);
+    }
+
+    .lead-chip input:checked + span {
+      animation: lead-pop 360ms var(--ease-out);
+    }
+
+    .lead-next,
+    .lead-back,
+    .lead-submit {
+      transition:
+        transform var(--dur-1) var(--ease-out),
+        box-shadow var(--dur-1) var(--ease-out),
+        background-color var(--dur-1) var(--ease-out);
+    }
+
+    .lead-next:hover,
+    .lead-submit:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 6px 6px 0 var(--color-brand-dark);
+    }
+
+    .lead-next:active,
+    .lead-submit:active,
+    .lead-back:active {
+      transform: translate(2px, 2px);
+      box-shadow: 2px 2px 0 var(--color-brand-dark);
+    }
+
+    .lead-summary:not([hidden]),
+    .lead-error:not([hidden]) {
+      animation: lead-shake 380ms var(--ease-out);
+    }
+
+    .lead-success:not([hidden]) h3 {
+      animation: lead-pop 560ms var(--ease-out);
+    }
+
+    .lead-success:not([hidden]) p {
+      animation: lead-fade 600ms var(--ease-out) 200ms backwards;
+    }
+
+    .lead-success:not([hidden]) .lead-confetti i {
+      animation: lead-confetti 1100ms cubic-bezier(0.2, 0.8, 0.3, 1) forwards;
+    }
+  }
+
+  @keyframes lead-in-right {
+    from {
+      opacity: 0;
+      transform: translateX(32px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes lead-in-left {
+    from {
+      opacity: 0;
+      transform: translateX(-32px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes lead-chip-in {
+    from {
+      opacity: 0;
+      transform: translateY(12px) scale(0.92);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes lead-pop {
+    0% {
+      transform: scale(0.85);
+    }
+    55% {
+      transform: scale(1.12);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  @keyframes lead-shake {
+    0%,
+    100% {
+      transform: translateX(0);
+    }
+    20% {
+      transform: translateX(-6px);
+    }
+    40% {
+      transform: translateX(6px);
+    }
+    60% {
+      transform: translateX(-4px);
+    }
+    80% {
+      transform: translateX(4px);
+    }
+  }
+
+  @keyframes lead-fade {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes lead-confetti {
+    0% {
+      opacity: 1;
+      transform: translate(0, 0) rotate(0deg);
+    }
+    70% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+      transform: translate(var(--x), calc(var(--y) + 120px)) rotate(var(--r));
+    }
+  }
+
   /* Honeypot: fuera del árbol de accesibilidad y del layout (un bot lo rellena, una persona no lo ve). */
   .lead-hp {
     display: none;
@@ -324,6 +661,8 @@ type Key = (typeof textFields)[number]['key'] | (typeof selectKeys)[number];
     margin-bottom: 1rem;
   }
 
+  .lead-next,
+  .lead-back,
   .lead-submit {
     display: inline-flex;
     align-items: center;
@@ -341,6 +680,11 @@ type Key = (typeof textFields)[number]['key'] | (typeof selectKeys)[number];
     cursor: pointer;
   }
 
+  .lead-back {
+    background: var(--color-brand-white);
+  }
+
+  .lead-next:hover,
   .lead-submit:hover {
     background: var(--color-brand-yellow);
   }

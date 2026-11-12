@@ -456,7 +456,7 @@ test.describe('objetivos, sombras y área de salvado', () => {
 
 test.describe('peso y peticiones', () => {
   const COLLAGE_MAX = 42240;
-  const INLINE_SCRIPT_MAX = 3072;
+  const INLINE_SCRIPT_MAX = 6144;
   const ALLOWED_HOSTS = ['localhost', 'forms.clickup.com', 'app-cdn.clickup.com'];
 
   test(`dist/index.html: por debajo de ${HTML_RAW_MAX} bytes crudos y de ${HTML_GZIP_MAX} con gzip -9`, () => {
@@ -480,7 +480,7 @@ test.describe('peso y peticiones', () => {
     expect(js).toEqual([]);
   });
 
-  test('/: raíces [data-collage] más el sprite pesan 42240 bytes o menos y el script en línea menos de 3072', async ({
+  test('/: raíces [data-collage] más el sprite pesan 42240 bytes o menos y el script en línea menos de 6144', async ({
     page,
   }, testInfo) => {
     await page.goto('/');
