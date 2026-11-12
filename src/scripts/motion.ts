@@ -21,7 +21,7 @@ async function start(): Promise<void> {
   hero
     .from('#hero-title', { y: 32, duration: 0.8 })
     .fromTo('.hero-sub', { ...hidden, y: 24 }, { ...shown, y: 0, duration: 0.7 }, '-=0.5')
-    .fromTo('.hero-cta', { ...hidden, y: 24, scale: 0.96 }, { ...shown, y: 0, scale: 1, duration: 0.7, ease: 'back.out(1.6)' }, '-=0.45')
+    .fromTo('.hero-cta', { ...hidden, y: 24 }, { ...shown, y: 0, duration: 0.7, ease: 'back.out(1.6)' }, '-=0.45')
     .from('.hero-card--main', { y: 48, scale: 0.92, rotate: -2, duration: 1.1, ease: 'back.out(1.3)' }, 0.1)
     .fromTo('.hero-clients .client-card', { ...hidden, y: 24 }, { ...shown, y: 0, duration: 0.6, stagger: 0.07 }, '-=0.6');
 
