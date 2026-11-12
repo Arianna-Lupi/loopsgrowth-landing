@@ -22,9 +22,9 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 /** Rutas (relativas a la raíz, con `/`) autorizadas a inyectar HTML en bruto. Vacía a propósito. */
 export const RAW_HTML_ALLOW = [];
 /** Cantidad de `<script` permitida por archivo. */
-export const SCRIPT_ALLOW = { 'src/components/AgendaSection.astro': 1 };
+export const SCRIPT_ALLOW = { 'src/components/AgendaSection.astro': 1, 'src/layouts/BaseLayout.astro': 1 };
 /** Únicos archivos permitidos dentro de `src/scripts`. */
-export const SCRIPTS_DIR_ALLOW = ['src/scripts/cta-focus.ts', 'src/scripts/lead-form.ts'];
+export const SCRIPTS_DIR_ALLOW = ['src/scripts/cta-focus.ts', 'src/scripts/lead-form.ts', 'src/scripts/motion.ts'];
 
 const RAW_HTML_RE = /\bset:html\b|\binnerHTML\b|\bdangerouslySetInnerHTML\b/;
 const HEX_RE = /#(?:[0-9a-fA-F]{8}|[0-9a-fA-F]{6}|[0-9a-fA-F]{4}|[0-9a-fA-F]{3})(?![\w-])/g;
