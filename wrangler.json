@@ -1,12 +1,16 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "loopsgrowth",
+  "account_id": "2440cecb1195a265bd32c8f80f465977",
   "compatibility_date": "2026-09-20",
   "assets": {
-    "directory": "./dist"
+    "directory": "./dist",
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "none"
   },
-  "vars": {
-    "PUBLIC_ENV": "production",
-    "PUBLIC_SITE_URL": "https://loopsgrowth.com"
-  }
+  "workers_dev": false,
+  "routes": [
+    { "pattern": "loopsgrowth.com/*", "zone_name": "loopsgrowth.com" },
+    { "pattern": "www.loopsgrowth.com/*", "zone_name": "loopsgrowth.com" }
+  ]
 }
