@@ -1,7 +1,7 @@
 /**
- * Formulario de leads (#agenda). Validación propia accesible (novalidate), envío JSON a /api/lead y
- * estados anunciados: errores por campo con aria-invalid + aria-describedby, resumen con foco y
- * éxito con foco. Sin dependencias.
+ * Formulario de leads conversacional (#agenda). Ocho pasos: contacto, negocio y seis preguntas de
+ * opción única. Validación propia accesible (novalidate), foco al enunciado de cada paso, progreso
+ * anunciado y envío JSON a /api/lead con Turnstile. Sin dependencias.
  */
 const form = document.getElementById('lead-form') as HTMLFormElement | null;
 
@@ -9,14 +9,18 @@ if (form) {
   const summary = document.getElementById('lead-summary') as HTMLElement;
   const statusEl = document.getElementById('lead-status') as HTMLElement;
   const success = document.getElementById('lead-success') as HTMLElement;
-  const submit = form.querySelector<HTMLButtonElement>('.lead-submit')!;
+  const progressText = document.getElementById('lead-progress-text') as HTMLElement;
+  const bar = document.getElementById('lead-bar-fill') as HTMLElement;
+  const steps = Array.from(form.querySelectorAll<HTMLFieldSetElement>('.lead-step'));
+  const nextBtn = form.querySelector<HTMLButtonElement>('.lead-next')!;
+  const backBtn = form.querySelector<HTMLButtonElement>('.lead-back')!;
+  const submitBtn = form.querySelector<HTMLButtonElement>('.lead-submit')!;
   const msg = form.dataset;
   const EMAIL_RE = /^[A-Za-z0-9._+-]+@[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)+$/;
-  const fields = Array.from(form.querySelectorAll<HTMLInputElement | HTMLSelectElement>('.lead-field input, .lead-field select'));
+  let current = 0;
   let sending = false;
 
-  // Turnstile (anti-bot). El script de Cloudflare solo se pide cuando la persona toca el formulario,
-  // así la carga inicial de la landing no hace ninguna petición externa.
+  // ---------- Turnstile (se carga al tocar el formulario; la carga inicial no pide nada externo) ----------
   type TurnstileApi = {
     render: (el: HTMLElement, opts: Record<string, unknown>) => string;
     reset: (id?: string) => void;
@@ -69,47 +73,120 @@ if (form) {
   form.addEventListener('focusin', loadTurnstile, { once: true });
   form.addEventListener('pointerenter', loadTurnstile, { once: true });
 
-  const errorEl = (el: Element) => document.getElementById(`${el.id}-err`)!;
+  // ---------- Validación por paso ----------
+  const textInputs = (step: HTMLElement) => Array.from(step.querySelectorAll<HTMLInputElement>('.lead-field input'));
+  const radios = (step: HTMLElement) => Array.from(step.querySelectorAll<HTMLInputElement>('input[type="radio"]'));
 
-  function setError(el: HTMLInputElement | HTMLSelectElement, text: string | null): void {
-    const err = errorEl(el);
+  function setError(target: HTMLElement, errId: string, text: string | null): void {
+    const err = document.getElementById(errId);
+    if (!err) return;
     if (text) {
       err.textContent = text;
       err.hidden = false;
-      el.setAttribute('aria-invalid', 'true');
+      target.setAttribute('aria-invalid', 'true');
     } else {
       err.textContent = '';
       err.hidden = true;
-      el.removeAttribute('aria-invalid');
+      target.removeAttribute('aria-invalid');
     }
   }
 
-  function check(el: HTMLInputElement | HTMLSelectElement): boolean {
+  function checkText(el: HTMLInputElement): boolean {
     const v = el.value.trim();
-    if (!v) return (setError(el, msg.msgRequired!), false);
-    if (el.name === 'email' && !EMAIL_RE.test(v)) return (setError(el, msg.msgEmail!), false);
-    setError(el, null);
+    if (!v) return (setError(el, `${el.id}-err`, msg.msgRequired!), false);
+    if (el.name === 'email' && !EMAIL_RE.test(v)) return (setError(el, `${el.id}-err`, msg.msgEmail!), false);
+    setError(el, `${el.id}-err`, null);
     return true;
   }
 
-  fields.forEach((el) => el.addEventListener('blur', () => el.value && check(el)));
-  fields.forEach((el) => el.addEventListener('input', () => el.hasAttribute('aria-invalid') && check(el)));
+  /** Valida el paso; devuelve el primer elemento inválido (o null si todo está bien). */
+  function validateStep(step: HTMLFieldSetElement): HTMLElement | null {
+    const texts = textInputs(step);
+    if (texts.length) {
+      const bad = texts.filter((el) => !checkText(el));
+      return bad[0] ?? null;
+    }
+    const group = radios(step);
+    const first = group[0];
+    const ok = group.some((r) => r.checked);
+    const errId = `${first.id}-err`;
+    const radiogroup = step.querySelector<HTMLElement>('.lead-chips')!;
+    setError(radiogroup, errId, ok ? null : msg.msgRequired!);
+    return ok ? null : first;
+  }
 
+  textInputs(form as unknown as HTMLElement).forEach((el) => {
+    el.addEventListener('blur', () => el.value && checkText(el));
+    el.addEventListener('input', () => el.hasAttribute('aria-invalid') && checkText(el));
+  });
+  radios(form as unknown as HTMLElement).forEach((r) =>
+    r.addEventListener('change', () => {
+      const step = r.closest<HTMLFieldSetElement>('.lead-step')!;
+      validateStep(step);
+      summary.hidden = true;
+    }),
+  );
+
+  // ---------- Navegación ----------
+  function render(moveFocus: boolean, dir: 'forward' | 'back' = 'forward'): void {
+    steps.forEach((s, i) => (s.hidden = i !== current));
+    const last = current === steps.length - 1;
+    backBtn.hidden = current === 0;
+    nextBtn.hidden = last;
+    submitBtn.hidden = !last;
+    progressText.textContent = `${msg.stepWord} ${current + 1} ${msg.stepOf} ${steps.length}`;
+    bar.style.setProperty('--lead-progress', `${((current + 1) / steps.length) * 100}%`);
+    summary.hidden = true;
+    if (moveFocus) {
+      const step = steps[current];
+      const cls = dir === 'forward' ? 'is-forward' : 'is-back';
+      step.classList.remove('is-forward', 'is-back');
+      step.classList.add(cls);
+      step.addEventListener('animationend', (e) => e.target === step && step.classList.remove(cls), { once: false });
+      step.querySelector<HTMLElement>('.lead-legend')?.focus();
+    }
+  }
+
+  function showSummary(target: HTMLElement | null): void {
+    summary.textContent = msg.msgSummary!;
+    summary.hidden = false;
+    target?.focus();
+  }
+
+  function goNext(): void {
+    const bad = validateStep(steps[current]);
+    if (bad) return showSummary(bad);
+    current += 1;
+    render(true);
+  }
+
+  nextBtn.addEventListener('click', goNext);
+  backBtn.addEventListener('click', () => {
+    if (current === 0) return;
+    current -= 1;
+    render(true, 'back');
+  });
+
+  // ---------- Envío ----------
   form.addEventListener('submit', async (event) => {
     event.preventDefault();
     if (sending) return;
+    // Enter en un campo de un paso intermedio avanza en lugar de enviar.
+    if (current < steps.length - 1) return goNext();
 
-    const invalid = fields.filter((el) => !check(el));
-    if (invalid.length) {
-      summary.textContent = msg.msgSummary!;
-      summary.hidden = false;
-      invalid[0].focus();
+    const bad = validateStep(steps[current]);
+    if (bad) return showSummary(bad);
+
+    // Solo en `astro dev` y con ?demo en la URL: enseña el estado de éxito sin enviar nada (se elimina del build).
+    if (import.meta.env.DEV && location.search.includes('demo')) {
+      form.hidden = true;
+      success.hidden = false;
+      success.focus();
       return;
     }
-    summary.hidden = true;
 
     sending = true;
-    submit.setAttribute('aria-disabled', 'true');
+    submitBtn.setAttribute('aria-disabled', 'true');
     statusEl.textContent = msg.msgSending!;
 
     const payload: Record<string, string> = {};
@@ -138,8 +215,10 @@ if (form) {
       summary.focus();
     } finally {
       sending = false;
-      submit.removeAttribute('aria-disabled');
+      submitBtn.removeAttribute('aria-disabled');
       if (form.hidden) statusEl.textContent = '';
     }
   });
+
+  render(false);
 }

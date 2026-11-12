@@ -8,15 +8,21 @@ import { fileURLToPath } from 'node:url';
 // (los `.css` y los bloques `<style>` de los `.astro` de `src/`) y afirma cuatro reglas:
 //   1. Toda `animation*` y `transition*` (salvo `none`) vive dentro de
 //      `@media (prefers-reduced-motion: no-preference)`.
-//   2. Todo `@keyframes` declara solo `transform` en sus cuadros.
+//   2. Todo `@keyframes` declara solo `transform` en sus cuadros (salvo los `lead-*` del formulario de #agenda).
 //   3. Ningún valor lleva `infinite` y ninguna propiedad es `animation-timeline`.
 //   4. Toda declaración de la familia `animation` (no `transition`) tiene un selector que empieza con
 //      `#inicio` y apunta a `[data-piece]`, `[data-piece-of]`, `.hc-pupil` o `[data-pupil]`: el h1, el
 //      subtítulo y el CTA no tienen animación de cuadros clave (su hover es una transición y sigue permitido).
+//      Excepción: los selectores `.lead-*` del formulario de #agenda.
 // Cada regla se prueba por mutación con cadenas sintéticas: una regla que no muerde es una regla falsa.
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const NO_PREF = '(prefers-reduced-motion: no-preference)';
+// Excepción pedida por Juan (2026-11-12): el formulario conversacional de #agenda puede animar con opacity y
+// transform en sus propios selectores (`.lead-*`) y keyframes (`lead-*`). Sigue valiendo la regla 1: todo bajo
+// `prefers-reduced-motion: no-preference`, y la regla 3: nada infinito.
+const LEAD_PREFIX = 'lead-';
+const LEAD_SELECTOR_PREFIX = '.lead-';
 const PIECE_TARGETS = ['[data-piece]', '[data-piece-of]', '.hc-pupil', '[data-pupil]'];
 
 const norm = (s) => s.replace(/\s+/g, ' ').trim();
@@ -114,14 +120,18 @@ export function scanCss(files) {
         v(1, `${d.prop} fuera de @media ${NO_PREF}`);
       }
       // 2. Los cuadros clave declaran solo `transform`.
-      if (d.keyframes && d.prop !== 'transform') v(2, `${d.keyframes} declara ${d.prop} (solo transform)`);
+      if (d.keyframes && !d.keyframes.replace(/^@keyframes\s+/, '').startsWith(LEAD_PREFIX) && d.prop !== 'transform') v(2, `${d.keyframes} declara ${d.prop} (solo transform)`);
       // 3. Nada infinito ni ligado al scroll.
       if (/\binfinite\b/i.test(d.value)) v(3, `${d.prop} usa infinite`);
       if (d.prop === 'animation-timeline') v(3, 'animation-timeline no está permitido');
       // 4. La familia `animation` solo apunta a las piezas del collage y las pupilas de #inicio.
       if (isAnimation(d.prop) && !d.keyframes) {
         const parts = splitSelectors(d.selector);
-        const ok = parts.length > 0 && parts.every((p) => p.startsWith('#inicio') && PIECE_TARGETS.some((t) => p.includes(t)));
+        const ok =
+          parts.length > 0 &&
+          parts.every(
+            (p) => (p.startsWith('#inicio') && PIECE_TARGETS.some((t) => p.includes(t))) || p.startsWith(LEAD_SELECTOR_PREFIX),
+          );
         if (!ok) v(4, `${d.prop} sobre "${d.selector}": solo #inicio con [data-piece], [data-piece-of], .hc-pupil o [data-pupil]`);
       }
     }
@@ -206,6 +216,14 @@ test('regla 3 muerde: animation-iteration-count infinite y animation-timeline', 
 });
 
 // ---- Regla 4: el h1, el subtítulo y el CTA no tienen animación de cuadros clave ----
+
+test('excepción: los keyframes lead-* y los selectores .lead-* se permiten bajo no-preference, pero no sin él ni infinitos', () => {
+  const ok = rules('@keyframes lead-pop { from { opacity: 0; transform: scale(.9); } to { opacity: 1; transform: none; } } @media (prefers-reduced-motion: no-preference) { .lead-step.is-forward { animation: lead-pop 300ms; } }');
+  assert.deepEqual(ok, []);
+  assert.deepEqual(rules('@media (prefers-reduced-motion: no-preference) { .lead-chip span { animation: lead-pop 300ms infinite; } }'), [3]);
+  assert.deepEqual(rules('.lead-chip span { animation: lead-pop 300ms; }'), [1]);
+  assert.deepEqual(rules('@keyframes otro { from { opacity: 0; } to { opacity: 1; } }'), [2, 2]);
+});
 
 test('regla 4 muerde: una animation sobre el h1 de #inicio', () => {
   const r = rules('@media (prefers-reduced-motion: no-preference) { #inicio h1 { animation: hc-enter 600ms; } }');

@@ -70,7 +70,7 @@ function listJs(dir: string): string[] {
   return out;
 }
 
-test('(e) el único JS propio del build es el script de foco y pesa menos de 3 KB', () => {
+test('(e) el único JS propio del build es el script de foco y pesa menos de 6 KB', () => {
   const dist = resolve('dist');
   const html = readFileSync(join(dist, 'index.html'), 'utf8');
 
@@ -98,5 +98,6 @@ test('(e) el único JS propio del build es el script de foco y pesa menos de 3 K
   const inlineBytes = own.filter((s) => !s.src).reduce((sum, s) => sum + Buffer.byteLength(s.code), 0);
   const total = jsBytes + inlineBytes;
   console.log(`JS propio: ${own[0].src ? `archivo ${own[0].src}` : 'inlinado en dist/index.html'}, ${total} bytes`);
-  expect(total).toBeLessThan(3072);
+  // 6 KB: el foco de #agenda más el formulario conversacional (validación, pasos y Turnstile bajo demanda).
+  expect(total).toBeLessThan(6144);
 });
