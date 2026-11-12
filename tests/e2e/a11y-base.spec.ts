@@ -28,8 +28,8 @@ const TEAM_LINK_URLS = es.team.members.filter((m) => m.link).map((m) => `a:${m.l
 // Un resumen del FAQ por elemento del YAML (plan 02-06): cada uno es una parada de Tab antes del enlace de respaldo.
 const FAQ_COUNT = es.faq.items.length;
 const SUMMARIES = Array.from({ length: FAQ_COUNT }, () => 'summary');
-// El formulario propio de #agenda: 5 campos de texto y 6 selects, todos paradas de Tab.
-const FIELDS = Array.from({ length: 11 }, () => 'field');
+// El formulario conversacional de #agenda: el primer paso trae 2 campos y el botón Siguiente.
+const FIELDS = Array.from({ length: 2 }, () => 'field');
 
 // Marcas de dato faltante que la página debe mostrar en `/`: una por reclamación del YAML cuyo texto es
 // la marca, sin contar `privacy.` (el cuerpo de la política vive en /privacidad). Se deriva del YAML: se
@@ -72,7 +72,7 @@ async function activeStop(page: Page): Promise<Stop> {
       outlineWidth: parseFloat(cs.outlineWidth),
       width: box.width,
       height: box.height,
-      submit: el.classList.contains('lead-submit'),
+      submit: el.classList.contains('lead-next'),
     };
   });
 }
@@ -359,10 +359,10 @@ test.describe('sección #agenda: estructura', () => {
     expect(card.shadow).toContain('4px 4px 0px');
   });
 
-  test('(e2) cada campo del formulario tiene etiqueta asociada, es obligatorio y apunta a su mensaje de error', async ({ page }) => {
+  test('(e2) el primer paso tiene etiquetas asociadas, campos obligatorios y mensaje de error enlazado', async ({ page }) => {
     await page.goto('/');
-    const controls = page.locator('#lead-form .lead-field input, #lead-form .lead-field select');
-    await expect(controls).toHaveCount(11);
+    const controls = page.locator('#lead-form .lead-step:not([hidden]) .lead-field input');
+    await expect(controls).toHaveCount(2);
     const report = await controls.evaluateAll((els) =>
       els.map((el) => ({
         id: el.id,
@@ -376,18 +376,22 @@ test.describe('sección #agenda: estructura', () => {
       expect(r.required, `aria-required de ${r.id}`).toBe('true');
       expect(r.err, `mensaje de error de ${r.id}`).toBe(true);
     }
+    await expect(page.locator('#lead-progress-text')).toHaveText('Paso 1 de 8');
+    // Los pasos no visibles no son alcanzables ni por Tab ni por lector de pantalla.
+    await expect(page.locator('#lead-form .lead-step[hidden]')).toHaveCount(7);
   });
 
-  test('(e3) enviar vacío muestra errores por campo, resumen enfocado y aria-invalid en el primer campo', async ({ page }) => {
+  test('(e3) Siguiente con el paso vacío muestra errores, resumen y foco en el primer campo inválido', async ({ page }) => {
     await page.goto('/');
-    await page.locator('#lead-form .lead-submit').click();
+    await page.locator('#lead-form .lead-next').click();
     await expect(page.locator('#lead-summary')).toBeVisible();
     await expect(page.locator('#lf-name')).toHaveAttribute('aria-invalid', 'true');
     await expect(page.locator('#lf-name')).toBeFocused();
     await expect(page.locator('#lf-name-err')).toBeVisible();
+    await expect(page.locator('#lead-progress-text')).toHaveText('Paso 1 de 8');
   });
 
-  test('(e4) envío válido llama a /api/lead y muestra el mensaje de éxito con foco', async ({ page }) => {
+  test('(e4) recorrido completo por los 8 pasos: foco al enunciado, Atrás conserva respuestas y el envío llama a /api/lead', async ({ page }) => {
     let body: Record<string, string> | null = null;
     await page.route('**/api/lead', async (route) => {
       body = route.request().postDataJSON();
@@ -401,16 +405,38 @@ test.describe('sección #agenda: estructura', () => {
       }),
     );
     await page.goto('/');
-    for (const [id, value] of Object.entries({ name: 'Ana Prueba', email: 'ana@ejemplo.com', company: 'Ejemplo SA', website: 'www.ejemplo.com', sector: 'Moda' })) {
-      await page.locator(`#lf-${id}`).fill(value);
+    await page.locator('#lf-name').fill('Ana Prueba');
+    await page.locator('#lf-email').fill('ana@ejemplo.com');
+    await page.locator('#lead-form .lead-next').click();
+    await expect(page.locator('#lead-progress-text')).toHaveText('Paso 2 de 8');
+    await expect(page.locator('#lead-form .lead-step:not([hidden]) .lead-legend')).toBeFocused();
+    await page.locator('#lf-company').fill('Ejemplo SA');
+    await page.locator('#lf-website').fill('www.ejemplo.com');
+    await page.locator('#lf-sector').fill('Moda');
+    await page.locator('#lead-form .lead-next').click();
+    // Cada paso de opción única: sin elegir no avanza; al elegir y pulsar Siguiente, avanza.
+    for (let step = 3; step <= 8; step++) {
+      await expect(page.locator('#lead-progress-text')).toHaveText(`Paso ${step} de 8`);
+      if (step === 3) {
+        await page.locator('#lead-form .lead-next').click();
+        await expect(page.locator('#lead-summary')).toBeVisible();
+        await expect(page.locator('#lead-progress-text')).toHaveText('Paso 3 de 8');
+      }
+      await page.locator('#lead-form .lead-step:not([hidden]) .lead-chip').first().click();
+      if (step < 8) await page.locator('#lead-form .lead-next').click();
     }
-    for (const id of ['country', 'structure', 'revenue', 'doingSeo', 'budget', 'source']) {
-      await page.locator(`#lf-${id}`).selectOption({ index: 1 });
-    }
+    // Atrás conserva lo elegido.
+    await page.locator('#lead-form .lead-back').click();
+    await expect(page.locator('#lead-progress-text')).toHaveText('Paso 7 de 8');
+    await expect(page.locator('#lead-form .lead-step:not([hidden]) input:checked')).toHaveCount(1);
+    await page.locator('#lead-form .lead-next').click();
     await page.locator('#lead-form .lead-submit').click();
     await expect(page.locator('#lead-success')).toBeVisible();
     await expect(page.locator('#lead-success')).toBeFocused();
-    expect(body).toMatchObject({ name: 'Ana Prueba', email: 'ana@ejemplo.com', hp: '', turnstileToken: 'token-de-prueba' });
+    expect(body).toMatchObject({ name: 'Ana Prueba', email: 'ana@ejemplo.com', company: 'Ejemplo SA', hp: '', turnstileToken: 'token-de-prueba' });
+    for (const key of ['country', 'structure', 'revenue', 'doingSeo', 'budget', 'source']) {
+      expect((body as unknown as Record<string, string>)[key], key).toBeTruthy();
+    }
   });
 
   test('(j) pesos de la sección: enlace de respaldo 700; intro y frase de respaldo 400', async ({ page }) => {

@@ -1,0 +1,48 @@
+name: Deploy sitio a Cloudflare
+
+# Cada push a main compila la landing, pasa las guardas y publica dist/ en Cloudflare (Workers Assets,
+# rutas loopsgrowth.com/* y www.loopsgrowth.com/*). Configuración en wrangler.json y public/_headers.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-site
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+          cache: npm
+
+      - run: npm ci
+
+      # HOSTINGER=1 desactiva los bloqueos de check-copy y check-photos (los textos pendientes y las
+      # fotos sin aprobar no bloquean el despliegue), igual que en el despliegue anterior.
+      - name: Build de producción
+        run: npm run build
+        env:
+          HOSTINGER: '1'
+          PUBLIC_ENV: production
+          PUBLIC_SITE_URL: https://loopsgrowth.com
+
+      - name: Guardas (contraste, copy, presupuestos, movimiento)
+        run: npm run test:guards
+
+      - name: Publicar en Cloudflare
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: 2440cecb1195a265bd32c8f80f465977
+          command: deploy

@@ -567,6 +567,24 @@ es:
       submit:
         text: "Enviar solicitud"
         status: verified
+      next:
+        text: "Siguiente"
+        status: verified
+      back:
+        text: "Atrás"
+        status: verified
+      step_word:
+        text: "Paso"
+        status: verified
+      step_of:
+        text: "de"
+        status: verified
+      step_contact:
+        text: "Empecemos por conocerte"
+        status: verified
+      step_business:
+        text: "Cuéntanos de tu negocio"
+        status: verified
       sending:
         text: "Enviando..."
         status: verified
