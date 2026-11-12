@@ -38,7 +38,8 @@ npm run preview
 - **Accesibilidad y movimiento**: CSS `@media (prefers-reduced-motion)` nativo sin dependencias de animación (`src/styles/motion.css`).
 - **Tipografía**: Fuentes locales optimizadas (`Outfit`) sin llamadas externas a Google Fonts.
 - **Gestión de contenidos**: Contenido centralizado en [`src/content/landing.es.yaml`](src/content/landing.es.yaml) con validación mediante esquema tipado en [`src/content.config.ts`](src/content.config.ts).
-- **Formulario de conversión**: Formulario propio y accesible en la sección `#agenda` que envía a `/api/lead`. Un Worker de Cloudflare (`worker/`) crea la tarea en la Lista Onboarding de ClickUp y manda un email a hello@loopsgrowth.com (Resend). Detalles de despliegue en `worker/README.md`. El enlace de respaldo al formulario de ClickUp se mantiene.
+- **Formulario de conversión**: Formulario propio y accesible en la sección `#agenda` que envía a `/api/lead`. Un Worker de Cloudflare (`worker/`) crea la tarea en la Lista Onboarding de ClickUp y manda un email a hello@loopsgrowth.com (Resend). Detalles de despliegue en `worker/README.md`.
+- **Hosting y CI/CD**: el sitio se sirve desde Cloudflare (Workers Assets, `wrangler.json`, cabeceras en `public/_headers`). Cada push a `main` ejecuta `.github/workflows/deploy-site.yml` (build, guardas y `wrangler deploy`); el Worker de leads se redespliega con `deploy-worker.yml`. Secreto necesario en GitHub: `CLOUDFLARE_API_TOKEN`. Hostinger queda como respaldo del origen anterior. El enlace de respaldo al formulario de ClickUp se mantiene.
 
 ---
 

@@ -1,6 +1,7 @@
-name: Deploy sitio a Hostinger
+name: Deploy sitio a Cloudflare
 
-# Cada push a main compila la landing, pasa las guardas y sube dist/ por FTP a Hostinger.
+# Cada push a main compila la landing, pasa las guardas y publica dist/ en Cloudflare (Workers Assets,
+# rutas loopsgrowth.com/* y www.loopsgrowth.com/*). Configuración en wrangler.json y public/_headers.
 on:
   push:
     branches: [main]
@@ -28,7 +29,7 @@ jobs:
       - run: npm ci
 
       # HOSTINGER=1 desactiva los bloqueos de check-copy y check-photos (los textos pendientes y las
-      # fotos sin aprobar no bloquean el hosting), igual que en el despliegue anterior.
+      # fotos sin aprobar no bloquean el despliegue), igual que en el despliegue anterior.
       - name: Build de producción
         run: npm run build
         env:
@@ -39,12 +40,9 @@ jobs:
       - name: Guardas (contraste, copy, presupuestos, movimiento)
         run: npm run test:guards
 
-      - name: Subir dist/ a Hostinger por FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+      - name: Publicar en Cloudflare
+        uses: cloudflare/wrangler-action@v3
         with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          protocol: ftps
-          local-dir: ./dist/
-          server-dir: ${{ secrets.FTP_SERVER_DIR }}
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: 2440cecb1195a265bd32c8f80f465977
+          command: deploy
