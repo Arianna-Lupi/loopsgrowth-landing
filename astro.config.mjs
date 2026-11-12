@@ -33,6 +33,9 @@ export default defineConfig({
   ],
   vite: {
     plugins: [tailwindcss()],
+    // El script de #agenda (foco, barra CTA móvil y formulario) pesa ~5 KB: con el umbral por defecto (4 KB)
+    // Vite lo sacaría a un .js aparte. Se inlinea en el HTML para no sumar una petición ni un archivo .js.
+    build: { assetsInlineLimit: 8192 },
   },
   fonts: [
     {

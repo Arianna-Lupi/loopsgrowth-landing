@@ -68,6 +68,13 @@ const emailHref = EMAIL_RE.test(email) ? `mailto:${email}` : undefined;
     padding-block: var(--section-y);
   }
 
+  /* Espacio para que la barra CTA fija de móvil nunca tape el último contenido. */
+  @media (max-width: 39.99em) {
+    .site-footer {
+      padding-bottom: calc(var(--section-y) + 5rem);
+    }
+  }
+
   /* Una columna: marca y luego el nav, con una separación de al menos la altura del logo. */
   .footer-grid {
     display: grid;

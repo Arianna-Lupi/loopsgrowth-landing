@@ -148,15 +148,13 @@ const clients = data.hero.clients.items.map((item) => {
     align-items: center;
     gap: 0.5rem;
     min-height: var(--target-min);
-    padding: 0.75rem 1.375rem;
-    border: var(--border-pop);
-    border-radius: var(--radius-pill);
-    background: transparent;
-    color: var(--color-brand-dark);
+    padding: 0.5rem 0.25rem;
+    color: var(--link);
     font-size: 1rem;
     font-weight: 700;
-    text-decoration: none;
-    box-shadow: 2px 2px 0 var(--color-brand-dark);
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 4px;
   }
 
   .hero-secondary-arrow {
@@ -165,7 +163,7 @@ const clients = data.hero.clients.items.map((item) => {
 
   @media (prefers-reduced-motion: no-preference) {
     .hero-secondary-btn {
-      transition: background var(--dur-1) var(--ease-out), color var(--dur-1) var(--ease-out), transform var(--dur-1) var(--ease-out);
+      transition: text-decoration-thickness var(--dur-1) var(--ease-out);
     }
     .hero-secondary-btn:hover .hero-secondary-arrow {
       transform: translateX(3px);
@@ -174,8 +172,7 @@ const clients = data.hero.clients.items.map((item) => {
   }
 
   .hero-secondary-btn:hover {
-    background: var(--color-brand-dark);
-    color: var(--color-brand-white);
+    text-decoration-thickness: 3px;
   }
 
   .hero-secondary-btn:focus-visible {
@@ -266,11 +263,10 @@ const clients = data.hero.clients.items.map((item) => {
     gap: 0.5rem;
     min-width: 0;
     padding: 0.5rem 0.125rem 0.625rem;
-    border: var(--border-pop);
+    border: 2px solid color-mix(in srgb, var(--color-brand-dark) 18%, transparent);
     border-radius: var(--radius-card);
     background: var(--color-brand-cream);
     color: var(--on-surface);
-    box-shadow: var(--shadow-pop);
     text-align: center;
   }
 

@@ -5,8 +5,8 @@
  * enlace a `/` en cualquier otra ruta.
  * Monta el sprite del collage una sola vez por página, fuera del landmark (si BaseLayout lo
  * asume después, basta mover esa línea).
- * El CTA se oculta con `display: none` por debajo de 640 px: así sale también del
- * orden de tabulación y el CTA del hero queda como único acceso en móvil.
+ * Por debajo de 640 px el CTA es una barra fija inferior que aparece al pasar el hero
+ * (`cta-focus.ts` alterna `.is-visible`); oculto sale también del orden de tabulación.
  */
 import CtaLink from './CtaLink.astro';
 import Logo from './brand/Logo.astro';
@@ -58,32 +58,55 @@ const tone = 'light';
     flex-shrink: 0;
   }
 
-  @media (max-width: 26.5em) {
+  /* Móvil: el CTA del header pasa a ser una barra fija inferior (el mismo enlace, sin duplicar CTA).
+     Con JavaScript solo aparece cuando el CTA del hero ya salió de la pantalla y mientras no se vea
+     el formulario ni el pie; sin JavaScript queda visible siempre. El `backdrop-filter` del header se
+     apaga aquí porque crearía un bloque contenedor para el `position: fixed`. */
+  @media (max-width: 39.99em) {
     .site-header {
-      padding-block: 0.5rem;
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+      /* Sin desenfoque, un fondo translúcido deja ver el texto que pasa por debajo: aquí es opaco. */
+      background: var(--surface);
     }
+
+    .header-cta {
+      position: fixed;
+      inset: auto 0 0 0;
+      z-index: 60;
+      padding: 0.75rem 1rem calc(0.75rem + env(safe-area-inset-bottom, 0px));
+      border-top: var(--border-pop);
+      background: var(--color-brand-cream);
+    }
+
     .header-cta :global(.cta) {
-      min-height: 2.25rem;
-      padding: 0.25rem 0.625rem;
-      font-size: 0.75rem;
-      box-shadow: 2px 2px 0 var(--pop-shadow-color);
-      white-space: nowrap;
+      width: 100%;
+      min-height: 3rem;
     }
+
     :global(.site-header .brand-logo) {
-      --logo-h: 24px;
+      --logo-h: 28px;
     }
   }
 
-  @media (min-width: 26.51em) and (max-width: 39.99em) {
-    .header-cta :global(.cta) {
-      min-height: 2.5rem;
-      padding: 0.35rem 0.875rem;
-      font-size: 0.8125rem;
-      box-shadow: 2px 2px 0 var(--pop-shadow-color);
-      white-space: nowrap;
+  @media (max-width: 39.99em) and (scripting: enabled) {
+    .header-cta:not(.is-visible) {
+      visibility: hidden;
+      transform: translateY(100%);
     }
-    :global(.site-header .brand-logo) {
-      --logo-h: 28px;
+  }
+
+  @media (max-width: 39.99em) and (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+    .header-cta {
+      transition:
+        transform 260ms var(--ease-out),
+        visibility 0s linear 260ms;
+    }
+
+    .header-cta.is-visible {
+      transition:
+        transform 260ms var(--ease-out),
+        visibility 0s;
     }
   }
 </style>

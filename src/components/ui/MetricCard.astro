@@ -91,7 +91,8 @@ const chip = pill || channel;
     line-height: var(--text-display--line-height);
     font-weight: 700;
     color: var(--heading);
-    overflow-wrap: anywhere;
+    /* La cifra no parte en dos líneas ("+500 %" dejaba el % huérfano). */
+    white-space: nowrap;
   }
 
   /* Marcador plano detrás del tercio inferior de la cifra: una sola tonalidad, sin desenfoque. */
@@ -116,10 +117,11 @@ const chip = pill || channel;
     color: var(--on-surface);
   }
 
+  /* Sector y plazo anclados abajo: en tarjetas de distinta altura el aire queda en medio, no al final. */
   .metric-facts {
     display: grid;
     gap: 0.5rem;
-    margin: 0;
+    margin: auto 0 0;
   }
 
   .metric-facts > div {

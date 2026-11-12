@@ -14,14 +14,12 @@ const data = await getLanding();
   <div class="whynow-wrap">
     <div class="whynow-cols">
       <div class="whynow-box whynow-box--google">
-        <span class="box-tag">Google SEO</span>
         <h3 class="box-title">Búsqueda Tradicional</h3>
         <p class="box-lead">{data.why_now.items[0].text}</p>
         <p class="box-note">{data.why_now.items[3].text}</p>
       </div>
 
       <div class="whynow-box whynow-box--ai">
-        <span class="box-tag box-tag--ai">ChatGPT & Gemini</span>
         <h3 class="box-title">Asistentes de IA</h3>
         <p class="box-lead">{data.why_now.items[1].text}</p>
       </div>
@@ -79,24 +77,8 @@ const data = await getLanding();
     background: var(--color-brand-white);
   }
 
-  .box-tag {
-    align-self: flex-start;
-    padding: 0.25rem 0.625rem;
-    border-radius: var(--radius-s);
-    background: color-mix(in srgb, var(--color-brand-dark) 8%, transparent);
-    font-size: 0.75rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    color: var(--color-brand-dark);
-  }
-
-  .box-tag--ai {
-    background: color-mix(in srgb, var(--color-brand-purple) 12%, transparent);
-    color: var(--color-brand-purple);
-  }
-
   .box-title {
-    margin-top: 0.75rem;
+    margin-top: 0;
     margin-bottom: 0.5rem;
     font-size: var(--text-title);
     line-height: var(--text-title--line-height);
@@ -130,7 +112,7 @@ const data = await getLanding();
 
   .banner-title {
     margin: 0;
-    font-size: clamp(1.25rem, 1.1rem + 0.8vw, 1.625rem);
+    font-size: var(--text-title);
     line-height: 1.3;
     font-weight: 700;
     color: var(--color-brand-yellow);
@@ -157,7 +139,7 @@ const data = await getLanding();
     border-radius: 9999px;
     background: var(--color-brand-white);
     box-shadow: var(--shadow-pop);
-    font-size: 0.9375rem;
+    font-size: var(--text-body);
     font-weight: 700;
     color: var(--color-brand-dark);
     text-align: center;

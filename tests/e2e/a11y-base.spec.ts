@@ -414,14 +414,16 @@ test.describe('sección #agenda: estructura', () => {
     await page.locator('#lf-website').fill('www.ejemplo.com');
     await page.locator('#lf-sector').fill('Moda');
     await page.locator('#lead-form .lead-next').click();
-    // Cada paso de opción única: sin elegir no avanza; al elegir y pulsar Siguiente, avanza.
-    for (let step = 3; step <= 8; step++) {
+    // Paso 3: País es un select nativo; sin elegir no avanza.
+    await expect(page.locator('#lead-progress-text')).toHaveText('Paso 3 de 8');
+    await page.locator('#lead-form .lead-next').click();
+    await expect(page.locator('#lead-summary')).toBeVisible();
+    await expect(page.locator('#lf-country')).toHaveAttribute('aria-invalid', 'true');
+    await page.locator('#lf-country').selectOption({ index: 1 });
+    await page.locator('#lead-form .lead-next').click();
+    // Pasos 4 a 8: opción única como tarjetas; al elegir y pulsar Siguiente, avanza.
+    for (let step = 4; step <= 8; step++) {
       await expect(page.locator('#lead-progress-text')).toHaveText(`Paso ${step} de 8`);
-      if (step === 3) {
-        await page.locator('#lead-form .lead-next').click();
-        await expect(page.locator('#lead-summary')).toBeVisible();
-        await expect(page.locator('#lead-progress-text')).toHaveText('Paso 3 de 8');
-      }
       await page.locator('#lead-form .lead-step:not([hidden]) .lead-chip').first().click();
       if (step < 8) await page.locator('#lead-form .lead-next').click();
     }

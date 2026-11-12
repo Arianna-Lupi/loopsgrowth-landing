@@ -49,3 +49,4 @@ GEMINI.md
 .wrangler/
 worker/.wrangler/
 .dev.vars
+.impeccable/

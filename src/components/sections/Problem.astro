@@ -54,7 +54,7 @@ const data = await getLanding();
   }
 
   #problema :global(.section-title) {
-    font-size: clamp(2rem, 1.6rem + 2vw, 2.75rem);
+    font-size: var(--text-heading);
     line-height: 1.2;
     color: var(--heading);
   }
@@ -118,7 +118,7 @@ const data = await getLanding();
 
   .blocker-text {
     margin-top: 0.75rem;
-    font-size: 0.9375rem;
+    font-size: var(--text-body);
     line-height: 1.6;
     color: color-mix(in srgb, var(--on-surface) 80%, transparent);
     max-width: 40ch;

@@ -47,3 +47,22 @@ if (location.hash === HASH) {
   };
   setTimeout(tick, 0);
 }
+
+// Barra CTA fija de móvil (el CTA del header): aparece cuando el CTA del hero ya quedó arriba y se oculta
+// mientras se ve el formulario o el pie. Sin IntersectionObserver o sin hero (otras rutas) no se muestra.
+const bar = document.querySelector<HTMLElement>('.header-cta');
+const heroCta = document.querySelector<HTMLElement>('a[data-cta="hero"]');
+if (bar && heroCta && 'IntersectionObserver' in window) {
+  const state = { hero: true, passed: false, agenda: false, footer: false };
+  const update = () => bar.classList.toggle('is-visible', !state.hero && state.passed && !state.agenda && !state.footer);
+  const watch = (el: Element | null, onChange: (e: IntersectionObserverEntry) => void) => {
+    if (!el) return;
+    new IntersectionObserver((entries) => entries.forEach((e) => (onChange(e), update()))).observe(el);
+  };
+  watch(heroCta, (e) => {
+    state.hero = e.isIntersecting;
+    state.passed = !e.isIntersecting && e.boundingClientRect.bottom < 0;
+  });
+  watch(document.getElementById('agenda'), (e) => (state.agenda = e.isIntersecting));
+  watch(document.querySelector('footer'), (e) => (state.footer = e.isIntersecting));
+}

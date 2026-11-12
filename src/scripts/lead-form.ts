@@ -74,7 +74,8 @@ if (form) {
   form.addEventListener('pointerenter', loadTurnstile, { once: true });
 
   // ---------- Validación por paso ----------
-  const textInputs = (step: HTMLElement) => Array.from(step.querySelectorAll<HTMLInputElement>('.lead-field input'));
+  type Field = HTMLInputElement | HTMLSelectElement;
+  const textInputs = (step: HTMLElement) => Array.from(step.querySelectorAll<Field>('.lead-field input, .lead-field select'));
   const radios = (step: HTMLElement) => Array.from(step.querySelectorAll<HTMLInputElement>('input[type="radio"]'));
 
   function setError(target: HTMLElement, errId: string, text: string | null): void {
@@ -91,7 +92,7 @@ if (form) {
     }
   }
 
-  function checkText(el: HTMLInputElement): boolean {
+  function checkText(el: Field): boolean {
     const v = el.value.trim();
     if (!v) return (setError(el, `${el.id}-err`, msg.msgRequired!), false);
     if (el.name === 'email' && !EMAIL_RE.test(v)) return (setError(el, `${el.id}-err`, msg.msgEmail!), false);
@@ -118,6 +119,7 @@ if (form) {
   textInputs(form as unknown as HTMLElement).forEach((el) => {
     el.addEventListener('blur', () => el.value && checkText(el));
     el.addEventListener('input', () => el.hasAttribute('aria-invalid') && checkText(el));
+    el.addEventListener('change', () => el.hasAttribute('aria-invalid') && checkText(el));
   });
   radios(form as unknown as HTMLElement).forEach((r) =>
     r.addEventListener('change', () => {
@@ -135,7 +137,7 @@ if (form) {
     nextBtn.hidden = last;
     submitBtn.hidden = !last;
     progressText.textContent = `${msg.stepWord} ${current + 1} ${msg.stepOf} ${steps.length}`;
-    bar.style.setProperty('--lead-progress', `${((current + 1) / steps.length) * 100}%`);
+    bar.style.setProperty('--lead-progress', String((current + 1) / steps.length));
     summary.hidden = true;
     if (moveFocus) {
       const step = steps[current];
@@ -181,6 +183,7 @@ if (form) {
     if (import.meta.env.DEV && location.search.includes('demo')) {
       form.hidden = true;
       success.hidden = false;
+      document.getElementById('agenda')?.setAttribute('data-sent', '');
       success.focus();
       return;
     }
@@ -204,6 +207,7 @@ if (form) {
       if (!res.ok) throw new Error(String(res.status));
       form.hidden = true;
       success.hidden = false;
+      document.getElementById('agenda')?.setAttribute('data-sent', '');
       success.focus();
     } catch {
       statusEl.textContent = '';

@@ -60,10 +60,31 @@ const WIDE_INDEX = 3;
     min-width: 0;
   }
 
+  /* Tres tarjetas normales y una ancha (la de Meta Ads, con su diseño de dos columnas): la ancha ocupa su propia
+     fila completa. Así no estira a su vecina de la fila (antes dejaba ~250 px vacíos en "App móvil"). */
   @media (min-width: 48em) {
     .cases-grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 1.5rem;
+    }
+
+    .case-item[data-wide] {
+      grid-column: 1 / -1;
+    }
+
+    /* Con dos columnas la tercera tarjeta quedaría sola con un hueco al lado: ocupa la fila. */
+    .case-item:nth-child(3) {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (min-width: 64em) {
+    .cases-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .case-item:nth-child(3) {
+      grid-column: auto;
     }
   }
 </style>

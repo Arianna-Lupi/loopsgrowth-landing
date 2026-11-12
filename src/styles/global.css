@@ -7,6 +7,13 @@
     scroll-behavior: auto;
   }
 
+  /* La barra CTA fija de móvil no debe tapar el foco ni los destinos de ancla (SC 2.4.11). */
+  @media (max-width: 39.99em) {
+    html {
+      scroll-padding-bottom: 5.5rem;
+    }
+  }
+
   /* Scroll suave solo con preferencia explícita; bajo `reduce` el salto es inmediato. */
   @media (prefers-reduced-motion: no-preference) {
     html {
