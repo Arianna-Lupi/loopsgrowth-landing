@@ -25,7 +25,7 @@ Método: SerpAPI, motor `google`, dominio `google.co.ve`, `gl=ve`, `hl=es`, 10 r
 
 ## Lecturas que cambian el plan
 
-1. **"agencia geo venezuela" está abierta.** Ninguna agencia domina la frase y Google devuelve resultados que no tratan el tema. Es la oportunidad más clara para una página propia, con la reserva de que no medí su volumen.
+1. **"agencia geo venezuela" no sirve como frase de compra.** Google devuelve geografía y geopolítica, no agencias. Una investigación paralela (sesión de Contrata) llegó a lo mismo. Para GEO hay que medir "agencia geo y aeo", "seo para ia" y "posicionamiento en chatgpt", que quedan para la primera corrida del script semanal.
 2. **"mejor agencia seo venezuela" la dominan consultores personales** (angelboyer.com, eduardorodriguez.org) y sitios de agencia con listas. Competir ahí exige prueba pública: casos con permiso y reseñas verificables.
 3. **Las frases por ciudad las ocupan directorios y redes sociales** (Sortlist, Clutch, Instagram, Facebook). Una página propia con contenido real de la ciudad puede entrar, pero solo si Loops tiene algo verificable que decir de esa ciudad. Falta confirmar la presencia de Loops en Venezuela.
 4. **Para ecommerce, esadriandavid.com ocupa tres posiciones** de la misma frase. Falta abrir esas páginas para confirmar el formato (guía, artículo o servicio) antes de decidir qué escribir.
