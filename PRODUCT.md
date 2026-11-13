@@ -36,7 +36,7 @@ El copy vive en un doc de Ari y se mapea sin reescribir a `src/content/landing.e
 - Cuatro CTA con el mismo texto ("Agenda tu llamada de 30 minutos") que llevan a `#agenda`.
 - Sin fotos reales del equipo ni logos de clientes: ilustración de marca, texto y métricas.
 - Sin cifras inventadas: donde falta el dato, la página muestra "FALTA CONFIRMAR".
-- Fuera de alcance: dominio y deploy, versión en inglés, formulario propio, blog.
+- Fuera de alcance: versión en inglés, SaaS del proceso con IA y ContrataUnMarketer. Dominio y deploy (Cloudflare), formulario propio y blog ya no están fuera de alcance: el formulario salió en producción y el blog entra por el milestone SEO y blog (`.planning/milestones/seo-blog/`, pedido de Arianna el 13 de nov de 2026).
 
 ## Brand Commitments
 
