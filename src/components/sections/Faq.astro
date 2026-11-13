@@ -117,6 +117,11 @@ const { faq } = data;
     transform: rotate(90deg);
   }
 
+  /* Con movimiento activo, GSAP (motion.ts) maneja el giro del icono: sin la transición CSS que lo pelearía. */
+  :global(html[data-motion-ready]) .faq-icon-v {
+    transition: none;
+  }
+
   /* Anillo dentro de la tarjeta: el offset negativo suma el ancho del trazo y el desfase estándar. */
   .faq-summary:focus-visible {
     outline: var(--focus-width) solid var(--focus-ring);

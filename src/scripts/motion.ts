@@ -69,6 +69,49 @@ async function start(): Promise<void> {
     btn.addEventListener('pointerleave', down);
   });
 
+  // FAQ: <details> nativo con apertura y cierre animados. El teclado y el lector de pantalla no cambian
+  // (Enter y Espacio siguen disparando el clic del summary); sin JS se abre y cierra de golpe.
+  document.querySelectorAll<HTMLDetailsElement>('.faq-item').forEach((item) => {
+    const summary = item.querySelector<HTMLElement>('.faq-summary');
+    const answer = item.querySelector<HTMLElement>('.faq-answer');
+    const bar = item.querySelector<SVGElement>('.faq-icon-v');
+    const disc = item.querySelector<SVGElement>('.faq-icon-disc');
+    const icon = item.querySelector<SVGElement>('.faq-icon');
+    if (!summary || !answer) return;
+    gsap.set(bar, { transformOrigin: '50% 50%', rotation: item.open ? 90 : 0 });
+
+    summary.addEventListener('click', (event) => {
+      event.preventDefault();
+      gsap.killTweensOf([answer, answer.firstElementChild, bar, icon, disc]);
+      gsap.set(answer, { clearProps: 'height,overflow,paddingTop,paddingBottom,borderTopWidth,boxSizing' });
+      const cs = getComputedStyle(answer);
+      const edge = { paddingTop: cs.paddingTop, paddingBottom: cs.paddingBottom, borderTopWidth: cs.borderTopWidth };
+      if (!item.open) {
+        item.open = true;
+        gsap.fromTo(answer, { height: 0, paddingTop: 0, paddingBottom: 0, borderTopWidth: 0, overflow: 'hidden', boxSizing: 'content-box' }, { height: 'auto', ...edge, duration: 0.45, ease: 'power3.out', clearProps: 'height,overflow,paddingTop,paddingBottom,borderTopWidth,boxSizing' });
+        gsap.fromTo(answer.firstElementChild, { opacity: 0, y: -10 }, { opacity: 1, y: 0, duration: 0.4, delay: 0.08, ease, clearProps: 'opacity,transform' });
+        gsap.to(bar, { rotation: 90, duration: 0.4, ease: 'back.out(2)' });
+        gsap.fromTo(icon, { scale: 0.85 }, { scale: 1, duration: 0.5, ease: 'back.out(3)', transformOrigin: '50% 50%' });
+      } else {
+        gsap.to(answer.firstElementChild, { opacity: 0, y: -6, duration: 0.18, ease: 'power2.in' });
+        gsap.to(bar, { rotation: 0, duration: 0.3, ease: 'power2.inOut' });
+        const content = answer.getBoundingClientRect().height - parseFloat(edge.paddingTop) - parseFloat(edge.paddingBottom) - parseFloat(edge.borderTopWidth);
+        gsap.fromTo(answer, { height: content, boxSizing: 'content-box', overflow: 'hidden' }, {
+          height: 0,
+          paddingTop: 0,
+          paddingBottom: 0,
+          borderTopWidth: 0,
+          duration: 0.3,
+          ease: 'power2.inOut',
+          onComplete: () => {
+            item.open = false;
+            gsap.set([answer, answer.firstElementChild], { clearProps: 'height,overflow,opacity,transform,paddingTop,paddingBottom,borderTopWidth,boxSizing' });
+          },
+        });
+      }
+    });
+  });
+
   // Lenis: inercia de scroll solo con ratón o trackpad.
   if (window.matchMedia('(pointer: fine)').matches) {
     const { default: Lenis } = await import('lenis');
