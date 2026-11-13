@@ -30,6 +30,10 @@ Método: SerpAPI, motor `google`, dominio `google.co.ve`, `gl=ve`, `hl=es`, 10 r
 3. **Las frases por ciudad las ocupan directorios y redes sociales** (Sortlist, Clutch, Instagram, Facebook). Una página propia con contenido real de la ciudad puede entrar, pero solo si Loops tiene algo verificable que decir de esa ciudad. Falta confirmar la presencia de Loops en Venezuela.
 4. **Para ecommerce, esadriandavid.com ocupa tres posiciones** de la misma frase. Falta abrir esas páginas para confirmar el formato (guía, artículo o servicio) antes de decidir qué escribir.
 
+## Qué falta tras ampliar a LATAM
+
+Esta línea base mide solo Venezuela. Tras la decisión de ampliar a LATAM en español, falta medir las SERPs de México, Colombia y Chile para las frases "agencia seo", "consultor seo", "posicionamiento seo", "que es geo", "agencia de seo" y "cómo aparecer en google maps". Está planificado en la fase S6 y espera la aprobación del gasto de SerpAPI.
+
 ## Límites de esta medición
 
 - Una sola fecha: no se distingue una posición estable de una oscilación diaria.
