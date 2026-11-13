@@ -30,8 +30,8 @@ Recomendación: no tocarlo. El título puede llevar la palabra clave y el H1 con
 2. Casos con resultados y permiso del cliente para publicarlos.
 3. Alcance geográfico: si Loops atiende LATAM además de Venezuela, y qué presencia tiene en cada país (clientes locales, ciudades, dirección si la hay).
 4. Quién firma y revisa el blog.
-6. Si Loops ofrece SEO internacional, link building y auditoría GEO, y a qué precio.
-5. Permiso escrito de cada graduado del diplomado cuya opinión se quiera usar. Van con nombre real y como graduados del diplomado, no como resultados de clientes.
+5. Si Loops ofrece SEO internacional, link building y auditoría GEO, y a qué precio.
+6. Permiso escrito de cada graduado del diplomado cuya opinión se quiera usar. Van con nombre real y como graduados del diplomado, no como resultados de clientes.
 
 ## 5. Erratas y pendientes ya detectados en el copy actual (solo se reportan)
 
