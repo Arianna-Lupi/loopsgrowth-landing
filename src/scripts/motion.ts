@@ -17,6 +17,9 @@ async function start(): Promise<void> {
   const shown = { opacity: 1, clearProps: 'transform' };
 
   // Hero: entrada al cargar. El h1 y la imagen (candidatos a LCP) solo mueven transform; nunca se ocultan.
+  // Espera a que la imagen del hero esté decodificada (máx. 1,2 s) para que la entrada no corra con el cuadro en blanco.
+  const heroImg = document.querySelector<HTMLImageElement>('.hero-card-img');
+  if (heroImg) await Promise.race([heroImg.decode().catch(() => undefined), new Promise((r) => setTimeout(r, 1200))]);
   const hero = gsap.timeline({ defaults: { ease, duration: 0.9 } });
   hero
     .from('#hero-title', { y: 32, duration: 0.8 })
