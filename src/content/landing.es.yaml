@@ -628,8 +628,8 @@ es:
     blog_link:
       text: "Blog"
       status: pending
-      confirm_by: Juan
-      reason: "Etiqueta nueva del enlace al blog en el pie. Juan la aprobó por mensaje de la sesión de Contrata; falta su confirmación directa."
+      confirm_by: Ari
+      reason: "Etiqueta nueva del enlace al blog en el pie, no está en el doc de Ari. Juan la aprobó por mensaje de la sesión de Contrata; falta la confirmación de Ari."
     contact_label:
       text: "Contacto"
       status: verified
