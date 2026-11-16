@@ -1,0 +1,151 @@
+---
+/**
+ * Artículo del blog (modo Leer). Un solo h1 (el título), medida de lectura de 65ch, migas con datos
+ * estructurados, firma de Ari y cierre con enlaces a las páginas de servicio (nunca precios).
+ * Un borrador (solo visible fuera de producción) sale `noindex`.
+ */
+import { render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import CtaLink from '../../components/CtaLink.astro';
+import { getPosts, formatDate, AUTHORS } from '../../lib/blog';
+import { buildArticleSchema } from '../../lib/seo';
+import { siteUrl } from '../../lib/site';
+import { getLanding, ctaLabel } from '../../lib/content';
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+const author = AUTHORS[post.data.author];
+const path = `/blog/${post.id}/`;
+const data = await getLanding();
+const label = ctaLabel(data);
+const schema = buildArticleSchema({
+  siteUrl,
+  path,
+  title: post.data.title,
+  description: post.data.description,
+  datePublished: post.data.pubDate,
+  dateModified: post.data.updatedDate,
+  authorName: author.name,
+  authorUrl: author.url,
+  breadcrumbs: [
+    { name: 'Inicio', path: '/' },
+    { name: 'Blog', path: '/blog/' },
+    { name: post.data.title, path },
+  ],
+});
+---
+
+<BaseLayout
+  title={`${post.data.title} | Loops Growth`}
+  description={post.data.description}
+  path={path}
+  ogType="article"
+  noindex={post.data.draft}
+  schema={schema}
+>
+  <article class="post" data-tone="light" aria-labelledby="post-title">
+    <div class="wrap">
+      <nav aria-label="Ruta de navegación" class="crumbs">
+        <ol>
+          <li><a href="/">Inicio</a></li>
+          <li><a href="/blog/">Blog</a></li>
+          <li aria-current="page">{post.data.title}</li>
+        </ol>
+      </nav>
+      <header>
+        <h1 id="post-title">{post.data.title}</h1>
+        <p class="meta">
+          Por <a href={author.url} rel="author">{author.name}</a>, {author.role}.
+          <time datetime={post.data.pubDate.toISOString()}>{formatDate(post.data.pubDate)}</time>
+          {post.data.updatedDate && (
+            <>
+              . Actualizado el <time datetime={post.data.updatedDate.toISOString()}>{formatDate(post.data.updatedDate)}</time>
+            </>
+          )}
+        </p>
+      </header>
+      <div class="prose">
+        <Content />
+      </div>
+      <aside class="post-cta" aria-labelledby="post-cta-title">
+        <h2 id="post-cta-title">¿Quieres revisar tu caso?</h2>
+        <p>Agenda una llamada con el equipo de Loops Growth.</p>
+        <CtaLink label={label} location="blog" href="/#agenda" />
+      </aside>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .post {
+    padding-block: var(--section-y);
+  }
+  .crumbs ol {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0 0 1.5rem;
+    padding: 0;
+    list-style: none;
+    font-size: var(--text-label);
+  }
+  .crumbs li + li::before {
+    content: '/';
+    margin-inline-end: 0.5rem;
+  }
+  .post h1 {
+    max-width: 24ch;
+    font-size: var(--text-heading);
+    line-height: var(--text-heading--line-height);
+  }
+  .meta {
+    margin-block: 1rem 2rem;
+    font-size: var(--text-label);
+  }
+  .prose {
+    max-width: 65ch;
+  }
+  .prose :global(h2) {
+    margin-top: 2.5rem;
+    margin-bottom: 0.75rem;
+  }
+  .prose :global(h3) {
+    margin-top: 2rem;
+    margin-bottom: 0.5rem;
+  }
+  .prose :global(p),
+  .prose :global(ul),
+  .prose :global(ol) {
+    margin-block: 1rem;
+  }
+  .prose :global(ul),
+  .prose :global(ol) {
+    padding-inline-start: 1.5rem;
+  }
+  .prose :global(ul) {
+    list-style: disc;
+  }
+  .prose :global(ol) {
+    list-style: decimal;
+  }
+  .prose :global(li) {
+    margin-block: 0.5rem;
+  }
+  .post-cta {
+    max-width: 65ch;
+    margin-top: 3rem;
+    padding: 1.5rem;
+    border: var(--border-pop);
+    border-radius: var(--radius-card);
+    background: var(--color-brand-cream);
+    box-shadow: var(--shadow-pop);
+  }
+  .post-cta p {
+    margin-block: 0.5rem 1rem;
+  }
+</style>

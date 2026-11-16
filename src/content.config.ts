@@ -1,5 +1,5 @@
 import { defineCollection } from 'astro:content';
-import { file } from 'astro/loaders';
+import { file, glob } from 'astro/loaders';
 import { z } from 'astro/zod';
 
 /**
@@ -181,4 +181,32 @@ const landing = defineCollection({
   }),
 });
 
-export const collections = { landing };
+/**
+ * Blog (milestone SEO). Los artículos viven en `src/content/blog/*.md`. Reglas duras de Ari:
+ * sin precios ni garantía, sin casos ni reseñas inventados, firma y revisa Ari.
+ * `draft` nace en `true`: un borrador no se publica en producción (ni ruta, ni sitemap, ni lista).
+ * `reviewedBy` queda vacío hasta que Ari apruebe por escrito; sin eso `draft` no puede pasar a `false`.
+ * `cluster` y `intent` salen de `clusters.md` y fijan la regla "una frase, una página".
+ */
+const blog = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: 'src/content/blog' }),
+  schema: z
+    .strictObject({
+      title: z.string().min(10).max(70),
+      description: z.string().min(70).max(160),
+      pubDate: z.coerce.date(),
+      updatedDate: z.coerce.date().optional(),
+      author: z.enum(['ari']).default('ari'),
+      cluster: z.enum(['L2-geo', 'L4-eleccion', 'L6-fundamentos']),
+      keyword: z.string().min(3),
+      draft: z.boolean().default(true),
+      reviewedBy: z.string().min(1).optional(),
+      related: z.array(z.string()).max(3).default([]),
+    })
+    .refine((d) => d.draft || d.reviewedBy, {
+      message: 'Un artículo con draft: false necesita reviewedBy (aprobación escrita de Ari).',
+      path: ['reviewedBy'],
+    }),
+});
+
+export const collections = { landing, blog };

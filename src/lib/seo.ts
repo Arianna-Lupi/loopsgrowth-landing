@@ -142,3 +142,59 @@ export function buildLandingSchema(params: LandingSchemaParams): Record<string, 
     '@graph': graph,
   };
 }
+
+export interface BreadcrumbItem {
+  name: string;
+  path: string;
+}
+
+export interface ArticleSchemaParams {
+  siteUrl: string;
+  path: string;
+  title: string;
+  description: string;
+  datePublished: Date;
+  dateModified?: Date;
+  authorName: string;
+  authorUrl: string;
+  breadcrumbs: BreadcrumbItem[];
+}
+
+/** Grafo de un artículo: Article (autor y editor por referencia a Organization) y BreadcrumbList. Sin FAQPage: solo si el artículo trae una FAQ real. */
+export function buildArticleSchema(p: ArticleSchemaParams): Record<string, unknown> {
+  const base = p.siteUrl.replace(/\/+$/, '');
+  const url = `${base}${p.path}`;
+  return {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'Article',
+        '@id': `${url}#article`,
+        headline: p.title,
+        description: p.description,
+        mainEntityOfPage: { '@type': 'WebPage', '@id': url },
+        url,
+        inLanguage: 'es',
+        datePublished: p.datePublished.toISOString(),
+        dateModified: (p.dateModified ?? p.datePublished).toISOString(),
+        image: `${base}${DEFAULT_OG_IMAGE}`,
+        author: { '@type': 'Person', name: p.authorName, url: p.authorUrl },
+        publisher: { '@id': `${base}/#organization` },
+      },
+      buildBreadcrumb(base, p.breadcrumbs, url),
+    ],
+  };
+}
+
+export function buildBreadcrumb(base: string, items: BreadcrumbItem[], pageUrl: string): Record<string, unknown> {
+  return {
+    '@type': 'BreadcrumbList',
+    '@id': `${pageUrl}#breadcrumb`,
+    itemListElement: items.map((it, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: it.name,
+      item: `${base}${it.path}`,
+    })),
+  };
+}
