@@ -169,6 +169,7 @@ const landing = defineCollection({
     footer: z.strictObject({
       nav_label: claim,
       privacy_link: claim,
+      blog_link: claim,
       contact_label: claim,
       email: claim,
       social_label: claim,
@@ -209,4 +210,27 @@ const blog = defineCollection({
     }),
 });
 
-export const collections = { landing, blog };
+/**
+ * Páginas de país (SEO programático, `/agencia-seo/<pais>/`). Un archivo YAML por país en
+ * `src/content/paises/`. Sin archivo no hay página: solo se genera un país con contenido único y verdadero.
+ * Cada `hecho` lleva su fuente https; no se admiten precios, direcciones, oficinas ni reseñas
+ * (los vigila `scripts/check-programmatic.mjs`, que corre en `prebuild`).
+ */
+const pais = defineCollection({
+  loader: glob({ pattern: '*.yaml', base: 'src/content/paises' }),
+  schema: z
+    .strictObject({
+      nombre: z.string().min(3),
+      draft: z.boolean().default(true),
+      reviewedBy: z.string().min(1).optional(),
+      title: z.string().min(10).max(70),
+      description: z.string().min(70).max(160),
+      h1: z.string().min(10),
+      intro: z.string().min(250),
+      secciones: z.array(z.strictObject({ titulo: z.string().min(5), cuerpo: z.string().min(350) })).min(3),
+      hechos: z.array(z.strictObject({ dato: z.string().min(20), fuente: z.url({ protocol: /^https$/ }) })).min(3),
+    })
+    .refine((d) => d.draft || d.reviewedBy, { message: 'Publicar un país requiere reviewedBy (Ari).', path: ['reviewedBy'] }),
+});
+
+export const collections = { landing, blog, pais };

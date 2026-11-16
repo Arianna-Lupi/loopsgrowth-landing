@@ -78,6 +78,8 @@ const fullOgImage = ogImage.startsWith('http')
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <Font cssVariable="--font-brand" preload={[{ subset: "latin", style: "normal" }]} />
 
+    <slot name="head" />
+
     {schema && (
       <script is:inline type="application/ld+json" set:html={JSON.stringify(schema)} />
     )}

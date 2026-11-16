@@ -48,6 +48,7 @@ const schema = buildArticleSchema({
   noindex={post.data.draft}
   schema={schema}
 >
+  <link slot="head" rel="alternate" type="application/rss+xml" title="Blog de Loops Growth" href="/blog/rss.xml" />
   <article class="post" data-tone="light" aria-labelledby="post-title">
     <div class="wrap">
       <nav aria-label="Ruta de navegación" class="crumbs">

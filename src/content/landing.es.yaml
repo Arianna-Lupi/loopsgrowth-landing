@@ -625,6 +625,11 @@ es:
     privacy_link:
       text: "Política de privacidad"
       status: verified
+    blog_link:
+      text: "Blog"
+      status: pending
+      confirm_by: Juan
+      reason: "Etiqueta nueva del enlace al blog en el pie. Juan la aprobó por mensaje de la sesión de Contrata; falta su confirmación directa."
     contact_label:
       text: "Contacto"
       status: verified
