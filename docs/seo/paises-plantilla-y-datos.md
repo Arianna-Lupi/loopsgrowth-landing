@@ -34,9 +34,10 @@ Sin esto no se escribe la página. Ninguna fila se rellena por inferencia.
 | Particularidades del mercado que ella conozca (cómo busca la gente, plataformas, pagos, regulación) con fuente | Hechos con fuente | Pendiente |
 | Si hay un caso real y permiso para citarlo | Sección de ejemplo | Pendiente. Hasta entonces, ninguno |
 
-Orden propuesto de lote 1 (de `STRATEGY-UPDATE.md`): hub, Venezuela (ancla), Colombia y Chile. México y Argentina quedan condicionales. Perú no.
+Lote 1 (decidido por Juan, 2026-11-16): hub, Venezuela (ancla), Colombia, Chile y México. Argentina y Perú quedan fuera. No se genera ninguna página hasta que Ari entregue los datos de cada país.
 
 ## Pendiente de decisión
 
 - La frase compartida "Loops Growth ofrece SEO y GEO para negocios de {pais}" necesita aprobación de Ari.
-- URL final de Venezuela: `/agencia-seo/venezuela/`.
+- Decidido: la URL de Venezuela es `/agencia-seo/venezuela/` y México entra al lote 1.
+- La etiqueta "Blog" del pie la confirmó Ari por mensaje relayado. En `landing.es.yaml` sigue `pending` hasta que ella la apruebe en el doc, para no marcar `verified` sin fuente directa.
