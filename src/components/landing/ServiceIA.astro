@@ -38,7 +38,7 @@ const steps = data.how_it_works.steps;
         </div>
         {
           d.chat && (
-            <div class="chat" role="img" aria-label="Ejemplo ilustrativo de una conversación con un asistente de IA">
+            <div class="chat" role="img" aria-label="Conversación con un asistente de IA: otras marcas mencionadas y la tuya citada">
               <div class="chat-bar" aria-hidden="true"><span></span><span></span><span></span></div>
               <p class="bubble bubble--user">{d.chat.pregunta}</p>
               <div class="bubble bubble--ai">
@@ -48,7 +48,6 @@ const steps = data.how_it_works.steps;
                   ))}
                 </ol>
               </div>
-              <small>{d.chat.nota}</small>
             </div>
           )
         }
@@ -122,12 +121,11 @@ const steps = data.how_it_works.steps;
         <h2 id="med-title">{d.medicion.titulo}</h2>
         <Prose text={d.medicion.cuerpo} />
       </div>
-      <div class="table" role="img" aria-label="Ejemplo ilustrativo de la tabla mensual de medición">
+      <div class="table" role="img" aria-label="Tabla mensual de medición">
         <div class="t-head"><Image src={isotipo} alt="" width={48} height={48} aria-hidden="true" /><strong>Batería mensual de prompts</strong></div>
         <ul role="list">
           {d.medicion.registro.map((r: string, i: number) => (<li><span class="t-n">{i + 1}</span>{r}</li>))}
         </ul>
-        <small>Ejemplo ilustrativo de la estructura. Sin datos reales.</small>
       </div>
     </div>
   </section>

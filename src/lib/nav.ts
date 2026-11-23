@@ -17,6 +17,7 @@ export async function getMainNav(): Promise<NavLink[]> {
   const all: NavLink[] = [
     { label: nav.services.text, href: '/servicios/posicionamiento-en-ia/' },
     { label: nav.venezuela.text, href: '/agencia-seo-venezuela/' },
+    { label: nav.results.text, href: '/casos/' },
     { label: nav.blog.text, href: '/blog/' },
     { label: nav.about.text, href: '/nosotros/' },
   ];
@@ -30,6 +31,7 @@ export async function getFooterExplore(): Promise<NavLink[]> {
     { label: nav.service_ia.text, href: '/servicios/posicionamiento-en-ia/' },
     { label: nav.venezuela_full.text, href: '/agencia-seo-venezuela/' },
     { label: nav.caracas.text, href: '/agencia-seo-venezuela/caracas/' },
+    { label: nav.results.text, href: '/casos/' },
     { label: nav.about.text, href: '/nosotros/' },
     { label: nav.author.text, href: '/equipo/arianna-lupi/' },
   ];

@@ -69,11 +69,18 @@ const schema = {
   .crumbs ol {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem;
+    align-items: center;
+    gap: 0 0.5rem;
     margin: 0 0 1.5rem;
     padding: 0;
     list-style: none;
     font-size: var(--text-label);
+  }
+  .crumbs li {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--target-min);
+    line-height: 1.2;
   }
   .crumbs li + li::before {
     content: '/';

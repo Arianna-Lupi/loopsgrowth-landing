@@ -1,0 +1,50 @@
+# Borrador. Datos de Juan Carlos Angulo tomados de juan-tech.com y dev.juan-tech.com (indicado por él el 2026-11-23) y de la
+# sección Quiénes somos de la home. Sin precios, sin clientes nombrados fuera de la home y sin datos personales.
+tipo: autora
+ruta: /equipo/juan-carlos-angulo/
+nombre: Juan Carlos Angulo
+draft: true
+retrato: juan
+title: "Juan Carlos Angulo: director técnico de Loops Growth"
+description: "Juan Carlos Angulo es director técnico de Loops Growth: SEO técnico, Core Web Vitals, arquitectura web y optimización para IA. Ingeniero de software."
+h1: "Juan Carlos Angulo, director técnico"
+intro: |
+  Juan Carlos Angulo es el director técnico de Loops Growth. Es ingeniero de software y trabaja el SEO técnico: rastreo, indexación, rendimiento web y la base que permite que Google y los asistentes de IA lean un sitio.
+
+  Trabaja en español e inglés desde Lima, Perú.
+trayectoria:
+  - titulo: Más de 5 años en ingeniería de software y SEO técnico
+    texto: Arquitectura web, optimización de Core Web Vitals y auditoría técnica avanzada.
+  - titulo: Senior Tech SEO Analyst en aprendoclub
+    texto: Desde noviembre de 2022. Lideró migraciones de varios sitios a Webflow.
+  - titulo: Loops Growth
+    texto: Parte del equipo desde 2024, a cargo de la parte técnica.
+  - titulo: Coach del Diplomado SEO + AIO
+    texto: Coach de SEO técnico en aprendoclub desde marzo de 2025.
+  - titulo: Ponente
+    texto: Caracas SEO Fest 2024 sobre SEO técnico, y taller de SEO + IA en Lima junto a Arianna Lupi.
+secciones:
+  - titulo: Qué hace en Loops Growth
+    cuerpo: |
+      Se encarga de la auditoría técnica, la arquitectura web, los Core Web Vitals y la optimización para IA. Su objetivo es que cada sitio se pueda rastrear, indexar y entender, que es la base sobre la que se construyen el contenido y la autoridad.
+
+      Como ingeniero de software, aplica los cambios a nivel de código cuando el sitio lo necesita. Conoce al [equipo de Loops Growth](/nosotros/) o su trabajo en [posicionamiento en IA](/servicios/posicionamiento-en-ia/).
+  - titulo: Dónde encontrarlo
+    cuerpo: |
+      Escribe sobre SEO técnico y desarrollo web en su blog bilingüe, en juan-tech.com, y puedes encontrarlo y escribirle por LinkedIn.
+persona:
+  nombre: Juan Carlos Angulo
+  cargo: Director Técnico
+  descripcion: "Director técnico de Loops Growth. Ingeniero de software especializado en SEO técnico, Core Web Vitals y optimización para IA."
+  sameAs:
+    - https://juan-tech.com
+    - https://linkedin.com/in/juancangulo
+  conoceDe:
+    - SEO técnico
+    - Core Web Vitals
+    - Ingeniería de software
+pendientes:
+  - "Juan: confirmar que el sitio juan-tech.com y el LinkedIn se publican en esta página."
+  - "Discrepancia a revisar: la home dice +5 años en ingeniería de software y SEO técnico y su sitio dice más de cuatro años de experiencia profesional. Se usó la cifra de la home."
+  - "Su sitio habla de más de 18 clientes internacionales de SEO técnico: no se publica hasta que Juan y Ari lo confirmen."
+  - "Ari: aprobar la página y el texto."

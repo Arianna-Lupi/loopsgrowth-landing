@@ -34,7 +34,12 @@ const hasPublishedPosts =
 const draftPaths = new Set();
 const yamlEntries = (dir) =>
   existsSync(dir) ? readdirSync(dir).filter((f) => f.endsWith('.yaml')).map((f) => [f.replace(/\.yaml$/, ''), parseYaml(readFileSync(`${dir}/${f}`, 'utf8')) ?? {}]) : [];
-for (const [, d] of yamlEntries('src/content/paginas')) if (d.draft !== false) draftPaths.add(d.ruta);
+for (const [, d] of yamlEntries('src/content/paginas')) {
+  if (d.draft === false) continue;
+  draftPaths.add(d.ruta);
+  // Las fichas de casos cuelgan del índice: si el índice es borrador, ellas también.
+  if (d.tipo === 'casos') for (const slug of ['ventas-ecommerce', 'conversiones-saas', 'clics-app-infantil', 'trafico-marca-personal']) draftPaths.add(`${d.ruta}${slug}/`);
+}
 for (const [id, d] of yamlEntries('src/content/paises')) {
   if (d.draft === false) continue;
   draftPaths.add(d.tipo === 'ciudad' ? `/agencia-seo-${d.pais}/${d.ciudad}/` : `/agencia-seo-${id}/`);

@@ -17,6 +17,9 @@ Fecha: 2026-11-23. Rama `feat/landings-dic`. Todas las páginas nuevas están en
 | `/agencia-seo-venezuela/caracas/` | Sectores que más compiten en Caracas y clientes o ejemplos de Caracas con permiso (sin esto no se publica: riesgo de doorway). 3 hechos con fuente https | Ari |
 | `/nosotros/` | Confirmar el cargo de Miguel Pacheco y que su nombre salga ahí. Si quiere foto del equipo. Si cuenta como pieza de capacidad | Ari |
 | `/equipo/arianna-lupi/` | Bio con sus palabras, URL de aprendoclub, foto. Si se publican las cifras de la home ($4M) | Ari |
+| `/casos/` y 4 fichas de caso | Ari debe confirmar que existan: su hoja del 17-nov decía no crear páginas de casos y Juan lo pidió el 23-nov. Las fichas solo usan los datos de la home. Falta permiso del cliente para publicar más detalle por caso | Ari |
+| `/equipo/juan-carlos-angulo/` | Datos tomados de juan-tech.com. Juan debe confirmar qué publicar. Discrepancia: la home dice +5 años y su sitio dice más de 4. No se publicaron sus precios ni sus clientes | Juan, Ari |
+| `/equipo/veronica-romero/` y `/equipo/miguel-pacheco/` | Solo hay datos de la home. Faltan bio, años de experiencia (Miguel), enlaces y fotos aprobadas | Verónica, Miguel, Ari |
 | Blog (2 artículos) | Revisión y aprobación escrita (`reviewedBy` y `draft: false`). Revisión técnica de Juan Carlos, que pide la hoja. Verifiqué las afirmaciones sobre OAI-SearchBot y Business Hub contra la documentación de OpenAI del 2026-11-23: conviene revisarlas de nuevo antes de publicar | Ari y Juan Carlos |
 
 ## Pendientes de otros

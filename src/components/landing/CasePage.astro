@@ -1,0 +1,90 @@
+---
+/**
+ * Ficha de un caso. Hero a ancho completo con la cifra gigante en el tono propio del caso, datos del proyecto en una
+ * lista de definiciones, "qué hicimos" con el texto del YAML y los otros casos como bandas de color. Sin datos
+ * nuevos: todo sale del YAML de la home. Ritmo de tonos: tono del caso, light, otros casos, purple (cierre).
+ */
+import Crumbs from './Crumbs.astro';
+import Closing from './Closing.astro';
+import CtaLink from '../CtaLink.astro';
+import { getLanding, ctaLabel } from '../../lib/content';
+import { CASO_SLUGS, CASO_TONES, casoPath } from '../../lib/casos';
+
+interface Props { index: number; crumbs: { name: string; path: string }[] }
+const { index, crumbs } = Astro.props;
+const data = await getLanding();
+const label = ctaLabel(data);
+const c = data.cases.items[index];
+const tone = CASO_TONES[index];
+const others = data.cases.items.map((x, i) => ({ x, i })).filter(({ i }) => i !== index);
+---
+
+<article>
+  <section class="hero" data-tone={tone} aria-labelledby="hero-title">
+    <div class="wrap">
+      <Crumbs crumbs={crumbs} />
+      <p class="n" aria-hidden="true">{c.figure.text}</p>
+      <h1 id="hero-title"><span class="sr">{c.figure.text} </span>{c.metric.text}</h1>
+      <p class="meta">{c.sector.text} · {c.period.text}</p>
+      <p class="actions"><CtaLink label={label} location="pagina" href="/#agenda" /></p>
+    </div>
+  </section>
+
+  <section class="facts" data-tone="light" aria-labelledby="facts-title">
+    <div class="wrap grid">
+      <div>
+        <h2 id="facts-title">Qué hicimos</h2>
+        <p class="detail">{c.detail?.text}</p>
+      </div>
+      <dl>
+        <div><dt>Sector</dt><dd>{c.sector.text}</dd></div>
+        <div><dt>Plazo</dt><dd>{c.period.text}</dd></div>
+        {c.channel && <div><dt>Canal</dt><dd>{c.channel.text}</dd></div>}
+        {c.pill && <div><dt>Tipo de proyecto</dt><dd>{c.pill.text}</dd></div>}
+      </dl>
+    </div>
+  </section>
+
+  <section class="others" data-tone="yellow" aria-labelledby="others-title">
+    <div class="wrap">
+      <h2 id="others-title">Otros casos</h2>
+      <ul role="list">
+        {others.map(({ x, i }) => (
+          <li><a href={casoPath(CASO_SLUGS[i])}><span class="on">{x.figure.text}</span><span class="ot">{x.metric.text}<small>{x.sector.text}</small></span></a></li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <Closing tone="purple" title="¿Quieres revisar tu caso?" text="Agenda una llamada con el equipo de Loops Growth y revisamos tu situación. Sin costo y sin compromiso." />
+</article>
+
+<style>
+  .hero { padding-block: 1.5rem calc(var(--section-y) + 1rem); }
+  .n { margin: 0; font-size: clamp(4rem, 1.5rem + 12vw, 11rem); white-space: nowrap; line-height: 0.85; font-weight: 700; letter-spacing: -0.05em; font-variant-numeric: tabular-nums; color: var(--heading); overflow-wrap: anywhere; }
+  [data-tone='purple'] .n { color: var(--color-brand-yellow); }
+  h1 { max-width: 20ch; margin-top: 1rem; font-size: var(--text-heading); letter-spacing: -0.02em; }
+  .meta { margin-top: 0.75rem; font-weight: 600; font-size: var(--text-title); }
+  .actions { margin-top: 2rem; }
+  .facts, .others { padding-block: var(--section-y); }
+  .grid { display: grid; gap: 2rem; align-items: start; }
+  .facts h2, .others h2 { letter-spacing: -0.02em; margin-bottom: 1rem; }
+  .detail { max-width: 52ch; font-size: var(--text-title); line-height: 1.45; }
+  dl { display: grid; gap: 0; margin: 0; }
+  dl div { display: grid; grid-template-columns: 9rem 1fr; gap: 1rem; padding-block: 1rem; border-top: var(--border-pop); }
+  dl div:last-child { border-bottom: var(--border-pop); }
+  dt { font-weight: 700; }
+  dd { margin: 0; }
+  ul { display: grid; gap: 0.75rem; margin: 0; padding: 0; list-style: none; }
+  ul a { display: grid; grid-template-columns: minmax(5.5rem, auto) 1fr; gap: 1rem; align-items: center; padding: 1rem 1.25rem; border: var(--border-pop); border-radius: var(--radius-card); background: var(--color-brand-white); color: var(--color-brand-dark); text-decoration: none; box-shadow: 4px 4px 0 var(--color-brand-dark); }
+  ul a:focus-visible { outline: var(--focus-width) solid var(--focus-ring); outline-offset: var(--focus-offset); }
+  .on { font-size: var(--text-heading); font-weight: 700; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; color: var(--color-brand-purple); line-height: 1; }
+  .ot { display: grid; gap: 0.125rem; font-weight: 700; }
+  .ot small { font-weight: 400; font-size: var(--text-label); }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  @media (min-width: 64em) {
+    .grid { grid-template-columns: 1fr 1fr; }
+    ul { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    ul a { grid-template-columns: 1fr; align-content: start; }
+  }
+</style>

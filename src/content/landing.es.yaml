@@ -657,6 +657,14 @@ es:
       text: "Nosotros"
       status: verified
       reason: "Etiqueta del menú en la hoja de Ari (17-nov-2026)."
+    results:
+      text: "Resultados"
+      status: verified
+      reason: "Etiqueta del menú en la hoja de Ari ('Resultados', 17-nov-2026); lleva al índice de casos."
+    all_results:
+      text: "Ver todos"
+      status: verified
+      reason: "Microcopy estructural: enlace al índice de casos, pedido por Juan el 2026-11-23."
     service_ia:
       text: "Posicionamiento en IA"
       status: verified

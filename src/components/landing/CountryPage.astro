@@ -16,14 +16,13 @@ import { getLanding, ctaLabel } from '../../lib/content';
 import { getLivePaths } from '../../lib/paginas';
 import { toBlocks } from '../../lib/text';
 import { PAIS_TEMPLATE } from '../../lib/paises';
+import founder from '../../assets/hero/hero-founder.webp';
 
 interface Props { d: any; id: string; crumbs: { name: string; path: string }[]; cityPaths: Record<string, string> }
 const { d, crumbs, cityPaths } = Astro.props;
 const data = await getLanding();
 const label = ctaLabel(data);
 const live = await getLivePaths();
-const portraits = import.meta.glob('../../assets/team/treated/*.png', { eager: true, import: 'default' }) as Record<string, ImageMetadata>;
-const tiles = ['arianna', 'veronica', 'juan'].map((id, i) => ({ src: portraits[`../../assets/team/treated/${id}.png`], name: data.team.members[i].name.text }));
 const intro = `${PAIS_TEMPLATE.servicio_intro.replace('{pais}', d.nombre)}\n\n${d.intro}`;
 const sub = toBlocks(intro).filter((b) => b.kind === 'p').map((b: any) => b.text);
 ---
@@ -48,12 +47,7 @@ const sub = toBlocks(intro).filter((b) => b.kind === 'p').map((b: any) => b.text
             )
           }
         </div>
-        <div class="call" role="img" aria-label="Ilustración de una reunión por videollamada con el equipo de Loops Growth">
-          <div class="call-top" aria-hidden="true"><span class="rec"></span><strong>Videollamada de {data.call.duration.text}</strong></div>
-          <ul class="tiles" role="list" aria-hidden="true">
-            {tiles.map((t, i) => (<li class={`t t${i}`}><Image src={t.src} alt="" width={240} height={240} loading="eager" /><span>{t.name}</span></li>))}
-          </ul>
-        </div>
+        <div class="stage"><Image src={founder} alt="Arianna Lupi, fundadora de Loops Growth, en el collage de marca" width={720} height={720} loading="eager" fetchpriority="high" /></div>
       </div>
     </div>
   </section>
@@ -104,14 +98,8 @@ const sub = toBlocks(intro).filter((b) => b.kind === 'p').map((b: any) => b.text
   .chips :is(a, span) { display: inline-flex; align-items: center; min-height: var(--target-min); padding: 0 1rem; border: var(--border-pop); border-radius: var(--radius-pill); background: var(--color-brand-white); color: var(--color-brand-dark); font-weight: 600; text-decoration: none; }
   .chips a { box-shadow: 3px 3px 0 var(--color-brand-dark); }
   .chips a:focus-visible { outline: var(--focus-width) solid var(--focus-ring); outline-offset: var(--focus-offset); }
-  .call { padding: 1rem; border: var(--border-pop); border-radius: var(--radius-card); background: var(--color-brand-dark); color: var(--color-brand-white); box-shadow: var(--shadow-pop); }
-  .call-top { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem; font-size: var(--text-label); }
-  .rec { width: 0.625rem; height: 0.625rem; border-radius: 50%; background: var(--color-brand-orange); }
-  .tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin: 0; padding: 0; list-style: none; }
-  .t { position: relative; overflow: hidden; border-radius: var(--radius-s); aspect-ratio: 4 / 3; background: var(--color-brand-purple); }
-  .t0 { grid-column: 1 / -1; aspect-ratio: 16 / 9; }
-  .t :global(img) { width: 100%; height: 100%; object-fit: cover; object-position: center 30%; }
-  .t span { position: absolute; left: 0.5rem; bottom: 0.5rem; padding: 0.125rem 0.5rem; border-radius: var(--radius-pill); background: rgb(33 33 33 / 0.85); font-size: 0.75rem; font-weight: 600; }
+  .stage { overflow: hidden; border: var(--border-pop); border-radius: var(--radius-card); background: var(--color-brand-purple); box-shadow: var(--shadow-pop); aspect-ratio: 1; max-width: 32rem; }
+  .stage :global(img) { display: block; width: 100%; height: 100%; object-fit: cover; }
 
   .row { display: grid; gap: 1rem; padding-block: 2rem; border-top: var(--border-pop); }
   .row:last-child { border-bottom: var(--border-pop); }

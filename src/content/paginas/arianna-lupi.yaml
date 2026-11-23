@@ -18,9 +18,6 @@ trayectoria:
   - titulo: Fundadora de Loops Growth
     texto: Define la estrategia y guía al equipo que ejecuta el SEO y el posicionamiento en IA.
 secciones:
-  - titulo: Sus artículos
-    cuerpo: |
-      Arianna firma todos los artículos del blog de Loops Growth y los revisa antes de publicarlos. Cada guía explica una sola pregunta, sin promesas de posiciones y sin cifras que no se puedan comprobar.
   - titulo: Dónde encontrarla
     cuerpo: |
       Puedes ver su trabajo en ariannalupi.com y escribirle por LinkedIn. Conoce al [equipo de Loops Growth](/nosotros/) o su servicio de [posicionamiento en IA](/servicios/posicionamiento-en-ia/).
@@ -29,6 +26,8 @@ pendientes:
   - "Ari: URL exacta de aprendoclub para enlazarla (hoy no hay enlace)."
   - "Ari: foto para la página de autora (hoy no se usa ninguna)."
   - "Ari: confirmar si se publican las cifras de la home ('$4M generados en SEO'); hoy no se repiten aquí."
+retrato: arianna
+firma_blog: true
 persona:
   nombre: Arianna Lupi
   cargo: Fundadora y estratega SEO

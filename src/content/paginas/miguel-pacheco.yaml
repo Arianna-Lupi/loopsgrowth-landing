@@ -1,0 +1,35 @@
+# Borrador. Solo datos ya publicados en la home (sección Solución). Faltan años de experiencia, bio y enlaces de Miguel.
+tipo: autora
+ruta: /equipo/miguel-pacheco/
+nombre: Miguel Pacheco
+draft: true
+retrato: miguel
+title: "Miguel Pacheco: especialista SEO de Loops Growth"
+description: "Miguel Pacheco es especialista SEO de Loops Growth y se encarga de las palabras clave, el contenido y el trabajo de autoridad de cada proyecto."
+h1: "Miguel Pacheco, especialista SEO"
+intro: |
+  Miguel Pacheco es especialista SEO en Loops Growth. Se encarga de la investigación de palabras clave, el contenido y el trabajo de autoridad de cada proyecto.
+trayectoria:
+  - titulo: Especialista SEO
+    texto: Parte del equipo de Loops Growth.
+  - titulo: Palabras clave y contenido
+    texto: Define qué buscan tus clientes y qué contenido responde esas búsquedas.
+  - titulo: Link building y autoridad
+    texto: Trabaja las menciones y los enlaces que hacen de tu sitio una fuente confiable.
+secciones:
+  - titulo: Qué hace en Loops Growth
+    cuerpo: |
+      Investiga las palabras clave de cada proyecto, planifica y optimiza el contenido y trabaja la autoridad del sitio con link building. Su trabajo es el que conecta lo que busca tu cliente con lo que publica tu web.
+
+      Conoce al [equipo de Loops Growth](/nosotros/) o cómo trabajamos el [posicionamiento en IA](/servicios/posicionamiento-en-ia/).
+persona:
+  nombre: Miguel Pacheco
+  cargo: Especialista SEO
+  descripcion: "Especialista SEO de Loops Growth, a cargo de las palabras clave, el contenido y el link building de cada proyecto."
+  sameAs: []
+  conoceDe:
+    - SEO
+    - Link building
+pendientes:
+  - "Miguel: años de experiencia, bio en sus palabras y enlaces que quiera publicar."
+  - "Ari: aprobar la página y el texto."

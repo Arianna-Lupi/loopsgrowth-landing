@@ -230,7 +230,7 @@ export function buildPerson(p: PersonSchemaParams): Record<string, unknown> {
     jobTitle: p.cargo,
     description: p.descripcion,
     url: `${base}${p.path}`,
-    sameAs: p.sameAs,
+    ...(p.sameAs.length ? { sameAs: p.sameAs } : {}),
     ...(p.conoceDe.length ? { knowsAbout: p.conoceDe } : {}),
     worksFor: { '@id': `${base}/#organization` },
   };

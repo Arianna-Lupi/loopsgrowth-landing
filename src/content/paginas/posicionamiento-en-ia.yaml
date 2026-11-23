@@ -34,7 +34,6 @@ chat:
       tu: true
     - nombre: Otro proveedor
       estado: Mencionado
-  nota: Ejemplo ilustrativo. No es una respuesta real de ningún asistente.
 etapas:
   - titulo: Encontrado
     texto: El asistente puede leer tus páginas cuando busca en la web.

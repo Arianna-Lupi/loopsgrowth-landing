@@ -1,0 +1,18 @@
+# Borrador. Índice de casos (decisión de Juan, 2026-11-23; la hoja de Ari del 17-nov decía no crear páginas de casos:
+# Ari debe confirmar). Las fichas salen de los 4 casos del YAML de la home, sin datos nuevos.
+tipo: casos
+ruta: /casos/
+nombre: Resultados
+draft: true
+title: "Resultados de SEO: los casos de Loops Growth"
+description: "Resultados de SEO en e-commerce, SaaS, apps y marcas personales. Abre cada caso para ver qué se logró, en qué sector y en cuánto tiempo."
+h1: "Resultados: lo que logramos con SEO"
+intro: |
+  Estos son los resultados de proyectos de SEO que hemos trabajado, en distintos sectores y plazos. Abre cada caso para ver el detalle.
+secciones:
+  - titulo: Cómo leer estos casos
+    cuerpo: |
+      Cada caso muestra un resultado, el sector y el plazo en que se logró. Las cifras corresponden a cada proyecto y a su situación de partida, así que no se pueden trasladar tal cual a otro negocio. Si quieres saber qué esperar en el tuyo, lo revisamos en una llamada.
+pendientes:
+  - "Ari: confirmar que existan páginas de casos (su hoja del 17-nov-2026 decía no crearlas; Juan lo pidió el 23-nov)."
+  - "Ari: permiso del cliente para publicar el detalle de cada caso y, si quiere, más contexto por caso (hoy solo hay lo que trae la home)."

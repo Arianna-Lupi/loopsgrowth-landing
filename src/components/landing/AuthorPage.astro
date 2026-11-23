@@ -13,14 +13,16 @@ import Closing from './Closing.astro';
 import { getLanding, ctaLabel } from '../../lib/content';
 import { getPosts, formatDate } from '../../lib/blog';
 import { toBlocks } from '../../lib/text';
-import portrait from '../../assets/team/treated/arianna.png';
+const portraits = import.meta.glob('../../assets/team/treated/*.png', { eager: true, import: 'default' }) as Record<string, ImageMetadata>;
 
 interface Props { d: any; crumbs: { name: string; path: string }[] }
 const { d, crumbs } = Astro.props;
 const label = ctaLabel(await getLanding());
-const posts = (await getPosts()).slice(0, 4);
+const portrait = portraits[`../../assets/team/treated/${d.retrato ?? 'arianna'}.png`];
+const bg = d.retrato === 'arianna' ? 'orange' : d.retrato === 'juan' ? 'cream' : 'yellow';
+const posts = d.firma_blog ? (await getPosts()).slice(0, 4) : [];
 const paras = toBlocks(d.intro).filter((b) => b.kind === 'p').map((b: any) => b.text);
-const links = d.persona.sameAs.map((u: string) => ({ href: u, text: u.includes('linkedin') ? 'LinkedIn' : u.replace('https://', '') }));
+const links = d.persona.sameAs.map((u: string) => ({ href: u, text: u.includes('linkedin') ? 'LinkedIn' : u.replace('https://', '').replace(/\/$/, '') }));
 ---
 
 <article>
@@ -29,7 +31,7 @@ const links = d.persona.sameAs.map((u: string) => ({ href: u, text: u.includes('
       <Crumbs crumbs={crumbs} />
       <div class="grid">
         <aside class="card">
-          <div class="photo"><Image src={portrait} alt={`Retrato de ${d.persona.nombre}`} width={480} height={480} loading="eager" /></div>
+          <div class:list={['photo', `photo--${bg}`]}><Image src={portrait} alt={`Retrato de ${d.persona.nombre}`} width={480} height={480} loading="eager" /></div>
           <p class="role">{d.persona.cargo}</p>
           <ul role="list" aria-label="Dónde encontrarla">
             {links.map((l: any) => (<li><a href={l.href} target="_blank" rel="noopener noreferrer">{l.text}<span class="sr"> (se abre en una pestaña nueva)</span></a></li>))}
@@ -80,6 +82,8 @@ const links = d.persona.sameAs.map((u: string) => ({ href: u, text: u.includes('
   .grid { display: grid; gap: 2.5rem; align-items: start; }
   .card { display: grid; gap: 1rem; padding: 1.25rem; border: var(--border-pop); border-radius: var(--radius-card); background: var(--color-brand-cream); box-shadow: var(--shadow-pop); }
   .photo { overflow: hidden; border: var(--border-pop); border-radius: var(--radius-card); background: var(--color-brand-orange); aspect-ratio: 1; }
+  .photo--yellow { background: var(--color-brand-yellow); }
+  .photo--cream { background: var(--color-brand-cream); }
   .photo :global(img) { width: 100%; height: 100%; object-fit: cover; display: block; }
   .role { font-weight: 700; font-size: var(--text-title); }
   .card ul { display: grid; gap: 0; margin: 0; padding: 0; list-style: none; }

@@ -174,6 +174,8 @@ const landing = defineCollection({
       venezuela_full: claim,
       blog: claim,
       about: claim,
+      results: claim,
+      all_results: claim,
       service_ia: claim,
       caracas: claim,
       author: claim,
@@ -277,7 +279,7 @@ const paginas = defineCollection({
   loader: glob({ pattern: '*.yaml', base: 'src/content/paginas' }),
   schema: z
     .strictObject({
-      tipo: z.enum(['servicio', 'nosotros', 'autora']),
+      tipo: z.enum(['servicio', 'nosotros', 'autora', 'casos']),
       ruta: z.string().regex(/^\/[a-z0-9-]+(?:\/[a-z0-9-]+)*\/$/),
       nombre: z.string().min(3),
       draft: z.boolean().default(true),
@@ -286,7 +288,7 @@ const paginas = defineCollection({
       description: z.string().min(70).max(160),
       h1: z.string().min(10),
       intro: z.string().min(120),
-      secciones: z.array(z.strictObject({ titulo: z.string().min(5), cuerpo: z.string().min(120) })).min(2),
+      secciones: z.array(z.strictObject({ titulo: z.string().min(5), cuerpo: z.string().min(120) })).min(1),
       /** Servicio: las etapas de visibilidad (encontrado, mencionado, citado, recomendado) como paso a paso visual. */
       etapas: z.array(z.strictObject({ titulo: z.string().min(3), texto: z.string().min(20) })).min(3).max(5).optional(),
       /** Servicio: los entregables en un bento (el primero es el protagonista). */
@@ -298,11 +300,14 @@ const paginas = defineCollection({
         .strictObject({
           pregunta: z.string().min(10),
           filas: z.array(z.strictObject({ nombre: z.string().min(3), estado: z.string().min(3), tu: z.boolean().default(false) })).min(2),
-          nota: z.string().min(10),
         })
         .optional(),
       /** Autora: trayectoria en hitos cortos (solo datos confirmados). */
       trayectoria: z.array(z.strictObject({ titulo: z.string().min(3), texto: z.string().min(10) })).optional(),
+      /** Persona: retrato tratado de la web (id del archivo en src/assets/team/treated). */
+      retrato: z.enum(['arianna', 'veronica', 'juan', 'miguel']).optional(),
+      /** Persona: si firma artículos del blog (muestra la lista de sus artículos). */
+      firma_blog: z.boolean().default(false),
       /** Nosotros: muestra los retratos del equipo (los de la home). */
       equipo: z.boolean().default(false),
       faq: z.array(faqItem).default([]),
@@ -313,7 +318,7 @@ const paginas = defineCollection({
           nombre: z.string().min(3),
           cargo: z.string().min(3),
           descripcion: z.string().min(30),
-          sameAs: z.array(z.url({ protocol: /^https$/ })).min(1),
+          sameAs: z.array(z.url({ protocol: /^https$/ })).default([]),
           conoceDe: z.array(z.string().min(3)).default([]),
         })
         .optional(),
