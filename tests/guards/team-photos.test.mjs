@@ -34,7 +34,7 @@ test('registro real: una fila por foto del manifiesto, válida, con derivado y s
   assert.deepEqual(rows.map((r) => r.id).sort(), [...ids].sort());
   for (const r of rows) assert.ok(existsSync(`src/assets/${'team/' + r.derived}`), r.derived);
   assert.deepEqual(treatedIds().sort(), [...ids].sort(), 'rasters en treated distintos del manifiesto');
-  for (const r of rows) assert.ok(['2026-09-20', '2026-09-22'].includes(r.downloaded));
+  for (const r of rows) assert.ok(['2026-09-20', '2026-09-22', '2026-11-23'].includes(r.downloaded));
 });
 
 test('registro: una fila válida pasa y cada campo mal formado falla nombrando id y campo (mutaciones)', () => {
@@ -50,6 +50,8 @@ test('registro: una fila válida pasa y cada campo mal formado falla nombrando i
   }
   assert.ok(validateTeamProvenance([{ ...GOOD, note: 'a \u2013 b' }]).length > 0, 'guion corto');
   assert.ok(validateTeamProvenance([{ ...GOOD, source: 'http://aprendoclub.com/api/media/file/juan.avif' }]).length > 0, 'http');
+  assert.deepEqual(validateTeamProvenance([{ ...GOOD, source: 'archivo-propio:juan-2026-09-20' }]), [], 'archivo propio');
+  assert.ok(validateTeamProvenance([{ ...GOOD, source: 'archivo-propio:Juan 1' }]).length > 0, 'archivo propio mal formado');
   assert.deepEqual(validateTeamProvenance([{ ...GOOD, approval: 'aprobada por Ari el 2026-09-21', consent: 'dado por Juan Carlos Angulo el 2026-09-20' }]), []);
   assert.ok(validateTeamProvenance([{ ...GOOD, approval: 'aprobada por Ari el 2026-09-19' }]).some((e) => e.includes('anterior')), 'aprobación anterior a la descarga');
   assert.ok(validateTeamProvenance([{ ...GOOD, consent: 'dado por Juan el 2026-09-19' }]).some((e) => e.includes('anterior')), 'consentimiento anterior a la descarga');
@@ -124,7 +126,9 @@ test('manifiesto: ids únicos, posiciones únicas entre 0 y 3, colores de marca 
     assert.ok(contrastRaw(ink, tokens.theme[`--color-brand-${p.disc}`]) >= 4.5, `${p.id}: contraste`);
     assert.ok(p.gamma >= 0.5 && p.gamma <= 2, `${p.id}: gamma ${p.gamma}`);
     const { left, top, size } = p.crop;
-    assert.ok(left >= 0 && top >= 0 && left + size <= 500 && top + size <= 625, `${p.id}: recorte fuera de 500x625`);
+    // El recorte debe caber en las dimensiones registradas de su original (la foto de Juan es de 1348x1167).
+    const [w, h] = rows.find((r) => r.id === p.id).dimensions.split('x').map(Number);
+    assert.ok(left >= 0 && top >= 0 && left + size <= w && top + size <= h, `${p.id}: recorte fuera de ${w}x${h}`);
     assert.equal(teamPhotoAt(p.index), p);
   }
   assert.equal(TEAM_PHOTOS.some((p) => p.index === 3), true, 'Miguel Pacheco (posición 3) tiene su foto en el manifiesto');

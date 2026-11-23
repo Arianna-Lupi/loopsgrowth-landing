@@ -190,6 +190,8 @@ const TEAM_COLUMNS = ['id', 'derived', 'source', 'downloaded', 'dimensions', 'sh
 
 /** Origen permitido de las fotos del equipo: la API de medios del sitio de Ari. */
 export const TEAM_SOURCE_PREFIX = 'https://aprendoclub.com/api/media/file/';
+/** Foto entregada por la propia persona (no sale de la web de Ari): se registra como `archivo-propio:<id>-<fecha>`. */
+export const TEAM_OWN_FILE_PREFIX = 'archivo-propio:';
 
 /** Filas de la tabla "Registro" de src/assets/team/PROVENANCE.md (10 columnas). */
 export function parseTeamProvenance(text) {
@@ -231,7 +233,8 @@ export function validateTeamProvenance(rows) {
   for (const row of rows) {
     const bad = (field, why) => errors.push(`Foto del equipo "${row.id}", campo "${field}": ${why}.`);
     if (!/^[a-z][a-z0-9-]*$/.test(row.id ?? '')) bad('id', 'debe ser un identificador en minúsculas');
-    if (!(row.source ?? '').startsWith(TEAM_SOURCE_PREFIX) || !/^https:\/\/\S+$/.test(row.source)) bad('source', `debe ser una URL https que empiece por ${TEAM_SOURCE_PREFIX}`);
+    const ownFile = /^archivo-propio:[a-z0-9-]+$/.test(row.source ?? '');
+    if (!ownFile && (!(row.source ?? '').startsWith(TEAM_SOURCE_PREFIX) || !/^https:\/\/\S+$/.test(row.source))) bad('source', `debe ser una URL https que empiece por ${TEAM_SOURCE_PREFIX} o un archivo propio (${TEAM_OWN_FILE_PREFIX}<id>-<fecha>)`);
     if (!/^\d{4}-\d{2}-\d{2}$/.test(row.downloaded ?? '') || !isCalendarDate(row.downloaded)) bad('downloaded', 'debe ser una fecha AAAA-MM-DD que exista');
     if (!/^\d+x\d+$/.test(row.dimensions ?? '')) bad('dimensions', 'debe tener la forma ANCHOxALTO');
     if (!/^[0-9a-f]{64}$/.test(row.sha256 ?? '')) bad('sha256', 'debe medir 64 hexadecimales');
