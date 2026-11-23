@@ -9,7 +9,7 @@
  * parte oculto por reveal.css solo mientras `html.js-reveal` existe (lo pone un script en línea del head y lo quita aquí
  * o a los 1,5 s si este módulo no llegó a ejecutarse).
  */
-import { COUNT_SELECTOR, GROUPS, HERO_SELECTOR } from './reveal-selectors';
+import { ATTR_SELECTOR, COUNT_SELECTOR, GROUPS, HERO_SELECTOR } from './reveal-selectors';
 
 const DURATION = 400;
 const STEP = 110;
@@ -78,7 +78,7 @@ function run(): void {
         if (!entry.isIntersecting) continue;
         io.unobserve(entry.target);
         const index = Number((entry.target as HTMLElement).dataset.rvI ?? 0);
-        if (entry.target.matches(COUNT_SELECTOR)) countUp(entry.target as HTMLElement, index * STEP);
+        if (entry.target.matches(`${COUNT_SELECTOR}, [data-rv='count']`)) countUp(entry.target as HTMLElement, index * STEP);
         else play(entry.target, index);
       }
     },
@@ -97,6 +97,16 @@ function run(): void {
         io.observe(el);
       });
     }
+  }
+  // Landings: elementos marcados con data-rv. El escalón es `data-rv-i` o su orden entre los hermanos marcados.
+  const marked = new Map<Element | null, Element[]>();
+  for (const el of document.querySelectorAll(ATTR_SELECTOR)) marked.set(el.parentElement, [...(marked.get(el.parentElement) ?? []), el]);
+  for (const els of marked.values()) {
+    els.forEach((el, i) => {
+      const h = el as HTMLElement;
+      h.dataset.rvI = h.dataset.rvIndex ?? String(i);
+      io.observe(el);
+    });
   }
   // Las cifras de los casos cuentan al entrar, escalonadas igual que sus tarjetas.
   document.querySelectorAll(COUNT_SELECTOR).forEach((el, i) => {

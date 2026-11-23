@@ -13,7 +13,7 @@ import { fileURLToPath } from 'node:url';
 //      `collage-rules.mjs`) ni `src/assets`.
 //   3. Sin `outline` en `none` o `0` y sin `outline-style: none` (el foco visible es de A11Y.md).
 //   4. Sin `line-height` con `!important` (el espaciado de texto del usuario debe poder ganar, SC 1.4.12).
-//   5. Los únicos `<script` de `src` son el de `AgendaSection.astro` y los dos de `pages/index.astro` (entradas del home:
+//   5. Los únicos `<script` de `src` son el de `AgendaSection.astro` y los dos de `RevealScripts.astro` (entradas por scroll:
 //      script en línea del head y módulo `reveal.ts`, prueba de Juan del 2026-11-23). `src/scripts` solo contiene
 //      `cta-focus.ts`, `lead-form.ts`, `reveal.ts` y `reveal-selectors.ts`.
 // Cada regla se prueba por mutación con cadenas sintéticas: una regla que no muerde es una regla falsa.
@@ -23,7 +23,7 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 /** Rutas (relativas a la raíz, con `/`) autorizadas a inyectar HTML en bruto. Vacía a propósito. */
 export const RAW_HTML_ALLOW = [];
 /** Cantidad de `<script` permitida por archivo. */
-export const SCRIPT_ALLOW = { 'src/components/AgendaSection.astro': 1, 'src/pages/index.astro': 2 };
+export const SCRIPT_ALLOW = { 'src/components/AgendaSection.astro': 1, 'src/components/RevealScripts.astro': 2 };
 /** Únicos archivos permitidos dentro de `src/scripts`. */
 export const SCRIPTS_DIR_ALLOW = ['src/scripts/cta-focus.ts', 'src/scripts/lead-form.ts', 'src/scripts/reveal.ts', 'src/scripts/reveal-selectors.ts'];
 

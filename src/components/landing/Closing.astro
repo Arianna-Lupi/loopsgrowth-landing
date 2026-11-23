@@ -14,11 +14,11 @@ const label = ctaLabel(await getLanding());
 <section class="closing" data-tone={tone} aria-labelledby="closing-title">
   <div class="wrap row">
     <div>
-      <h2 id="closing-title">{title}</h2>
-      <p>{text}</p>
-      <p class="cta"><CtaLink label={label} location="pagina" href="/#agenda" /></p>
+      <h2 id="closing-title" data-rv>{title}</h2>
+      <p data-rv>{text}</p>
+      <p class="cta" data-rv><CtaLink label={label} location="pagina" href="/#agenda" /></p>
     </div>
-    <div class:list={['art', tone === 'yellow' ? 'art--cream' : tone === 'dark' ? 'art--purple' : 'art--yellow']} aria-hidden="true">
+    <div data-rv class:list={['art', tone === 'yellow' ? 'art--cream' : tone === 'dark' ? 'art--purple' : 'art--yellow']} aria-hidden="true">
       <Image src={tone === 'dark' ? ojoAmarillo : ojo} alt="" width={200} height={200} />
     </div>
   </div>

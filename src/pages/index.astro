@@ -16,7 +16,6 @@ import { getLanding, fill, textVars } from '../lib/content';
 import { buildLandingSchema } from '../lib/seo';
 import { siteUrl } from '../lib/site';
 import { getLivePaths } from '../lib/paginas';
-import '../styles/reveal.css';
 
 const data = await getLanding();
 // Orden canónico de las 12 secciones (id, tono). Cada plan de la fase 2 suma la suya en este orden;
@@ -41,14 +40,7 @@ const schema = buildLandingSchema({
 });
 ---
 
-<BaseLayout title={title} description={description} schema={schema}>
-  <script slot="head" is:inline>
-    // Entradas del hero: la clase oculta el hero solo hasta que reveal.js lo anima; si no llega, se retira a los 1,5 s.
-    if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      document.documentElement.classList.add('js-reveal');
-      setTimeout(function () { if (!window.__rvReady) document.documentElement.classList.remove('js-reveal'); }, 1500);
-    }
-  </script>
+<BaseLayout title={title} description={description} schema={schema} reveal>
   <Hero />
   <Problem />
   <WhyNow />
@@ -61,7 +53,4 @@ const schema = buildLandingSchema({
   <ForWhom />
   <AgendaSection />
   <Faq />
-  <script>
-    import '../scripts/reveal';
-  </script>
 </BaseLayout>

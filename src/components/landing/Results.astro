@@ -22,13 +22,13 @@ const list = compact ? others.slice(0, 2) : others;
 
 <section class="results" data-tone={tone} aria-labelledby="results-title">
   <div class="wrap">
-    <div class="head">
+    <div class="head" data-rv>
       <h2 id="results-title">{cases.title.text}</h2>
       <a class="all" href={allHref}>{data.nav.all_results.text}</a>
     </div>
     <div class="grid">
-      <article class="lead">
-        <p class="n">{lead.figure.text}</p>
+      <article class="lead" data-rv>
+        <p class="n" data-rv="count">{lead.figure.text}</p>
         <div>
           <p class="metric">{lead.metric.text}</p>
           {lead.detail && <p>{lead.detail.text}</p>}
@@ -39,8 +39,8 @@ const list = compact ? others.slice(0, 2) : others;
       <ul role="list">
         {
           list.map((c, k) => (
-            <li>
-              <span class="n sm">{c.figure.text}</span>
+            <li data-rv>
+              <span class="n sm" data-rv="count">{c.figure.text}</span>
               <span class="body"><strong>{c.metric.text}</strong><small>{c.sector.text} · {c.period.text}</small><a class="more" href={hrefOf(k + 1)}>Ver el caso<span class="sr"> de {c.sector.text}</span></a></span>
             </li>
           ))

@@ -16,12 +16,14 @@
   html.js-reveal .section-cta:not(.rv-done),
   html.js-reveal #agenda .agenda-copy > *:not(.rv-done),
   html.js-reveal #faq .faq-item:not(.rv-done),
-  html.js-reveal #faq > .wrap > h2:not(.rv-done) {
+  html.js-reveal #faq > .wrap > h2:not(.rv-done),
+  html.js-reveal [data-rv]:not(.rv-done) {
     opacity: 0;
   }
 
   /* Cifras que cuentan: invisibles hasta que empieza el conteo, para no mostrar el valor final antes. */
-  html.js-reveal .metric-mark:not(.rv-done) {
+  html.js-reveal .metric-mark:not(.rv-done),
+  html.js-reveal [data-rv='count']:not(.rv-done) {
     visibility: hidden;
   }
 }

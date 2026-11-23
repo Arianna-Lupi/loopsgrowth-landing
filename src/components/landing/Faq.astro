@@ -9,10 +9,10 @@ const { items, tone = 'light', title = 'Preguntas frecuentes', side = true } = A
   items.length > 0 && (
     <section class="faq" data-tone={tone} aria-labelledby="faq-title">
       <div class:list={['wrap', side && 'side']}>
-        <h2 id="faq-title">{title}</h2>
+        <h2 id="faq-title" data-rv>{title}</h2>
         <div class="list">
           {items.map((f) => (
-            <details>
+            <details data-rv>
               <summary>{f.pregunta}</summary>
               <Prose text={f.respuesta} />
             </details>

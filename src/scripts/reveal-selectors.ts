@@ -15,7 +15,10 @@ export const GROUPS: readonly string[] = [
 ];
 
 /** Todo lo que reveal.ts puede animar con la Web Animations API (opacity y transform, finito, sin iteraciones). */
-export const REVEAL_ANY = [HERO_SELECTOR, ...GROUPS].join(', ');
+/** Elementos que una landing marca a mano con `data-rv` (y `data-rv="count"` para cifras que cuentan). */
+export const ATTR_SELECTOR = '[data-rv]';
+
+export const REVEAL_ANY = [HERO_SELECTOR, ...GROUPS, ATTR_SELECTOR].join(', ');
 
 /** Cifras de los casos: cuentan de 0 a su valor al entrar (reveal.ts). */
 export const COUNT_SELECTOR = '.metric-mark';

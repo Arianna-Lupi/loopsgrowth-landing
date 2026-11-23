@@ -33,21 +33,21 @@ const sub = toBlocks(intro).filter((b) => b.kind === 'p').map((b: any) => b.text
       <Crumbs crumbs={crumbs} />
       <div class="hero-grid">
         <div>
-          <h1 id="hero-title">{d.h1}</h1>
-          {sub.map((t, i) => <p class:list={['sub', i > 0 && 'more']}>{t}</p>)}
-          <p class="actions"><CtaLink label={label} location="pagina" href="/#agenda" /></p>
+          <h1 id="hero-title" data-rv>{d.h1}</h1>
+          {sub.map((t, i) => <p data-rv class:list={['sub', i > 0 && 'more']}>{t}</p>)}
+          <p class="actions" data-rv><CtaLink label={label} location="pagina" href="/#agenda" /></p>
           {
             d.ciudades.length > 0 && (
               <ul class="chips" role="list" aria-label="Ciudades de Venezuela que atendemos a distancia">
                 {d.ciudades.map((c: any) => {
                   const href = c.pagina ? cityPaths[c.nombre] : undefined;
-                  return <li>{href && live.has(href) ? <a href={href}>{c.nombre}</a> : <span>{c.nombre}</span>}</li>;
+                  return <li data-rv>{href && live.has(href) ? <a href={href}>{c.nombre}</a> : <span>{c.nombre}</span>}</li>;
                 })}
               </ul>
             )
           }
         </div>
-        <div class="stage"><Image src={founder} alt="Arianna Lupi, fundadora de Loops Growth, en el collage de marca" width={720} height={720} loading="eager" fetchpriority="high" /></div>
+        <div class="stage" data-rv><Image src={founder} alt="Arianna Lupi, fundadora de Loops Growth, en el collage de marca" width={720} height={720} loading="eager" fetchpriority="high" /></div>
       </div>
     </div>
   </section>
@@ -57,8 +57,8 @@ const sub = toBlocks(intro).filter((b) => b.kind === 'p').map((b: any) => b.text
       {
         d.secciones.map((s: any, i: number) => (
           <div class="row">
-            <h2>{s.titulo}</h2>
-            <Prose text={s.cuerpo} />
+            <h2 data-rv>{s.titulo}</h2>
+            <div data-rv data-rv-index="1"><Prose text={s.cuerpo} /></div>
           </div>
         ))
       }
@@ -69,10 +69,10 @@ const sub = toBlocks(intro).filter((b) => b.kind === 'p').map((b: any) => b.text
     d.remoto.length > 0 && (
       <section class="remote" data-tone="dark" aria-labelledby="rem-title">
         <div class="wrap">
-          <h2 id="rem-title">{d.remoto_titulo}</h2>
+          <h2 id="rem-title" data-rv>{d.remoto_titulo}</h2>
           <ol class="rem" role="list">
             {d.remoto.map((r: any, i: number) => (
-              <li><span class="big" aria-hidden="true">{i + 1}</span><h3>{r.titulo}</h3><p>{r.texto}</p></li>
+              <li data-rv><span class="big" aria-hidden="true">{i + 1}</span><h3>{r.titulo}</h3><p>{r.texto}</p></li>
             ))}
           </ol>
         </div>

@@ -4,6 +4,7 @@ import { Font } from 'astro:assets';
 import SkipLinks from '../components/SkipLinks.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
+import RevealScripts from '../components/RevealScripts.astro';
 import { isProduction, canonicalUrl, siteUrl } from '../lib/site';
 import { THEME_COLOR, DEFAULT_OG_IMAGE } from '../lib/seo';
 
@@ -17,6 +18,8 @@ interface Props {
   ogImage?: string;
   ogType?: string;
   schema?: Record<string, unknown>;
+  /** Activa las entradas por scroll (reveal.ts). */
+  reveal?: boolean;
 }
 
 const {
@@ -27,6 +30,7 @@ const {
   ogImage = DEFAULT_OG_IMAGE,
   ogType = 'website',
   schema,
+  reveal = false,
 } = Astro.props;
 
 const canonical = canonicalUrl(path);
@@ -79,6 +83,7 @@ const fullOgImage = ogImage.startsWith('http')
     <Font cssVariable="--font-brand" preload={[{ subset: "latin", style: "normal" }]} />
 
     <slot name="head" />
+    {reveal && <RevealScripts />}
 
     {schema && (
       <script is:inline type="application/ld+json" set:html={JSON.stringify(schema)} />
