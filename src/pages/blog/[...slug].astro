@@ -19,7 +19,9 @@ export async function getStaticPaths() {
 }
 
 const { post } = Astro.props;
-const { Content } = await render(post);
+const { Content, headings } = await render(post);
+// Tabla de contenidos: solo los h2 del artículo. Astro les asigna el id (slug) al renderizar el Markdown.
+const toc = headings.filter((h) => h.depth === 2);
 const author = AUTHORS[post.data.author];
 // Con la página de autora en este build, la firma y el schema apuntan a ella; si no, al sitio de Ari.
 const authorPage = (await getLivePaths()).has('/equipo/arianna-lupi/') ? '/equipo/arianna-lupi/' : undefined;
@@ -65,7 +67,7 @@ const schema = buildArticleSchema({
       <header>
         <h1 id="post-title">{post.data.title}</h1>
         <p class="meta">
-          Por <a href={authorHref} rel="author">{author.name}</a>, {author.role}.
+          Por <a href={authorHref} rel="author">{author.name}</a>, {author.role}.{' '}
           <time datetime={post.data.pubDate.toISOString()}>{formatDate(post.data.pubDate)}</time>
           {post.data.updatedDate && (
             <>
@@ -74,14 +76,49 @@ const schema = buildArticleSchema({
           )}
         </p>
       </header>
-      <div class="prose">
-        <Content />
+      <div class="layout">
+        <div class="main-col">
+          {
+            toc.length > 1 && (
+              <details class="toc toc--mobile">
+                <summary>En este artículo</summary>
+                <ol>
+                  {toc.map((h) => (
+                    <li><a href={`#${h.slug}`}>{h.text}</a></li>
+                  ))}
+                </ol>
+              </details>
+            )
+          }
+          <div class="prose">
+            <Content />
+          </div>
+          <aside class="post-cta post-cta--end" aria-labelledby="post-cta-title">
+            <h2 id="post-cta-title">¿Quieres revisar tu caso?</h2>
+            <p>Agenda una llamada con el equipo de Loops Growth.</p>
+            <CtaLink label={label} location="blog" href="/#agenda" />
+          </aside>
+        </div>
+        <aside class="side" aria-label="Contenido y acción del artículo">
+          {
+            toc.length > 1 && (
+              <nav class="toc toc--side" aria-labelledby="toc-title">
+                <h2 id="toc-title">En este artículo</h2>
+                <ol>
+                  {toc.map((h) => (
+                    <li><a href={`#${h.slug}`}>{h.text}</a></li>
+                  ))}
+                </ol>
+              </nav>
+            )
+          }
+          <div class="side-cta">
+            <p class="side-cta-title">¿Quieres que lo hagamos por ti?</p>
+            <p>Cuéntanos tu caso en una llamada y te decimos qué haría falta.</p>
+            <CtaLink label={label} location="blog" href="/#agenda" />
+          </div>
+        </aside>
       </div>
-      <aside class="post-cta" aria-labelledby="post-cta-title">
-        <h2 id="post-cta-title">¿Quieres revisar tu caso?</h2>
-        <p>Agenda una llamada con el equipo de Loops Growth.</p>
-        <CtaLink label={label} location="blog" href="/#agenda" />
-      </aside>
     </div>
   </article>
 </BaseLayout>
@@ -142,17 +179,16 @@ const schema = buildArticleSchema({
     margin-block: 0.5rem;
   }
   .prose :global(table) {
-    display: block;
-    max-width: 100%;
+    width: 100%;
     margin-block: 1.5rem;
-    overflow-x: auto;
     border-collapse: collapse;
     font-size: var(--text-label);
   }
   .prose :global(th),
   .prose :global(td) {
-    min-width: 9rem;
-    padding: 0.5rem 0.75rem;
+    min-width: 0;
+    padding: 0.5rem 0.5rem;
+    overflow-wrap: anywhere;
     border: 2px solid var(--color-brand-dark);
     text-align: left;
     vertical-align: top;
@@ -161,6 +197,81 @@ const schema = buildArticleSchema({
     color: var(--link);
     text-decoration: underline;
     text-underline-offset: 4px;
+  }
+  .layout {
+    display: grid;
+    gap: 2rem;
+  }
+  .main-col {
+    min-width: 0;
+  }
+  .side {
+    display: none;
+  }
+  .toc--mobile {
+    margin-bottom: 1.5rem;
+    border: var(--border-pop);
+    border-radius: var(--radius-card);
+    background: var(--color-brand-cream);
+  }
+  .toc--mobile summary {
+    display: flex;
+    align-items: center;
+    min-height: var(--target-min);
+    padding: 0.5rem 1rem;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .toc ol {
+    margin: 0;
+    padding: 0 1rem 0.75rem 2.25rem;
+    list-style: decimal;
+  }
+  .toc a {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--target-min);
+    color: var(--link);
+    text-underline-offset: 4px;
+  }
+  .toc--side h2 {
+    font-size: var(--text-title);
+    line-height: var(--text-title--line-height);
+  }
+  .side-cta {
+    margin-top: 1.5rem;
+    padding: 1.25rem;
+    border: var(--border-pop);
+    border-radius: var(--radius-card);
+    background: var(--color-brand-cream);
+    box-shadow: var(--shadow-pop);
+  }
+  .side-cta p {
+    margin-block: 0 0.75rem;
+  }
+  .side-cta-title {
+    font-weight: 700;
+  }
+  @media (min-width: 64em) {
+    .layout {
+      grid-template-columns: minmax(0, 65ch) 18rem;
+      justify-content: space-between;
+      align-items: start;
+    }
+    .side {
+      display: block;
+      position: sticky;
+      top: 1.5rem;
+    }
+    .toc--mobile {
+      display: none;
+    }
+    .post-cta--end {
+      display: none;
+    }
+    .toc--side ol {
+      padding: 0.5rem 0 0 1.25rem;
+    }
   }
   .post-cta {
     max-width: 65ch;
