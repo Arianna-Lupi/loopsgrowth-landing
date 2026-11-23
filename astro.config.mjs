@@ -4,6 +4,7 @@ import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 import { loadEnv } from 'vite';
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
+import { parse as parseYaml } from 'yaml';
 
 // Superficie de entorno (FND-05). Solo el valor exacto `production` indexa;
 // cualquier otro valor (incluido `Production` o vacío) se trata como no productivo.
@@ -28,6 +29,22 @@ const hasPublishedPosts =
   existsSync(blogDir) &&
   readdirSync(blogDir).some((f) => f.endsWith('.md') && /^draft:\s*false\s*$/m.test(readFileSync(`${blogDir}/${f}`, 'utf8')));
 
+// Rutas de borradores (`draft: true`): salen `noindex` en cualquier build donde existan (local o preview) y no deben
+// entrar al sitemap. En producción no se generan. Países y ciudades: país plano, ciudad anidada.
+const draftPaths = new Set();
+const yamlEntries = (dir) =>
+  existsSync(dir) ? readdirSync(dir).filter((f) => f.endsWith('.yaml')).map((f) => [f.replace(/\.yaml$/, ''), parseYaml(readFileSync(`${dir}/${f}`, 'utf8')) ?? {}]) : [];
+for (const [, d] of yamlEntries('src/content/paginas')) if (d.draft !== false) draftPaths.add(d.ruta);
+for (const [id, d] of yamlEntries('src/content/paises')) {
+  if (d.draft === false) continue;
+  draftPaths.add(d.tipo === 'ciudad' ? `/agencia-seo-${d.pais}/${d.ciudad}/` : `/agencia-seo-${id}/`);
+}
+if (existsSync(blogDir)) {
+  for (const f of readdirSync(blogDir).filter((f) => f.endsWith('.md'))) {
+    if (!/^draft:\s*false\s*$/m.test(readFileSync(`${blogDir}/${f}`, 'utf8'))) draftPaths.add(`/blog/${f.replace(/\.md$/, '')}/`);
+  }
+}
+
 const site = parseSiteUrl(env.PUBLIC_SITE_URL) ?? 'https://loopsgrowth.com';
 
 // https://astro.build/config
@@ -37,7 +54,7 @@ export default defineConfig({
   integrations: [
     sitemap({
       filter: (page) =>
-        !page.includes('/privacidad') && !page.includes('/marca/hoja') && (hasPublishedPosts || !/\/blog\/?$/.test(page)),
+        !page.includes('/privacidad') && !draftPaths.has(new URL(page).pathname) && !page.includes('/marca/hoja') && (hasPublishedPosts || !/\/blog\/?$/.test(page)),
     }),
   ],
   vite: {

@@ -50,3 +50,22 @@ test('un borrador incompleto solo avisa', () => {
   const r = evaluate([{ ...good('aa'), draft: true, secciones: [] }], template);
   assert.ok(r.length > 0 && r.every((f) => f.level === 'warn' || f.rule === 'FUENTE' || f.rule === 'PRECIO' || f.rule === 'OFICINA'));
 });
+
+// Patrón de Ari (dic-2026): país plano, ciudad anidada, sin hub.
+const city = (pais, ciudad) => ({ ...good(`${pais}-${ciudad}`), tipo: 'ciudad', pais, ciudad });
+test('una ciudad con su país publicado pasa', () => {
+  assert.deepEqual(rules([{ ...good('venezuela'), tipo: 'pais' }, city('venezuela', 'caracas')]), []);
+});
+test('una ciudad sin país padre bloquea (página huérfana)', () => {
+  assert.ok(rules([city('venezuela', 'caracas')]).includes('HUERFANA'));
+});
+test('una ciudad publicada con el país en borrador bloquea', () => {
+  assert.ok(rules([{ ...good('venezuela'), tipo: 'pais', draft: true }, city('venezuela', 'caracas')]).includes('HUERFANA'));
+});
+test('el id de una ciudad debe ser <pais>-<ciudad>', () => {
+  assert.ok(rules([{ ...good('venezuela'), tipo: 'pais' }, { ...city('venezuela', 'caracas'), id: 'caracas' }]).includes('SLUG'));
+});
+test('el FAQ también cuenta: precios y rayas en una respuesta bloquean', () => {
+  const p = { ...good('aa'), faq: [{ pregunta: '¿Cuánto cuesta?', respuesta: 'Desde USD 300 al mes' }] };
+  assert.ok(rules([p]).includes('PRECIO'));
+});

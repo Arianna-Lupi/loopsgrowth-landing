@@ -3,6 +3,7 @@ import { isProduction } from './site';
 import template from './pais-template.json';
 
 export type Pais = CollectionEntry<'pais'>;
+export type PaisTipo = Pais['data']['tipo'];
 export const PAIS_TEMPLATE = template;
 
 /** Países visibles: en producción solo los publicados (`draft: false`). */

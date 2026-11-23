@@ -1,0 +1,62 @@
+---
+/**
+ * Página de país `/agencia-seo-<pais>/` (SEO programático, borrador para Ari). Patrón de Ari: país plano, ciudad
+ * anidada, sin hub. Sin países publicados no se genera nada. Un borrador (solo visible fuera de producción) sale
+ * `noindex`. Sin LocalBusiness, sin dirección ni oficina y sin reseñas. Cada país aporta secciones y hechos propios.
+ */
+import ContentPage from '../../components/ContentPage.astro';
+import { getPaises, PAIS_TEMPLATE } from '../../lib/paises';
+import { paisPath, relatedLinks } from '../../lib/paginas';
+import { buildOrganization } from '../../lib/seo';
+import { getLanding } from '../../lib/content';
+import { siteUrl } from '../../lib/site';
+
+export async function getStaticPaths() {
+  const paises = (await getPaises()).filter((p) => p.data.tipo === 'pais');
+  return paises.map((pais) => ({ params: { pais: pais.id }, props: { pais } }));
+}
+
+const { pais } = Astro.props;
+const d = pais.data;
+const base = siteUrl.replace(/\/+$/, '');
+const path = paisPath(pais);
+const landing = await getLanding();
+// La ciudad enlazada existe solo si el build la incluye.
+const ciudades = (await getPaises()).filter((p) => p.data.tipo === 'ciudad' && p.data.pais === pais.id);
+const relacionados = [
+  ...ciudades.map((c) => ({ href: paisPath(c), label: `agencia SEO en ${c.data.nombre}`, texto: `Si estás en ${c.data.nombre}, revisa la` })),
+  ...(await relatedLinks(['servicio', 'autora'])),
+];
+const intro = `${PAIS_TEMPLATE.servicio_intro.replace('{pais}', d.nombre)}\n\n${d.intro}`;
+const graph = [
+  buildOrganization(landing, base),
+  {
+    '@type': 'Service',
+    '@id': `${base}${path}#service`,
+    name: d.h1,
+    serviceType: 'SEO y posicionamiento en IA',
+    provider: { '@id': `${base}/#organization` },
+    areaServed: { '@type': 'Country', name: d.nombre },
+    url: `${base}${path}`,
+  },
+];
+---
+
+<ContentPage
+  title={d.title}
+  description={d.description}
+  path={path}
+  noindex={d.draft}
+  h1={d.h1}
+  intro={intro}
+  secciones={d.secciones}
+  hechos={d.hechos}
+  faq={d.faq}
+  casos={{ texto: 'Los resultados de nuestros clientes están en un solo lugar:', ancla: 'casos en la home' }}
+  crumbs={[
+    { name: 'Inicio', path: '/' },
+    { name: `Agencia SEO en ${d.nombre}`, path },
+  ]}
+  relacionados={relacionados}
+  graph={graph}
+/>

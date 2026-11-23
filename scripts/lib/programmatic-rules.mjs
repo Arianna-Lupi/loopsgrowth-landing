@@ -1,7 +1,7 @@
 // Reglas de calidad del SEO programático por país (milestone SEO, claude-seo:seo-programmatic).
 // Módulo puro: recibe páginas ya parseadas y devuelve hallazgos. No lee ni escribe archivos.
 // Una página de país solo se publica con contenido único y verdadero: si no lo tiene, no se genera.
-import { findInversion } from './copy-rules.mjs';
+import { findInversion, findVoseo } from './copy-rules.mjs';
 
 export const MAX_PAGES = 14; // tope del plan (14 páginas de país y ciudad)
 export const MIN_UNIQUE_WARN = 0.4; // meta de contenido único
@@ -25,7 +25,34 @@ const shingles = (ws, n = 5) => {
 
 /** Texto visible único de una página (sin plantilla). */
 export function pageText(p) {
-  return [p.h1, p.intro, ...p.secciones.flatMap((s) => [s.titulo, s.cuerpo]), ...p.hechos.map((h) => h.dato)].join('\n');
+  return [
+    p.h1, p.intro,
+    ...p.secciones.flatMap((s) => [s.titulo, s.cuerpo]),
+    ...p.hechos.map((h) => h.dato),
+    ...(p.faq ?? []).flatMap((f) => [f.pregunta, f.respuesta]),
+  ].join('\n');
+}
+
+/** Cadenas del código fuente que implican oficina o dirección física: Loops no tiene ninguna (decisión de Ari, 17-nov-2026). */
+export const SCHEMA_ADDRESS_RE = /LocalBusiness|PostalAddress|streetAddress|addressLocality|GeoCoordinates|hasMap|ProfessionalService/;
+
+/**
+ * Texto prohibido en cualquier página de contenido (país, ciudad, servicio, nosotros, autora, blog):
+ * precios, garantía, oficina, reseñas, rayas, marcas de faltante, voseo y cifras de inversión.
+ * @param {string} text
+ * @returns {{rule:string, detail:string}[]}
+ */
+export function forbiddenText(text) {
+  const out = [];
+  for (const [rule, re] of [['PRECIO', PRICE_RE], ['OFICINA', OFFICE_RE], ['RESENA', REVIEW_RE], ['RAYA', DASH_RE], ['FALTA', FALTA_RE]]) {
+    re.lastIndex = 0;
+    const m = text.match(re);
+    if (m) out.push({ rule, detail: `texto prohibido: ${[...new Set(m)].slice(0, 3).join(', ')}` });
+  }
+  if (findInversion(text).length) out.push({ rule: 'PRECIO', detail: 'cifra de inversión' });
+  const v = findVoseo(text);
+  if (v.length) out.push({ rule: 'VOSEO', detail: `voseo: ${v[0]}` });
+  return out;
 }
 
 /**
@@ -41,14 +68,23 @@ export function evaluate(pages, template) {
 
   const sets = pages.map((p) => shingles(words(pageText(p))));
   const slugs = new Set();
+  const countries = new Set(pages.filter((p) => p.tipo !== 'ciudad').map((p) => p.id));
+  const publishedCountries = new Set(pages.filter((p) => p.tipo !== 'ciudad' && !p.draft).map((p) => p.id));
   pages.forEach((p, i) => {
     if (slugs.has(p.id)) add(p.id, 'SLUG', 'block', 'slug duplicado');
     slugs.add(p.id);
+    // Patrón de Ari: país plano, ciudad anidada, sin hub. Una ciudad necesita su país; publicada, el país también publicado.
+    if (p.tipo === 'ciudad') {
+      if (!p.pais || !p.ciudad) add(p.id, 'CIUDAD', 'block', 'una ciudad necesita `pais` y `ciudad`');
+      else if (!countries.has(p.pais)) add(p.id, 'HUERFANA', 'block', `el país padre "${p.pais}" no existe`);
+      else if (!p.draft && !publishedCountries.has(p.pais)) add(p.id, 'HUERFANA', 'block', `la ciudad está publicada y el país "${p.pais}" no`);
+      if (p.id !== `${p.pais}-${p.ciudad}`) add(p.id, 'SLUG', 'block', `el id de una ciudad es <pais>-<ciudad>: ${p.pais}-${p.ciudad}`);
+    }
     // Los borradores solo informan; las páginas publicables bloquean.
     const lvl = p.draft ? 'warn' : 'block';
     const text = pageText(p);
     const wc = words(text).length;
-    if (p.secciones.length < MIN_SECTIONS) add(p.id, 'SECCIONES', lvl, `${p.secciones.length} secciones; mínimo ${MIN_SECTIONS}`);
+    if ((p.secciones ?? []).length < MIN_SECTIONS) add(p.id, 'SECCIONES', lvl, `${p.secciones.length} secciones; mínimo ${MIN_SECTIONS}`);
     if (p.hechos.length < MIN_FACTS) add(p.id, 'HECHOS', lvl, `${p.hechos.length} hechos con fuente; mínimo ${MIN_FACTS}`);
     if (wc < MIN_WORDS) add(p.id, 'PALABRAS', lvl, `${wc} palabras; mínimo ${MIN_WORDS}`);
     const others = new Set();
@@ -61,12 +97,7 @@ export function evaluate(pages, template) {
     const ratio = mine.size + tplWords ? unique / (mine.size + tplWords) : 0;
     if (ratio < MIN_UNIQUE_BLOCK) add(p.id, 'UNICO', lvl, `${(ratio * 100).toFixed(0)} % único; bajo ${MIN_UNIQUE_BLOCK * 100} % no se publica`);
     else if (ratio < MIN_UNIQUE_WARN) add(p.id, 'UNICO', 'warn', `${(ratio * 100).toFixed(0)} % único; la meta es ${MIN_UNIQUE_WARN * 100} %`);
-    for (const [rule, re] of [['PRECIO', PRICE_RE], ['OFICINA', OFFICE_RE], ['RESENA', REVIEW_RE], ['RAYA', DASH_RE], ['FALTA', FALTA_RE]]) {
-      re.lastIndex = 0;
-      const m = text.match(re);
-      if (m) add(p.id, rule, 'block', `texto prohibido: ${[...new Set(m)].slice(0, 3).join(', ')}`);
-    }
-    if (findInversion(text).length) add(p.id, 'PRECIO', 'block', 'cifra de inversión');
+    for (const f of forbiddenText(text)) add(p.id, f.rule, 'block', f.detail);
     for (const h of p.hechos) {
       try {
         const u = new URL(h.fuente);

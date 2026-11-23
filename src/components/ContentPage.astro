@@ -1,0 +1,172 @@
+---
+/**
+ * Plantilla de las páginas de contenido nuevas (servicio, nosotros, autora, país y ciudad). Un solo h1, migas
+ * con `aria-current`, bloques de texto desde YAML, lista de datos con fuente, FAQ en `<details>` nativos y la
+ * CTA única ("Agenda tu llamada de 30 minutos") arriba, a mitad y al final. Sin JavaScript. Sin dirección,
+ * mapa ni reseñas. Los `pendientes` del YAML nunca llegan aquí.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import CtaLink from './CtaLink.astro';
+import { buildBreadcrumb } from '../lib/seo';
+import { toBlocks } from '../lib/text';
+import { siteUrl } from '../lib/site';
+import { getLanding, ctaLabel } from '../lib/content';
+
+interface Props {
+  title: string;
+  description: string;
+  path: string;
+  noindex?: boolean;
+  h1: string;
+  intro: string;
+  secciones: { titulo: string; cuerpo: string }[];
+  hechos?: { dato: string; fuente: string }[];
+  faq?: { pregunta: string; respuesta: string }[];
+  /** Enlace de cierre a los casos de la home. */
+  casos?: { texto: string; ancla: string };
+  crumbs: { name: string; path: string }[];
+  /** Enlaces contextuales a páginas hermanas, ya filtrados por existencia. */
+  relacionados?: { href: string; label: string; texto: string }[];
+  /** Nodos extra del grafo JSON-LD (Service, Person, etc.). */
+  graph?: Record<string, unknown>[];
+  ogType?: string;
+}
+
+const { title, description, path, noindex = false, h1, intro, secciones, hechos = [], faq = [], casos, crumbs, relacionados = [], graph = [], ogType } = Astro.props;
+const base = siteUrl.replace(/\/+$/, '');
+const data = await getLanding();
+const label = ctaLabel(data);
+const pageUrl = `${base}${path}`;
+const nodes: Record<string, unknown>[] = [buildBreadcrumb(base, crumbs, pageUrl), ...graph];
+if (faq.length > 0) {
+  nodes.push({
+    '@type': 'FAQPage',
+    '@id': `${pageUrl}#faq`,
+    mainEntity: faq.map((f) => ({
+      '@type': 'Question',
+      name: f.pregunta,
+      acceptedAnswer: { '@type': 'Answer', text: f.respuesta.replace(/\s*\n+\s*/g, ' ') },
+    })),
+  });
+}
+const schema = { '@context': 'https://schema.org', '@graph': nodes };
+// La CTA del medio va después de la sección central.
+const mid = Math.ceil(secciones.length / 2) - 1;
+---
+
+<BaseLayout title={title} description={description} path={path} noindex={noindex} schema={schema} ogType={ogType}>
+  <article class="content-page" data-tone="light" aria-labelledby="page-title">
+    <div class="wrap">
+      <nav aria-label="Ruta de navegación" class="crumbs">
+        <ol>
+          {
+            crumbs.map((c, i) =>
+              i === crumbs.length - 1 ? <li aria-current="page">{c.name}</li> : <li><a href={c.path}>{c.name}</a></li>,
+            )
+          }
+        </ol>
+      </nav>
+      <h1 id="page-title">{h1}</h1>
+      <div class="prose">
+        {toBlocks(intro).map((b) => (b.kind === 'p' ? <p>{b.text}</p> : <ul>{b.items.map((i) => <li>{i}</li>)}</ul>))}
+      </div>
+      <p class="cta-row"><CtaLink label={label} location="pagina" href="/#agenda" /></p>
+      <div class="prose">
+        {
+          secciones.map((s, idx) => (
+            <>
+              <section>
+                <h2>{s.titulo}</h2>
+                {toBlocks(s.cuerpo).map((b) =>
+                  b.kind === 'p' ? <p>{b.text}</p> : <ul>{b.items.map((i) => <li>{i}</li>)}</ul>,
+                )}
+              </section>
+              {idx === mid && (
+                <p class="cta-row"><CtaLink label={label} location="pagina" href="/#agenda" /></p>
+              )}
+            </>
+          ))
+        }
+        {
+          casos && (
+            <section>
+              <h2>Resultados</h2>
+              <p>
+                {casos.texto} <a href="/#casos">{casos.ancla}</a>.
+              </p>
+            </section>
+          )
+        }
+        {
+          hechos.length > 0 && (
+            <section>
+              <h2>Datos que usamos</h2>
+              <ul>
+                {hechos.map((h) => (
+                  <li>
+                    {h.dato} <a href={h.fuente} rel="noopener noreferrer">Fuente</a>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )
+        }
+        {
+          relacionados.length > 0 && (
+            <section>
+              <h2>Sigue explorando</h2>
+              <ul>
+                {relacionados.map((r) => (
+                  <li>
+                    {r.texto} <a href={r.href}>{r.label}</a>.
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )
+        }
+      </div>
+      {
+        faq.length > 0 && (
+          <section class="faq" aria-labelledby="faq-title">
+            <h2 id="faq-title">Preguntas frecuentes</h2>
+            {faq.map((f) => (
+              <details class="faq-item">
+                <summary>{f.pregunta}</summary>
+                {toBlocks(f.respuesta).map((b) => (b.kind === 'p' ? <p>{b.text}</p> : <ul>{b.items.map((i) => <li>{i}</li>)}</ul>))}
+              </details>
+            ))}
+          </section>
+        )
+      }
+      <aside class="cta-box" aria-labelledby="cta-title">
+        <h2 id="cta-title">¿Quieres revisar tu caso?</h2>
+        <p>Agenda una llamada con el equipo de Loops Growth y revisamos tu situación.</p>
+        <CtaLink label={label} location="pagina" href="/#agenda" />
+      </aside>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .content-page { padding-block: var(--section-y); }
+  .crumbs ol { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0 0 1.5rem; padding: 0; list-style: none; font-size: var(--text-label); }
+  .crumbs li + li::before { content: '/'; margin-inline-end: 0.5rem; }
+  .crumbs a { display: inline-flex; align-items: center; min-height: var(--target-min); }
+  .content-page h1 { max-width: 24ch; font-size: var(--text-heading); line-height: var(--text-heading--line-height); }
+  .prose { max-width: 65ch; margin-top: 1.5rem; }
+  .prose :global(h2), .faq h2 { margin-top: 2.5rem; margin-bottom: 0.75rem; font-size: var(--text-title); line-height: var(--text-title--line-height); }
+  .prose :global(p), .prose :global(ul) { margin-block: 1rem; }
+  .prose :global(ul) { padding-inline-start: 1.5rem; list-style: disc; }
+  .prose :global(li) { margin-block: 0.5rem; }
+  .prose :global(a), .faq a { color: var(--link); text-decoration: underline; text-underline-offset: 4px; }
+  .cta-row { margin-block: 2rem; }
+  .faq { max-width: 65ch; margin-top: 2.5rem; }
+  .faq-item { margin-block: 0.75rem; border: var(--border-pop); border-radius: var(--radius-card); background: var(--color-brand-cream); box-shadow: var(--shadow-pop); }
+  .faq-item summary { display: flex; align-items: center; min-height: var(--target-min); padding: 0.75rem 1rem; font-weight: 700; cursor: pointer; }
+  .faq-item summary:focus-visible { outline: var(--focus-width) solid var(--focus-ring); outline-offset: var(--focus-offset); }
+  .faq-item :global(p), .faq-item :global(ul) { margin: 0; padding: 0 1rem 1rem; }
+  .faq-item :global(ul) { padding-inline-start: 2.5rem; list-style: disc; }
+  .cta-box { max-width: 65ch; margin-top: 3rem; padding: 1.5rem; border: var(--border-pop); border-radius: var(--radius-card); background: var(--color-brand-cream); box-shadow: var(--shadow-pop); }
+  .cta-box p { margin-block: 0.5rem 1rem; }
+</style>

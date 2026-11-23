@@ -1,0 +1,75 @@
+---
+/**
+ * Páginas de servicio, nosotros y autora (colección `paginas`). La URL sale del campo `ruta` del YAML.
+ * Sin páginas publicadas no se genera nada. Un borrador (solo visible fuera de producción) sale `noindex`.
+ * Sin LocalBusiness, sin dirección y sin precios: Loops no tiene oficina.
+ */
+import ContentPage from '../components/ContentPage.astro';
+import { getPaginas, relatedLinks, type LinkKey } from '../lib/paginas';
+import { AREA_SERVED, buildPerson } from '../lib/seo';
+import { siteUrl } from '../lib/site';
+
+export async function getStaticPaths() {
+  const paginas = await getPaginas();
+  return paginas.map((pagina) => ({ params: { slug: pagina.data.ruta.slice(1, -1) }, props: { pagina } }));
+}
+
+const { pagina } = Astro.props;
+const d = pagina.data;
+const base = siteUrl.replace(/\/+$/, '');
+const path = d.ruta;
+
+const RELATED: Record<typeof d.tipo, LinkKey[]> = {
+  servicio: ['venezuela', 'autora', 'nosotros'],
+  nosotros: ['autora', 'servicio', 'venezuela'],
+  autora: ['nosotros', 'servicio'],
+};
+const relacionados = await relatedLinks(RELATED[d.tipo]);
+
+// Sin página `/servicios/`: la miga de un servicio es solo Inicio y el servicio, para no apuntar a un 404.
+const crumbs = [{ name: 'Inicio', path: '/' }];
+if (d.tipo === 'autora') crumbs.push({ name: 'Nosotros', path: '/nosotros/' });
+crumbs.push({ name: d.nombre, path });
+
+const graph: Record<string, unknown>[] = [];
+if (d.tipo === 'servicio') {
+  graph.push({
+    '@type': 'Service',
+    '@id': `${base}${path}#service`,
+    name: d.h1,
+    serviceType: 'Posicionamiento en IA (GEO y AEO)',
+    provider: { '@id': `${base}/#organization` },
+    areaServed: AREA_SERVED,
+    url: `${base}${path}`,
+  });
+}
+if (d.tipo === 'autora' && d.persona) {
+  graph.push(
+    buildPerson({
+      siteUrl: base,
+      path,
+      nombre: d.persona.nombre,
+      cargo: d.persona.cargo,
+      descripcion: d.persona.descripcion,
+      sameAs: d.persona.sameAs,
+      conoceDe: d.persona.conoceDe,
+    }),
+  );
+}
+---
+
+<ContentPage
+  title={d.title}
+  description={d.description}
+  path={path}
+  noindex={d.draft}
+  h1={d.h1}
+  intro={d.intro}
+  secciones={d.secciones}
+  faq={d.faq}
+  casos={d.casos}
+  crumbs={crumbs}
+  relacionados={relacionados}
+  graph={graph}
+  ogType={d.tipo === 'autora' ? 'profile' : 'website'}
+/>

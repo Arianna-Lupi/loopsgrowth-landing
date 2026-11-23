@@ -166,6 +166,19 @@ const landing = defineCollection({
     }),
     // Pie de página y política de privacidad (plan 02-06). El cuerpo de la política es una lista de
     // afirmaciones: un `<p>` por elemento. Correo y redes del pie son pendientes de Ari.
+    // Menú principal y enlaces del pie hacia las páginas nuevas (estrategia de Ari, dic-2026). Solo nombres de control.
+    nav: z.strictObject({
+      label: claim,
+      services: claim,
+      venezuela: claim,
+      venezuela_full: claim,
+      blog: claim,
+      about: claim,
+      service_ia: claim,
+      caracas: claim,
+      author: claim,
+      explore_label: claim,
+    }),
     footer: z.strictObject({
       nav_label: claim,
       privacy_link: claim,
@@ -211,15 +224,25 @@ const blog = defineCollection({
 });
 
 /**
- * Páginas de país (SEO programático, `/agencia-seo/<pais>/`). Un archivo YAML por país en
- * `src/content/paises/`. Sin archivo no hay página: solo se genera un país con contenido único y verdadero.
- * Cada `hecho` lleva su fuente https; no se admiten precios, direcciones, oficinas ni reseñas
- * (los vigila `scripts/check-programmatic.mjs`, que corre en `prebuild`).
+ * Páginas de país y ciudad (SEO programático, estrategia de Ari de dic-2026). Un archivo YAML por página en
+ * `src/content/paises/`. URLs: país plano `/agencia-seo-<pais>/` y ciudad anidada `/agencia-seo-<pais>/<ciudad>/`
+ * (sin hub `/agencia-seo/`). El id del archivo del país es `<pais>` y el de la ciudad `<pais>-<ciudad>`.
+ * Sin archivo no hay página: solo se genera un lugar con contenido único y verdadero. Cada `hecho` lleva su
+ * fuente https; no se admiten precios, direcciones, oficinas ni reseñas (los vigila `scripts/check-programmatic.mjs`,
+ * que corre en `prebuild`). `draft` nace en `true` y `pendientes` lista lo que solo Ari puede confirmar:
+ * no se renderiza nunca. Un borrador no existe en producción.
  */
+const faqItem = z.strictObject({ pregunta: z.string().min(10), respuesta: z.string().min(20) });
+
 const pais = defineCollection({
   loader: glob({ pattern: '*.yaml', base: 'src/content/paises' }),
   schema: z
     .strictObject({
+      tipo: z.enum(['pais', 'ciudad']),
+      /** Solo en ciudades: id del país padre (nombre del archivo del país). */
+      pais: z.string().min(3).optional(),
+      /** Solo en ciudades: segmento de la URL (`caracas`). */
+      ciudad: z.string().min(3).optional(),
       nombre: z.string().min(3),
       draft: z.boolean().default(true),
       reviewedBy: z.string().min(1).optional(),
@@ -228,9 +251,51 @@ const pais = defineCollection({
       h1: z.string().min(10),
       intro: z.string().min(250),
       secciones: z.array(z.strictObject({ titulo: z.string().min(5), cuerpo: z.string().min(350) })).min(3),
-      hechos: z.array(z.strictObject({ dato: z.string().min(20), fuente: z.url({ protocol: /^https$/ }) })).min(3),
+      // Sin mínimo en el esquema: los borradores aún no traen hechos con fuente. La guarda exige 3 para publicar.
+      hechos: z.array(z.strictObject({ dato: z.string().min(20), fuente: z.url({ protocol: /^https$/ }) })).default([]),
+      faq: z.array(faqItem).default([]),
+      pendientes: z.array(z.string().min(5)).default([]),
     })
-    .refine((d) => d.draft || d.reviewedBy, { message: 'Publicar un país requiere reviewedBy (Ari).', path: ['reviewedBy'] }),
+    .refine((d) => d.draft || d.reviewedBy, { message: 'Publicar una página de país o ciudad requiere reviewedBy (Ari).', path: ['reviewedBy'] })
+    .refine((d) => d.tipo === 'pais' || (d.pais && d.ciudad), { message: 'Una ciudad necesita `pais` y `ciudad`.', path: ['ciudad'] }),
 });
 
-export const collections = { landing, blog, pais };
+/**
+ * Páginas de servicio y de equipo (`/servicios/<servicio>/`, `/nosotros/`, `/equipo/<persona>/`). Un YAML por
+ * página en `src/content/paginas/`. `ruta` fija la URL. Mismas reglas duras: sin precios ni garantía, sin casos
+ * inventados, sin dirección. `draft` nace en `true`; publicar exige `reviewedBy`. `pendientes` lista lo que
+ * falta confirmar y no se renderiza. `persona` solo en la página de una autora: alimenta el JSON-LD Person.
+ */
+const paginas = defineCollection({
+  loader: glob({ pattern: '*.yaml', base: 'src/content/paginas' }),
+  schema: z
+    .strictObject({
+      tipo: z.enum(['servicio', 'nosotros', 'autora']),
+      ruta: z.string().regex(/^\/[a-z0-9-]+(?:\/[a-z0-9-]+)*\/$/),
+      nombre: z.string().min(3),
+      draft: z.boolean().default(true),
+      reviewedBy: z.string().min(1).optional(),
+      title: z.string().min(10).max(70),
+      description: z.string().min(70).max(160),
+      h1: z.string().min(10),
+      intro: z.string().min(120),
+      secciones: z.array(z.strictObject({ titulo: z.string().min(5), cuerpo: z.string().min(120) })).min(2),
+      faq: z.array(faqItem).default([]),
+      /** Enlace de cierre a los casos de la home (`/#casos`), único lugar de casos. */
+      casos: z.strictObject({ texto: z.string().min(20), ancla: z.string().min(5) }).optional(),
+      persona: z
+        .strictObject({
+          nombre: z.string().min(3),
+          cargo: z.string().min(3),
+          descripcion: z.string().min(30),
+          sameAs: z.array(z.url({ protocol: /^https$/ })).min(1),
+          conoceDe: z.array(z.string().min(3)).default([]),
+        })
+        .optional(),
+      pendientes: z.array(z.string().min(5)).default([]),
+    })
+    .refine((d) => d.draft || d.reviewedBy, { message: 'Publicar una página requiere reviewedBy (Ari).', path: ['reviewedBy'] })
+    .refine((d) => d.tipo !== 'autora' || d.persona, { message: 'La página de autora necesita `persona`.', path: ['persona'] }),
+});
+
+export const collections = { landing, blog, pais, paginas };
