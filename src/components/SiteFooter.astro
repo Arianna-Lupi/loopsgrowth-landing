@@ -17,8 +17,11 @@ import Logo from './brand/Logo.astro';
 import { getLanding } from '../lib/content';
 import { EMAIL_RE } from '../lib/email.mjs';
 import { getPosts } from '../lib/blog';
+import { getFooterExplore } from '../lib/nav';
 
-const { footer, brand } = await getLanding();
+const { footer, brand, nav } = await getLanding();
+const explore = await getFooterExplore();
+const here = Astro.url.pathname;
 const onPrivacy = Astro.url.pathname.startsWith('/privacidad');
 // En `/` el logo no es un destino; en las demás rutas lleva a la home.
 const homeHref = Astro.url.pathname === '/' ? undefined : '/';
@@ -37,6 +40,18 @@ const emailHref = EMAIL_RE.test(email) ? `mailto:${email}` : undefined;
       <Logo name={brand.name.text} href={homeHref} variant="horizontal" tone={tone} />
     </div>
     <nav class="footer-nav" aria-label={footer.nav_label.text}>
+      {
+        explore.length > 0 && (
+          <div class="footer-block">
+            <p class="footer-label">{nav.explore_label.text}</p>
+            {explore.map((l) => (
+              <a class="footer-link" href={l.href} aria-current={here === l.href ? 'page' : undefined}>
+                {l.label}
+              </a>
+            ))}
+          </div>
+        )
+      }
       <div class="footer-block">
         <p class="footer-label">{footer.contact_label.text}</p>
         {
@@ -145,7 +160,7 @@ const emailHref = EMAIL_RE.test(email) ? `mailto:${email}` : undefined;
 
     .footer-nav {
       grid-column: span 2;
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
     }
   }
 </style>
