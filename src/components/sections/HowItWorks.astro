@@ -15,7 +15,7 @@ const data = await getLanding();
   <ol class="steps" role="list">
     {
       data.how_it_works.steps.map((step) => (
-        <li class="step">
+        <li class="step" data-rv-tl="h">
           <div class="step-body">
             <h3>{step.title.text}</h3>
             <p class="step-desc">{step.description.text}</p>

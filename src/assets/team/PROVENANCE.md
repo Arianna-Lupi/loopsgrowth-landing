@@ -6,6 +6,10 @@ Registro de las fotos reales de integrantes de Loops Growth que aparecen en "Qui
 
 Las fotos salen de la página https://www.aprendoclub.com/quienes-somos, que no declara licencia ni derechos sobre ellas. Son fotos del propio equipo en el sitio de Ari y Juan Carlos Angulo autorizó su uso el 2026-09-20, pero la aprobación de Ari y el consentimiento de cada persona siguen PENDIENTES. La puerta de producción (`PUBLIC_ENV=production`) bloquea mientras cualquiera de las dos cosas esté pendiente; fuera de producción solo advierte.
 
+## Foto original de Arianna en la firma del blog
+
+`src/assets/team/original/arianna.webp` es la misma foto de la fila `arianna` (convertida de AVIF a WebP, sin recorte ni tratamiento) y solo se usa en la firma de los artículos del blog, por pedido de Juan Carlos Angulo del 2026-11-23. Mismo estado de aprobación que la fila `arianna`.
+
 ## Cómo cerrar la aprobación
 
 1. Ari confirma que puede usarse cada foto en la landing y cada persona da su consentimiento (por escrito, por ejemplo un mensaje).

@@ -6,7 +6,8 @@
  */
 import { render } from 'astro:content';
 import { Image } from 'astro:assets';
-import ariPhoto from '../../assets/team/treated/arianna.png';
+// Foto original de Arianna (sin tratamiento de marca): solo se usa aquí, en la firma de los artículos.
+import ariPhoto from '../../assets/team/original/arianna.webp';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import CtaLink from '../../components/CtaLink.astro';
 import { getPosts, formatDate, AUTHORS } from '../../lib/blog';
@@ -69,15 +70,21 @@ const schema = buildArticleSchema({
       </nav>
       <header>
         <h1 id="post-title" data-rv>{post.data.title}</h1>
-        <p class="meta" data-rv>
-          Por <a href={authorHref} rel="author">{author.name}</a>, {author.role}.{' '}
-          <time datetime={post.data.pubDate.toISOString()}>{formatDate(post.data.pubDate)}</time>
-          {post.data.updatedDate && (
-            <>
-              . Actualizado el <time datetime={post.data.updatedDate.toISOString()}>{formatDate(post.data.updatedDate)}</time>
-            </>
-          )}
-        </p>
+        <div class="byline" data-rv>
+          <Image class="byline-photo" src={ariPhoto} alt="" width={96} height={96} loading="eager" />
+          <p>
+            <a class="byline-name" href={authorHref} rel="author">{author.name}</a>
+            <span class="byline-meta">
+              {author.role} · {' '}
+              <time datetime={post.data.pubDate.toISOString()}>{formatDate(post.data.pubDate)}</time>
+              {post.data.updatedDate && (
+                <>
+                  · Actualizado el <time datetime={post.data.updatedDate.toISOString()}>{formatDate(post.data.updatedDate)}</time>
+                </>
+              )}
+            </span>
+          </p>
+        </div>
       </header>
       <div class="layout">
         <div class="main-col">
@@ -96,12 +103,20 @@ const schema = buildArticleSchema({
           <div class="prose">
             <Content />
           </div>
-          <aside class="author-box" data-rv aria-label="Sobre la autora">
-            <Image src={ariPhoto} alt="" width={96} height={96} loading="lazy" decoding="async" />
-            <div>
-              <p class="author-name">{author.name}</p>
-              <p>{author.role}. Más de 8 años de experiencia en SEO y fundadora de la academia aprendoclub.</p>
-              {authorPage && <a href={authorPage}>Conoce a la autora</a>}
+          <aside class="author-box" data-rv aria-labelledby="author-box-title">
+            <div class="author-photo">
+              <Image src={ariPhoto} alt={`Retrato de ${author.name}`} width={320} height={400} loading="lazy" decoding="async" />
+            </div>
+            <div class="author-copy">
+              <p class="author-label">Escrito por</p>
+              <h2 id="author-box-title" class="author-name">{author.name}</h2>
+              <p class="author-role">{author.role}</p>
+              <p>Más de 8 años de experiencia en SEO y fundadora de la academia de SEO y marketing aprendoclub. Firma y revisa todos los artículos de este blog.</p>
+              <ul class="author-links" role="list">
+                {authorPage && <li><a class="author-main" href={authorPage}>Conoce a la autora</a></li>}
+                <li><a href="https://www.linkedin.com/in/arianna-lupi/" target="_blank" rel="noopener noreferrer">LinkedIn<span class="sr-only"> (se abre en una pestaña nueva)</span></a></li>
+                <li><a href={author.url} target="_blank" rel="noopener noreferrer">ariannalupi.com<span class="sr-only"> (se abre en una pestaña nueva)</span></a></li>
+              </ul>
             </div>
           </aside>
           <aside class="post-cta post-cta--end" aria-labelledby="post-cta-title">
@@ -304,33 +319,123 @@ const schema = buildArticleSchema({
   .prose :global(blockquote p) {
     margin: 0;
   }
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .byline {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-block: 1rem 2rem;
+  }
+  .byline-photo {
+    width: 3rem;
+    height: 3rem;
+    flex: none;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center 20%;
+    background: var(--color-brand-cream);
+    box-shadow: 0 0 0 1px rgb(33 33 33 / 0.15);
+  }
+  .byline p {
+    display: grid;
+    margin: 0;
+    line-height: 1.3;
+  }
+  .byline-name {
+    display: inline-flex;
+    align-items: center;
+    width: fit-content;
+    min-height: 1.75rem;
+    font-weight: 700;
+    color: var(--link);
+    text-underline-offset: 4px;
+  }
+  .byline-meta {
+    font-size: var(--text-label);
+  }
   .author-box {
     display: grid;
-    grid-template-columns: 5rem 1fr;
-    gap: 1rem;
-    align-items: center;
+    gap: 1.5rem;
     max-width: 65ch;
-    margin-top: 2.5rem;
+    margin-top: 3rem;
     padding: 1.25rem;
+    border: var(--border-pop);
     border-radius: var(--radius-card);
     background: var(--color-brand-cream);
-    box-shadow: 0 0 0 1px rgb(33 33 33 / 0.12), 0 8px 24px rgb(0 0 0 / 0.06);
+    box-shadow: var(--shadow-pop);
   }
-  .author-box :global(img) {
-    width: 5rem;
-    height: 5rem;
+  .author-photo {
+    overflow: hidden;
+    border-radius: var(--radius-s);
+    background: var(--color-brand-white);
+    aspect-ratio: 4 / 5;
+    max-width: 14rem;
+  }
+  .author-photo :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
     object-fit: cover;
-    border-radius: var(--radius-card);
+    object-position: center top;
+  }
+  .author-copy {
+    display: grid;
+    align-content: start;
+    gap: 0.5rem;
+  }
+  .author-label {
+    font-size: var(--text-label);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
   }
   .author-name {
-    font-weight: 700;
+    margin: 0;
+    font-size: var(--text-heading);
+    line-height: 1.1;
+    color: var(--color-brand-dark);
   }
-  .author-box a {
+  .author-role {
+    font-weight: 600;
+  }
+  .author-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 1.25rem;
+    margin: 0.5rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .author-links a {
     display: inline-flex;
     align-items: center;
     min-height: var(--target-min);
     color: var(--link);
+    font-weight: 600;
     text-underline-offset: 4px;
+  }
+  .author-main {
+    padding-inline: 1rem;
+    border: var(--border-pop);
+    border-radius: var(--radius-pill);
+    background: var(--color-brand-white);
+    color: var(--color-brand-dark) !important;
+    text-decoration: none;
+    box-shadow: 3px 3px 0 var(--color-brand-dark);
+  }
+  @media (min-width: 40em) {
+    .author-box {
+      grid-template-columns: 11rem 1fr;
+      align-items: start;
+      padding: 1.5rem;
+    }
   }
   .post-cta {
     max-width: 65ch;

@@ -6,7 +6,7 @@ export const HERO_SELECTOR = '#inicio .hero-copy > *:not([aria-hidden]), #inicio
 /** Secciones: entran al verse. Cada grupo escalona a sus hermanos directos. */
 export const GROUPS: readonly string[] = [
   '.section-head > *',
-  '.section-body > :is(ul, ol) > li',
+  '.section-body > :is(ul, ol) > li:not([data-rv-tl])',
   '.section-body > :not(:is(ul, ol))',
   '.section-cta',
   '#agenda .agenda-copy > *',
@@ -21,7 +21,7 @@ export const ATTR_SELECTOR = '[data-rv]';
 /** Línea de tiempo: el `li` coordina punto, línea y texto (`data-rv-tl`). */
 export const TIMELINE_SELECTOR = '[data-rv-tl]';
 
-export const REVEAL_ANY = [HERO_SELECTOR, ...GROUPS, ATTR_SELECTOR, '[data-rv-tl] .dot', '[data-rv-tl] .line', '[data-rv-tl] .tl-body'].join(', ');
+export const REVEAL_ANY = [HERO_SELECTOR, ...GROUPS, ATTR_SELECTOR, '[data-rv-tl] .dot', '[data-rv-tl] .line', '[data-rv-tl] .tl-body', '[data-rv-tl="h"] .step-body'].join(', ');
 
 /** Cifras de los casos: cuentan de 0 a su valor al entrar (reveal.ts). */
 export const COUNT_SELECTOR = '.metric-mark';

@@ -22,7 +22,22 @@ const TO = { opacity: 1, transform: 'none' };
  * Línea de tiempo: en cada paso el punto aparece con un rebote corto (scale), después la línea se dibuja hacia el
  * siguiente paso (scaleY desde arriba) y el texto se desliza desde la izquierda. Todo termina con `fill: backwards`.
  */
+/**
+ * Línea de tiempo horizontal del home ("Cómo trabajamos"): el disco numerado (::before) rebota, el conector discontinuo
+ * (::after) se revela con clip-path hacia el siguiente paso (de izquierda a derecha desde 64em, de arriba abajo en móvil)
+ * y el texto sube. Los pseudoelementos se animan con la opción `pseudoElement` de la Web Animations API.
+ */
+function playTimelineH(li: Element, index: number): void {
+  li.classList.add('rv-done');
+  const base = Math.min(index, MAX_STEPS) * 140;
+  const horizontal = matchMedia('(min-width: 64em)').matches;
+  li.animate([{ opacity: 0, transform: 'scale(0.4)' }, { opacity: 1, transform: 'scale(1.12)', offset: 0.7 }, { opacity: 1, transform: 'scale(1)' }], { duration: 420, delay: base, easing: EASE, fill: 'backwards', pseudoElement: '::before' });
+  li.animate([{ clipPath: horizontal ? 'inset(0 100% 0 0)' : 'inset(0 0 100% 0)' }, { clipPath: 'inset(0 0 0 0)' }], { duration: 560, delay: base + 300, easing: 'cubic-bezier(0.22, 0.61, 0.36, 1)', fill: 'backwards', pseudoElement: '::after' });
+  li.querySelector('.step-body')?.animate([FROM, TO], { duration: 420, delay: base + 160, easing: EASE, fill: 'backwards' });
+}
+
 function playTimeline(li: Element, index: number): void {
+  if ((li as HTMLElement).dataset.rvTl === 'h') return playTimelineH(li, index);
   li.classList.add('rv-done');
   const base = Math.min(index, MAX_STEPS) * 90;
   const dot = li.querySelector('.dot');
