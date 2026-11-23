@@ -24,10 +24,10 @@ const [note] = d.secciones;
       <Crumbs crumbs={crumbs} />
       <div class="grid">
         <div>
-          <h1 id="hero-title">{d.h1}</h1>
-          {paras.map((t) => <p class="sub">{t}</p>)}
+          <h1 id="hero-title" data-rv>{d.h1}</h1>
+          {paras.map((t) => <p class="sub" data-rv>{t}</p>)}
         </div>
-        <div class="note"><h2>{note.titulo}</h2><Prose text={note.cuerpo} /></div>
+        <div class="note" data-rv data-rv-index="2"><h2>{note.titulo}</h2><Prose text={note.cuerpo} /></div>
       </div>
     </div>
   </section>
@@ -36,8 +36,8 @@ const [note] = d.secciones;
     cases.items.map((c, i) => (
       <section class="band" data-tone={CASO_TONES[i]} aria-labelledby={`caso-${i}`}>
         <div class="wrap band-grid">
-          <p class="n" aria-hidden="true">{c.figure.text}</p>
-          <div>
+          <p class="n" aria-hidden="true" data-rv="count">{c.figure.text}</p>
+          <div data-rv data-rv-index="1">
             <h2 id={`caso-${i}`}><span class="sr">{c.figure.text} </span>{c.metric.text}</h2>
             <p class="meta">{c.sector.text} · {c.period.text}</p>
             {c.detail && <p class="detail">{c.detail.text}</p>}

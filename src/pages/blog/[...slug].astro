@@ -49,6 +49,7 @@ const schema = buildArticleSchema({
 ---
 
 <BaseLayout
+  reveal
   title={`${post.data.title} | Loops Growth`}
   description={post.data.description}
   path={path}
@@ -67,8 +68,8 @@ const schema = buildArticleSchema({
         </ol>
       </nav>
       <header>
-        <h1 id="post-title">{post.data.title}</h1>
-        <p class="meta">
+        <h1 id="post-title" data-rv>{post.data.title}</h1>
+        <p class="meta" data-rv>
           Por <a href={authorHref} rel="author">{author.name}</a>, {author.role}.{' '}
           <time datetime={post.data.pubDate.toISOString()}>{formatDate(post.data.pubDate)}</time>
           {post.data.updatedDate && (
@@ -82,7 +83,7 @@ const schema = buildArticleSchema({
         <div class="main-col">
           {
             toc.length > 1 && (
-              <details class="toc toc--mobile">
+              <details class="toc toc--mobile" data-rv>
                 <summary>En este artículo</summary>
                 <ol>
                   {toc.map((h) => (
@@ -95,7 +96,7 @@ const schema = buildArticleSchema({
           <div class="prose">
             <Content />
           </div>
-          <aside class="author-box" aria-label="Sobre la autora">
+          <aside class="author-box" data-rv aria-label="Sobre la autora">
             <Image src={ariPhoto} alt="" width={96} height={96} loading="lazy" decoding="async" />
             <div>
               <p class="author-name">{author.name}</p>
@@ -109,7 +110,7 @@ const schema = buildArticleSchema({
             <CtaLink label={label} location="blog" href="/#agenda" />
           </aside>
         </div>
-        <aside class="side" aria-label="Contenido y acción del artículo">
+        <aside class="side" data-rv data-rv-index="2" aria-label="Contenido y acción del artículo">
           {
             toc.length > 1 && (
               <nav class="toc toc--side" aria-labelledby="toc-title">

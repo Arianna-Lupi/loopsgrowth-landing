@@ -46,7 +46,7 @@ if (d.tipo === 'autora' && d.persona) {
 const schema = buildPageGraph(base, path, crumbs, d.faq, extra);
 ---
 
-<BaseLayout reveal={d.tipo === 'servicio' || d.tipo === 'nosotros'} title={d.title} description={d.description} path={path} noindex={d.draft} schema={schema} ogType={d.tipo === 'autora' ? 'profile' : 'website'}>
+<BaseLayout reveal title={d.title} description={d.description} path={path} noindex={d.draft} schema={schema} ogType={d.tipo === 'autora' ? 'profile' : 'website'}>
   {d.tipo === 'servicio' && <ServiceIA d={d} crumbs={crumbs} />}
   {d.tipo === 'nosotros' && <AboutPage d={d} crumbs={crumbs} />}
   {d.tipo === 'autora' && <AuthorPage d={d} crumbs={crumbs} />}

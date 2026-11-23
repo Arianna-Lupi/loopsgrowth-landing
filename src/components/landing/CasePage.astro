@@ -23,34 +23,34 @@ const others = data.cases.items.map((x, i) => ({ x, i })).filter(({ i }) => i !=
   <section class="hero" data-tone={tone} aria-labelledby="hero-title">
     <div class="wrap">
       <Crumbs crumbs={crumbs} />
-      <p class="n" aria-hidden="true">{c.figure.text}</p>
-      <h1 id="hero-title"><span class="sr">{c.figure.text} </span>{c.metric.text}</h1>
-      <p class="meta">{c.sector.text} · {c.period.text}</p>
-      <p class="actions"><CtaLink label={label} location="pagina" href="/#agenda" /></p>
+      <p class="n" aria-hidden="true" data-rv="count">{c.figure.text}</p>
+      <h1 id="hero-title" data-rv><span class="sr">{c.figure.text} </span>{c.metric.text}</h1>
+      <p class="meta" data-rv>{c.sector.text} · {c.period.text}</p>
+      <p class="actions" data-rv><CtaLink label={label} location="pagina" href="/#agenda" /></p>
     </div>
   </section>
 
   <section class="facts" data-tone="light" aria-labelledby="facts-title">
     <div class="wrap grid">
       <div>
-        <h2 id="facts-title">Qué hicimos</h2>
-        <p class="detail">{c.detail?.text}</p>
+        <h2 id="facts-title" data-rv>Qué hicimos</h2>
+        <p class="detail" data-rv>{c.detail?.text}</p>
       </div>
       <dl>
-        <div><dt>Sector</dt><dd>{c.sector.text}</dd></div>
-        <div><dt>Plazo</dt><dd>{c.period.text}</dd></div>
-        {c.channel && <div><dt>Canal</dt><dd>{c.channel.text}</dd></div>}
-        {c.pill && <div><dt>Tipo de proyecto</dt><dd>{c.pill.text}</dd></div>}
+        <div data-rv><dt>Sector</dt><dd>{c.sector.text}</dd></div>
+        <div data-rv><dt>Plazo</dt><dd>{c.period.text}</dd></div>
+        {c.channel && <div data-rv><dt>Canal</dt><dd>{c.channel.text}</dd></div>}
+        {c.pill && <div data-rv><dt>Tipo de proyecto</dt><dd>{c.pill.text}</dd></div>}
       </dl>
     </div>
   </section>
 
   <section class="others" data-tone="yellow" aria-labelledby="others-title">
     <div class="wrap">
-      <h2 id="others-title">Otros casos</h2>
+      <h2 id="others-title" data-rv>Otros casos</h2>
       <ul role="list">
         {others.map(({ x, i }) => (
-          <li><a href={casoPath(CASO_SLUGS[i])}><span class="on">{x.figure.text}</span><span class="ot">{x.metric.text}<small>{x.sector.text}</small></span></a></li>
+          <li data-rv><a href={casoPath(CASO_SLUGS[i])}><span class="on">{x.figure.text}</span><span class="ot">{x.metric.text}<small>{x.sector.text}</small></span></a></li>
         ))}
       </ul>
     </div>

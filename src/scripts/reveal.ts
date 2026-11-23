@@ -9,7 +9,7 @@
  * parte oculto por reveal.css solo mientras `html.js-reveal` existe (lo pone un script en línea del head y lo quita aquí
  * o a los 1,5 s si este módulo no llegó a ejecutarse).
  */
-import { ATTR_SELECTOR, COUNT_SELECTOR, GROUPS, HERO_SELECTOR } from './reveal-selectors';
+import { ATTR_SELECTOR, COUNT_SELECTOR, GROUPS, HERO_SELECTOR, TIMELINE_SELECTOR } from './reveal-selectors';
 
 const DURATION = 400;
 const STEP = 110;
@@ -17,6 +17,21 @@ const MAX_STEPS = 5;
 const EASE = 'cubic-bezier(0.2, 0.7, 0.2, 1)';
 const FROM = { opacity: 0, transform: 'translateY(12px)' };
 const TO = { opacity: 1, transform: 'none' };
+
+/**
+ * Línea de tiempo: en cada paso el punto aparece con un rebote corto (scale), después la línea se dibuja hacia el
+ * siguiente paso (scaleY desde arriba) y el texto se desliza desde la izquierda. Todo termina con `fill: backwards`.
+ */
+function playTimeline(li: Element, index: number): void {
+  li.classList.add('rv-done');
+  const base = Math.min(index, MAX_STEPS) * 90;
+  const dot = li.querySelector('.dot');
+  const line = li.querySelector('.line');
+  const body = li.querySelector('.tl-body');
+  dot?.animate([{ opacity: 0, transform: 'scale(0.4)' }, { opacity: 1, transform: 'scale(1.12)', offset: 0.7 }, { opacity: 1, transform: 'scale(1)' }], { duration: 420, delay: base, easing: EASE, fill: 'backwards' });
+  line?.animate([{ opacity: 1, transform: 'scaleY(0)' }, { opacity: 1, transform: 'scaleY(1)' }], { duration: 520, delay: base + 260, easing: 'cubic-bezier(0.22, 0.61, 0.36, 1)', fill: 'backwards' });
+  body?.animate([{ opacity: 0, transform: 'translateX(-14px)' }, { opacity: 1, transform: 'none' }], { duration: 420, delay: base + 140, easing: EASE, fill: 'backwards' });
+}
 
 function play(el: Element, index: number): void {
   el.classList.add('rv-done');
@@ -45,11 +60,14 @@ function countUp(el: HTMLElement, delay: number): void {
   // El ancho final se reserva antes de contar: la cifra no empuja a sus vecinas.
   el.style.display = 'inline-block';
   el.style.minWidth = `${el.offsetWidth}px`;
-  const sr = document.createElement('span');
-  sr.className = 'rv-sr';
-  sr.textContent = text;
-  el.after(sr);
-  el.setAttribute('aria-hidden', 'true');
+  // Si la cifra ya es decorativa (aria-hidden, con su valor en el título), no se duplica el texto para lectores.
+  if (el.getAttribute('aria-hidden') !== 'true') {
+    const sr = document.createElement('span');
+    sr.className = 'rv-sr';
+    sr.textContent = text;
+    el.after(sr);
+    el.setAttribute('aria-hidden', 'true');
+  }
   el.textContent = fmt(0);
   const start = performance.now() + delay;
   const total = 1400;
@@ -80,7 +98,8 @@ function run(): void {
         if (!entry.isIntersecting) continue;
         io.unobserve(entry.target);
         const index = Number((entry.target as HTMLElement).dataset.rvI ?? 0);
-        if (entry.target.matches(`${COUNT_SELECTOR}, [data-rv='count']`)) countUp(entry.target as HTMLElement, index * STEP);
+        if (entry.target.matches(TIMELINE_SELECTOR)) playTimeline(entry.target, index);
+        else if (entry.target.matches(`${COUNT_SELECTOR}, [data-rv='count']`)) countUp(entry.target as HTMLElement, index * STEP);
         else play(entry.target, index);
       }
     },
@@ -102,7 +121,7 @@ function run(): void {
   }
   // Landings: elementos marcados con data-rv. El escalón es `data-rv-i` o su orden entre los hermanos marcados.
   const marked = new Map<Element | null, Element[]>();
-  for (const el of document.querySelectorAll(ATTR_SELECTOR)) marked.set(el.parentElement, [...(marked.get(el.parentElement) ?? []), el]);
+  for (const el of document.querySelectorAll(`${ATTR_SELECTOR}, ${TIMELINE_SELECTOR}`)) marked.set(el.parentElement, [...(marked.get(el.parentElement) ?? []), el]);
   for (const els of marked.values()) {
     els.forEach((el, i) => {
       const h = el as HTMLElement;

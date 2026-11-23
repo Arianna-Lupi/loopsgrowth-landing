@@ -29,6 +29,6 @@ const description = `${c.detail?.text ?? c.metric.text} Sector: ${c.sector.text}
 const schema = buildPageGraph(base, path, crumbs, []);
 ---
 
-<BaseLayout title={title} description={description} path={path} noindex={draft} schema={schema}>
+<BaseLayout reveal title={title} description={description} path={path} noindex={draft} schema={schema}>
   <CasePage index={index} crumbs={crumbs} />
 </BaseLayout>

@@ -15,7 +15,7 @@ import { fileURLToPath } from 'node:url';
 //   4. Sin `line-height` con `!important` (el espaciado de texto del usuario debe poder ganar, SC 1.4.12).
 //   5. Los únicos `<script` de `src` son el de `AgendaSection.astro` y los dos de `RevealScripts.astro` (entradas por scroll:
 //      script en línea del head y módulo `reveal.ts`, prueba de Juan del 2026-11-23). `src/scripts` solo contiene
-//      `cta-focus.ts`, `lead-form.ts`, `reveal.ts` y `reveal-selectors.ts`.
+//      `cta-focus.ts`, `lead-form.ts`, `reveal.ts`, `reveal-selectors.ts` y `accordion.ts`.
 // Cada regla se prueba por mutación con cadenas sintéticas: una regla que no muerde es una regla falsa.
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
@@ -25,7 +25,7 @@ export const RAW_HTML_ALLOW = [];
 /** Cantidad de `<script` permitida por archivo. */
 export const SCRIPT_ALLOW = { 'src/components/AgendaSection.astro': 1, 'src/components/RevealScripts.astro': 2 };
 /** Únicos archivos permitidos dentro de `src/scripts`. */
-export const SCRIPTS_DIR_ALLOW = ['src/scripts/cta-focus.ts', 'src/scripts/lead-form.ts', 'src/scripts/reveal.ts', 'src/scripts/reveal-selectors.ts'];
+export const SCRIPTS_DIR_ALLOW = ['src/scripts/cta-focus.ts', 'src/scripts/lead-form.ts', 'src/scripts/reveal.ts', 'src/scripts/reveal-selectors.ts', 'src/scripts/accordion.ts'];
 
 const RAW_HTML_RE = /\bset:html\b|\binnerHTML\b|\bdangerouslySetInnerHTML\b/;
 const HEX_RE = /#(?:[0-9a-fA-F]{8}|[0-9a-fA-F]{6}|[0-9a-fA-F]{4}|[0-9a-fA-F]{3})(?![\w-])/g;
@@ -207,7 +207,7 @@ test('regla 5: un <script> fuera de AgendaSection, o uno de más dentro, se marc
   assert.deepEqual(rulesOf(agenda, ''), [5]);
 });
 
-test('regla 5: src/scripts solo admite los cuatro archivos permitidos', () => {
+test('regla 5: src/scripts solo admite los cinco archivos permitidos', () => {
   assert.deepEqual(rulesOf('src/scripts/cta-focus.ts', 'export {};'), []);
   assert.deepEqual(rulesOf('src/scripts/lead-form.ts', 'export {};'), []);
   assert.deepEqual(rulesOf('src/scripts/otro.ts', 'export {};'), [5]);

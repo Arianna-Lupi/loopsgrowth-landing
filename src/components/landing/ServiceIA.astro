@@ -101,9 +101,10 @@ const steps = data.how_it_works.steps;
       <ol class="tl" role="list">
         {
           steps.map((st: any, i: number) => (
-            <li data-rv>
+            <li data-rv-tl>
               <span class="dot" aria-hidden="true">{i + 1}</span>
-              <div>
+              {i < steps.length - 1 && <span class="line" aria-hidden="true"></span>}
+              <div class="tl-body">
                 <h3>{st.title.text}</h3>
                 <p>{st.description.text}</p>
                 <span class="when">{st.timeframe.text}</span>
@@ -178,8 +179,7 @@ const steps = data.how_it_works.steps;
   .tl-grid { display: grid; gap: 2.5rem; }
   .tl { display: grid; gap: 0; margin: 0; padding: 0; list-style: none; position: relative; }
   .tl li { position: relative; display: grid; grid-template-columns: 3rem 1fr; gap: 1rem; padding-bottom: 2rem; }
-  .tl li::before { content: ''; position: absolute; left: 1.4375rem; top: 3rem; bottom: 0; width: 3px; background: var(--color-brand-dark); }
-  .tl li:last-child::before { display: none; }
+  .line { position: absolute; left: 1.4375rem; top: 3rem; bottom: 0; width: 3px; background: var(--color-brand-dark); transform-origin: top center; }
   .dot { display: grid; place-items: center; width: 3rem; height: 3rem; border: var(--border-pop); border-radius: 50%; background: var(--color-brand-yellow); font-weight: 700; font-variant-numeric: tabular-nums; }
   .tl h3 { margin-bottom: 0.25rem; }
   .when { display: inline-flex; margin-top: 0.5rem; padding: 0.125rem 0.75rem; border-radius: var(--radius-pill); background: var(--color-brand-cream); font-size: var(--text-label); font-weight: 600; }

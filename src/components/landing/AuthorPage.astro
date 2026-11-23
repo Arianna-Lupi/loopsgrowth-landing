@@ -30,7 +30,7 @@ const links = d.persona.sameAs.map((u: string) => ({ href: u, text: u.includes('
     <div class="wrap">
       <Crumbs crumbs={crumbs} />
       <div class="grid">
-        <aside class="card">
+        <aside class="card" data-rv>
           <div class:list={['photo', `photo--${bg}`]}><Image src={portrait} alt={`Retrato de ${d.persona.nombre}`} width={480} height={480} loading="eager" /></div>
           <p class="role">{d.persona.cargo}</p>
           <ul role="list" aria-label="Dónde encontrarla">
@@ -39,16 +39,16 @@ const links = d.persona.sameAs.map((u: string) => ({ href: u, text: u.includes('
           <p class="cta"><CtaLink label={label} location="pagina" href="/#agenda" /></p>
         </aside>
         <div class="main">
-          <h1 id="hero-title">{d.h1}</h1>
-          {paras.map((t, i) => <p class:list={['sub', i > 0 && 'more']}>{t}</p>)}
+          <h1 id="hero-title" data-rv>{d.h1}</h1>
+          {paras.map((t, i) => <p data-rv class:list={['sub', i > 0 && 'more']}>{t}</p>)}
           {
             d.trayectoria && (
               <ol class="path" role="list" aria-label="Trayectoria">
-                {d.trayectoria.map((t: any) => (<li><strong>{t.titulo}</strong><span>{t.texto}</span></li>))}
+                {d.trayectoria.map((t: any) => (<li data-rv><strong>{t.titulo}</strong><span>{t.texto}</span></li>))}
               </ol>
             )
           }
-          {d.secciones.map((s: any) => (<div class="block"><h2>{s.titulo}</h2><Prose text={s.cuerpo} /></div>))}
+          {d.secciones.map((s: any) => (<div class="block" data-rv><h2>{s.titulo}</h2><Prose text={s.cuerpo} /></div>))}
         </div>
       </div>
     </div>
@@ -58,10 +58,10 @@ const links = d.persona.sameAs.map((u: string) => ({ href: u, text: u.includes('
     posts.length > 0 && (
       <section class="posts" data-tone="yellow" aria-labelledby="posts-title">
         <div class="wrap">
-          <h2 id="posts-title">Artículos de {d.persona.nombre}</h2>
+          <h2 id="posts-title" data-rv>Artículos de {d.persona.nombre}</h2>
           <ul role="list">
             {posts.map((p) => (
-              <li>
+              <li data-rv>
                 <a href={`/blog/${p.id}/`}><span class="pt">{p.data.title}</span><span class="pd">{formatDate(p.data.pubDate)}</span></a>
               </li>
             ))}

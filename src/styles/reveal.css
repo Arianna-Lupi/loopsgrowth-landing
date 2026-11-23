@@ -17,7 +17,8 @@
   html.js-reveal #agenda .agenda-copy > *:not(.rv-done),
   html.js-reveal #faq .faq-item:not(.rv-done),
   html.js-reveal #faq > .wrap > h2:not(.rv-done),
-  html.js-reveal [data-rv]:not(.rv-done) {
+  html.js-reveal [data-rv]:not(.rv-done),
+  html.js-reveal [data-rv-tl]:not(.rv-done) :is(.dot, .line, .tl-body) {
     opacity: 0;
   }
 

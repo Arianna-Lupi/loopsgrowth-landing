@@ -21,6 +21,7 @@ const schema = {
 ---
 
 <BaseLayout
+  reveal
   title="Blog de SEO y GEO: Loops Growth"
   description="Guías de SEO y GEO escritas por Arianna Lupi para marcas y negocios que quieren crecer en Google y en asistentes de IA."
   path="/blog/"
@@ -36,14 +37,14 @@ const schema = {
           <li aria-current="page">Blog</li>
         </ol>
       </nav>
-      <h1 id="blog-title">Blog</h1>
+      <h1 id="blog-title" data-rv>Blog</h1>
       {
         posts.length === 0 ? (
           <p class="empty">Estamos preparando las primeras guías. Vuelve pronto.</p>
         ) : (
           <ul class="post-list" role="list">
             {posts.map((post) => (
-              <li>
+              <li data-rv>
                 <article class="post-card">
                   <h2>
                     <a href={`/blog/${post.id}/`}>{post.data.title}</a>
