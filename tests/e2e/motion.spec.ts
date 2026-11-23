@@ -158,9 +158,13 @@ test.describe('entrada del collage del hero con no-preference', () => {
       const live = await motionSnapshot(page);
       expect(live.length).toBeGreaterThan(0);
       for (const e of live) {
-        expect(e.type, e.target).toBe('CSSAnimation');
         expect(e.allowed, `${e.name} sobre ${e.target}`).toBe(true);
-        expect(e.properties, e.target).toEqual(['transform']);
+        // Collage y pupilas: CSSAnimation solo con transform. Entradas del hero (reveal.ts): Web Animations API con opacity y transform.
+        if (e.type === 'Animation') expect([...e.properties].sort(), e.target).toEqual(['opacity', 'transform']);
+        else {
+          expect(e.type, e.target).toBe('CSSAnimation');
+          expect(e.properties, e.target).toEqual(['transform']);
+        }
       }
       await page.waitForTimeout(2500);
       await expectNoMotion(page);
@@ -324,7 +328,7 @@ test.describe('pupilas del hero con no-preference', () => {
     test(`a ${vp.width} px la dirección --look-dx/--look-dy apunta hacia el CTA del hero (producto punto mayor que 0)`, async ({ page }) => {
       await page.setViewportSize(vp);
       await page.goto('/');
-      await page.waitForFunction(() => document.getAnimations().length === 0, null, { timeout: 5000 });
+      await page.waitForFunction(() => (window as unknown as { __rvReady?: boolean }).__rvReady === true && document.getAnimations().length === 0, null, { timeout: 5000 });
       const data = await page.evaluate(() => {
         const cta = document.querySelector('#inicio a[data-cta="hero"]')!.getBoundingClientRect();
         const c = { x: cta.x + cta.width / 2, y: cta.y + cta.height / 2 };

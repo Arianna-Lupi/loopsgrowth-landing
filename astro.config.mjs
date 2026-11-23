@@ -64,6 +64,8 @@ export default defineConfig({
   ],
   vite: {
     plugins: [tailwindcss()],
+    // Los scripts de la página (entradas del home, formulario) salen como archivos y no inflan el HTML de `/` (presupuesto de peso).
+    build: { assetsInlineLimit: 0 },
   },
   fonts: [
     {

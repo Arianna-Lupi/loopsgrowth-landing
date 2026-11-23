@@ -64,7 +64,7 @@ async function open(page: Page, width: number) {
   await page.setViewportSize({ width, height: 900 });
   await page.goto('/');
   // Las geometrías se miden en reposo: la entrada del hero (02-07) dura 1 s y mueve las piezas mientras corre.
-  await page.waitForFunction(() => document.getAnimations().length === 0, null, { timeout: 5000 });
+  await page.waitForFunction(() => (window as unknown as { __rvReady?: boolean }).__rvReady === true && document.getAnimations().length === 0, null, { timeout: 5000 });
 }
 
 test.describe('escenas: lenguaje del moodboard', () => {

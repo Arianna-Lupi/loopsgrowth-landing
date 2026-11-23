@@ -17,7 +17,7 @@ async function open(page: Page, width: number, height = 900) {
   await page.setViewportSize({ width, height });
   await page.goto('/');
   // Las geometrías se miden en reposo: la entrada del hero (02-07) dura 1 s y mueve las piezas mientras corre.
-  await page.waitForFunction(() => document.getAnimations().length === 0, null, { timeout: 5000 });
+  await page.waitForFunction(() => (window as unknown as { __rvReady?: boolean }).__rvReady === true && document.getAnimations().length === 0, null, { timeout: 5000 });
 }
 /** Recorre la página en pasos para disparar las cargas diferidas y espera a que todas las img terminen. */
 async function scrollThrough(page: Page) {

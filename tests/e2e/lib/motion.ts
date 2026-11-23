@@ -1,4 +1,5 @@
 import { expect, type Page } from '@playwright/test';
+import { REVEAL_ANY } from '../../../src/scripts/reveal-selectors';
 
 // Política de movimiento compartida por los specs (plan 02-07, DSGN-05). No es un spec: Playwright
 // solo corre `*.spec.ts`. Un único lugar dice qué animaciones puede tener la página y cómo se miden.
@@ -9,7 +10,7 @@ import { expect, type Page } from '@playwright/test';
 // - `/privacidad/` y `/marca/hoja/` no tienen ninguna con ninguna preferencia.
 
 export type AllowedMotion = {
-  type: 'CSSAnimation' | 'CSSTransition';
+  type: 'CSSAnimation' | 'CSSTransition' | 'Animation';
   /** `animationName` (CSSAnimation) o `transitionProperty` (CSSTransition). */
   names: string[];
   /** Selector que debe cumplir el elemento animado. */
@@ -23,6 +24,8 @@ export const MOTION_ALLOWLIST: AllowedMotion[] = [
   { type: 'CSSAnimation', names: ['hc-enter'], selector: '#inicio [data-piece], #inicio [data-piece-of]', properties: ['transform'] },
   // Las dos pupilas del Loopy oficial miran hacia el CTA una sola vez.
   { type: 'CSSAnimation', names: ['hc-look'], selector: '#inicio .hc-pupil, #inicio [data-pupil]', properties: ['transform'] },
+  // Entradas del home (src/scripts/reveal.ts, prueba de Juan 2026-11-23): Web Animations API, opacity y transform, finitas.
+  { type: 'Animation', names: [''], selector: REVEAL_ANY, properties: ['opacity', 'transform'] },
   // Icono del FAQ: la barra vertical rota al abrir.
   { type: 'CSSTransition', names: ['transform'], selector: '.faq-icon-v', properties: ['transform'] },
   // Hover del CTA y del enlace de respaldo del formulario (fase 1).

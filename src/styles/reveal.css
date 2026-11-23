@@ -1,0 +1,37 @@
+/*
+ * Estado inicial de las entradas del home (src/scripts/reveal.ts). Todo lo que reveal.ts anima parte oculto, para que
+ * no haya parpadeo (un elemento visible que desaparece y luego entra). Solo con `html.js-reveal` (lo pone un script en
+ * línea del head cuando hay IntersectionObserver y movimiento permitido) y con `prefers-reduced-motion: no-preference`.
+ * reveal.ts marca cada elemento con `.rv-done` justo antes de animarlo, así que el ocultamiento deja de aplicar en ese
+ * instante. Si el módulo no llega a ejecutarse, el script en línea retira la clase a los 1,5 s y todo se ve. Sin
+ * JavaScript o con `reduce` nada se oculta. Este archivo no declara animation ni transition: anima la Web Animations API.
+ * Los selectores son los de `reveal-selectors.ts` (los compara tests/guards/reveal.test.mjs).
+ */
+@media (prefers-reduced-motion: no-preference) {
+  html.js-reveal #inicio .hero-copy > *:not([aria-hidden]):not(.rv-done),
+  html.js-reveal #inicio .hero-clients:not(.rv-done),
+  html.js-reveal .section-head > *:not(.rv-done),
+  html.js-reveal .section-body > :is(ul, ol) > li:not(.rv-done),
+  html.js-reveal .section-body > :not(:is(ul, ol)):not(.rv-done),
+  html.js-reveal .section-cta:not(.rv-done),
+  html.js-reveal #agenda .agenda-copy > *:not(.rv-done),
+  html.js-reveal #faq .faq-item:not(.rv-done),
+  html.js-reveal #faq > .wrap > h2:not(.rv-done) {
+    opacity: 0;
+  }
+
+  /* Cifras que cuentan: invisibles hasta que empieza el conteo, para no mostrar el valor final antes. */
+  html.js-reveal .metric-mark:not(.rv-done) {
+    visibility: hidden;
+  }
+}
+
+/* Texto para lectores de pantalla con el valor final mientras la cifra visible cuenta. */
+.rv-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
