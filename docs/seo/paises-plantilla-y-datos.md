@@ -3,14 +3,15 @@
 Estado: BORRADOR para Ari. La plantilla está implementada y no genera ninguna página, porque hoy no existe contenido único y verdadero para ningún país.
 Fecha: 2026-11-16.
 
-## Cómo funciona
+## Cómo funciona (actualizado el 2026-11-23, estrategia de Ari)
 
-- Un archivo `src/content/paises/<pais>.yaml` por país. Sin archivo no hay página, y sin país publicado tampoco hay hub `/agencia-seo/`.
-- Campos obligatorios: `nombre`, `title`, `description`, `h1`, `intro` (250 caracteres o más), `secciones` (mínimo 3, de 350 caracteres o más cada una) y `hechos` (mínimo 3, cada uno con fuente https).
-- `draft` nace en `true`. Para publicar hace falta `draft: false` y `reviewedBy` con la aprobación de Ari.
-- El texto compartido entre países vive en `src/lib/pais-template.json` y se mantiene corto (tres frases).
-- Autocanonical y breadcrumbs en cada página. Schema: BreadcrumbList y Service con `areaServed` del país. Nunca LocalBusiness ni dirección.
-- Sitemap: solo páginas publicadas. Un país en borrador sale `noindex` y no entra en producción.
+- URLs: país plano `/agencia-seo-<pais>/` y ciudad anidada `/agencia-seo-<pais>/<ciudad>/`. Sin hub `/agencia-seo/`.
+- Un archivo `src/content/paises/<pais>.yaml` por país (`tipo: pais`) y `<pais>-<ciudad>.yaml` por ciudad (`tipo: ciudad`, `pais`, `ciudad`). Sin archivo no hay página. Una ciudad sin su país publicado no se genera ni se publica (regla HUERFANA).
+- Campos: `nombre`, `title`, `description`, `h1`, `intro` (250 caracteres o más), `secciones` (mínimo 3, 350 caracteres o más cada una), `hechos` (cada uno con fuente https; la guarda exige 3 para publicar, los borradores pueden traer cero), `faq` y `pendientes` (nunca se muestra).
+- `draft` nace en `true`. Para publicar hace falta `draft: false` y `reviewedBy` con la aprobación de Ari. En producción un borrador no se genera.
+- Texto compartido entre páginas: `src/lib/pais-template.json`, tres frases.
+- Schema: BreadcrumbList, Organization (areaServed VE y LATAM, sin address), Service con `areaServed` (Country o City) y FAQPage. Nunca LocalBusiness, dirección, mapa ni Google Business.
+- Colombia (`/agencia-seo-colombia/`) queda condicionada al mes 3 y a tener cliente o caso allá: no se crea. Chile y México, después de febrero.
 
 ## Guarda `npm run check:programmatic` (corre en `prebuild`)
 
@@ -34,10 +35,4 @@ Sin esto no se escribe la página. Ninguna fila se rellena por inferencia.
 | Particularidades del mercado que ella conozca (cómo busca la gente, plataformas, pagos, regulación) con fuente | Hechos con fuente | Pendiente |
 | Si hay un caso real y permiso para citarlo | Sección de ejemplo | Pendiente. Hasta entonces, ninguno |
 
-Lote 1 (decidido por Juan, 2026-11-16): hub, Venezuela (ancla), Colombia, Chile y México. Argentina y Perú quedan fuera. No se genera ninguna página hasta que Ari entregue los datos de cada país.
-
-## Pendiente de decisión
-
-- La frase compartida "Loops Growth ofrece SEO y GEO para negocios de {pais}" necesita aprobación de Ari.
-- Decidido: la URL de Venezuela es `/agencia-seo/venezuela/` y México entra al lote 1.
-- La etiqueta "Blog" del pie la confirmó Ari por mensaje relayado. En `landing.es.yaml` sigue `pending` hasta que ella la apruebe en el doc, para no marcar `verified` sin fuente directa.
+Lote de diciembre: Venezuela (ancla) y Caracas. El resto, según la condición de arriba.

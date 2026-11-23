@@ -1,0 +1,70 @@
+# Borrador para Ari. Estructura de la columna "Page idea" de la hoja Content Strategy (17-nov-2026).
+# Sin precios, sin garantía, sin cifras ni casos inventados. Publicar exige draft: false y reviewedBy.
+tipo: servicio
+ruta: /servicios/posicionamiento-en-ia/
+nombre: Posicionamiento en IA
+draft: true
+title: "Posicionamiento en IA: aparece en ChatGPT, Gemini y Google"
+description: "Servicio de posicionamiento en IA: trabajamos para que ChatGPT, Gemini y Google encuentren y consideren tu negocio. Auditoría, entregables y medición."
+h1: "Posicionamiento en IA: aparece en ChatGPT, Gemini y Google"
+intro: |
+  Cada vez más personas le preguntan a un asistente de IA a quién contratar o qué comprar, en lugar de recorrer una lista de enlaces. El posicionamiento en IA es el trabajo para que esos asistentes encuentren tu negocio, lo entiendan y lo consideren como fuente cuando respondan.
+
+  En Loops Growth lo trabajamos junto con tu SEO, como una sola estrategia en español para empresas de Venezuela y de LATAM.
+secciones:
+  - titulo: Qué es el posicionamiento en IA
+    cuerpo: |
+      Es el conjunto de acciones que ayudan a que ChatGPT, Gemini y las respuestas de IA de Google conozcan tu negocio y puedan mencionarlo o citarlo. Se conoce también como GEO (optimización para motores generativos) y AEO (optimización para motores de respuestas). Son nombres distintos para el mismo objetivo: aparecer dentro de la respuesta, no solo en una lista de resultados.
+
+      Para el que busca, la diferencia es simple. En un buscador clásico compara diez enlaces. En un asistente recibe una respuesta ya armada, con pocas marcas nombradas. Si tu negocio no está en esa respuesta, esa persona no llega a conocerte.
+  - titulo: Cómo decide un asistente a quién mencionar
+    cuerpo: |
+      Un asistente responde con lo que aprendió y, cuando tiene acceso a la web, con las páginas que consulta en ese momento. Mencionar a un negocio depende de que encuentre información clara sobre él y de que varias fuentes coincidan en lo que dicen.
+
+      Por eso el trabajo no consiste en un truco. Consiste en que tu sitio se pueda leer, en que explique con claridad qué haces y para quién, y en que haya menciones tuyas en lugares que el asistente considera confiables. Cada plataforma decide con sus propios criterios, y esos criterios cambian.
+  - titulo: Qué incluye el servicio
+    cuerpo: |
+      - Auditoría de visibilidad en IA: revisamos qué dicen hoy los asistentes sobre tu negocio y frente a tus competidores.
+      - Rastreadores de IA: comprobamos que los rastreadores que usan estas plataformas puedan leer tus páginas importantes.
+      - Entidad y schema: dejamos claro quién eres, qué ofreces y dónde, con datos estructurados que coincidan con lo que muestra tu web.
+      - Contenido citable: páginas y artículos que responden preguntas reales de tus clientes, con respuestas directas y autoría visible.
+      - Menciones: trabajo de autoridad para que fuentes confiables hablen de tu negocio.
+      - Medición mensual: una batería fija de prompts que repetimos cada mes en los mismos asistentes.
+  - titulo: Cómo trabajamos
+    cuerpo: |
+      Empezamos con una llamada para entender tu negocio y tu punto de partida. Después hacemos la auditoría y presentamos una propuesta con las oportunidades priorizadas, el alcance y la inversión según esa auditoría. Con tu aprobación, ejecutamos mes a mes: técnica, contenido y autoridad.
+
+      Compartimos el avance por escrito y lo revisamos contigo por videollamada.
+  - titulo: Cómo medimos el avance
+    cuerpo: |
+      Definimos una batería fija de preguntas que haría un cliente antes de comprarte. Cada mes las repetimos en ChatGPT, Gemini y las respuestas de IA de Google, y registramos si te mencionan, si te citan y qué fuentes aparecen.
+
+      Las respuestas de un asistente cambian de una consulta a otra. Por eso miramos la tendencia a lo largo de los meses y no una sola respuesta. Esta medición convive con tus métricas de SEO en Search Console y en tu analítica.
+  - titulo: SEO e IA en una sola estrategia
+    cuerpo: |
+      Gran parte de la base es la misma: un sitio rápido y rastreable, páginas claras para cada servicio, contenido útil y señales de confianza. Por eso no armamos dos proyectos separados. Cada pieza que publicamos busca servir a Google y a los asistentes de IA a la vez.
+casos:
+  texto: "Los resultados de los clientes de Loops Growth viven en un solo lugar, en la sección de casos de la home:"
+  ancla: "ver los casos"
+faq:
+  - pregunta: "¿Pueden asegurar que ChatGPT me recomiende?"
+    respuesta: |
+      No. Nadie puede asegurarlo, porque cada asistente decide con sus propios criterios y esos criterios cambian. Lo que hacemos es aumentar las razones por las que un asistente te conozca, te encuentre y te considere como fuente, y medir cada mes si eso se refleja.
+  - pregunta: "¿Qué diferencia hay entre posicionamiento en IA, GEO y AEO?"
+    respuesta: |
+      En la práctica, ninguna. Son nombres para el mismo trabajo: lograr que los asistentes de IA mencionen y citen tu negocio. Usamos posicionamiento en IA porque es la forma en que la mayoría lo busca en español.
+  - pregunta: "¿Necesito SEO si ya quiero aparecer en la IA?"
+    respuesta: |
+      Sí, y se trabajan juntos. Un sitio que Google no puede rastrear o entender tampoco es fácil de leer para un asistente. Por eso tratamos SEO y posicionamiento en IA como una sola estrategia.
+  - pregunta: "¿Cuánto tarda en verse el avance?"
+    respuesta: |
+      Es un trabajo de medio y largo plazo, igual que el SEO. Nuestro plan se piensa en un horizonte de 6 a 12 meses: primero las bases, después el crecimiento y con el tiempo se acumula.
+  - pregunta: "¿Cuál es la inversión?"
+    respuesta: |
+      La inversión depende de la auditoría. Después de analizar tu negocio y tus oportunidades, presentamos una propuesta con el alcance, las prioridades y la inversión. No trabajamos con un paquete idéntico para todos.
+pendientes:
+  - "Ari: aprobar el texto completo (la estrategia aprobó la estructura de la columna Page idea, no la redacción)."
+  - "Ari: confirmar que los seis entregables de 'Qué incluye' coinciden con lo que Loops ejecuta hoy."
+  - "Ari: confirmar el flujo 'llamada, auditoría, propuesta, ejecución mensual' y que el avance se comparte por escrito y por videollamada."
+  - "Ari: confirmar que la batería de prompts se mide cada mes en ChatGPT, Gemini y las respuestas de IA de Google."
+  - "Decisión pendiente: la FAQ de inversión sigue la regla 'inversión según auditoría' y no menciona cifras."

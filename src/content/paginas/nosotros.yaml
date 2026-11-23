@@ -1,0 +1,36 @@
+# Borrador para Ari. Solo datos ya publicados en la home (sección Quiénes somos) y en la hoja de estrategia.
+tipo: nosotros
+ruta: /nosotros/
+nombre: Nosotros
+draft: true
+title: "Nosotros: el equipo de Loops Growth, agencia SEO en LATAM"
+description: "Conoce al equipo de Loops Growth, una agencia SEO para LATAM que ejecuta tu SEO y tu posicionamiento en IA. Fundada por Arianna Lupi, con más de 8 años en SEO."
+h1: "Nosotros: el equipo de Loops Growth"
+intro: |
+  Loops Growth es un equipo ágil especializado en crecimiento orgánico a través de Google y de plataformas de IA. Trabajamos en español con negocios de Venezuela y de LATAM.
+
+  Combinamos experiencia, ejecución rigurosa y un contacto directo que responde por el resultado. No entregamos recomendaciones para desaparecer: hacemos el trabajo.
+secciones:
+  - titulo: Quién dirige Loops Growth
+    cuerpo: |
+      Arianna Lupi es la fundadora y estratega SEO de Loops Growth. Tiene más de 8 años de experiencia en SEO y es fundadora de aprendoclub, una academia de SEO y marketing. Ella define la estrategia y firma los artículos del blog.
+
+      Puedes leer su perfil completo en su página de autora y encontrarla en LinkedIn.
+  - titulo: El equipo
+    cuerpo: |
+      - Arianna Lupi, fundadora y estratega SEO.
+      - Verónica Romero, directora de proyectos.
+      - Juan Carlos Angulo, director técnico.
+      - Miguel Pacheco, especialista SEO.
+  - titulo: Cómo trabajamos
+    cuerpo: |
+      Funcionamos como tu equipo interno de crecimiento: analizamos tu negocio, definimos la estrategia, priorizamos oportunidades y ejecutamos el trabajo técnico, de contenido y de autoridad. Cada mes compartimos qué se hizo y qué se movió.
+
+      Trabajamos de forma remota, por videollamada y con reportes escritos.
+casos:
+  texto: "Los resultados de nuestros clientes están en la sección de casos de la home:"
+  ancla: "ver los casos"
+pendientes:
+  - "Ari: confirmar el cargo de Miguel Pacheco (la home lo muestra como especialista SEO) y que su nombre puede aparecer en esta página."
+  - "Ari: confirmar si quiere una foto del equipo en esta página (hoy no se usa ninguna)."
+  - "Ari: la hoja pide confirmar si /nosotros/ cuenta como pieza de capacidad."

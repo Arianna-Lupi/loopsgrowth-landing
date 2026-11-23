@@ -1,9 +1,21 @@
-# Borradores de los primeros 5 artículos del blog de Loops Growth
+# Borradores de artículos para enero y febrero de 2027 (material de partida)
 
-Estado: borrador para que Ari revise y firme. Nada de esto está publicado ni en la colección del blog.
-Fecha: 2026-11-16. Cada borrador pasa a `src/content/blog/<slug>.md` solo con la aprobación escrita de Ari (`draft: false` y `reviewedBy`).
+Estado: material de partida, NO publicable. Nada de esto está en la colección del blog. Actualizado el 2026-11-23 tras la estrategia de 3 meses de Ari (hoja "Estrategia 3 Meses").
+Los artículos de diciembre salieron de este archivo o se escribieron de nuevo y viven en `src/content/blog/` como borrador (`draft: true`): `agencia-seo-vs-especialista-seo` y `como-aparecer-en-chatgpt`.
 
-`PENDING-COPY.md` del repo se genera con `npm run pending` desde `landing.es.yaml` y no se edita a mano, así que los borradores viven en este archivo.
+## Mapa de slugs (borrador previo a slug de la hoja de Ari)
+
+| Borrador previo | Slug de la hoja | Mes | Estado |
+| --- | --- | --- | --- |
+| Qué es GEO | `/blog/que-es-posicionamiento-en-ia/` | 2 (enero) | Pendiente de aprobación de Ari. Reescribir titulando primero "posicionamiento en IA", con GEO y AEO desambiguados |
+| SEO para IA: la guía | `/blog/seo-para-ia/` | 2 (enero) | Pendiente de aprobación de Ari. Pilar P1 |
+| Qué es AEO | sin slug en la hoja | | Se absorbe en `que-es-posicionamiento-en-ia`. No se publica por separado |
+| Posicionamiento en ChatGPT | `/blog/como-aparecer-en-chatgpt/` | 1 (diciembre) | Ya reescrito y en la colección como borrador |
+| GEO vs SEO | `/blog/seo-vs-geo-vs-aeo/` | 3 (febrero) | Pendiente de aprobación de Ari |
+| (sin borrador) | `/blog/como-elegir-agencia-seo/` | 2 (enero) | Falta escribirlo. Pilar P2 |
+| (sin borrador) | `/blog/como-aparecer-en-la-ia-de-google/` | 3 (febrero) | Falta escribirlo. Citar solo fuentes primarias de Google |
+
+Los meses 2 y 3 quedan pendientes de aprobación de Ari. No se escribe nada de ellos para publicar hasta que ella los apruebe.
 
 ## Reglas aplicadas
 
@@ -11,17 +23,17 @@ Fecha: 2026-11-16. Cada borrador pasa a `src/content/blog/<slug>.md` solo con la
 - Ningún texto promete aparecer en ChatGPT, Gemini o Google. Todos dicen que nadie lo puede garantizar.
 - Sin rayas largas ni cortas. Español neutro con tuteo.
 - Enlaces internos: las páginas `/servicios/geo-aeo/`, `/servicios/seo/` y `/mejor-agencia-seo/` aún no existen. Se marcan como [ENLACE PENDIENTE] y no se publican hasta que existan.
-- Una frase, una página: cada artículo responde una sola pregunta y apunta al pilar `seo-para-ia-guia`. Contrata no publica nada sobre GEO.
+- Una frase, una página: cada artículo responde una sola pregunta y apunta al pilar `seo-para-ia`. Contrata no publica nada sobre GEO.
 
 ## Orden de publicación propuesto (de `calendar.md`)
 
 | Orden | Slug | Frase principal | Semana del calendario |
 | --- | --- | --- | --- |
-| 1 | `que-es-geo-optimizacion-para-motores-generativos` | que es geo | 3 |
-| 2 | `seo-para-ia-guia` | seo para ia | 4 |
+| 1 | `que-es-posicionamiento-en-ia` | que es geo | 3 |
+| 2 | `seo-para-ia` | seo para ia | 4 |
 | 3 | `que-es-aeo` | que es aeo | 4 |
-| 4 | `posicionamiento-en-chatgpt` | posicionamiento en chatgpt | 6 |
-| 5 | `geo-vs-seo` | geo vs seo | 7 |
+| 4 | `como-aparecer-en-chatgpt` | posicionamiento en chatgpt | 6 |
+| 5 | `seo-vs-geo-vs-aeo` | geo vs seo | 7 |
 
 Antes de publicar el 1 hay que revisar la SERP de "que es geo" en México y Colombia por el ruido de geografía (pendiente S6).
 
@@ -29,17 +41,17 @@ Antes de publicar el 1 hay que revisar la SERP de "que es geo" en México y Colo
 
 ## 1. Qué es GEO
 
-- Slug: `/blog/que-es-geo-optimizacion-para-motores-generativos/`
+- Slug: `/blog/que-es-posicionamiento-en-ia/`
 - Title (49): Qué es GEO: optimización para motores generativos
 - Meta description (133): GEO es el trabajo para que ChatGPT, Gemini y Google mencionen y recomienden tu marca. Qué es, en qué se parece al SEO y cómo empezar.
 - Palabra clave: que es geo (absorbe "qué es geo seo")
-- Cluster: L2. Satélite del pilar `seo-para-ia-guia`.
+- Cluster: L2. Satélite del pilar `seo-para-ia`.
 
 # Qué es GEO: optimización para motores generativos
 
 GEO significa Generative Engine Optimization, en español optimización para motores generativos. Es el trabajo que hace una marca para que asistentes como ChatGPT, Gemini, Perplexity y las respuestas con IA de Google la mencionen, la citen o la recomienden cuando alguien hace una pregunta.
 
-Este artículo explica qué es, qué cambia frente al SEO tradicional y por dónde empezar. Si buscas la visión general de cómo se relaciona todo esto con el SEO, la tienes en [la guía de SEO para IA] [ENLACE PENDIENTE: /blog/seo-para-ia-guia/].
+Este artículo explica qué es, qué cambia frente al SEO tradicional y por dónde empezar. Si buscas la visión general de cómo se relaciona todo esto con el SEO, la tienes en [la guía de SEO para IA] [ENLACE PENDIENTE: /blog/seo-para-ia/].
 
 ## Qué es un motor generativo
 
@@ -82,7 +94,7 @@ Cierre de autoría: firma Arianna Lupi. Revisión de Ari: pendiente.
 
 ## 2. SEO para IA: la guía
 
-- Slug: `/blog/seo-para-ia-guia/`
+- Slug: `/blog/seo-para-ia/`
 - Title (51): SEO para IA: guía para aparecer en respuestas de IA
 - Meta description (132): Cómo adaptar tu SEO para que Google, ChatGPT y otros asistentes de IA entiendan tu marca y la citen. Qué hacer primero y qué evitar.
 - Palabra clave: seo para ia
@@ -102,10 +114,10 @@ No sabemos cuánto tráfico mueve esto en tu sector. Por eso conviene medirlo an
 
 | Pregunta | Guía |
 | --- | --- |
-| ¿Qué es GEO? | [Qué es GEO] [ENLACE PENDIENTE: /blog/que-es-geo-optimizacion-para-motores-generativos/] |
+| ¿Qué es GEO? | [Qué es GEO] [ENLACE PENDIENTE: /blog/que-es-posicionamiento-en-ia/] |
 | ¿Qué es AEO y en qué se diferencia? | [Qué es AEO] [ENLACE PENDIENTE: /blog/que-es-aeo/] |
-| ¿GEO reemplaza al SEO? | [GEO vs SEO] [ENLACE PENDIENTE: /blog/geo-vs-seo/] |
-| ¿Cómo hago para que ChatGPT me mencione? | [Posicionamiento en ChatGPT] [ENLACE PENDIENTE: /blog/posicionamiento-en-chatgpt/] |
+| ¿GEO reemplaza al SEO? | [GEO vs SEO] [ENLACE PENDIENTE: /blog/seo-vs-geo-vs-aeo/] |
+| ¿Cómo hago para que ChatGPT me mencione? | [Posicionamiento en ChatGPT] [ENLACE PENDIENTE: /blog/como-aparecer-en-chatgpt/] |
 
 ## Qué sí funciona hoy
 
@@ -158,7 +170,7 @@ Cuando alguien pregunta algo concreto, como "cuánto tarda en cargar una web" o 
 
 AEO pone el foco en la respuesta puntual a una pregunta. GEO pone el foco en que los motores generativos conozcan tu marca y la recomienden. Los dos términos se solapan y la industria no los usa de forma uniforme. En la práctica, el trabajo se parece mucho: contenido claro, fuentes confiables y un sitio sano.
 
-Para el panorama completo, lee [la guía de SEO para IA] [ENLACE PENDIENTE: /blog/seo-para-ia-guia/]. Si quieres una definición más amplia del otro término, mira [qué es GEO] [ENLACE PENDIENTE: /blog/que-es-geo-optimizacion-para-motores-generativos/].
+Para el panorama completo, lee [la guía de SEO para IA] [ENLACE PENDIENTE: /blog/seo-para-ia/]. Si quieres una definición más amplia del otro término, mira [qué es GEO] [ENLACE PENDIENTE: /blog/que-es-posicionamiento-en-ia/].
 
 ## Un límite honesto
 
@@ -170,7 +182,7 @@ Cierre de autoría: firma Arianna Lupi. Revisión de Ari: pendiente.
 
 ## 4. Posicionamiento en ChatGPT
 
-- Slug: `/blog/posicionamiento-en-chatgpt/`
+- Slug: `/blog/como-aparecer-en-chatgpt/`
 - Title (51): Cómo aparecer en ChatGPT: qué puedes hacer y qué no
 - Meta description (137): Nadie puede garantizar que ChatGPT recomiende tu marca. Esto sí puedes hacer para que te conozca, te cite y te nombre con más frecuencia.
 - Palabra clave: posicionamiento en chatgpt (absorbe "cómo aparecer en chatgpt")
@@ -202,7 +214,7 @@ Un asistente responde con lo que aprendió durante su entrenamiento y, cuando ti
 
 Cada mes, haz a ChatGPT y a otros asistentes las preguntas que haría un cliente antes de comprarte. Anota si te nombran, qué dicen y qué fuentes aparecen. Los resultados cambian de una consulta a otra, así que mira la tendencia y no una sola respuesta.
 
-Esta guía hace parte de [SEO para IA] [ENLACE PENDIENTE: /blog/seo-para-ia-guia/]. Si quieres apoyo, mira [cómo trabajamos GEO y AEO] [ENLACE PENDIENTE: /servicios/geo-aeo/].
+Esta guía hace parte de [SEO para IA] [ENLACE PENDIENTE: /blog/seo-para-ia/]. Si quieres apoyo, mira [cómo trabajamos GEO y AEO] [ENLACE PENDIENTE: /servicios/geo-aeo/].
 
 Cierre de autoría: firma Arianna Lupi. Revisión de Ari: pendiente.
 
@@ -210,7 +222,7 @@ Cierre de autoría: firma Arianna Lupi. Revisión de Ari: pendiente.
 
 ## 5. GEO vs SEO
 
-- Slug: `/blog/geo-vs-seo/`
+- Slug: `/blog/seo-vs-geo-vs-aeo/`
 - Title (42): GEO vs SEO: en qué se parecen y qué cambia
 - Meta description (139): GEO y SEO comparten la base y cambian en el objetivo, el formato y la medición. Una comparación clara para decidir dónde poner tu esfuerzo.
 - Palabra clave: geo vs seo
@@ -246,7 +258,7 @@ Sin un sitio sano no hay SEO ni GEO. Un contenido útil, bien organizado y con a
 - Si tu categoría ya se consulta mucho en asistentes de IA, suma el trabajo de GEO sobre esa base.
 - Si no tienes ninguna de las dos cosas, la base de SEO es lo primero.
 
-Mira el panorama completo en [la guía de SEO para IA] [ENLACE PENDIENTE: /blog/seo-para-ia-guia/] y las definiciones en [qué es GEO] [ENLACE PENDIENTE: /blog/que-es-geo-optimizacion-para-motores-generativos/].
+Mira el panorama completo en [la guía de SEO para IA] [ENLACE PENDIENTE: /blog/seo-para-ia/] y las definiciones en [qué es GEO] [ENLACE PENDIENTE: /blog/que-es-posicionamiento-en-ia/].
 
 Cierre de autoría: firma Arianna Lupi. Revisión de Ari: pendiente.
 

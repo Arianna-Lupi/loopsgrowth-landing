@@ -11,6 +11,7 @@ import { getPosts, formatDate, AUTHORS } from '../../lib/blog';
 import { buildArticleSchema } from '../../lib/seo';
 import { siteUrl } from '../../lib/site';
 import { getLanding, ctaLabel } from '../../lib/content';
+import { getLivePaths } from '../../lib/paginas';
 
 export async function getStaticPaths() {
   const posts = await getPosts();
@@ -20,6 +21,9 @@ export async function getStaticPaths() {
 const { post } = Astro.props;
 const { Content } = await render(post);
 const author = AUTHORS[post.data.author];
+// Con la página de autora en este build, la firma y el schema apuntan a ella; si no, al sitio de Ari.
+const authorPage = (await getLivePaths()).has('/equipo/arianna-lupi/') ? '/equipo/arianna-lupi/' : undefined;
+const authorHref = authorPage ?? author.url;
 const path = `/blog/${post.id}/`;
 const data = await getLanding();
 const label = ctaLabel(data);
@@ -31,7 +35,7 @@ const schema = buildArticleSchema({
   datePublished: post.data.pubDate,
   dateModified: post.data.updatedDate,
   authorName: author.name,
-  authorUrl: author.url,
+  authorUrl: authorPage ? new URL(authorPage, siteUrl).href : author.url,
   breadcrumbs: [
     { name: 'Inicio', path: '/' },
     { name: 'Blog', path: '/blog/' },
@@ -61,7 +65,7 @@ const schema = buildArticleSchema({
       <header>
         <h1 id="post-title">{post.data.title}</h1>
         <p class="meta">
-          Por <a href={author.url} rel="author">{author.name}</a>, {author.role}.
+          Por <a href={authorHref} rel="author">{author.name}</a>, {author.role}.
           <time datetime={post.data.pubDate.toISOString()}>{formatDate(post.data.pubDate)}</time>
           {post.data.updatedDate && (
             <>
@@ -136,6 +140,27 @@ const schema = buildArticleSchema({
   }
   .prose :global(li) {
     margin-block: 0.5rem;
+  }
+  .prose :global(table) {
+    display: block;
+    max-width: 100%;
+    margin-block: 1.5rem;
+    overflow-x: auto;
+    border-collapse: collapse;
+    font-size: var(--text-label);
+  }
+  .prose :global(th),
+  .prose :global(td) {
+    min-width: 9rem;
+    padding: 0.5rem 0.75rem;
+    border: 2px solid var(--color-brand-dark);
+    text-align: left;
+    vertical-align: top;
+  }
+  .prose :global(a) {
+    color: var(--link);
+    text-decoration: underline;
+    text-underline-offset: 4px;
   }
   .post-cta {
     max-width: 65ch;
