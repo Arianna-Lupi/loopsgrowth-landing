@@ -1,0 +1,109 @@
+---
+/**
+ * Un acordeón del FAQ: `<details>` nativo con su icono de más y menos. Único componente de pregunta para el home
+ * (`sections/Faq.astro`, textos del YAML con LangText) y para las landings (`landing/Faq.astro`, textos de cada página con
+ * enlaces en línea). Cada uno pasa la pregunta y la respuesta por sus slots. Ganchos de `motion.css` y de las pruebas:
+ * `faq-item`, `faq-summary`, `faq-answer`, `faq-icon` y `faq-icon-v`. La altura la anima `src/scripts/accordion.ts`.
+ */
+interface Props { tone?: 'light' }
+const { tone = 'light' } = Astro.props;
+---
+
+<details class="faq-item" data-tone={tone}>
+  <summary class="faq-summary">
+    <span class="faq-question"><slot name="question" /></span>
+    <svg class="faq-icon" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false">
+      <circle class="faq-icon-disc" cx="12" cy="12" r="10.5" />
+      <path d="M7 12h10" />
+      <path class="faq-icon-v" d="M12 7v10" />
+    </svg>
+  </summary>
+  <div class="faq-answer"><slot /></div>
+</details>
+
+<style>
+  .faq-item {
+    border: var(--border-pop);
+    border-radius: var(--radius-card);
+    background: var(--color-brand-cream);
+    box-shadow: var(--shadow-pop);
+    overflow: visible;
+  }
+
+  .faq-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    min-height: var(--target-min);
+    padding: 1rem;
+    list-style: none;
+    cursor: pointer;
+  }
+
+  .faq-summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq-question {
+    min-width: 0;
+    font-weight: 700;
+    overflow-wrap: anywhere;
+  }
+
+  .faq-icon {
+    flex: none;
+    fill: none;
+    stroke: var(--on-surface);
+    stroke-width: 2.5;
+    stroke-linecap: round;
+  }
+
+  .faq-icon-disc {
+    fill: var(--color-brand-white);
+    stroke-width: 2;
+  }
+
+  .faq-summary:hover .faq-icon-disc {
+    fill: var(--color-brand-yellow);
+  }
+
+  /* La barra vertical gira sobre su propio centro: la misma barra (10 de largo, mismo trazo) queda
+     encima de la horizontal y el plus queda como minus. La transición vive en `motion.css`. */
+  .faq-icon-v {
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+
+  .faq-item[open] .faq-icon-v {
+    transform: rotate(90deg);
+  }
+
+  /* Anillo dentro de la tarjeta: el offset negativo suma el ancho del trazo y el desfase estándar. */
+  .faq-summary:focus-visible {
+    outline: var(--focus-width) solid var(--focus-ring);
+    outline-offset: calc(-1 * (var(--focus-width) + var(--focus-offset)));
+    border-radius: calc(var(--radius-card) - 3px);
+  }
+
+  .faq-answer {
+    padding: 1rem;
+    border-top: var(--border-pop);
+    min-width: 0;
+  }
+
+  .faq-answer p {
+    overflow-wrap: anywhere;
+  }
+
+  .faq-answer :global(.prose p:last-child) {
+    margin-bottom: 0;
+  }
+
+  @media (min-width: 40em) {
+    .faq-summary,
+    .faq-answer {
+      padding: 1.5rem;
+    }
+  }
+</style>
