@@ -22,6 +22,19 @@ secciones:
       Un asistente responde con lo que aprendió y, cuando tiene acceso a la web, con las páginas que consulta en ese momento. Mencionar a un negocio depende de que encuentre información clara sobre él y de que varias fuentes coincidan en lo que dicen.
 
       Por eso el trabajo no consiste en un truco. Consiste en que tu sitio se pueda leer, en que explique con claridad qué haces y para quién, y en que haya menciones tuyas en lugares que el asistente considera confiables. Cada plataforma decide con sus propios criterios, y esos criterios cambian.
+
+      Si tu empresa está en Venezuela, mira cómo trabajamos como [agencia SEO en Venezuela](/agencia-seo-venezuela/).
+chat:
+  pregunta: "¿Qué agencia SEO me recomiendas para mi tienda online?"
+  filas:
+    - nombre: Otra marca del sector
+      estado: Mencionada
+    - nombre: Tu marca
+      estado: Citada
+      tu: true
+    - nombre: Otro proveedor
+      estado: Mencionado
+  nota: Ejemplo ilustrativo. No es una respuesta real de ningún asistente.
 etapas:
   - titulo: Encontrado
     texto: El asistente puede leer tus páginas cuando busca en la web.
@@ -55,9 +68,6 @@ medicion:
     - Si te cita como fuente
     - Qué otras fuentes y marcas aparecen
     - Cómo cambia la tendencia mes a mes
-casos:
-  texto: "Los resultados de los clientes de Loops Growth viven en un solo lugar, en la sección de casos de la home:"
-  ancla: "ver los casos"
 faq:
   - pregunta: "¿Pueden asegurar que ChatGPT me recomiende?"
     respuesta: |
@@ -67,7 +77,7 @@ faq:
       En la práctica, ninguna. Son nombres para el mismo trabajo: lograr que los asistentes de IA mencionen y citen tu negocio. Usamos posicionamiento en IA porque es la forma en que la mayoría lo busca en español.
   - pregunta: "¿Necesito SEO si ya quiero aparecer en la IA?"
     respuesta: |
-      Sí, y se trabajan juntos. Un sitio que Google no puede rastrear o entender tampoco es fácil de leer para un asistente. Por eso tratamos SEO y posicionamiento en IA como una sola estrategia.
+      Sí, y se trabajan juntos. Un sitio que Google no puede rastrear o entender tampoco es fácil de leer para un asistente. Por eso [Arianna Lupi](/equipo/arianna-lupi/) y su equipo tratan SEO y posicionamiento en IA como una sola estrategia.
   - pregunta: "¿Cuánto tarda en verse el avance?"
     respuesta: |
       Es un trabajo de medio y largo plazo, igual que el SEO. Nuestro plan se piensa en un horizonte de 6 a 12 meses: primero las bases, después el crecimiento y con el tiempo se acumula.

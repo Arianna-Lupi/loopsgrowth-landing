@@ -1,0 +1,36 @@
+---
+/** FAQ en `<details>` nativos, sin JavaScript. `side` pone el título a la izquierda desde 64em. */
+import Prose from './Prose.astro';
+interface Props { items: { pregunta: string; respuesta: string }[]; tone?: 'light' | 'yellow' | 'dark'; title?: string; side?: boolean }
+const { items, tone = 'light', title = 'Preguntas frecuentes', side = true } = Astro.props;
+---
+
+{
+  items.length > 0 && (
+    <section class="faq" data-tone={tone} aria-labelledby="faq-title">
+      <div class:list={['wrap', side && 'side']}>
+        <h2 id="faq-title">{title}</h2>
+        <div class="list">
+          {items.map((f) => (
+            <details>
+              <summary>{f.pregunta}</summary>
+              <Prose text={f.respuesta} />
+            </details>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+<style>
+  .faq { padding-block: var(--section-y); }
+  .faq h2 { margin-bottom: 1.5rem; letter-spacing: -0.02em; max-width: 14ch; }
+  .list { display: grid; gap: 0.75rem; min-width: 0; }
+  details { border-radius: var(--radius-card); background: var(--color-brand-cream); color: var(--color-brand-dark); box-shadow: 0 0 0 1px rgb(33 33 33 / 0.12), 0 8px 24px rgb(0 0 0 / 0.06); }
+  summary { display: flex; align-items: center; min-height: var(--target-min); padding: 0.75rem 1rem; font-weight: 700; cursor: pointer; }
+  summary:focus-visible { outline: var(--focus-width) solid var(--focus-ring); outline-offset: var(--focus-offset); }
+  details[open] summary { color: var(--color-brand-purple); }
+  details :global(.prose) { padding: 0 1rem 1rem; }
+  @media (min-width: 64em) { .side { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: 2rem; align-items: start; } }
+</style>

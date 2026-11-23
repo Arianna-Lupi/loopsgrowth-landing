@@ -1,14 +1,14 @@
 ---
 /**
- * Página de ciudad `/agencia-seo-<pais>/<ciudad>/`. Contenido local único y verdadero o no se genera.
- * SIN dirección, mapa, LocalBusiness con address ni ficha de Google Business: Loops no tiene oficina.
- * El schema es Service con `areaServed` de tipo City dentro del país. Sin la página del país publicada,
- * la ciudad no se genera (evita una página huérfana).
+ * Página de ciudad `/agencia-seo-<pais>/<ciudad>/`. Contenido local único y verdadero o no se genera. SIN dirección,
+ * mapa, LocalBusiness con address ni ficha de Google Business: Loops no tiene oficina. El schema es Service con
+ * `areaServed` de tipo City dentro del país. Sin la página del país en el build, la ciudad no se genera (sin huérfanas).
  */
-import LandingPage from '../../components/LandingPage.astro';
-import { getPaises, PAIS_TEMPLATE } from '../../lib/paises';
-import { paisPath, relatedLinks } from '../../lib/paginas';
-import { buildOrganization } from '../../lib/seo';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import CityPage from '../../components/landing/CityPage.astro';
+import { getPaises } from '../../lib/paises';
+import { paisPath } from '../../lib/paginas';
+import { buildOrganization, buildPageGraph } from '../../lib/seo';
 import { getLanding } from '../../lib/content';
 import { siteUrl } from '../../lib/site';
 
@@ -26,42 +26,13 @@ const base = siteUrl.replace(/\/+$/, '');
 const path = paisPath(ciudad);
 const padre = (await getPaises()).find((p) => p.id === d.pais)!;
 const landing = await getLanding();
-const relacionados = [
-  { href: paisPath(padre), label: `agencia SEO en ${padre.data.nombre}`, texto: 'Mira la página de' },
-  ...(await relatedLinks(['servicio', 'autora'])),
-];
-const intro = `${PAIS_TEMPLATE.servicio_intro.replace('{pais}', d.nombre)}\n\n${d.intro}`;
-const graph = [
+const crumbs = [{ name: 'Inicio', path: '/' }, { name: `Agencia SEO en ${padre.data.nombre}`, path: paisPath(padre) }, { name: d.nombre, path }];
+const schema = buildPageGraph(base, path, crumbs, d.faq, [
   buildOrganization(landing, base),
-  {
-    '@type': 'Service',
-    '@id': `${base}${path}#service`,
-    name: d.h1,
-    serviceType: 'SEO y posicionamiento en IA',
-    provider: { '@id': `${base}/#organization` },
-    areaServed: { '@type': 'City', name: d.nombre, containedInPlace: { '@type': 'Country', name: padre.data.nombre } },
-    url: `${base}${path}`,
-  },
-];
+  { '@type': 'Service', '@id': `${base}${path}#service`, name: d.h1, serviceType: 'SEO y posicionamiento en IA', provider: { '@id': `${base}/#organization` }, areaServed: { '@type': 'City', name: d.nombre, containedInPlace: { '@type': 'Country', name: padre.data.nombre } }, url: `${base}${path}` },
+]);
 ---
 
-<LandingPage
-  kind="ciudad"
-  title={d.title}
-  description={d.description}
-  path={path}
-  noindex={d.draft}
-  h1={d.h1}
-  intro={intro}
-  secciones={d.secciones}
-  hechos={d.hechos}
-  faq={d.faq}
-  casos={{ texto: 'Los resultados de nuestros clientes están en un solo lugar:', ancla: 'casos en la home' }}
-  crumbs={[
-    { name: 'Inicio', path: '/' },
-    { name: `Agencia SEO en ${padre.data.nombre}`, path: paisPath(padre) },
-    { name: d.nombre, path },
-  ]}
-  relacionados={relacionados}
-  graph={graph}
-/>
+<BaseLayout title={d.title} description={d.description} path={path} noindex={d.draft} schema={schema}>
+  <CityPage d={d} crumbs={crumbs} paisName={padre.data.nombre} paisPath={paisPath(padre)} />
+</BaseLayout>

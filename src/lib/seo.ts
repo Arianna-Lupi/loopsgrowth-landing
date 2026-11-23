@@ -235,3 +235,27 @@ export function buildPerson(p: PersonSchemaParams): Record<string, unknown> {
     worksFor: { '@id': `${base}/#organization` },
   };
 }
+
+/** Grafo de una página de contenido: BreadcrumbList, nodos extra y FAQPage solo si hay preguntas reales. */
+export function buildPageGraph(
+  base: string,
+  path: string,
+  crumbs: BreadcrumbItem[],
+  faq: { pregunta: string; respuesta: string }[],
+  extra: Record<string, unknown>[] = [],
+): Record<string, unknown> {
+  const url = `${base.replace(/\/+$/, '')}${path}`;
+  const nodes: Record<string, unknown>[] = [buildBreadcrumb(base, crumbs, url), ...extra];
+  if (faq.length > 0) {
+    nodes.push({
+      '@type': 'FAQPage',
+      '@id': `${url}#faq`,
+      mainEntity: faq.map((f) => ({
+        '@type': 'Question',
+        name: f.pregunta,
+        acceptedAnswer: { '@type': 'Answer', text: f.respuesta.replace(/\s*\n+\s*/g, ' ') },
+      })),
+    });
+  }
+  return { '@context': 'https://schema.org', '@graph': nodes };
+}

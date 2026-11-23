@@ -254,6 +254,13 @@ const pais = defineCollection({
       // Sin mínimo en el esquema: los borradores aún no traen hechos con fuente. La guarda exige 3 para publicar.
       hechos: z.array(z.strictObject({ dato: z.string().min(20), fuente: z.url({ protocol: /^https$/ }) })).default([]),
       faq: z.array(faqItem).default([]),
+      /** País: ciudades que se mencionan; `pagina: true` solo si existe su página propia. */
+      ciudades: z.array(z.strictObject({ nombre: z.string().min(3), pagina: z.boolean().default(false) })).default([]),
+      /** País: cómo se trabaja a distancia (3 bloques cortos). */
+      remoto_titulo: z.string().min(5).optional(),
+      remoto: z.array(z.strictObject({ titulo: z.string().min(3), texto: z.string().min(20) })).default([]),
+      /** Ciudad: qué se revisa en esa ciudad (lista corta con marca de verificación). */
+      senales: z.array(z.string().min(10)).default([]),
       pendientes: z.array(z.string().min(5)).default([]),
     })
     .refine((d) => d.draft || d.reviewedBy, { message: 'Publicar una página de país o ciudad requiere reviewedBy (Ari).', path: ['reviewedBy'] })
@@ -286,6 +293,16 @@ const paginas = defineCollection({
       entregables: z.array(z.strictObject({ titulo: z.string().min(5), texto: z.string().min(30) })).min(4).max(6).optional(),
       /** Servicio: cómo se mide, con la lista de lo que se registra cada mes. */
       medicion: z.strictObject({ titulo: z.string().min(5), cuerpo: z.string().min(80), registro: z.array(z.string().min(5)).min(3) }).optional(),
+      /** Servicio: ventana de chat ilustrativa del hero. */
+      chat: z
+        .strictObject({
+          pregunta: z.string().min(10),
+          filas: z.array(z.strictObject({ nombre: z.string().min(3), estado: z.string().min(3), tu: z.boolean().default(false) })).min(2),
+          nota: z.string().min(10),
+        })
+        .optional(),
+      /** Autora: trayectoria en hitos cortos (solo datos confirmados). */
+      trayectoria: z.array(z.strictObject({ titulo: z.string().min(3), texto: z.string().min(10) })).optional(),
       /** Nosotros: muestra los retratos del equipo (los de la home). */
       equipo: z.boolean().default(false),
       faq: z.array(faqItem).default([]),

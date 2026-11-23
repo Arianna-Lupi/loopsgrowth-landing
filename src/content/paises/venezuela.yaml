@@ -16,14 +16,28 @@ secciones:
       Nuestro trabajo en Venezuela parte de una pregunta práctica: con qué palabras busca tu cliente a un proveedor como tú y qué respuestas encuentra hoy. A partir de ahí ordenamos qué páginas necesita tu web, qué debe explicar cada una y qué señales de confianza faltan.
   - titulo: Qué hacemos por empresas de Venezuela
     cuerpo: |
-      Combinamos dos frentes en una sola estrategia. El primero es el SEO: la parte técnica de tu web, el contenido que responde lo que tus clientes preguntan y la autoridad hacia tu sitio. El segundo es el posicionamiento en IA: lograr que ChatGPT, Gemini y las respuestas de IA de Google puedan encontrar y considerar tu negocio.
+      Combinamos dos frentes en una sola estrategia. El primero es el SEO: la parte técnica de tu web, el contenido que responde lo que tus clientes preguntan y la autoridad hacia tu sitio. El segundo es el [posicionamiento en IA](/servicios/posicionamiento-en-ia/): lograr que ChatGPT, Gemini y las respuestas de IA de Google puedan encontrar y considerar tu negocio.
 
       Cada mes compartimos qué se hizo y qué se movió. La inversión se define según la auditoría de tu caso, no con un paquete igual para todos.
-  - titulo: Trabajo remoto, sin importar la ciudad
+  - titulo: Una sola estrategia para todo el país
     cuerpo: |
       Trabajamos por videollamada y compartimos el avance por escrito, así que no necesitas estar cerca de nosotros ni nosotros de ti. Esto aplica a empresas de Caracas, Valencia, Maracaibo, Barquisimeto y cualquier otra ciudad del país.
 
-      Para quien está en la capital preparamos una página aparte, con lo que cambia al competir en esa ciudad. Las demás ciudades se atienden con esta misma estrategia, sin páginas propias.
+      Para quien está en la capital preparamos la página de [agencia SEO en Caracas](/agencia-seo-venezuela/caracas/), con lo que cambia al competir en esa ciudad. Las demás ciudades se atienden con esta misma estrategia, sin páginas propias.
+remoto_titulo: Trabajo remoto, sin importar la ciudad
+ciudades:
+  - nombre: Caracas
+    pagina: true
+  - nombre: Valencia
+  - nombre: Maracaibo
+  - nombre: Barquisimeto
+remoto:
+  - titulo: Por videollamada
+    texto: La primera llamada y las revisiones siguientes se hacen por videollamada, sin traslados.
+  - titulo: Avance por escrito
+    texto: Cada mes compartimos por escrito qué se hizo y qué se movió, para que lo revises con tu equipo.
+  - titulo: Misma estrategia en todo el país
+    texto: Atendemos negocios de Caracas, Valencia, Maracaibo, Barquisimeto y del resto de Venezuela.
 faq:
   - pregunta: "¿Trabajan con empresas de Venezuela aunque estén en otra ciudad?"
     respuesta: |

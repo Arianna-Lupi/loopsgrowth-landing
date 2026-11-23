@@ -1,0 +1,38 @@
+---
+/** Cierre con la CTA única de la plantilla y un visual de marca. Un solo botón relleno. */
+import { Image } from 'astro:assets';
+import CtaLink from '../CtaLink.astro';
+import { getLanding, ctaLabel } from '../../lib/content';
+import ojo from '../../assets/brand/ojo-18-blanco.svg';
+import ojoAmarillo from '../../assets/brand/ojo-21-amarillo.svg';
+
+interface Props { tone?: 'purple' | 'yellow' | 'dark'; title: string; text: string }
+const { tone = 'purple', title, text } = Astro.props;
+const label = ctaLabel(await getLanding());
+---
+
+<section class="closing" data-tone={tone} aria-labelledby="closing-title">
+  <div class="wrap row">
+    <div>
+      <h2 id="closing-title">{title}</h2>
+      <p>{text}</p>
+      <p class="cta"><CtaLink label={label} location="pagina" href="/#agenda" /></p>
+    </div>
+    <div class:list={['art', tone === 'yellow' ? 'art--purple' : 'art--yellow']} aria-hidden="true">
+      <Image src={tone === 'dark' ? ojoAmarillo : ojo} alt="" width={200} height={200} />
+    </div>
+  </div>
+</section>
+
+<style>
+  .closing { padding-block: var(--section-y); }
+  .row { display: grid; gap: 2rem; align-items: center; }
+  h2 { max-width: 20ch; margin-bottom: 1rem; letter-spacing: -0.02em; }
+  p { max-width: 52ch; }
+  .cta { margin-top: 1.5rem; }
+  .art { display: grid; place-items: center; width: 100%; max-width: 13rem; aspect-ratio: 1; border: var(--border-pop); border-radius: var(--radius-card); box-shadow: var(--shadow-pop); }
+  .art--yellow { background: var(--color-brand-yellow); }
+  .art--purple { background: var(--color-brand-purple); }
+  .art :global(img) { width: 72%; height: 72%; object-fit: contain; }
+  @media (min-width: 48em) { .row { grid-template-columns: 1fr 13rem; } }
+</style>
