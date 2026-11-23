@@ -35,49 +35,49 @@ const steps = data.how_it_works.steps;
       <Crumbs crumbs={crumbs} />
       <div class="hero-grid">
         <div>
-          <h1 id="hero-title">{d.h1}</h1>
-          {paras.map((t, i) => <p class:list={['sub', i > 0 && 'more']}>{t}</p>)}
-          <p class="actions"><CtaLink label={label} location="pagina" href="/#agenda" /></p>
+          <h1 id="hero-title" data-rv>{d.h1}</h1>
+          {paras.map((t, i) => <p data-rv class:list={['sub', i > 0 && 'more']}>{t}</p>)}
+          <p class="actions" data-rv><CtaLink label={label} location="pagina" href="/#agenda" /></p>
         </div>
         <ul class="mosaic" role="list">
-          {team.map((m) => (<li><Image src={m.src} alt={`Retrato de ${m.name}`} width={240} height={240} loading="eager" /></li>))}
+          {team.map((m) => (<li data-rv><Image src={m.src} alt={`Retrato de ${m.name}`} width={240} height={240} loading="eager" /></li>))}
         </ul>
       </div>
-      <div class="logos-wrap"><Logos /></div>
+      <div class="logos-wrap" data-rv><Logos /></div>
     </div>
   </section>
 
   <section class="lead" data-tone="dark" aria-labelledby="lead-title">
     <div class="wrap lead-grid">
-      <h2 id="lead-title">{lead.titulo}</h2>
-      <Prose text={lead.cuerpo} />
+      <h2 id="lead-title" data-rv>{lead.titulo}</h2>
+      <div data-rv data-rv-index="1"><Prose text={lead.cuerpo} /></div>
     </div>
   </section>
 
   <section class="split" data-tone="light" aria-labelledby="how-title">
     <div class="wrap split-grid">
       <div>
-        <h2 id="how-title">{how.titulo}</h2>
-        <Prose text={how.cuerpo} />
+        <h2 id="how-title" data-rv>{how.titulo}</h2>
+        <div data-rv data-rv-index="1"><Prose text={how.cuerpo} /></div>
       </div>
-      <div class="art" aria-hidden="true"><Image src={isotipo} alt="" width={240} height={240} /></div>
+      <div class="art" data-rv aria-hidden="true"><Image src={isotipo} alt="" width={240} height={240} /></div>
     </div>
   </section>
 
   <section class="steps-sec" data-tone="light" aria-labelledby="proc-title">
     <div class="wrap">
-      <h2 id="proc-title">{data.how_it_works.title.text}</h2>
+      <h2 id="proc-title" data-rv>{data.how_it_works.title.text}</h2>
       <ol class="steps" role="list">
-        {steps.map((st, i) => (<li><span class="n" aria-hidden="true">{i + 1}</span><h3>{st.title.text}</h3><p>{st.description.text}</p><span class="pill">{st.timeframe.text}</span></li>))}
+        {steps.map((st, i) => (<li data-rv><span class="n" aria-hidden="true">{i + 1}</span><h3>{st.title.text}</h3><p>{st.description.text}</p><span class="pill">{st.timeframe.text}</span></li>))}
       </ol>
     </div>
   </section>
 
   <section class="people-sec" data-tone="dark" aria-labelledby="team-title">
     <div class="wrap">
-      <h2 id="team-title">{data.team.title.text}</h2>
+      <h2 id="team-title" data-rv>{data.team.title.text}</h2>
       <ul class="people" role="list">
-        {team.map((m, i) => (<li><Image src={m.src} alt={`Retrato de ${m.name}`} width={240} height={240} loading="lazy" decoding="async" />{personHref(i) ? <a href={personHref(i)}><strong>{m.name}</strong><span class="role"> {m.role}</span></a> : <strong>{m.name}</strong>}{!personHref(i) && <span>{m.role}</span>}</li>))}
+        {team.map((m, i) => (<li data-rv><Image src={m.src} alt={`Retrato de ${m.name}`} width={240} height={240} loading="lazy" decoding="async" />{personHref(i) ? <a href={personHref(i)}><strong>{m.name}</strong><span class="role"> {m.role}</span></a> : <strong>{m.name}</strong>}{!personHref(i) && <span>{m.role}</span>}</li>))}
       </ul>
     </div>
   </section>

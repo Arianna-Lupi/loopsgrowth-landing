@@ -32,16 +32,16 @@ const steps = data.how_it_works.steps;
       <Crumbs crumbs={crumbs} />
       <div class="hero-grid">
         <div>
-          <h1 id="hero-title">{d.h1}</h1>
-          <p class="sub">{sub.kind === 'p' ? sub.text : ''}</p>
-          <p class="actions"><CtaLink label={label} location="pagina" href="/#agenda" /><a class="link" href="#etapas">Cómo funciona</a></p>
+          <h1 id="hero-title" data-rv>{d.h1}</h1>
+          <p class="sub" data-rv>{sub.kind === 'p' ? sub.text : ''}</p>
+          <p class="actions" data-rv><CtaLink label={label} location="pagina" href="/#agenda" /><a class="link" href="#etapas">Cómo funciona</a></p>
         </div>
         {
           d.chat && (
-            <div class="chat" role="img" aria-label="Conversación con un asistente de IA: otras marcas mencionadas y la tuya citada">
+            <div class="chat" data-rv data-rv-index="1" role="img" aria-label="Conversación con un asistente de IA: otras marcas mencionadas y la tuya citada">
               <div class="chat-bar" aria-hidden="true"><span></span><span></span><span></span></div>
-              <p class="bubble bubble--user">{d.chat.pregunta}</p>
-              <div class="bubble bubble--ai">
+              <p class="bubble bubble--user" data-rv data-rv-index="3">{d.chat.pregunta}</p>
+              <div class="bubble bubble--ai" data-rv data-rv-index="4">
                 <ol>
                   {d.chat.filas.map((f: any) => (
                     <li class:list={[f.tu && 'you']}><span>{f.nombre}</span><em>{f.estado}</em></li>
@@ -52,22 +52,22 @@ const steps = data.how_it_works.steps;
           )
         }
       </div>
-      <div class="logos-wrap"><Logos /></div>
+      <div class="logos-wrap" data-rv data-rv-index="2"><Logos /></div>
     </div>
   </section>
 
   <section id="etapas" class="funnel" data-tone="light" aria-labelledby="que-title">
     <div class="wrap">
       <div class="funnel-head">
-        <h2 id="que-title">{que.titulo}</h2>
-        <Prose text={que.cuerpo} />
+        <h2 id="que-title" data-rv>{que.titulo}</h2>
+        <div data-rv data-rv-index="1"><Prose text={que.cuerpo} /></div>
       </div>
       <ol class="bars" role="list" aria-label="Etapas de visibilidad en una respuesta de IA">
         {
           d.etapas.map((e: any, i: number) => (
             <li style={`--w:${100 - i * 17}%`}>
-              <span class="bar"><b>{i + 1}</b><strong>{e.titulo}</strong></span>
-              <span class="bar-text">{e.texto}</span>
+              <span class="bar" data-rv="grow" data-rv-index={String(i)}><b>{i + 1}</b><strong>{e.titulo}</strong></span>
+              <span class="bar-text" data-rv data-rv-index={String(i)}>{e.texto}</span>
             </li>
           ))
         }
@@ -77,11 +77,11 @@ const steps = data.how_it_works.steps;
 
   <section class="bento-sec" data-tone="yellow" aria-labelledby="ent-title">
     <div class="wrap">
-      <h2 id="ent-title">Qué incluye el servicio</h2>
+      <h2 id="ent-title" data-rv>Qué incluye el servicio</h2>
       <ul class="bento" role="list">
         {
           d.entregables.map((e: any, i: number) => (
-            <li class={`b b${i + 1}`}>
+            <li data-rv class={`b b${i + 1}`}>
               {i === 0 && <Image class="b-art" src={ojoAmarillo} alt="" width={96} height={96} aria-hidden="true" />}
               <h3>{e.titulo}</h3>
               <p>{e.texto}</p>
@@ -95,13 +95,13 @@ const steps = data.how_it_works.steps;
   <section class="timeline" data-tone="light" aria-labelledby="proc-title">
     <div class="wrap tl-grid">
       <div class="tl-head">
-        <h2 id="proc-title">{data.how_it_works.title.text}</h2>
-        <Prose text={decide.cuerpo} />
+        <h2 id="proc-title" data-rv>{data.how_it_works.title.text}</h2>
+        <div data-rv data-rv-index="1"><Prose text={decide.cuerpo} /></div>
       </div>
       <ol class="tl" role="list">
         {
           steps.map((st: any, i: number) => (
-            <li>
+            <li data-rv>
               <span class="dot" aria-hidden="true">{i + 1}</span>
               <div>
                 <h3>{st.title.text}</h3>
@@ -118,13 +118,13 @@ const steps = data.how_it_works.steps;
   <section class="measure" data-tone="dark" aria-labelledby="med-title">
     <div class="wrap m-grid">
       <div>
-        <h2 id="med-title">{d.medicion.titulo}</h2>
-        <Prose text={d.medicion.cuerpo} />
+        <h2 id="med-title" data-rv>{d.medicion.titulo}</h2>
+        <div data-rv data-rv-index="1"><Prose text={d.medicion.cuerpo} /></div>
       </div>
-      <div class="table" role="img" aria-label="Tabla mensual de medición">
+      <div class="table" data-rv role="img" aria-label="Tabla mensual de medición">
         <div class="t-head"><Image src={isotipo} alt="" width={48} height={48} aria-hidden="true" /><strong>Batería mensual de prompts</strong></div>
         <ul role="list">
-          {d.medicion.registro.map((r: string, i: number) => (<li><span class="t-n">{i + 1}</span>{r}</li>))}
+          {d.medicion.registro.map((r: string, i: number) => (<li data-rv><span class="t-n">{i + 1}</span>{r}</li>))}
         </ul>
       </div>
     </div>
@@ -161,7 +161,7 @@ const steps = data.how_it_works.steps;
   .funnel-head { display: grid; gap: 1.5rem; margin-bottom: 2.5rem; }
   .bars { display: grid; gap: 0.75rem; margin: 0; padding: 0; list-style: none; }
   .bars li { display: grid; gap: 0.5rem; }
-  .bar { display: flex; align-items: center; gap: 0.75rem; width: var(--w); min-width: 12rem; padding: 0.875rem 1.25rem; border: var(--border-pop); border-radius: var(--radius-pill); background: var(--color-brand-purple); color: var(--color-brand-white); }
+  .bar { transform-origin: left center; display: flex; align-items: center; gap: 0.75rem; width: var(--w); min-width: 12rem; padding: 0.875rem 1.25rem; border: var(--border-pop); border-radius: var(--radius-pill); background: var(--color-brand-purple); color: var(--color-brand-white); }
   .bars li:nth-child(3) .bar { background: var(--color-brand-yellow); color: var(--color-brand-dark); box-shadow: var(--shadow-pop); }
   .bar b { display: inline-grid; place-items: center; width: 2rem; height: 2rem; border-radius: 50%; background: var(--color-brand-white); color: var(--color-brand-dark); font-variant-numeric: tabular-nums; }
   .bar strong { font-size: var(--text-title); }

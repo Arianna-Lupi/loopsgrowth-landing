@@ -33,6 +33,6 @@ const schema = buildPageGraph(base, path, crumbs, d.faq, [
 ]);
 ---
 
-<BaseLayout title={d.title} description={d.description} path={path} noindex={d.draft} schema={schema}>
+<BaseLayout reveal title={d.title} description={d.description} path={path} noindex={d.draft} schema={schema}>
   <CityPage d={d} crumbs={crumbs} paisName={padre.data.nombre} paisPath={paisPath(padre)} />
 </BaseLayout>

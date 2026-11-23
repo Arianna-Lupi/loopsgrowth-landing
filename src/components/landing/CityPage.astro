@@ -31,18 +31,18 @@ const quote = toBlocks(b.cuerpo)[0];
       <Crumbs crumbs={crumbs} />
       <div class="hero-grid">
         <div>
-          <h1 id="hero-title">{d.h1}</h1>
-          {paras.map((t, i) => <p class:list={['sub', i > 0 && 'more']}>{t}</p>)}
-          <p class="actions"><CtaLink label={label} location="pagina" href="/#agenda" /><a class="link" href={paisPath}>Ver {paisName}</a></p>
+          <h1 id="hero-title" data-rv>{d.h1}</h1>
+          {paras.map((t, i) => <p data-rv class:list={['sub', i > 0 && 'more']}>{t}</p>)}
+          <p class="actions" data-rv><CtaLink label={label} location="pagina" href="/#agenda" /><a class="link" href={paisPath}>Ver {paisName}</a></p>
         </div>
         {
           d.senales.length > 0 && (
-            <aside class="check" aria-labelledby="check-title">
+            <aside class="check" data-rv data-rv-index="1" aria-labelledby="check-title">
               <Image class="check-art" src={ojo} alt="" width={64} height={64} aria-hidden="true" />
               <h2 id="check-title">Qué revisamos en {d.nombre}</h2>
               <ul role="list">
                 {d.senales.map((s: string) => (
-                  <li><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false"><circle class="tick-bg" cx="12" cy="12" r="11" stroke-width="2" /><path class="tick" d="m7 12.5 3.2 3.2L17 9" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" /></svg><span>{s}</span></li>
+                  <li data-rv><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false"><circle class="tick-bg" cx="12" cy="12" r="11" stroke-width="2" /><path class="tick" d="m7 12.5 3.2 3.2L17 9" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" /></svg><span>{s}</span></li>
                 ))}
               </ul>
             </aside>
@@ -54,23 +54,23 @@ const quote = toBlocks(b.cuerpo)[0];
 
   <section class="story" data-tone="light" aria-labelledby="a-title">
     <div class="wrap story-grid">
-      <h2 id="a-title">{a.titulo}</h2>
-      <Prose text={a.cuerpo} />
+      <h2 id="a-title" data-rv>{a.titulo}</h2>
+      <div data-rv data-rv-index="1"><Prose text={a.cuerpo} /></div>
     </div>
   </section>
 
   <section class="quote" data-tone="yellow" aria-labelledby="b-title">
     <div class="wrap">
-      <h2 id="b-title" class="q-title">{b.titulo}</h2>
-      <p class="q">{quote.kind === 'p' ? quote.text : ''}</p>
-      <Prose text={b.cuerpo.split(/\n{2,}/).slice(1).join('\n\n')} />
+      <h2 id="b-title" class="q-title" data-rv>{b.titulo}</h2>
+      <p class="q" data-rv>{quote.kind === 'p' ? quote.text : ''}</p>
+      <div data-rv data-rv-index="2"><Prose text={b.cuerpo.split(/\n{2,}/).slice(1).join('\n\n')} /></div>
     </div>
   </section>
 
   <section class="strip" data-tone="light" aria-labelledby="c-title">
     <div class="wrap strip-grid">
-      <h2 id="c-title">{c.titulo}</h2>
-      <Prose text={c.cuerpo} />
+      <h2 id="c-title" data-rv>{c.titulo}</h2>
+      <div data-rv data-rv-index="1"><Prose text={c.cuerpo} /></div>
     </div>
   </section>
 

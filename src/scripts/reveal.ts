@@ -20,7 +20,9 @@ const TO = { opacity: 1, transform: 'none' };
 
 function play(el: Element, index: number): void {
   el.classList.add('rv-done');
-  el.animate([FROM, TO], { duration: DURATION, delay: Math.min(index, MAX_STEPS) * STEP, easing: EASE, fill: 'backwards' });
+  // `data-rv="grow"`: la barra crece desde su borde izquierdo (scaleX), en vez de subir.
+  const grow = (el as HTMLElement).dataset.rv === 'grow';
+  el.animate(grow ? [{ opacity: 0, transform: 'scaleX(0)' }, TO] : [FROM, TO], { duration: DURATION, delay: Math.min(index, MAX_STEPS) * STEP, easing: EASE, fill: 'backwards' });
 }
 
 const ES_THOUSANDS = /^\d{1,3}(\.\d{3})+$/;
