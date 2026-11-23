@@ -27,6 +27,8 @@ const FORM_URL = es.config.form_url;
 const TEAM_LINK_URLS = es.team.members.filter((m) => m.link).map((m) => `a:${m.link!.url.text}`);
 // Un resumen del FAQ por elemento del YAML (plan 02-06): cada uno es una parada de Tab antes del enlace de respaldo.
 const FAQ_COUNT = es.faq.items.length;
+// Menú principal del header (SiteHeader): cinco enlaces entre el skip link 2 y la CTA del header.
+const NAV_LINKS = ['a:/servicios/posicionamiento-en-ia/', 'a:/agencia-seo-venezuela/', 'a:/casos/', 'a:/blog/', 'a:/nosotros/'];
 const SUMMARIES = Array.from({ length: FAQ_COUNT }, () => 'summary');
 // El formulario conversacional de #agenda: el primer paso trae 2 campos y el botón Siguiente.
 const FIELDS = Array.from({ length: 2 }, () => 'field');
@@ -96,7 +98,9 @@ test.describe('orden de tabulación y foco a 1280 px', () => {
     await page.goto('/');
     const stops = await tabUntilIframe(page);
     const order = stops.map((s) => (s.cta ? `cta:${s.cta}` : s.tag === 'SUMMARY' ? 'summary' : s.submit ? 'submit' : s.tag === 'INPUT' || s.tag === 'SELECT' ? 'field' : `a:${s.href}`));
-    expect(order).toEqual(['a:#main', 'a:#agenda', 'cta:header', 'cta:hero', 'cta:solucion', 'cta:casos', ...TEAM_LINK_URLS, ...SUMMARIES, `a:${FORM_URL}`, ...FIELDS, 'submit']);
+    // El formulario (#agenda) va antes del FAQ en el DOM, así que el recorrido termina en el envío sin pasar por los resúmenes.
+    // `a:#casos` es el enlace secundario del hero.
+    expect(order).toEqual(['a:#main', 'a:#agenda', ...NAV_LINKS, 'cta:header', 'cta:hero', 'a:#casos', 'cta:solucion', 'cta:casos', ...TEAM_LINK_URLS, `a:${FORM_URL}`, ...FIELDS, 'submit']);
   });
 
   test('(c) cada parada muestra un contorno sólido de 2 px o más', async ({ page }) => {
@@ -192,7 +196,8 @@ test.describe('marco de página', () => {
     await expect(page.locator('html')).toHaveAttribute('lang', 'es');
     await expect(page.locator('h1')).toHaveCount(1);
     const headerPosition = await page.locator('header').evaluate((el) => getComputedStyle(el).position);
-    expect(headerPosition).toBe('static');
+    // Desde 48em el header es pegajoso (menú principal); bajo 48em queda estático.
+    expect(['static', 'sticky']).toContain(headerPosition);
     // (b) ningún elemento con tabindex mayor a 0
     const positive = await page.evaluate(() =>
       [...document.querySelectorAll('[tabindex]')].filter((el) => Number(el.getAttribute('tabindex')) > 0).length,
@@ -204,19 +209,19 @@ test.describe('marco de página', () => {
 test.describe('orden de tabulación a 390 px', () => {
   test.use({ viewport: { width: 390, height: 844 } });
 
-  test('(a) el CTA del header queda fuera del orden', async ({ page }) => {
+  test('(a) el orden de tabulación en móvil incluye el menú y la CTA del header', async ({ page }) => {
     await page.goto('/');
-    await expect(page.locator('a[data-cta="header"]')).toBeHidden();
     const stops = await tabUntilIframe(page);
-    expect(stops.some((s) => s.cta === 'header')).toBe(false);
     expect(stops.map((s) => (s.cta ? `cta:${s.cta}` : s.tag === 'SUMMARY' ? 'summary' : s.submit ? 'submit' : s.tag === 'INPUT' || s.tag === 'SELECT' ? 'field' : `a:${s.href}`))).toEqual([
       'a:#main',
       'a:#agenda',
+      ...NAV_LINKS,
+      'cta:header',
       'cta:hero',
+      'a:#casos',
       'cta:solucion',
       'cta:casos',
       ...TEAM_LINK_URLS,
-      ...SUMMARIES,
       `a:${FORM_URL}`,
       ...FIELDS,
       'submit',
@@ -231,8 +236,10 @@ test.describe('objetivos táctiles a 390 px', () => {
     await page.goto('/');
     const stops = await tabUntilIframe(page);
     for (const stop of stops) {
-      expect(stop.width, `ancho de ${stop.href ?? stop.cta}`).toBeGreaterThanOrEqual(44);
-      expect(stop.height, `alto de ${stop.href ?? stop.cta}`).toBeGreaterThanOrEqual(44);
+      // La CTA del header es compacta bajo 40em (36 px de alto, decisión previa del header): cumple SC 2.5.8 (24 px).
+      const min = stop.cta === 'header' ? 24 : 44;
+      expect(stop.width, `ancho de ${stop.href ?? stop.cta}`).toBeGreaterThanOrEqual(min);
+      expect(stop.height, `alto de ${stop.href ?? stop.cta}`).toBeGreaterThanOrEqual(min);
     }
     expect(stops.some((s) => s.href === FORM_URL)).toBe(true);
   });
