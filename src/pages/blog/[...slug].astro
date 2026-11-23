@@ -5,6 +5,8 @@
  * Un borrador (solo visible fuera de producción) sale `noindex`.
  */
 import { render } from 'astro:content';
+import { Image } from 'astro:assets';
+import ariPhoto from '../../assets/team/treated/arianna.png';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import CtaLink from '../../components/CtaLink.astro';
 import { getPosts, formatDate, AUTHORS } from '../../lib/blog';
@@ -93,6 +95,14 @@ const schema = buildArticleSchema({
           <div class="prose">
             <Content />
           </div>
+          <aside class="author-box" aria-label="Sobre la autora">
+            <Image src={ariPhoto} alt="" width={96} height={96} loading="lazy" decoding="async" />
+            <div>
+              <p class="author-name">{author.name}</p>
+              <p>{author.role}. Más de 8 años de experiencia en SEO y fundadora de la academia aprendoclub.</p>
+              {authorPage && <a href={authorPage}>Conoce a la autora</a>}
+            </div>
+          </aside>
           <aside class="post-cta post-cta--end" aria-labelledby="post-cta-title">
             <h2 id="post-cta-title">¿Quieres revisar tu caso?</h2>
             <p>Agenda una llamada con el equipo de Loops Growth.</p>
@@ -272,6 +282,46 @@ const schema = buildArticleSchema({
     .toc--side ol {
       padding: 0.5rem 0 0 1.25rem;
     }
+  }
+  .prose :global(blockquote) {
+    margin: 0 0 1.5rem;
+    padding: 1.25rem;
+    border: var(--border-pop);
+    border-radius: var(--radius-card);
+    background: var(--color-brand-yellow);
+    color: var(--color-brand-dark);
+    box-shadow: var(--shadow-pop);
+  }
+  .prose :global(blockquote p) {
+    margin: 0;
+  }
+  .author-box {
+    display: grid;
+    grid-template-columns: 5rem 1fr;
+    gap: 1rem;
+    align-items: center;
+    max-width: 65ch;
+    margin-top: 2.5rem;
+    padding: 1.25rem;
+    border-radius: var(--radius-card);
+    background: var(--color-brand-cream);
+    box-shadow: 0 0 0 1px rgb(33 33 33 / 0.12), 0 8px 24px rgb(0 0 0 / 0.06);
+  }
+  .author-box :global(img) {
+    width: 5rem;
+    height: 5rem;
+    object-fit: cover;
+    border-radius: var(--radius-card);
+  }
+  .author-name {
+    font-weight: 700;
+  }
+  .author-box a {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--target-min);
+    color: var(--link);
+    text-underline-offset: 4px;
   }
   .post-cta {
     max-width: 65ch;

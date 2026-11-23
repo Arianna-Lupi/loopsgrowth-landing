@@ -16,17 +16,12 @@ secciones:
       Arianna Lupi es la fundadora y estratega SEO de Loops Growth. Tiene más de 8 años de experiencia en SEO y es fundadora de aprendoclub, una academia de SEO y marketing. Ella define la estrategia y firma los artículos del blog.
 
       Puedes leer su perfil completo en su página de autora y encontrarla en LinkedIn.
-  - titulo: El equipo
-    cuerpo: |
-      - Arianna Lupi, fundadora y estratega SEO.
-      - Verónica Romero, directora de proyectos.
-      - Juan Carlos Angulo, director técnico.
-      - Miguel Pacheco, especialista SEO.
-  - titulo: Cómo trabajamos
+  - titulo: Un equipo que ejecuta
     cuerpo: |
       Funcionamos como tu equipo interno de crecimiento: analizamos tu negocio, definimos la estrategia, priorizamos oportunidades y ejecutamos el trabajo técnico, de contenido y de autoridad. Cada mes compartimos qué se hizo y qué se movió.
 
       Trabajamos de forma remota, por videollamada y con reportes escritos.
+equipo: true
 casos:
   texto: "Los resultados de nuestros clientes están en la sección de casos de la home:"
   ancla: "ver los casos"

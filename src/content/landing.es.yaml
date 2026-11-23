@@ -551,17 +551,7 @@ es:
           confirm_by: Ari
           reason: "Pregunta pedida en la hoja de Ari (Page idea de la home); la respuesta es un borrador sin cifras ni promesas."
         answer:
-          text: "Una agencia SEO trabaja para que tus clientes te encuentren en buscadores como Google.\nRevisa la parte técnica de tu web, ordena y crea el contenido que responde lo que tus clientes buscan y construye señales de confianza hacia tu sitio.\nEn Loops Growth sumamos el posicionamiento en IA: el trabajo para que ChatGPT, Gemini y las respuestas de IA de Google puedan encontrar, entender y considerar tu negocio como fuente."
-          status: pending
-          confirm_by: Ari
-          reason: "Respuesta redactada como borrador; Ari debe aprobarla o reemplazarla."
-      - question:
-          text: "¿Trabajan con negocios de Venezuela y del resto de LATAM?"
-          status: pending
-          confirm_by: Ari
-          reason: "Borrador sobre el alcance LATAM aprobado el 17-nov-2026. Ari debe confirmar el modo de trabajo remoto (videollamada y reportes) que describe su hoja."
-        answer:
-          text: "Sí. Trabajamos en español con negocios de Venezuela y de otros países de LATAM.\nLas reuniones son por videollamada y compartimos el avance por escrito, así que no hace falta estar en la misma ciudad."
+          text: "Trabaja para que tus clientes te encuentren en Google: mejora la parte técnica de tu web, crea el contenido que responde lo que buscan y construye señales de confianza.\nEn Loops Growth sumamos el posicionamiento en IA, para que ChatGPT y Gemini también puedan considerar tu negocio."
           status: pending
           confirm_by: Ari
           reason: "Respuesta redactada como borrador; Ari debe aprobarla o reemplazarla."

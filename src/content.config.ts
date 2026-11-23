@@ -280,6 +280,14 @@ const paginas = defineCollection({
       h1: z.string().min(10),
       intro: z.string().min(120),
       secciones: z.array(z.strictObject({ titulo: z.string().min(5), cuerpo: z.string().min(120) })).min(2),
+      /** Servicio: las etapas de visibilidad (encontrado, mencionado, citado, recomendado) como paso a paso visual. */
+      etapas: z.array(z.strictObject({ titulo: z.string().min(3), texto: z.string().min(20) })).min(3).max(5).optional(),
+      /** Servicio: los entregables en un bento (el primero es el protagonista). */
+      entregables: z.array(z.strictObject({ titulo: z.string().min(5), texto: z.string().min(30) })).min(4).max(6).optional(),
+      /** Servicio: cómo se mide, con la lista de lo que se registra cada mes. */
+      medicion: z.strictObject({ titulo: z.string().min(5), cuerpo: z.string().min(80), registro: z.array(z.string().min(5)).min(3) }).optional(),
+      /** Nosotros: muestra los retratos del equipo (los de la home). */
+      equipo: z.boolean().default(false),
       faq: z.array(faqItem).default([]),
       /** Enlace de cierre a los casos de la home (`/#casos`), único lugar de casos. */
       casos: z.strictObject({ texto: z.string().min(20), ancla: z.string().min(5) }).optional(),

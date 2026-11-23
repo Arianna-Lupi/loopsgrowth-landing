@@ -8,7 +8,7 @@ keyword: cómo aparecer en chatgpt
 draft: true
 ---
 
-**Respuesta corta:** no existe un botón para aparecer en ChatGPT y nadie puede asegurarlo. Lo que sí puedes hacer es facilitar que ChatGPT encuentre tu sitio, entienda qué haces y vea que otras fuentes confiables hablan de tu negocio. Ese trabajo se llama posicionamiento en IA.
+> **Respuesta corta:** no existe un botón para aparecer en ChatGPT y nadie puede asegurarlo. Lo que sí puedes hacer es facilitar que ChatGPT encuentre tu sitio, entienda qué haces y vea que otras fuentes confiables hablan de tu negocio. Ese trabajo se llama posicionamiento en IA.
 
 ## Encontrado, mencionado, citado y recomendado
 

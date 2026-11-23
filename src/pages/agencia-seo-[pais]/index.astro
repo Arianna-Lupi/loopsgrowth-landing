@@ -4,7 +4,7 @@
  * anidada, sin hub. Sin países publicados no se genera nada. Un borrador (solo visible fuera de producción) sale
  * `noindex`. Sin LocalBusiness, sin dirección ni oficina y sin reseñas. Cada país aporta secciones y hechos propios.
  */
-import ContentPage from '../../components/ContentPage.astro';
+import LandingPage from '../../components/LandingPage.astro';
 import { getPaises, PAIS_TEMPLATE } from '../../lib/paises';
 import { paisPath, relatedLinks } from '../../lib/paginas';
 import { buildOrganization } from '../../lib/seo';
@@ -42,7 +42,8 @@ const graph = [
 ];
 ---
 
-<ContentPage
+<LandingPage
+  kind="pais"
   title={d.title}
   description={d.description}
   path={path}

@@ -4,7 +4,7 @@
  * Sin páginas publicadas no se genera nada. Un borrador (solo visible fuera de producción) sale `noindex`.
  * Sin LocalBusiness, sin dirección y sin precios: Loops no tiene oficina.
  */
-import ContentPage from '../components/ContentPage.astro';
+import LandingPage from '../components/LandingPage.astro';
 import { getPaginas, relatedLinks, type LinkKey } from '../lib/paginas';
 import { AREA_SERVED, buildPerson } from '../lib/seo';
 import { siteUrl } from '../lib/site';
@@ -58,7 +58,8 @@ if (d.tipo === 'autora' && d.persona) {
 }
 ---
 
-<ContentPage
+<LandingPage
+  kind={d.tipo}
   title={d.title}
   description={d.description}
   path={path}
@@ -66,6 +67,10 @@ if (d.tipo === 'autora' && d.persona) {
   h1={d.h1}
   intro={d.intro}
   secciones={d.secciones}
+  etapas={d.etapas}
+  entregables={d.entregables}
+  medicion={d.medicion}
+  equipo={d.equipo}
   faq={d.faq}
   casos={d.casos}
   crumbs={crumbs}

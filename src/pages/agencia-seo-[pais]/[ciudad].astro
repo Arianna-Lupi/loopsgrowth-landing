@@ -5,7 +5,7 @@
  * El schema es Service con `areaServed` de tipo City dentro del país. Sin la página del país publicada,
  * la ciudad no se genera (evita una página huérfana).
  */
-import ContentPage from '../../components/ContentPage.astro';
+import LandingPage from '../../components/LandingPage.astro';
 import { getPaises, PAIS_TEMPLATE } from '../../lib/paises';
 import { paisPath, relatedLinks } from '../../lib/paginas';
 import { buildOrganization } from '../../lib/seo';
@@ -45,7 +45,8 @@ const graph = [
 ];
 ---
 
-<ContentPage
+<LandingPage
+  kind="ciudad"
   title={d.title}
   description={d.description}
   path={path}
