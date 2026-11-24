@@ -5,7 +5,8 @@ pubDate: 2027-06-03
 author: ari
 cluster: L1-tecnico
 keyword: "hreflang"
-draft: true
+draft: false
+reviewedBy: "Juan Angulo (revisión, 2026-11-24)"
 related: []
 ---
 

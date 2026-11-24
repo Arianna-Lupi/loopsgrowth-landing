@@ -5,7 +5,8 @@ pubDate: 2026-12-09
 author: ari
 cluster: L6-fundamentos
 keyword: "seo vs sem"
-draft: true
+draft: false
+reviewedBy: "Juan Angulo (revisión, 2026-11-24)"
 related: ["que-es-seo-y-como-funciona", "cuanto-tarda-el-seo"]
 ---
 

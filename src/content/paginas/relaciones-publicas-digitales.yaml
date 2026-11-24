@@ -2,7 +2,8 @@
 tipo: servicio
 ruta: /servicios/relaciones-publicas-digitales/
 nombre: Relaciones públicas digitales
-draft: true
+draft: false
+reviewedBy: "Juan Angulo (revisión, 2026-11-24)"
 publishAt: 2027-04-29
 grupo: autoridad
 title: "Relaciones públicas digitales: menciones con una historia real"

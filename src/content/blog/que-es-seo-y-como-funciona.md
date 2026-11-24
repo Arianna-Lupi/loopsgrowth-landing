@@ -5,7 +5,8 @@ pubDate: 2026-12-02
 author: ari
 cluster: L6-fundamentos
 keyword: "qué es seo"
-draft: true
+draft: false
+reviewedBy: "Juan Angulo (revisión, 2026-11-24)"
 related: ["cuanto-tarda-el-seo", "seo-vs-sem"]
 ---
 

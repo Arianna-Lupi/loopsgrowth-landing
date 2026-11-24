@@ -5,7 +5,8 @@ pubDate: 2027-03-08
 author: ari
 cluster: L2-geo
 keyword: "cómo saber si chatgpt menciona mi marca"
-draft: true
+draft: false
+reviewedBy: "Juan Angulo (revisión, 2026-11-24)"
 related: []
 ---
 

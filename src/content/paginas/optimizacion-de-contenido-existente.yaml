@@ -3,7 +3,8 @@ tipo: servicio
 ruta: /servicios/optimizacion-de-contenido-existente/
 nombre: Optimización de contenido existente
 grupo: contenido
-draft: true
+draft: false
+reviewedBy: "Juan Angulo (revisión, 2026-11-24)"
 publishAt: 2027-02-25
 title: "Optimización de contenido existente: actualizar o unir"
 description: "Optimización de contenido existente: decidimos qué páginas actualizar, consolidar o eliminar, y cómo detectar el contenido que cayó o compite contra sí mismo."

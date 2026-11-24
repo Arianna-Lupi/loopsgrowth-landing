@@ -5,7 +5,8 @@ pubDate: 2027-02-10
 author: ari
 cluster: L6-fundamentos
 keyword: "intención de búsqueda"
-draft: true
+draft: false
+reviewedBy: "Juan Angulo (revisión, 2026-11-24)"
 related: []
 ---
 

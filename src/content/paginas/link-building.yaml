@@ -2,7 +2,8 @@
 tipo: servicio
 ruta: /servicios/link-building/
 nombre: Link building
-draft: true
+draft: false
+reviewedBy: "Juan Angulo (revisión, 2026-11-24)"
 publishAt: 2027-01-05
 grupo: autoridad
 title: "Link building: enlaces ganados por mérito, no comprados"

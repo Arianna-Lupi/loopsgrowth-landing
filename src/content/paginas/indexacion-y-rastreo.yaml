@@ -2,7 +2,8 @@
 tipo: servicio
 ruta: /servicios/indexacion-y-rastreo/
 nombre: Indexación y rastreo
-draft: true
+draft: false
+reviewedBy: "Juan Angulo (revisión, 2026-11-24)"
 grupo: tecnico
 publishAt: 2027-02-09
 title: "Indexación y rastreo: por qué Google no indexa tus páginas"

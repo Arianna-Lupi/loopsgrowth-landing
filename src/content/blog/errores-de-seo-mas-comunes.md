@@ -5,7 +5,8 @@ pubDate: 2027-04-05
 author: ari
 cluster: L6-fundamentos
 keyword: "errores de seo"
-draft: true
+draft: false
+reviewedBy: "Juan Angulo (revisión, 2026-11-24)"
 related: []
 ---
 

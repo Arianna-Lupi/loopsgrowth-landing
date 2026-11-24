@@ -2,7 +2,8 @@
 tipo: servicio
 ruta: /servicios/optimizacion-para-chatgpt-y-perplexity/
 nombre: Optimización para ChatGPT y Perplexity
-draft: true
+draft: false
+reviewedBy: "Juan Angulo (revisión, 2026-11-24)"
 publishAt: 2027-01-21
 grupo: ia
 title: "Optimización para ChatGPT y Perplexity: rastreadores y fuentes"

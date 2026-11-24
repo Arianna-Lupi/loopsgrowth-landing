@@ -4,7 +4,8 @@ ruta: /servicios/medicion-de-menciones-en-ia/
 nombre: Medición de menciones en IA
 grupo: ia
 publishAt: 2027-03-16
-draft: true
+draft: false
+reviewedBy: "Juan Angulo (revisión, 2026-11-24)"
 title: "Medición de menciones en IA: qué dicen ChatGPT y Gemini de ti"
 description: "Servicio de medición de menciones en IA: repetimos cada mes una batería fija de preguntas y registramos si los asistentes mencionan o citan tu negocio."
 h1: "Medición de menciones en IA: qué dicen los asistentes de tu negocio"

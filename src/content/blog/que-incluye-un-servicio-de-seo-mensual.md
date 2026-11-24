@@ -5,7 +5,8 @@ pubDate: 2027-02-17
 author: ari
 cluster: L4-eleccion
 keyword: "qué incluye un servicio de seo"
-draft: true
+draft: false
+reviewedBy: "Juan Angulo (revisión, 2026-11-24)"
 related: ["seo-in-house-vs-agencia", "como-leer-un-reporte-seo"]
 ---
 

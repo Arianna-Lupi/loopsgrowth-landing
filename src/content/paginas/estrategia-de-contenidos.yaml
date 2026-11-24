@@ -3,7 +3,8 @@ tipo: servicio
 ruta: /servicios/estrategia-de-contenidos/
 nombre: Estrategia de contenidos SEO
 grupo: contenido
-draft: true
+draft: false
+reviewedBy: "Juan Angulo (revisión, 2026-11-24)"
 publishAt: 2026-12-17
 title: "Estrategia de contenidos SEO: clusters y calendario"
 description: "Estrategia de contenidos SEO en español: clusters por tema, calendario editorial y un criterio claro para decidir qué escribir primero."

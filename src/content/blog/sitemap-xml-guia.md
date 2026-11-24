@@ -5,7 +5,8 @@ pubDate: 2027-03-11
 author: ari
 cluster: L1-tecnico
 keyword: "sitemap xml"
-draft: true
+draft: false
+reviewedBy: "Juan Angulo (revisión, 2026-11-24)"
 related: []
 ---
 

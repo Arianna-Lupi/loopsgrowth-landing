@@ -4,7 +4,8 @@
 tipo: pais
 familia: aeo
 nombre: México
-draft: true
+draft: false
+reviewedBy: "Juan Angulo (revisión, 2026-11-24)"
 publishAt: 2027-04-08
 title: "Agencia AEO en México: aparece en respuestas de IA | Loops Growth"
 description: "Agencia AEO en México: optimizamos tu información para las respuestas de asistentes de IA como Gemini y ChatGPT. Trabajo remoto con reportes por escrito."

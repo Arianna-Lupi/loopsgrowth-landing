@@ -5,7 +5,8 @@ pubDate: 2026-12-15
 author: ari
 cluster: L4-eleccion
 keyword: "cómo elegir una agencia seo"
-draft: true
+draft: false
+reviewedBy: "Juan Angulo (revisión, 2026-11-24)"
 related: []
 ---
 

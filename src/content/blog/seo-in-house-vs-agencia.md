@@ -5,7 +5,8 @@ pubDate: 2027-02-11
 author: ari
 cluster: L4-eleccion
 keyword: "seo in house vs agencia"
-draft: true
+draft: false
+reviewedBy: "Juan Angulo (revisión, 2026-11-24)"
 related: ["agencia-seo-vs-especialista-seo"]
 ---
 

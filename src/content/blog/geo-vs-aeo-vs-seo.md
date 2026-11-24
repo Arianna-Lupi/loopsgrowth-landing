@@ -5,7 +5,8 @@ pubDate: 2027-03-01
 author: ari
 cluster: L2-geo
 keyword: "geo vs seo"
-draft: true
+draft: false
+reviewedBy: "Juan Angulo (revisión, 2026-11-24)"
 related: ["que-es-geo-optimizacion-para-motores-generativos", "que-es-aeo"]
 ---
 

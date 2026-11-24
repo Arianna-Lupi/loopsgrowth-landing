@@ -4,7 +4,8 @@ ruta: /servicios/seo-para-saas-b2b/
 nombre: SEO para SaaS B2B
 grupo: negocio
 publishAt: 2027-06-01
-draft: true
+draft: false
+reviewedBy: "Juan Angulo (revisión, 2026-11-24)"
 title: "SEO para SaaS B2B: contenido para quien evalúa y quien decide"
 description: "SEO para SaaS B2B en español: casos de uso, integraciones y comparativas pensadas para compras largas con varios decisores. Qué trabajamos y qué recibes."
 h1: "SEO para SaaS B2B: contenido para quien evalúa y quien decide"

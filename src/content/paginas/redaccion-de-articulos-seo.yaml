@@ -3,7 +3,8 @@ tipo: servicio
 ruta: /servicios/redaccion-de-articulos-seo/
 nombre: Redacción de artículos SEO
 grupo: contenido
-draft: true
+draft: false
+reviewedBy: "Juan Angulo (revisión, 2026-11-24)"
 publishAt: 2027-02-16
 title: "Redacción de artículos SEO con autor, fuentes y revisión"
 description: "Redacción de artículos SEO en español: brief, borrador y revisión, con autor visible y fuentes verificadas, para evitar el contenido genérico."

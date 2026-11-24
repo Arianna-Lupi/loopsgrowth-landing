@@ -2,7 +2,8 @@
 tipo: servicio
 ruta: /servicios/core-web-vitals/
 nombre: Core Web Vitals
-draft: true
+draft: false
+reviewedBy: "Juan Angulo (revisión, 2026-11-24)"
 grupo: tecnico
 publishAt: 2027-02-02
 title: "Core Web Vitals: mejora LCP, INP y CLS con datos reales"
