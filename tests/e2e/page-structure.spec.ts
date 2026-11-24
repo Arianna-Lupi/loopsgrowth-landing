@@ -23,9 +23,10 @@ const H1_TEXT = resolveText(es.hero.h1);
 const SUBTITLE_TEXT = resolveText(es.hero.subtitle);
 const DESCRIPTION_TEXTS = es.hero.description.map(resolveText);
 
-// Orden vertical del hero (quick 260920-hero-clients, indicación de Juan): h1, subtítulo, descripción, CTA y
-// después la lista de clientes. Antes el CTA subía sobre la descripción.
-const HERO_ORDER = ['h1', 'subtitle', 'description', 'cta', 'clients'] as const;
+// Orden vertical del hero tras el rediseño de la ronda 2: h1, subtítulo, CTA y después la lista de clientes.
+// La descripción ya no vive en el hero: sus textos pasaron a #problema y `.hero-desc` quedó como contenedor
+// vacío y oculto (display: none), así que no entra en el orden visual.
+const HERO_ORDER = ['h1', 'subtitle', 'cta', 'clients'] as const;
 
 const PURPLE = PURPLE_RGB;
 
@@ -43,15 +44,14 @@ const HERO_SELECTORS: Record<(typeof HERO_ORDER)[number], string> = {
   h1: '#inicio h1',
   subtitle: '#inicio .hero-sub',
   cta: '#inicio a[data-cta="hero"]',
-  description: '#inicio .hero-desc',
   clients: '#inicio .hero-clients',
 };
 
 const viewports = [
-  // El relleno del hero en móvil es más compacto que el de las demás secciones (quick 260920-name-geo-hero-mobile):
-  // 20 px arriba y 48 abajo bajo 40em, para que el CTA del hero entre en el primer pantallazo. #agenda conserva `sectionY`.
-  { name: '1280 px', width: 1280, height: 800, sectionY: 96, heroTop: 64, heroBottom: 96 },
-  { name: '390 px', width: 390, height: 844, sectionY: 64, heroTop: 20, heroBottom: 48 },
+  // Relleno del hero tras el rediseño de la ronda 2 (Hero.astro): arriba 3rem (48 px) y 4.5rem (72 px) desde 64em;
+  // abajo `--section-y`, igual que el resto de secciones (96 px en escritorio, 64 px en móvil).
+  { name: '1280 px', width: 1280, height: 800, sectionY: 96, heroTop: 72, heroBottom: 96 },
+  { name: '390 px', width: 390, height: 844, sectionY: 64, heroTop: 48, heroBottom: 64 },
 ];
 
 for (const vp of viewports) {
@@ -65,19 +65,23 @@ for (const vp of viewports) {
       await expect(page.locator('h1')).toHaveCSS('color', PURPLE);
     });
 
-    test('subtítulo y los tres párrafos de la descripción salen del YAML, en orden', async ({ page }) => {
+    test('el subtítulo sale del YAML y la descripción ya no se pinta en el hero (contenedor vacío y oculto)', async ({ page }) => {
       await page.goto('/');
       await expect(page.locator('#inicio .hero-sub')).toHaveText(SUBTITLE_TEXT);
-      const paragraphs = page.locator('#inicio .hero-desc p');
-      await expect(paragraphs).toHaveCount(3);
+      // Los tres textos siguen en el YAML (ahora los consume #problema), pero el hero deja su contenedor vacío.
       expect(DESCRIPTION_TEXTS).toHaveLength(3);
-      for (let i = 0; i < 3; i++) await expect(paragraphs.nth(i)).toHaveText(DESCRIPTION_TEXTS[i]);
+      const desc = page.locator('#inicio .hero-desc');
+      await expect(desc).toHaveCount(1);
+      await expect(desc).toBeHidden();
+      await expect(desc).toHaveAttribute('aria-hidden', 'true');
+      await expect(desc).toBeEmpty();
+      await expect(page.locator('#inicio .hero-desc p')).toHaveCount(0);
     });
 
-    // Cambio deliberado (quick 260920-hero-clients): con el CTA al final de los tres párrafos el CTA del hero ya
-    // no cabe en el primer pantallazo móvil. Se exige h1 y subtítulo completos en él y el CTA del header visible
-    // (mismo destino #agenda); el CTA del hero se exige visible, con #agenda y dentro del ancho.
-    test('h1 y subtítulo caben en el primer pantallazo y el CTA del hero lleva #agenda (el del header solo desde 640 px)', async ({
+    // Tras el rediseño de la ronda 2 el CTA del header se muestra en todos los anchos (compacto en móvil, ver
+    // SiteHeader.astro). Se exige h1 y subtítulo completos en el primer pantallazo, ambos CTA visibles con #agenda
+    // y el CTA del hero dentro del ancho.
+    test('h1 y subtítulo caben en el primer pantallazo y los CTA del header y del hero llevan #agenda', async ({
       page,
     }) => {
       await page.goto('/');
@@ -86,17 +90,13 @@ for (const vp of viewports) {
         expect(r.top, selector).toBeGreaterThanOrEqual(0);
         expect(r.bottom, selector).toBeLessThanOrEqual(vp.height);
       }
-      // El CTA del header se muestra desde 40em (SiteHeader.astro); en móvil no existe arriba (hallazgo de la tarea).
       const headerCta = page.locator('header a[data-cta="header"]');
       await expect(headerCta).toHaveAttribute('href', '#agenda');
-      if (vp.width >= 640) {
-        await expect(headerCta).toBeVisible();
-        const h = await box(page, 'header a[data-cta="header"]');
-        expect(h.top).toBeGreaterThanOrEqual(0);
-        expect(h.bottom).toBeLessThanOrEqual(vp.height);
-      } else {
-        await expect(headerCta).toBeHidden();
-      }
+      await expect(headerCta).toBeVisible();
+      const h = await box(page, 'header a[data-cta="header"]');
+      expect(h.top).toBeGreaterThanOrEqual(0);
+      expect(h.bottom).toBeLessThanOrEqual(vp.height);
+      expect(h.right).toBeLessThanOrEqual(vp.width);
       const cta = page.locator('#inicio a[data-cta="hero"]');
       await expect(cta).toBeVisible();
       await expect(cta).toHaveAttribute('href', '#agenda');
@@ -105,7 +105,7 @@ for (const vp of viewports) {
       expect(r.right).toBeLessThanOrEqual(vp.width);
     });
 
-    test('orden vertical del hero: h1, subtítulo, descripción, CTA, clientes', async ({ page }) => {
+    test('orden vertical del hero: h1, subtítulo, CTA, clientes', async ({ page }) => {
       await page.goto('/');
       const tops: number[] = [];
       for (const key of HERO_ORDER) tops.push((await box(page, HERO_SELECTORS[key])).top);
@@ -138,22 +138,25 @@ for (const vp of viewports) {
 
 type Tone = 'light' | 'yellow' | 'dark' | 'purple';
 
-// Orden canónico de las 12 secciones de `main` y su tono (UI-SPEC, Page Architecture). Cada plan
-// de la fase 2 suma su sección en este orden; hoy la página trae solo una parte.
+// Orden canónico de las 12 secciones de `main` y su tono tras el rediseño de la ronda 2 (src/pages/index.astro).
+// Cambios frente al orden original: ya no hay tono `yellow` en las secciones (por-que-ahora y faq pasaron a
+// `light`, nosotros a `dark`) y #agenda va antes de #faq.
 const PAGE_ORDER: ReadonlyArray<readonly [string, Tone]> = [
   ['inicio', 'light'],
   ['problema', 'dark'],
-  ['por-que-ahora', 'yellow'],
+  ['por-que-ahora', 'light'],
   ['solucion', 'light'],
   ['resultados', 'dark'],
   ['casos', 'light'],
-  ['nosotros', 'yellow'],
+  ['nosotros', 'dark'],
   ['incluye', 'light'],
   ['como-funciona', 'dark'],
   ['para-quien', 'light'],
-  ['faq', 'yellow'],
   ['agenda', 'purple'],
+  ['faq', 'light'],
 ];
+// Único par vecino que repite tono a propósito (ambos `light`, separados por el aire de la sección).
+const SAME_TONE_NEIGHBORS: ReadonlyArray<readonly [string, string]> = [['por-que-ahora', 'solucion']];
 
 // Título (h2) de cada sección, en el orden de la página: id de sección a ruta del claim en el YAML.
 // `inicio` no aparece: su encabezado es el h1.
@@ -167,8 +170,8 @@ const H2_SOURCE: Readonly<Record<string, string>> = {
   incluye: 'includes.title',
   'como-funciona': 'how_it_works.title',
   'para-quien': 'for_whom.title',
-  faq: 'faq.title',
   agenda: 'agenda.title',
+  faq: 'faq.title',
 };
 const yamlTree = (parse(readFileSync('src/content/landing.es.yaml', 'utf8')) as { es: Record<string, unknown> }).es;
 const claimAt = (path: string): Claim => {
@@ -182,13 +185,14 @@ const claimAt = (path: string): Claim => {
 };
 
 test.describe('orden y tono de las secciones', () => {
-  test('la constante PAGE_ORDER: 12 ids, ningún vecino repite tono y dark nunca toca purple', () => {
+  test('la constante PAGE_ORDER: 12 ids, solo un par de vecinos repite tono y dark nunca toca purple', () => {
     expect(PAGE_ORDER).toHaveLength(12);
     expect(new Set(PAGE_ORDER.map(([id]) => id)).size).toBe(12);
     for (let i = 1; i < PAGE_ORDER.length; i++) {
       const [, prev] = PAGE_ORDER[i - 1];
       const [, cur] = PAGE_ORDER[i];
-      expect(cur, `${PAGE_ORDER[i - 1][0]} y ${PAGE_ORDER[i][0]} repiten tono`).not.toBe(prev);
+      const allowed = SAME_TONE_NEIGHBORS.some(([a, b]) => a === PAGE_ORDER[i - 1][0] && b === PAGE_ORDER[i][0]);
+      if (!allowed) expect(cur, `${PAGE_ORDER[i - 1][0]} y ${PAGE_ORDER[i][0]} repiten tono`).not.toBe(prev);
       expect(new Set([prev, cur]), 'dark junto a purple').not.toEqual(new Set(['dark', 'purple']));
     }
   });
@@ -272,14 +276,15 @@ for (const vp of WIDTHS) {
       }
     });
 
-    test('.hero-art no se cruza con .hero-copy y el collage cabe en el ancho', async ({ page }) => {
+    test('.hero-art no se cruza con .hero-copy y la vitrina cabe en el ancho', async ({ page }) => {
       await page.goto('/');
       const copy = await box(page, '#inicio .hero-copy');
       const art = await box(page, '#inicio .hero-art');
       const overlapX = Math.min(copy.right, art.right) - Math.max(copy.left, art.left);
       const overlapY = Math.min(copy.bottom, art.bottom) - Math.max(copy.top, art.top);
       expect(overlapX > 0.5 && overlapY > 0.5, 'el collage y el texto se cruzan').toBe(false);
-      const svg = await box(page, '.hero-collage');
+      // El arte visible es la vitrina (`.hero-showcase`); el collage vectorial queda como respaldo oculto.
+      const svg = await box(page, '#inicio .hero-showcase');
       expect(svg.left).toBeGreaterThanOrEqual(-0.5);
       expect(svg.right).toBeLessThanOrEqual(vp.width + 0.5);
     });
@@ -289,33 +294,38 @@ for (const vp of WIDTHS) {
 test.describe('primer pantallazo', () => {
   test.describe('390x844', () => {
     test.use({ viewport: { width: 390, height: 844 } });
-    // Por feedback del cliente (2026-09-21), la imagen con el logo va debajo del h1 en móvil:
-    // en el primer pantallazo quedan h1 y el arte del hero.
-    test('el h1 y el arte del hero quedan completos en el primer pantallazo', async ({ page }) => {
+    // Tras la ronda 2 el hero móvil apila copy, arte y clientes: en el primer pantallazo caben h1, subtítulo y CTA
+    // completos y el arte ya asoma (empieza dentro de la ventana; su alto completo baja al hacer scroll).
+    test('h1, subtítulo y CTA quedan completos en el primer pantallazo y el arte empieza dentro de él', async ({ page }) => {
       await page.goto('/');
-      for (const sel of [HERO_SELECTORS.h1, '.hero-art']) {
+      for (const sel of [HERO_SELECTORS.h1, HERO_SELECTORS.subtitle, HERO_SELECTORS.cta]) {
         const r = await box(page, sel);
         expect(r.top, `${sel} top`).toBeGreaterThanOrEqual(0);
         expect(r.bottom, `${sel} bottom`).toBeLessThanOrEqual(844);
         expect(r.left).toBeGreaterThanOrEqual(0);
         expect(r.right).toBeLessThanOrEqual(390);
       }
+      const art = await box(page, '.hero-art');
+      expect(art.top, 'hero-art top').toBeLessThan(844);
+      expect(art.left).toBeGreaterThanOrEqual(0);
+      expect(art.right).toBeLessThanOrEqual(390);
     });
   });
 
-  // Con la imagen bajo el h1 en móvil, el CTA del hero conserva su objetivo táctil de 44 px y ritmo tipográfico.
+  // El CTA del hero conserva su objetivo táctil de 44 px y el subtítulo (único texto corrido del hero desde la ronda 2)
+  // el ritmo tipográfico.
   for (const [width, height] of [[360, 740], [390, 844], [412, 915], [375, 667]] as const) {
     test.describe(`${width}x${height}: CTA del hero y ritmo tipográfico`, () => {
       test.use({ viewport: { width, height } });
-      test('el CTA tiene 44 px de objetivo y los párrafos cumplen ritmo', async ({ page }) => {
+      test('el CTA tiene 44 px de objetivo y el subtítulo cumple ritmo', async ({ page }) => {
         await page.goto('/');
         const r = await box(page, HERO_SELECTORS.cta);
         expect(r.bottom - r.top, 'alto del CTA').toBeGreaterThanOrEqual(44);
         expect(r.left).toBeGreaterThanOrEqual(0);
         expect(r.right).toBeLessThanOrEqual(width);
-        // Ritmo compacto sin romper A11Y.md: interlineado de los párrafos >= 1.5 y ancho máximo <= 80ch.
+        // Ritmo sin romper A11Y.md: interlineado >= 1.5 y ancho máximo <= 80ch.
         const rhythm = await page.evaluate(() => {
-          const p = document.querySelector('#inicio .hero-desc p') as HTMLElement;
+          const p = document.querySelector('#inicio .hero-sub') as HTMLElement;
           const cs = getComputedStyle(p);
           const probe = document.createElement('div');
           probe.style.cssText = 'position:absolute;visibility:hidden;width:80ch';
@@ -332,11 +342,11 @@ test.describe('primer pantallazo', () => {
 
   test.describe('1280x800', () => {
     test.use({ viewport: { width: 1280, height: 800 } });
-    test('h1, subtítulo y el collage completos, con el collage a la derecha del texto', async ({
+    test('h1, subtítulo y la vitrina del hero completos, con la vitrina a la derecha del texto', async ({
       page,
     }) => {
       await page.goto('/');
-      for (const sel of [HERO_SELECTORS.h1, HERO_SELECTORS.subtitle, '.hero-collage']) {
+      for (const sel of [HERO_SELECTORS.h1, HERO_SELECTORS.subtitle, '#inicio .hero-showcase']) {
         const r = await box(page, sel);
         expect(r.top, `${sel} top`).toBeGreaterThanOrEqual(0);
         expect(r.bottom, `${sel} bottom`).toBeLessThanOrEqual(800);
@@ -344,7 +354,7 @@ test.describe('primer pantallazo', () => {
         expect(r.right).toBeLessThanOrEqual(1280);
       }
       const copy = await box(page, '#inicio .hero-copy');
-      const svg = await box(page, '.hero-collage');
+      const svg = await box(page, '#inicio .hero-showcase');
       expect(svg.left).toBeGreaterThanOrEqual(copy.right - 0.5);
     });
 
@@ -359,7 +369,9 @@ test.describe('primer pantallazo', () => {
 });
 
 test.describe('collage del hero', () => {
-  test('collage decorativo: raíz aria-hidden, capa svg sin title ni text, una sola img de foto con alt vacío y liviano', async ({ page }) => {
+  // Desde la ronda 2 el arte visible del hero es la vitrina (una img decorativa); el collage vectorial vive en
+  // `.hero-collage-fallback` con `display: none` (aria-hidden) y conserva su contrato accesible y de peso.
+  test('vitrina visible con una img decorativa y collage de respaldo oculto: aria-hidden, svg sin title ni text, una sola img de foto y liviano', async ({ page }) => {
     await page.goto('/');
     const root = page.locator('div.hero-collage[data-collage="hero"]');
     await expect(root).toHaveCount(1);
@@ -370,7 +382,14 @@ test.describe('collage del hero', () => {
     await expect(svg).toHaveAttribute('focusable', 'false');
     await expect(svg.locator('title')).toHaveCount(0);
     await expect(svg.locator('text')).toHaveCount(0);
-    await expect(page.locator('#inicio .hero-art img')).toHaveCount(1);
+    const showcaseImg = page.locator('#inicio .hero-showcase img');
+    await expect(showcaseImg).toHaveCount(1);
+    await expect(showcaseImg).toBeVisible();
+    await expect(showcaseImg).toHaveAttribute('alt', '');
+    await expect(page.locator('#inicio .hero-collage-fallback')).toBeHidden();
+    await expect(page.locator('#inicio .hero-collage-fallback')).toHaveAttribute('aria-hidden', 'true');
+    await expect(root).toBeHidden();
+    await expect(page.locator('#inicio .hero-art img')).toHaveCount(2);
     await expect(root.locator('[data-photo-frame] img')).toHaveCount(1);
     await expect(root.locator('img')).toHaveCount(1);
     await expect(svg.locator('image')).toHaveCount(0);
@@ -426,7 +445,7 @@ test.describe('sin JavaScript', () => {
     await expect(page.locator('#inicio .hero-sub')).toBeVisible();
     await expect(page.locator('#inicio a[data-cta="hero"]')).toBeVisible();
     await expect(page.locator('#inicio a[data-cta="hero"]')).toHaveAttribute('href', '#agenda');
-    await expect(page.locator('.hero-collage')).toBeVisible();
+    await expect(page.locator('#inicio .hero-showcase img')).toBeVisible();
   });
 });
 

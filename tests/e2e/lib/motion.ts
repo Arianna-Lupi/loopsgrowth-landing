@@ -26,6 +26,12 @@ export const MOTION_ALLOWLIST: AllowedMotion[] = [
   { type: 'CSSAnimation', names: ['hc-look'], selector: '#inicio .hc-pupil, #inicio [data-pupil]', properties: ['transform'] },
   // Entradas del home (src/scripts/reveal.ts, prueba de Juan 2026-11-23): Web Animations API, opacity y transform, finitas.
   { type: 'Animation', names: [''], selector: REVEAL_ANY, properties: ['opacity', 'transform'] },
+  // Formulario conversacional de #agenda (AgendaSection.astro, todo bajo `no-preference`): entrada de cada paso,
+  // entrada escalonada de las opciones y barra de progreso que crece al cambiar de paso. Son finitas y solo se
+  // disparan al cargar el primer paso o al navegar entre pasos.
+  { type: 'CSSAnimation', names: ['lead-in-right', 'lead-in-left'], selector: '#agenda .lead-step', properties: ['opacity', 'transform'] },
+  { type: 'CSSAnimation', names: ['lead-chip-in'], selector: '#agenda .lead-chip', properties: ['opacity', 'transform'] },
+  { type: 'CSSTransition', names: ['width'], selector: '#lead-bar-fill', properties: ['width'] },
   // Icono del FAQ: la barra vertical rota al abrir.
   { type: 'CSSTransition', names: ['transform'], selector: '.faq-icon-v', properties: ['transform'] },
   // Hover del CTA y del enlace de respaldo del formulario (fase 1).
