@@ -75,6 +75,16 @@ const tone = 'light';
     gap: 2rem;
   }
 
+  /* Bajo 40em la CTA no cabe junto al logo y baja: 2rem de salvado bajo el logo, y solo 0.25rem hasta el menú. */
+  @media (max-width: 39.99em) {
+    .bar {
+      row-gap: 0.25rem;
+    }
+    .header-cta {
+      margin-top: 1.75rem;
+    }
+  }
+
   @media (min-width: 40em) {
     .bar {
       row-gap: 2.5rem;
@@ -90,7 +100,8 @@ const tone = 'light';
   .main-nav ul {
     display: flex;
     flex-wrap: wrap;
-    gap: 0 1.25rem;
+    justify-content: space-between;
+    gap: 0 0.75rem;
     margin: 0;
     padding: 0;
     list-style: none;
@@ -102,6 +113,7 @@ const tone = 'light';
     justify-content: center;
     min-height: var(--target-min);
     min-width: var(--target-min);
+    padding-inline: 0.125rem;
     color: var(--on-surface);
     font-size: var(--text-label);
     line-height: var(--text-label--line-height);
@@ -128,6 +140,10 @@ const tone = 'light';
   }
 
   @media (min-width: 48em) {
+    .main-nav ul {
+      justify-content: center;
+    }
+
     .main-nav {
       order: 0;
       flex: 1 1 auto;
@@ -164,8 +180,8 @@ const tone = 'light';
   @media (min-width: 26.51em) and (max-width: 39.99em) {
     .header-cta :global(.cta) {
       min-height: 2.5rem;
-      padding: 0.35rem 0.875rem;
-      font-size: 0.8125rem;
+      padding: 0.25rem 0.625rem;
+      font-size: 0.75rem;
       box-shadow: 2px 2px 0 var(--pop-shadow-color);
       white-space: nowrap;
     }
