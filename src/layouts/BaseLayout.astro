@@ -36,9 +36,7 @@ const {
 const canonical = canonicalUrl(path);
 const effectiveSiteUrl = siteUrl || 'https://loopsgrowth.com';
 const pageUrl = canonical || (siteUrl ? new URL(path, siteUrl).href : `${effectiveSiteUrl}${path}`);
-const fullOgImage = ogImage.startsWith('http')
-  ? ogImage
-  : `${effectiveSiteUrl}${ogImage.startsWith('/') ? '' : '/'}${ogImage}`;
+const fullOgImage = new URL(ogImage, effectiveSiteUrl).href;
 ---
 
 <!doctype html>
