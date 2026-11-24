@@ -45,7 +45,7 @@ es:
     description:
       text: "Agencia SEO para LATAM: aparece en Google y en ChatGPT. Un equipo con 8 años de experiencia ejecuta tu SEO y tu posicionamiento en IA. Habla con nosotros."
       status: verified
-      reason: "Aprobado por Ari de forma verbal (confirmado por Juan, 2026-11-23); pendiente su confirmación escrita en Slack."
+      reason: "Aprobado por Ari por escrito en Slack el 2026-11-24."
   hero:
     h1:
       text: "Agencia SEO en LATAM para aparecer en Google y en ChatGPT"
@@ -546,11 +546,11 @@ es:
       - question:
           text: "¿Qué hace una agencia SEO?"
           status: verified
-          reason: "Aprobado por Ari de forma verbal (confirmado por Juan, 2026-11-23); pendiente su confirmación escrita en Slack."
+          reason: "Aprobado por Ari por escrito en Slack el 2026-11-24."
         answer:
           text: "Trabaja para que tus clientes te encuentren en Google: mejora la parte técnica de tu web, crea el contenido que responde lo que buscan y construye señales de confianza.\nEn Loops Growth sumamos el posicionamiento en IA, para que ChatGPT y Gemini también puedan considerar tu negocio."
           status: verified
-          reason: "Aprobado por Ari de forma verbal (confirmado por Juan, 2026-11-23); pendiente su confirmación escrita en Slack."
+          reason: "Aprobado por Ari por escrito en Slack el 2026-11-24."
   agenda:
     title:
       text: "¿Listo para que te encuentren cuando te estan buscando?"

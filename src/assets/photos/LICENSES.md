@@ -6,7 +6,7 @@ Registro de cada foto de stock usada o candidata en las ranuras de foto del coll
 
 Elección: cerrada
 
-Fotos elegidas: `hero-a` y `whynow-a`. Aprobadas por Juan Carlos Angulo el 2026-11-23 (Ari las aprobó de palabra, pendiente su confirmación escrita). Las candidatas `hero-b` y `whynow-b` se descartaron.
+Fotos elegidas: `hero-a` y `whynow-a`. Aprobadas por Juan Carlos Angulo el 2026-11-23 (Ari lo confirmó por escrito en Slack el 2026-11-24). Las candidatas `hero-b` y `whynow-b` se descartaron.
 
 ## Cómo cerrar la elección
 
