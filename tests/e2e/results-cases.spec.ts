@@ -162,10 +162,12 @@ test.describe('sin movimiento en Lo que logramos juntos', () => {
       await page.goto('/');
       if (motion === 'reduce') await expectNoMotion(page);
       else await expectMotionWithinBudget(page);
-      const opacities = await page
-        .locator('#resultados li')
-        .evaluateAll((els) => els.map((el) => getComputedStyle(el).opacity));
-      expect(opacities).toEqual(['1', '1', '1', '1']);
+      // Con no-preference los resultados entran con una animación de scroll (reveal.ts): arrancan en opacidad 0 hasta
+      // que la sección se ve y terminan en 1. Con reduce no hay ninguna y se miden de inmediato.
+      await page.locator('#resultados').scrollIntoViewIfNeeded();
+      await expect
+        .poll(() => page.locator('#resultados li').evaluateAll((els) => els.map((el) => getComputedStyle(el).opacity)))
+        .toEqual(['1', '1', '1', '1']);
     });
   }
 });
@@ -174,6 +176,15 @@ test.describe('sin movimiento en Lo que logramos juntos', () => {
 // Casos de éxito (CONT-06). Todo texto esperado sale del YAML; los rectángulos se miden en el navegador.
 // ---------------------------------------------------------------------------------------------
 const CASES = es.cases.items;
+/** Cuadrícula de 2 x 2: filas con el mismo top, columnas con el mismo borde izquierdo y la segunda a la derecha de la primera. */
+const expectTwoByTwo = (r: Box[], tol: number) => {
+  expect(Math.abs(r[0].y - r[1].y)).toBeLessThanOrEqual(tol);
+  expect(Math.abs(r[2].y - r[3].y)).toBeLessThanOrEqual(tol);
+  expect(Math.abs(r[2].x - r[0].x)).toBeLessThanOrEqual(tol);
+  expect(Math.abs(r[3].x - r[1].x)).toBeLessThanOrEqual(tol);
+  expect(r[1].x).toBeGreaterThan(r[0].x + r[0].width - tol);
+  expect(r[2].y).toBeGreaterThan(r[0].y + r[0].height - tol);
+};
 const overlaps = (a: Box, b: Box) =>
   a.x < b.x + b.width - 1 && b.x < a.x + a.width - 1 && a.y < b.y + b.height - 1 && b.y < a.y + a.height - 1;
 
@@ -197,7 +208,7 @@ for (const viewport of [
       expect(await section.getAttribute('aria-labelledby')).toBe(await h2.getAttribute('id'));
     });
 
-    test('(h) cinco artículos; el h3 es la frase completa del doc y da nombre a la tarjeta', async ({ page }) => {
+    test('(h) cuatro artículos; el h3 es la frase completa del doc y da nombre a la tarjeta', async ({ page }) => {
       await page.goto('/');
       const list = page.locator('#casos ul[role="list"]');
       await expect(list).toHaveCount(1);
@@ -210,7 +221,10 @@ for (const viewport of [
         await expect(h3).toHaveCount(1);
         expect(await article.getAttribute('aria-labelledby')).toBe(await h3.getAttribute('id'));
         const name = `${CASES[i].figure.text} ${CASES[i].metric.text}`;
-        expect(norm((await h3.textContent()) ?? '')).toBe(norm(name));
+        // La cifra cuenta de 0 al valor al entrar en pantalla (reveal.ts) y, mientras no se ve, queda con
+        // `visibility: hidden`: se lleva la tarjeta a la vista y se mide el nombre accesible, que ya trae el valor final.
+        await article.scrollIntoViewIfNeeded();
+        await expect(h3).toHaveAccessibleName(norm(name));
         await expect(page.getByRole('heading', { level: 3, name: norm(name), exact: true })).toHaveCount(1);
       }
     });
@@ -266,50 +280,40 @@ for (const viewport of [
     test('(k) la rejilla medida por rectángulos', async ({ page }) => {
       await page.goto('/');
       const r = await boxes(page, '#casos ul[role="list"] > li');
-      expect(r).toHaveLength(5);
+      expect(r).toHaveLength(4);
       const tol = 2;
-      if (viewport.width < 640) {
+      if (viewport.width < 768) {
         for (const b of r) expect(Math.abs(b.x - r[0].x)).toBeLessThanOrEqual(tol);
       } else {
-        // 1280 px: tres columnas; la quinta ocupa las columnas 2 y 3.
-        expect(Math.abs(r[0].y - r[1].y)).toBeLessThanOrEqual(tol);
-        expect(Math.abs(r[1].y - r[2].y)).toBeLessThanOrEqual(tol);
-        expect(Math.abs(r[3].x - r[0].x)).toBeLessThanOrEqual(tol);
-        expect(Math.abs(r[4].x - r[1].x)).toBeLessThanOrEqual(tol);
-        expect(Math.abs(r[4].x + r[4].width - (r[2].x + r[2].width))).toBeLessThanOrEqual(tol);
-        expect(Math.abs(r[3].y - r[4].y)).toBeLessThanOrEqual(tol);
+        // 1280 px: dos columnas de 2 x 2; la cuarta (la ancha de Meta Ads, con la lupa) cierra la segunda columna.
+        expectTwoByTwo(r, tol);
       }
     });
   });
 }
 
-for (const width of [640, 768]) {
+test.describe('Casos de éxito, una columna a 640 px', () => {
+  test.use({ viewport: { width: 640, height: 900 } });
+  test('(k) bajo 768 px las cuatro tarjetas van en una sola columna', async ({ page }) => {
+    await page.goto('/');
+    const r = await boxes(page, '#casos ul[role="list"] > li');
+    expect(r).toHaveLength(4);
+    for (const b of r) expect(Math.abs(b.x - r[0].x)).toBeLessThanOrEqual(2);
+    for (let i = 1; i < r.length; i++) expect(r[i].y).toBeGreaterThan(r[i - 1].y + r[i - 1].height - 2);
+  });
+});
+
+for (const width of [768, 1024]) {
   test.describe(`Casos de éxito, dos columnas a ${width} px`, () => {
     test.use({ viewport: { width, height: 900 } });
-    test('(k) dos columnas y la quinta ocupa ambas', async ({ page }) => {
+    test('(k) dos columnas de 2 x 2 desde 768 px', async ({ page }) => {
       await page.goto('/');
       const r = await boxes(page, '#casos ul[role="list"] > li');
-      expect(Math.abs(r[0].y - r[1].y)).toBeLessThanOrEqual(2);
-      expect(Math.abs(r[2].y - r[3].y)).toBeLessThanOrEqual(2);
-      expect(Math.abs(r[2].x - r[0].x)).toBeLessThanOrEqual(2);
-      expect(Math.abs(r[4].x - r[0].x)).toBeLessThanOrEqual(2);
-      expect(Math.abs(r[4].x + r[4].width - (r[1].x + r[1].width))).toBeLessThanOrEqual(2);
+      expect(r).toHaveLength(4);
+      expectTwoByTwo(r, 2);
     });
   });
 }
-
-test.describe('Casos de éxito, tres columnas a 1024 px', () => {
-  test.use({ viewport: { width: 1024, height: 800 } });
-  test('(k) tres columnas y la quinta en las columnas 2 y 3', async ({ page }) => {
-    await page.goto('/');
-    const r = await boxes(page, '#casos ul[role="list"] > li');
-    expect(Math.abs(r[0].y - r[1].y)).toBeLessThanOrEqual(2);
-    expect(Math.abs(r[1].y - r[2].y)).toBeLessThanOrEqual(2);
-    expect(Math.abs(r[3].x - r[0].x)).toBeLessThanOrEqual(2);
-    expect(Math.abs(r[4].x - r[1].x)).toBeLessThanOrEqual(2);
-    expect(Math.abs(r[4].x + r[4].width - (r[2].x + r[2].width))).toBeLessThanOrEqual(2);
-  });
-});
 
 for (const viewport of [
   { width: 1280, height: 800 },
@@ -318,7 +322,7 @@ for (const viewport of [
   test.describe(`La lupa de Casos de éxito a ${viewport.width} px`, () => {
     test.use({ viewport });
 
-    test('(l) una sola lupa decorativa de 96 px en la quinta tarjeta, sin cruzar texto y con la cifra encima', async ({
+    test('(l) una sola lupa decorativa de 96 px en la cuarta tarjeta (la ancha de Meta Ads), sin cruzar texto y con la cifra encima', async ({
       page,
     }) => {
       await page.goto('/');
@@ -331,7 +335,7 @@ for (const viewport of [
       await expect(lupa).toHaveAttribute('focusable', 'false');
       await expect(lupa.locator('use')).toHaveCount(1);
       expect(await lupa.locator('use').getAttribute('href')).toBe('#lg-lupa');
-      const fifth = page.locator('#casos ul[role="list"] > li').nth(4).locator('article');
+      const fifth = page.locator('#casos ul[role="list"] > li').nth(3).locator('article');
       await expect(fifth.locator('svg[data-collage-piece="lupa"]')).toHaveCount(1);
 
       // Ancho y alto calculados (no incluyen la rotación) y relación 0.97 del arte oficial.
