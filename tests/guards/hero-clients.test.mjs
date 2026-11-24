@@ -80,21 +80,21 @@ test('puerta: registro, manifiesto o archivo incoherentes bloquean en cualquier 
   assert.deepEqual(gate({ hashes: { holafly: GOOD.sha256 } }).errors, []);
 });
 
-test('check-photos.mjs: sale 0 fuera de producción y 1 en production con la aprobación pendiente', () => {
+test('check-photos.mjs: sale 0 fuera de producción y los logos aprobados no bloquean en production', () => {
   const dev = spawnSync('node', ['scripts/check-photos.mjs'], { encoding: 'utf8', env: { ...process.env, PUBLIC_ENV: 'development' } });
   assert.equal(dev.status, 0, dev.stderr);
   assert.match(dev.stdout, /12 logos de clientes/);
   const prod = spawnSync('node', ['scripts/check-photos.mjs'], { encoding: 'utf8', env: { ...process.env, PUBLIC_ENV: 'production' } });
-  assert.equal(prod.status, 1);
-  assert.match(prod.stderr, /clientes\): El logo de cliente "holafly" tiene la aprobación de Ari pendiente/);
+  // Los logos ya están aprobados; producción puede seguir bloqueada por el equipo, pero no por los logos.
+  assert.doesNotMatch(prod.stderr, /clientes\): El logo de cliente/);
 });
 
-test('YAML: 12 clientes verified y la etiqueta pending para Ari', () => {
+test('YAML: 12 clientes y la etiqueta, todos verified', () => {
   const block = YAML.slice(YAML.indexOf('    clients:'), YAML.indexOf('  problem:'));
   const names = [...block.matchAll(/^ {8}- text: "([^"]+)"/gm)].map((m) => m[1]);
   assert.deepEqual(names, NAMES);
-  assert.equal((block.match(/status: verified/g) ?? []).length, 12);
-  assert.match(block, /label:\n {8}text: "Marcas que han confiado en nuestro trabajo"\n {8}status: pending\n {8}confirm_by: Ari\n {8}reason: /);
+  assert.equal((block.match(/status: verified/g) ?? []).length, 13);
+  assert.match(block, /label:\n {8}text: "Marcas que han confiado en nuestro trabajo"\n {8}status: verified\n {8}reason: /);
   assert.doesNotMatch(block, /[–—]|AEO/);
 });
 

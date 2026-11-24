@@ -1,0 +1,38 @@
+---
+/**
+ * Página de ciudad `/agencia-seo-<pais>/<ciudad>/`. Contenido local único y verdadero o no se genera. SIN dirección,
+ * mapa, LocalBusiness con address ni ficha de Google Business: Loops no tiene oficina. El schema es Service con
+ * `areaServed` de tipo City dentro del país. Sin la página del país en el build, la ciudad no se genera (sin huérfanas).
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import CityPage from '../../components/landing/CityPage.astro';
+import { getPaises } from '../../lib/paises';
+import { paisPath } from '../../lib/paginas';
+import { buildOrganization, buildPageGraph } from '../../lib/seo';
+import { getLanding } from '../../lib/content';
+import { siteUrl } from '../../lib/site';
+
+export async function getStaticPaths() {
+  const todos = await getPaises();
+  const ids = new Set(todos.filter((p) => p.data.tipo === 'pais').map((p) => p.id));
+  return todos
+    .filter((p) => p.data.tipo === 'ciudad' && ids.has(p.data.pais!))
+    .map((ciudad) => ({ params: { pais: ciudad.data.pais!, ciudad: ciudad.data.ciudad! }, props: { ciudad } }));
+}
+
+const { ciudad } = Astro.props;
+const d = ciudad.data;
+const base = siteUrl.replace(/\/+$/, '');
+const path = paisPath(ciudad);
+const padre = (await getPaises()).find((p) => p.id === d.pais)!;
+const landing = await getLanding();
+const crumbs = [{ name: 'Inicio', path: '/' }, { name: `Agencia SEO en ${padre.data.nombre}`, path: paisPath(padre) }, { name: d.nombre, path }];
+const schema = buildPageGraph(base, path, crumbs, d.faq, [
+  buildOrganization(landing, base),
+  { '@type': 'Service', '@id': `${base}${path}#service`, name: d.h1, serviceType: 'SEO y posicionamiento en IA', provider: { '@id': `${base}/#organization` }, areaServed: { '@type': 'City', name: d.nombre, containedInPlace: { '@type': 'Country', name: padre.data.nombre } }, url: `${base}${path}` },
+]);
+---
+
+<BaseLayout reveal title={d.title} description={d.description} path={path} noindex={d.draft} schema={schema}>
+  <CityPage d={d} crumbs={crumbs} paisName={padre.data.nombre} paisPath={paisPath(padre)} />
+</BaseLayout>

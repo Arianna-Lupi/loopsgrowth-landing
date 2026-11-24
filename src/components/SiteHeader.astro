@@ -5,16 +5,21 @@
  * enlace a `/` en cualquier otra ruta.
  * Monta el sprite del collage una sola vez por página, fuera del landmark (si BaseLayout lo
  * asume después, basta mover esa línea).
- * El CTA se oculta con `display: none` por debajo de 640 px: así sale también del
- * orden de tabulación y el CTA del hero queda como único acceso en móvil.
+ * Menú principal: `<nav>` con enlaces reales, sin JavaScript. Bajo 48em baja a una segunda fila del header
+ * (que deja de ser pegajoso bajo 64em para no ocupar la pantalla); desde 48em va en línea entre el logo y la CTA.
+ * El CTA del header se muestra siempre; bajo 40em va compacto (36 a 40 px de alto, cumple SC 2.5.8).
  */
 import CtaLink from './CtaLink.astro';
 import Logo from './brand/Logo.astro';
 import CollageSprite from './collage/CollageSprite.astro';
 import { getLanding, ctaLabel } from '../lib/content';
+import { getMainNav } from '../lib/nav';
 
 const data = await getLanding();
 const label = ctaLabel(data);
+const links = await getMainNav();
+const path = Astro.url.pathname;
+const isCurrent = (href: string) => path === href || (href !== '/' && path.startsWith(href));
 const isHome = Astro.url.pathname === '/';
 const homeHref = isHome ? undefined : '/';
 // En otras rutas `#agenda` no existe: el CTA lleva a la home con el ancla.
@@ -28,6 +33,21 @@ const tone = 'light';
 <header class="site-header" data-tone={tone}>
   <div class="wrap bar">
     <Logo name={data.brand.name.text} href={homeHref} tone={tone} />
+    {
+      links.length > 0 && (
+        <nav class="main-nav" aria-label={data.nav.label.text}>
+          <ul role="list">
+            {links.map((l) => (
+              <li>
+                <a href={l.href} aria-current={isCurrent(l.href) ? 'page' : undefined}>
+                  {l.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      )
+    }
     <div class="header-cta">
       <CtaLink label={label} location="header" href={ctaHref} />
     </div>
@@ -48,9 +68,76 @@ const tone = 'light';
 
   .bar {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
-    gap: 0.75rem;
+    /* Área de salvado del logo (BrandBook p.7): 2rem libres a su derecha y debajo antes de la CTA o el menú. */
+    gap: 2rem;
+  }
+
+  @media (min-width: 40em) {
+    .bar {
+      row-gap: 2.5rem;
+    }
+  }
+
+  .main-nav {
+    order: 3;
+    flex-basis: 100%;
+    min-width: 0;
+  }
+
+  .main-nav ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 1.25rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .main-nav a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: var(--target-min);
+    min-width: var(--target-min);
+    color: var(--on-surface);
+    font-size: var(--text-label);
+    line-height: var(--text-label--line-height);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .main-nav a:hover,
+  .main-nav a[aria-current='page'] {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 6px;
+  }
+
+  .main-nav a:focus-visible {
+    outline: var(--focus-width) solid var(--focus-ring);
+    outline-offset: var(--focus-offset);
+  }
+
+  @media (max-width: 63.99em) {
+    .site-header {
+      position: static;
+    }
+  }
+
+  @media (min-width: 48em) {
+    .main-nav {
+      order: 0;
+      flex: 1 1 auto;
+      display: flex;
+      justify-content: center;
+    }
+
+    .main-nav ul {
+      gap: 0 1.75rem;
+    }
   }
 
   .header-cta {

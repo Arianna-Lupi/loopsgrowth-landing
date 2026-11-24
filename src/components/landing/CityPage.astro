@@ -1,0 +1,109 @@
+---
+/**
+ * Página de ciudad. Corta y concreta: hero morado con una tarjeta de verificación de lo que se revisa en la ciudad,
+ * una sección de titular fijo con texto, una cita grande amarilla y una franja de videollamada. SIN dirección, mapa,
+ * LocalBusiness ni Google Business. Ritmo de tonos: purple, light, yellow, light, dark, yellow.
+ */
+import { Image } from 'astro:assets';
+import CtaLink from '../CtaLink.astro';
+import Crumbs from './Crumbs.astro';
+import Prose from './Prose.astro';
+import Results from './Results.astro';
+import Faq from './Faq.astro';
+import Closing from './Closing.astro';
+import { getLanding, ctaLabel } from '../../lib/content';
+import { toBlocks } from '../../lib/text';
+import { PAIS_TEMPLATE } from '../../lib/paises';
+import ojo from '../../assets/brand/ojo-18-blanco.svg';
+
+interface Props { d: any; crumbs: { name: string; path: string }[]; paisName: string; paisPath: string }
+const { d, crumbs, paisName, paisPath } = Astro.props;
+const label = ctaLabel(await getLanding());
+const intro = `${PAIS_TEMPLATE.servicio_intro.replace('{pais}', d.nombre)}\n\n${d.intro}`;
+const paras = toBlocks(intro).filter((b) => b.kind === 'p').map((b: any) => b.text);
+const [a, b, c] = d.secciones;
+const quote = toBlocks(b.cuerpo)[0];
+---
+
+<article>
+  <section class="hero" data-tone="purple" aria-labelledby="hero-title">
+    <div class="wrap">
+      <Crumbs crumbs={crumbs} />
+      <div class="hero-grid">
+        <div>
+          <h1 id="hero-title" data-rv>{d.h1}</h1>
+          {paras.map((t, i) => <p data-rv class:list={['sub', i > 0 && 'more']}>{t}</p>)}
+          <p class="actions" data-rv><CtaLink label={label} location="pagina" href="/#agenda" /><a class="link" href={paisPath}>Ver {paisName}</a></p>
+        </div>
+        {
+          d.senales.length > 0 && (
+            <aside class="check" data-rv data-rv-index="1" aria-labelledby="check-title">
+              <Image class="check-art" src={ojo} alt="" width={64} height={64} aria-hidden="true" />
+              <h2 id="check-title">Qué revisamos en {d.nombre}</h2>
+              <ul role="list">
+                {d.senales.map((s: string) => (
+                  <li data-rv><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false"><circle class="tick-bg" cx="12" cy="12" r="11" stroke-width="2" /><path class="tick" d="m7 12.5 3.2 3.2L17 9" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" /></svg><span>{s}</span></li>
+                ))}
+              </ul>
+            </aside>
+          )
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="story" data-tone="light" aria-labelledby="a-title">
+    <div class="wrap story-grid">
+      <h2 id="a-title" data-rv>{a.titulo}</h2>
+      <div data-rv data-rv-index="1"><Prose text={a.cuerpo} /></div>
+    </div>
+  </section>
+
+  <section class="quote" data-tone="yellow" aria-labelledby="b-title">
+    <div class="wrap">
+      <h2 id="b-title" class="q-title" data-rv>{b.titulo}</h2>
+      <p class="q" data-rv>{quote.kind === 'p' ? quote.text : ''}</p>
+      <div data-rv data-rv-index="2"><Prose text={b.cuerpo.split(/\n{2,}/).slice(1).join('\n\n')} /></div>
+    </div>
+  </section>
+
+  <section class="strip" data-tone="light" aria-labelledby="c-title">
+    <div class="wrap strip-grid">
+      <h2 id="c-title" data-rv>{c.titulo}</h2>
+      <div data-rv data-rv-index="1"><Prose text={c.cuerpo} /></div>
+    </div>
+  </section>
+
+  <Results tone="light" compact />
+  <Faq items={d.faq} tone="dark" side />
+  <Closing tone="yellow" title="¿Quieres revisar tu caso?" text={`Agenda una llamada por videollamada y revisamos tu situación en ${d.nombre}. Sin costo y sin compromiso.`} />
+</article>
+
+<style>
+  section { padding-block: var(--section-y); }
+  h2 { letter-spacing: -0.02em; text-wrap: balance; }
+  .hero { padding-block: 1.5rem var(--section-y); }
+  .hero-grid { display: grid; gap: 2.5rem; align-items: center; }
+  h1 { max-width: 15ch; letter-spacing: -0.03em; text-wrap: balance; }
+  .sub { max-width: 52ch; margin-top: 1.25rem; font-size: var(--text-title); line-height: 1.45; }
+  .sub.more { font-size: var(--text-body); margin-top: 0.75rem; }
+  .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 1.5rem; margin-top: 2rem; }
+  .link { display: inline-flex; align-items: center; min-height: var(--target-min); font-weight: 600; color: var(--link); text-underline-offset: 4px; }
+  .link:focus-visible { outline: var(--focus-width) solid var(--focus-ring); outline-offset: var(--focus-offset); }
+  .check { display: grid; gap: 1rem; padding: 1.5rem; border: var(--border-pop); border-radius: var(--radius-card); background: var(--color-brand-white); color: var(--color-brand-dark); box-shadow: var(--shadow-pop); }
+  .check h2 { font-size: var(--text-title); color: var(--color-brand-dark); }
+  .check-art { width: 3.5rem; height: auto; }
+  .check ul { display: grid; gap: 0.75rem; margin: 0; padding: 0; list-style: none; }
+  .tick-bg { fill: var(--color-brand-yellow); stroke: var(--color-brand-dark); }
+  .tick { stroke: var(--color-brand-dark); }
+  .check li { display: grid; grid-template-columns: 1.5rem 1fr; gap: 0.75rem; align-items: start; }
+  .story-grid, .strip-grid { display: grid; gap: 1.5rem; }
+  .story h2, .strip h2 { max-width: 16ch; font-size: var(--text-heading); }
+  .q-title { font-size: var(--text-title); margin-bottom: 1rem; }
+  .q { max-width: 22ch; margin-bottom: 1.5rem; font-size: clamp(1.75rem, 1.2rem + 2.4vw, 3rem); line-height: 1.15; font-weight: 700; letter-spacing: -0.02em; text-wrap: balance; }
+  @media (min-width: 64em) {
+    .hero-grid { grid-template-columns: 1.1fr 0.9fr; }
+    .story-grid { grid-template-columns: 0.8fr 1.2fr; align-items: start; }
+    .strip-grid { grid-template-columns: 1.2fr 0.8fr; align-items: start; }
+  }
+</style>

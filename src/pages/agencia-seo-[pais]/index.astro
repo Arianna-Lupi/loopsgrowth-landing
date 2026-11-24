@@ -1,0 +1,37 @@
+---
+/**
+ * Página de país `/agencia-seo-<pais>/`. Patrón de Ari: país plano, ciudad anidada, sin hub. Sin países publicados
+ * no se genera nada. Un borrador (solo visible fuera de producción) sale `noindex`. Sin LocalBusiness, dirección,
+ * mapa ni reseñas. La composición es propia del país (CountryPage); el texto compartido vive en `pais-template.json`.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import CountryPage from '../../components/landing/CountryPage.astro';
+import { getPaises } from '../../lib/paises';
+import { paisPath } from '../../lib/paginas';
+import { buildOrganization, buildPageGraph } from '../../lib/seo';
+import { getLanding } from '../../lib/content';
+import { siteUrl } from '../../lib/site';
+
+export async function getStaticPaths() {
+  const paises = (await getPaises()).filter((p) => p.data.tipo === 'pais');
+  return paises.map((pais) => ({ params: { pais: pais.id }, props: { pais } }));
+}
+
+const { pais } = Astro.props;
+const d = pais.data;
+const base = siteUrl.replace(/\/+$/, '');
+const path = paisPath(pais);
+const landing = await getLanding();
+const todos = await getPaises();
+// Nombre de la ciudad con página propia, para el chip que enlaza a ella.
+const cityPaths = Object.fromEntries(todos.filter((p) => p.data.tipo === 'ciudad' && p.data.pais === pais.id).map((c) => [c.data.nombre, paisPath(c)]));
+const crumbs = [{ name: 'Inicio', path: '/' }, { name: `Agencia SEO en ${d.nombre}`, path }];
+const schema = buildPageGraph(base, path, crumbs, d.faq, [
+  buildOrganization(landing, base),
+  { '@type': 'Service', '@id': `${base}${path}#service`, name: d.h1, serviceType: 'SEO y posicionamiento en IA', provider: { '@id': `${base}/#organization` }, areaServed: { '@type': 'Country', name: d.nombre }, url: `${base}${path}` },
+]);
+---
+
+<BaseLayout title={d.title} description={d.description} path={path} noindex={d.draft} schema={schema} reveal>
+  <CountryPage d={d} id={pais.id} crumbs={crumbs} cityPaths={cityPaths} />
+</BaseLayout>

@@ -91,7 +91,6 @@ const chip = pill || channel;
     line-height: var(--text-display--line-height);
     font-weight: 700;
     color: var(--heading);
-    overflow-wrap: anywhere;
   }
 
   /* Marcador plano detrás del tercio inferior de la cifra: una sola tonalidad, sin desenfoque. */
@@ -99,6 +98,8 @@ const chip = pill || channel;
     background: linear-gradient(var(--mark), var(--mark)) no-repeat 0 88% / 100% 34%;
     box-decoration-break: clone;
     -webkit-box-decoration-break: clone;
+    /* La cifra no se parte en dos líneas (antes "+500" y "%"). */
+    white-space: nowrap;
   }
 
   .metric-name {

@@ -1,0 +1,30 @@
+---
+/** Cuerpo de texto desde un YAML: párrafos, listas y enlaces en línea `[ancla](/ruta/)`. Solo nodos de texto. */
+import { toBlocks } from '../../lib/text';
+import { parseInline } from '../../lib/inline';
+import { getLivePaths } from '../../lib/paginas';
+
+interface Props { text: string; class?: string }
+const { text, class: cls } = Astro.props;
+const live = await getLivePaths();
+const blocks = toBlocks(text);
+---
+
+<div class:list={['prose', cls]}>
+  {
+    blocks.map((b) =>
+      b.kind === 'p' ? (
+        <p>{parseInline(b.text, live).map((s) => (s.href ? <a href={s.href}>{s.text}</a> : s.text))}</p>
+      ) : (
+        <ul>{b.items.map((i) => <li>{parseInline(i, live).map((s) => (s.href ? <a href={s.href}>{s.text}</a> : s.text))}</li>)}</ul>
+      ),
+    )
+  }
+</div>
+
+<style>
+  .prose { max-width: 62ch; }
+  .prose :global(p), .prose :global(ul) { margin-block: 0 1rem; }
+  .prose :global(ul) { padding-inline-start: 1.25rem; list-style: disc; }
+  .prose :global(a) { color: var(--link); text-decoration: underline; text-underline-offset: 4px; }
+</style>

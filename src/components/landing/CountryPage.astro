@@ -1,0 +1,118 @@
+---
+/**
+ * Página de país. Mundo editorial y de trabajo remoto: hero amarillo con chips de ciudades y una ventana de
+ * videollamada con los retratos del equipo, secciones como filas de titular y texto separadas por reglas, un bloque
+ * oscuro con las tres formas de trabajar a distancia, resultados, FAQ y cierre. Sin mapa, dirección ni oficina.
+ * Ritmo de tonos: yellow, light, dark, yellow, light, purple.
+ */
+import { Image } from 'astro:assets';
+import CtaLink from '../CtaLink.astro';
+import Crumbs from './Crumbs.astro';
+import Prose from './Prose.astro';
+import Results from './Results.astro';
+import Faq from './Faq.astro';
+import Closing from './Closing.astro';
+import { getLanding, ctaLabel } from '../../lib/content';
+import { getLivePaths } from '../../lib/paginas';
+import { toBlocks } from '../../lib/text';
+import { PAIS_TEMPLATE } from '../../lib/paises';
+import founder from '../../assets/hero/hero-founder.webp';
+
+interface Props { d: any; id: string; crumbs: { name: string; path: string }[]; cityPaths: Record<string, string> }
+const { d, crumbs, cityPaths } = Astro.props;
+const data = await getLanding();
+const label = ctaLabel(data);
+const live = await getLivePaths();
+const intro = `${PAIS_TEMPLATE.servicio_intro.replace('{pais}', d.nombre)}\n\n${d.intro}`;
+const sub = toBlocks(intro).filter((b) => b.kind === 'p').map((b: any) => b.text);
+---
+
+<article>
+  <section class="hero" data-tone="yellow" aria-labelledby="hero-title">
+    <div class="wrap">
+      <Crumbs crumbs={crumbs} />
+      <div class="hero-grid">
+        <div>
+          <h1 id="hero-title" data-rv>{d.h1}</h1>
+          {sub.map((t, i) => <p data-rv class:list={['sub', i > 0 && 'more']}>{t}</p>)}
+          <p class="actions" data-rv><CtaLink label={label} location="pagina" href="/#agenda" /></p>
+          {
+            d.ciudades.length > 0 && (
+              <ul class="chips" role="list" aria-label="Ciudades de Venezuela que atendemos a distancia">
+                {d.ciudades.map((c: any) => {
+                  const href = c.pagina ? cityPaths[c.nombre] : undefined;
+                  return <li data-rv>{href && live.has(href) ? <a href={href}>{c.nombre}</a> : <span>{c.nombre}</span>}</li>;
+                })}
+              </ul>
+            )
+          }
+        </div>
+        <div class="stage" data-rv><Image src={founder} alt="Arianna Lupi, fundadora de Loops Growth, en el collage de marca" width={720} height={720} loading="eager" fetchpriority="high" /></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="rows" data-tone="light" aria-label={`Cómo trabajamos en ${d.nombre}`}>
+    <div class="wrap">
+      {
+        d.secciones.map((s: any, i: number) => (
+          <div class="row">
+            <h2 data-rv>{s.titulo}</h2>
+            <div data-rv data-rv-index="1"><Prose text={s.cuerpo} /></div>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  {
+    d.remoto.length > 0 && (
+      <section class="remote" data-tone="dark" aria-labelledby="rem-title">
+        <div class="wrap">
+          <h2 id="rem-title" data-rv>{d.remoto_titulo}</h2>
+          <ol class="rem" role="list">
+            {d.remoto.map((r: any, i: number) => (
+              <li data-rv><span class="big" aria-hidden="true">{i + 1}</span><h3>{r.titulo}</h3><p>{r.texto}</p></li>
+            ))}
+          </ol>
+        </div>
+      </section>
+    )
+  }
+
+  <Results tone="yellow" />
+  <Faq items={d.faq} tone="light" />
+  <Closing tone="purple" title="¿Quieres revisar tu caso?" text={`Agenda una llamada con el equipo de Loops Growth y revisamos tu situación en ${d.nombre}. Sin costo y sin compromiso.`} />
+</article>
+
+<style>
+  section { padding-block: var(--section-y); }
+  h2 { letter-spacing: -0.02em; text-wrap: balance; }
+  .hero { padding-block: 1.5rem var(--section-y); }
+  .hero-grid { display: grid; gap: 2.5rem; align-items: center; }
+  h1 { max-width: 14ch; letter-spacing: -0.03em; text-wrap: balance; }
+  .sub { max-width: 52ch; margin-top: 1.25rem; font-size: var(--text-title); line-height: 1.45; }
+  .sub.more { font-size: var(--text-body); margin-top: 0.75rem; }
+  .actions { margin-top: 2rem; }
+  .chips { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1.5rem 0 0; padding: 0; list-style: none; }
+  .chips :is(a, span) { display: inline-flex; align-items: center; min-height: var(--target-min); padding: 0 1rem; border: var(--border-pop); border-radius: var(--radius-pill); background: var(--color-brand-white); color: var(--color-brand-dark); font-weight: 600; text-decoration: none; }
+  .chips a { box-shadow: 3px 3px 0 var(--color-brand-dark); }
+  .chips a:focus-visible { outline: var(--focus-width) solid var(--focus-ring); outline-offset: var(--focus-offset); }
+  .stage { overflow: hidden; border: var(--border-pop); border-radius: var(--radius-card); background: var(--color-brand-purple); box-shadow: var(--shadow-pop); aspect-ratio: 1; max-width: 32rem; }
+  .stage :global(img) { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+  .row { display: grid; gap: 1rem; padding-block: 2rem; border-top: var(--border-pop); }
+  .row:last-child { border-bottom: var(--border-pop); }
+  .row h2 { max-width: 16ch; font-size: var(--text-heading); }
+
+  .rem { display: grid; gap: 2rem; margin: 2.5rem 0 0; padding: 0; list-style: none; }
+  .rem li { display: grid; gap: 0.5rem; }
+  .big { font-size: clamp(4rem, 3rem + 5vw, 7rem); line-height: 0.9; font-weight: 700; letter-spacing: -0.04em; color: var(--color-brand-yellow); font-variant-numeric: tabular-nums; }
+  .rem p { max-width: 36ch; }
+
+  @media (min-width: 64em) {
+    .hero-grid { grid-template-columns: 1.1fr 0.9fr; }
+    .row { grid-template-columns: 0.9fr 1.1fr; gap: 3rem; align-items: start; }
+    .rem { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  }
+</style>

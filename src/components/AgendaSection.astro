@@ -10,6 +10,7 @@
  * crea la tarea en ClickUp y avisa por email). Todo el texto sale del YAML
  * y se muestra tal cual, sea cual sea el estado de su afirmación.
  */
+import LangText from './ui/LangText.astro';
 import AgendaCollage from './collage/AgendaCollage.astro';
 import { getLanding, fill, textVars } from '../lib/content';
 import leadOptions from '../lib/lead-options.json';
@@ -111,7 +112,7 @@ const steps = [
 
           {steps.map((step, i) => (
             <fieldset class="lead-step" data-step={i} hidden={i !== 0}>
-              <legend class="lead-legend" tabindex="-1">{step.title}</legend>
+              <legend class="lead-legend" tabindex="-1"><LangText text={step.title} /></legend>
               {'fields' in step ? (
                 step.fields.map((f) => (
                   <div class="lead-field">
@@ -140,7 +141,7 @@ const steps = [
                         value={label}
                         id={j === 0 ? `lf-${step.radio}` : undefined}
                       />
-                      <span>{label}</span>
+                      <span><LangText text={label} /></span>
                     </label>
                   ))}
                 </div>

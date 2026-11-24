@@ -16,13 +16,20 @@
 import Logo from './brand/Logo.astro';
 import { getLanding } from '../lib/content';
 import { EMAIL_RE } from '../lib/email.mjs';
+import { getPosts } from '../lib/blog';
+import { getFooterExplore } from '../lib/nav';
 
-const { footer, brand } = await getLanding();
+const { footer, brand, nav } = await getLanding();
+const explore = await getFooterExplore();
+const here = Astro.url.pathname;
 const onPrivacy = Astro.url.pathname.startsWith('/privacidad');
 // En `/` el logo no es un destino; en las demás rutas lleva a la home.
 const homeHref = Astro.url.pathname === '/' ? undefined : '/';
 // Un solo valor alimenta el tono del pie y el del logo, para que no puedan separarse.
 const tone = 'light';
+// El enlace al blog aparece solo con artículos publicados: sin ellos /blog/ es noindex y vacío.
+const hasBlog = (await getPosts()).length > 0;
+const onBlog = Astro.url.pathname.startsWith('/blog');
 const email = footer.email.text.trim();
 const emailHref = EMAIL_RE.test(email) ? `mailto:${email}` : undefined;
 ---
@@ -33,6 +40,18 @@ const emailHref = EMAIL_RE.test(email) ? `mailto:${email}` : undefined;
       <Logo name={brand.name.text} href={homeHref} variant="horizontal" tone={tone} />
     </div>
     <nav class="footer-nav" aria-label={footer.nav_label.text}>
+      {
+        explore.length > 0 && (
+          <div class="footer-block">
+            <p class="footer-label">{nav.explore_label.text}</p>
+            {explore.map((l) => (
+              <a class="footer-link" href={l.href} aria-current={here === l.href ? 'page' : undefined}>
+                {l.label}
+              </a>
+            ))}
+          </div>
+        )
+      }
       <div class="footer-block">
         <p class="footer-label">{footer.contact_label.text}</p>
         {
@@ -55,6 +74,9 @@ const emailHref = EMAIL_RE.test(email) ? `mailto:${email}` : undefined;
         >
           {footer.social.text}
         </a>
+        {hasBlog && (
+          <a class="footer-link" href="/blog/" aria-current={onBlog ? 'page' : undefined}>{footer.blog_link.text}</a>
+        )}
         <a class="footer-link" href="/privacidad/" aria-current={onPrivacy ? 'page' : undefined}>{footer.privacy_link.text}</a>
       </div>
     </nav>
@@ -138,7 +160,7 @@ const emailHref = EMAIL_RE.test(email) ? `mailto:${email}` : undefined;
 
     .footer-nav {
       grid-column: span 2;
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
     }
   }
 </style>

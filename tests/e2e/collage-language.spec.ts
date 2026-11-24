@@ -26,6 +26,11 @@ const SCENES: Record<string, string> = {
 const MINIS = Object.keys(SCENES).filter((n) => n.startsWith('sticker-') || n.startsWith('chip-'));
 const FULL = ['hero', 'whynow'];
 const NAMES = Object.keys(SCENES);
+// Tras la ronda 2 el collage del hero y el de Por qué ahora viven ocultos (display: none) como respaldo.
+const HIDDEN_SCENES = ['hero', 'whynow'];
+/** Muestra los dos collages de respaldo solo para medir su estructura (sin ellos no ocupan lugar ni entran en el árbol de accesibilidad). */
+const showHiddenScenes = (page: Page) =>
+  page.addStyleTag({ content: '#inicio .hero-collage-fallback, #por-que-ahora .whynow-preserve { display: block !important; }' });
 
 /** Rasgos por estructura que debe traer cada escena (los mismos de REQUIRED_TRAITS, más ranura). */
 const expectedTraits = (name: string): string[] => {
@@ -64,7 +69,7 @@ async function open(page: Page, width: number) {
   await page.setViewportSize({ width, height: 900 });
   await page.goto('/');
   // Las geometrías se miden en reposo: la entrada del hero (02-07) dura 1 s y mueve las piezas mientras corre.
-  await page.waitForFunction(() => document.getAnimations().length === 0, null, { timeout: 5000 });
+  await page.waitForFunction(() => (window as unknown as { __rvReady?: boolean }).__rvReady === true && document.getAnimations().length === 0, null, { timeout: 5000 });
 }
 
 test.describe('escenas: lenguaje del moodboard', () => {
@@ -72,7 +77,7 @@ test.describe('escenas: lenguaje del moodboard', () => {
     await open(page, 1280);
     for (const name of NAMES) await expect(page.locator(SCENES[name]), name).toHaveCount(1);
     // Las piezas sueltas (la lupa de Casos de éxito) y los avatares de Quiénes somos (plan 02-05) no son escenas:
-    // se cuentan aparte y son exactamente una pieza y un avatar (los otros tres integrantes llevan foto, quick 260920-team-photos).
+    // se cuentan aparte: una pieza y ningún avatar (los cuatro integrantes llevan foto desde que se aprobó la de Miguel).
     // Más la escena `agenda` del CTA final (plan 02-06), que mide `closing-sections.spec.ts`: raíz `div`,
     // dos píldoras, caja y separación de la tarjeta.
     await expect(
@@ -80,7 +85,7 @@ test.describe('escenas: lenguaje del moodboard', () => {
     ).toHaveCount(NAMES.length + 1);
     await expect(page.locator('#agenda [data-collage="agenda"]')).toHaveCount(1);
     await expect(page.locator('[data-collage="piece"]')).toHaveCount(1);
-    await expect(page.locator('[data-collage="avatar"]')).toHaveCount(1);
+    await expect(page.locator('[data-collage="avatar"]')).toHaveCount(0);
   });
 
   for (const name of NAMES) {
@@ -151,10 +156,16 @@ test.describe('escenas: lenguaje del moodboard', () => {
     await page.evaluate(() => document.querySelectorAll('[data-collage]').forEach((e) => e.remove()));
     const without = await page.locator('main').ariaSnapshot();
     expect(without).toBe(withCollage);
-    // mutación: quitar aria-hidden de la raíz y de una píldora cambia el árbol
+    // mutación: quitar aria-hidden de la raíz y de una píldora cambia el árbol. El collage del hero está oculto por
+    // display: none (no entra al árbol aunque pierda aria-hidden), así que se muestra solo para que la mutación se note.
     await open(page, 1280);
+    await showHiddenScenes(page);
+    const shown = await page.locator('main').ariaSnapshot();
+    expect(shown).toBe(withCollage);
     await page.evaluate(() => {
       const root = document.querySelector('.hero-collage[data-collage="hero"]') as HTMLElement;
+      // El respaldo también lleva aria-hidden en su contenedor: se quita junto con el de la raíz.
+      root.closest('.hero-collage-fallback')?.removeAttribute('aria-hidden');
       root.removeAttribute('aria-hidden');
       root.querySelector('[data-pill]')?.setAttribute('aria-hidden', 'false');
     });
@@ -163,7 +174,11 @@ test.describe('escenas: lenguaje del moodboard', () => {
   });
 
   test('ranuras: exactamente dos (hero y whynow), sin imagen y con la proporción de PHOTO_SLOTS', async ({ page }) => {
+    // Sin movimiento: al mostrarse el respaldo, la entrada del collage arrancaría y deformaría el rectángulo medido.
+    await page.emulateMedia({ reducedMotion: 'reduce' });
     await open(page, 1280);
+    // Las ranuras viven en los collages de respaldo (ocultos): se muestran solo para medir su proporción.
+    await showHiddenScenes(page);
     const names = await page.locator('[data-photo-slot]').evaluateAll((els) => els.map((e) => e.getAttribute('data-photo-slot')));
     expect(names.sort()).toEqual(['hero', 'whynow']);
     for (const name of names) {
@@ -178,13 +193,15 @@ test.describe('escenas: lenguaje del moodboard', () => {
     }
   });
 
-  // Lote B (02-03): desde 64em el collage ocupa el ancho de su columna con tope de 26rem (416 px).
-  test('Por qué ahora: 224 px justo bajo 64em y de 320 a 416 px desde 64em', async ({ page }) => {
-    for (const [width, min, max] of [[1023, 224, 224], [1024, 320, 416], [1280, 320, 416]] as const) {
+  // Lote B (02-03) fijaba 224 px bajo 64em y de 320 a 416 px desde 64em. Tras la ronda 2 el collage de Por qué ahora
+  // es un respaldo oculto y ningún CSS lo dimensiona: se protege que siga oculto, sin caja y sin desborde a cada ancho.
+  test('Por qué ahora: el collage queda oculto, sin caja y sin scroll horizontal a cada ancho', async ({ page }) => {
+    for (const width of [1023, 1024, 1280]) {
       await open(page, width);
+      await expect(page.locator('#por-que-ahora .whynow-preserve')).toBeHidden();
       const w = await page.locator(SCENES.whynow).evaluate((el) => el.getBoundingClientRect().width);
-      expect(w, `${width}: ${w}`).toBeGreaterThanOrEqual(min - 1);
-      expect(w, `${width}: ${w}`).toBeLessThanOrEqual(max + 1);
+      expect(w, `${width}: ${w}`).toBe(0);
+      expect(await page.evaluate(() => document.documentElement.scrollWidth), `${width}`).toBeLessThanOrEqual(width);
     }
   });
 
@@ -235,8 +252,12 @@ test.describe('escenas: sin JavaScript', () => {
   test.use({ javaScriptEnabled: false });
   test('cada raíz y sus píldoras son visibles', async ({ page }) => {
     await page.goto('/');
-    for (const name of NAMES) await expect(page.locator(SCENES[name]), name).toBeVisible();
-    for (const pill of await page.locator('[data-collage] [data-pill]').all()) await expect(pill).toBeVisible();
+    for (const name of NAMES) {
+      if (HIDDEN_SCENES.includes(name)) await expect(page.locator(SCENES[name]), name).toBeHidden();
+      else await expect(page.locator(SCENES[name]), name).toBeVisible();
+    }
+    // Las píldoras de los collages ocultos no se ven; las de pegatinas, chips y #agenda sí.
+    for (const pill of await page.locator('[data-collage] [data-pill]:not(.hero-collage-fallback *):not(.whynow-preserve *)').all()) await expect(pill).toBeVisible();
   });
 });
 

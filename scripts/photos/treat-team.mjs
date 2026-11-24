@@ -45,12 +45,38 @@ if (!light) fail(`el color "${disc}" no existe en tokens.css.`);
 
 // Escala de grises con el contraste estirado y un gamma por foto (abajo): las luces llegan al color del disco (el fondo
 // blanco del original desaparece en el disco) y los rasgos de la cara conservan contraste local.
-const { data } = await base
+const region = { left: crop.left, top: crop.top, width: crop.size, height: crop.size };
+const grey = await base
   .clone()
-  .extract({ left: crop.left, top: crop.top, width: crop.size, height: crop.size })
+  .extract(region)
   .resize(TEAM_PHOTO_OUT, TEAM_PHOTO_OUT, { fit: 'fill', kernel: 'lanczos3' })
+  .removeAlpha()
   .greyscale()
+  .raw()
+  .toBuffer();
+
+// Foto con fondo (no recortada de origen): `photo-sources/team/<id>-mask.png` (máscara de primer plano, blanco = persona; se
+// genera con scripts/photos/mask-macos.swift) deja el fondo en blanco, igual que los originales ya recortados, de modo que
+// se funda con el disco del color de marca.
+const maskPath = `photo-sources/team/${id}-mask.png`;
+let blended = grey;
+if (existsSync(maskPath)) {
+  const m = await sharp(maskPath, { limitInputPixels: 100_000_000 })
+    .rotate()
+    .extract(region)
+    .resize(TEAM_PHOTO_OUT, TEAM_PHOTO_OUT, { fit: 'fill', kernel: 'lanczos3' })
+    .removeAlpha()
+    .greyscale()
+    .blur(0.6)
+    .raw()
+    .toBuffer();
+  if (m.length !== grey.length) fail(`la máscara no coincide con la foto (${m.length} contra ${grey.length} bytes).`);
+  blended = Buffer.alloc(grey.length);
+  for (let i = 0; i < grey.length; i += 1) blended[i] = Math.round((grey[i] * m[i] + 255 * (255 - m[i])) / 255);
+}
+const { data } = await sharp(blended, { raw: { width: TEAM_PHOTO_OUT, height: TEAM_PHOTO_OUT, channels: 1 } })
   .normalise({ lower: 1, upper: 99 })
+  .greyscale()
   .raw()
   .toBuffer({ resolveWithObject: true });
 

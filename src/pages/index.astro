@@ -15,6 +15,7 @@ import AgendaSection from '../components/AgendaSection.astro';
 import { getLanding, fill, textVars } from '../lib/content';
 import { buildLandingSchema } from '../lib/seo';
 import { siteUrl } from '../lib/site';
+import { getLivePaths } from '../lib/paginas';
 
 const data = await getLanding();
 // Orden canónico de las 12 secciones (id, tono). Cada plan de la fase 2 suma la suya en este orden;
@@ -23,11 +24,14 @@ const data = await getLanding();
 //   nosotros yellow, incluye light, como-funciona dark, para-quien light, faq yellow, agenda purple.
 const title = fill(data.meta.title_template, textVars(data), 'meta.title_template');
 const description = data.meta.description?.text ??
-  "Agencia de SEO y GEO (AEO). Crecemos tu tienda y negocio a través de Google, ChatGPT y Gemini con estrategias de tráfico orgánico enfocadas en ventas sin depender de ads.";
+  "Agencia SEO para LATAM: aparece en Google y en ChatGPT. Un equipo con 8 años de experiencia ejecuta tu SEO y tu posicionamiento en IA. Habla con nosotros.";
 
 const baseUrl = siteUrl || 'https://loopsgrowth.com';
 const pageUrl = siteUrl ? new URL('/', siteUrl).href : `${baseUrl}/`;
+const live = await getLivePaths();
+const authorPath = live.has('/equipo/arianna-lupi/') ? '/equipo/arianna-lupi/' : undefined;
 const schema = buildLandingSchema({
+  authorPath,
   data,
   siteUrl: baseUrl,
   pageUrl,
@@ -36,7 +40,7 @@ const schema = buildLandingSchema({
 });
 ---
 
-<BaseLayout title={title} description={description} schema={schema}>
+<BaseLayout title={title} description={description} schema={schema} reveal>
   <Hero />
   <Problem />
   <WhyNow />

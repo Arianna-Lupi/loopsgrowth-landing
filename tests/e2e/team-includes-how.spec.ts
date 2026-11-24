@@ -12,18 +12,17 @@ import { expectMotionWithinBudget, expectNoMotion } from './lib/motion';
 type Claim = { text: string; status: string };
 const es = (parse(readFileSync('src/content/landing.es.yaml', 'utf8')) as {
   es: {
-    team: { title: Claim; intro: Claim; members: { name: Claim; role: Claim; link?: { url: Claim; label: Claim; hint: Claim } }[] };
+    team: { title: Claim; intro: Claim; members: { name: Claim; role: Claim; insights?: Claim[]; link?: { url: Claim; label: Claim; hint: Claim } }[] };
     includes: { title: Claim; items: { title: Claim; description: Claim }[] };
     how_it_works: { title: Claim; steps: { title: Claim; description: Claim; timeframe: Claim }[] };
   };
 }).es;
 const norm = (s: string) => s.replace(/\s+/g, ' ').trim();
 
-// Tarjetas con foto (por posición, `TEAM_PHOTOS` de team-photos.mjs) y con avatar Loopy: la variante del
-// avatar sale de `AVATARS` de Team.astro por la misma posición. Miguel Pacheco (3) no tiene foto.
-const PHOTO_IDS = ['arianna', 'veronica', 'juan'];
-const AVATAR_CARD = 3;
-const AVATAR_VARIANT = 'ojos-amarillo';
+// Tarjetas con foto (por posición, `TEAM_PHOTOS` de team-photos.mjs). Tras aprobar la foto de Miguel Pacheco las
+// cuatro tarjetas llevan retrato y ya no se pinta ningún avatar Loopy en #nosotros.
+const PHOTO_IDS = ['arianna', 'veronica', 'juan', 'miguel'];
+const MIGUEL_CARD = 3;
 const JUAN_CARD = 2;
 
 type Box = { x: number; y: number; width: number; height: number };
@@ -34,6 +33,10 @@ const boxes = async (page: Page, sel: string): Promise<Box[]> =>
       return { x: r.x, y: r.y + window.scrollY, width: r.width, height: r.height };
     }),
   );
+
+/** Espera a que terminen las entradas por scroll (Web Animations de reveal.ts) antes de medir transform o posición. */
+const settleMotion = (page: Page) =>
+  page.evaluate(() => Promise.all(document.getAnimations().map((a) => a.finished.catch(() => undefined))).then(() => undefined));
 
 for (const viewport of [
   { width: 1280, height: 800 },
@@ -46,16 +49,29 @@ for (const viewport of [
       await page.goto('/');
       const section = page.locator('main > section#nosotros');
       await expect(section).toHaveCount(1);
-      await expect(section).toHaveAttribute('data-tone', 'yellow');
+      await expect(section).toHaveAttribute('data-tone', 'dark');
       const labelledby = await section.getAttribute('aria-labelledby');
       const h2 = section.locator('h2');
       await expect(h2).toHaveCount(1);
       await expect(h2).toHaveAttribute('id', labelledby ?? '');
       expect(norm((await h2.textContent()) ?? '')).toBe(norm(es.team.title.text));
-      const list = section.locator('ul');
+      // La rejilla es la única lista de primer nivel; cada tarjeta trae además su lista de datos (`team-insights`).
+      const list = section.locator('ul.team-grid');
       await expect(list).toHaveCount(1);
       await expect(list).toHaveAttribute('role', 'list');
       await expect(list.locator('> li')).toHaveCount(4);
+    });
+
+    test('cada tarjeta lista sus datos del YAML (insights), en orden y sin viñetas vacías', async ({ page }) => {
+      await page.goto('/');
+      const cards = page.locator('#nosotros li.team-card');
+      await expect(cards).toHaveCount(es.team.members.length);
+      for (const [i, m] of es.team.members.entries()) {
+        const items = cards.nth(i).locator('ul.team-insights > li');
+        const expected = (m.insights ?? []).map((x) => norm(x.text));
+        expect(expected.length, `${m.name.text} sin datos en el YAML`).toBeGreaterThan(0);
+        expect((await items.allTextContents()).map(norm)).toEqual(expected);
+      }
     });
 
     test('cuatro h3 con los nombres y cuatro cargos del YAML, en orden', async ({ page }) => {
@@ -78,22 +94,16 @@ for (const viewport of [
       await expect(page.locator('#nosotros button, #nosotros [tabindex]')).toHaveCount(0);
     });
 
-    test('tres retratos y un avatar Loopy decorativo (Miguel), todos con la misma caja', async ({ page }) => {
+    test('cuatro retratos decorativos y ningún avatar Loopy, todos con la misma caja', async ({ page }) => {
       await page.goto('/');
       const cards = page.locator('#nosotros li.team-card');
       await expect(cards).toHaveCount(4);
-      const avatars = page.locator('#nosotros svg[data-collage="avatar"]');
-      await expect(avatars).toHaveCount(1);
-      const svg = cards.nth(AVATAR_CARD).locator('svg[data-collage="avatar"]');
-      await expect(svg).toHaveCount(1);
-      await expect(svg).toHaveAttribute('data-variant', AVATAR_VARIANT);
-      await expect(svg).toHaveAttribute('aria-hidden', 'true');
-      await expect(svg).toHaveAttribute('focusable', 'false');
-      await expect(svg.locator('title')).toHaveCount(0);
-      await expect(svg.locator('text')).toHaveCount(0);
-      await expect(svg.locator('[data-pill]')).toHaveCount(0);
-      expect(await svg.evaluate((el) => new TextEncoder().encode(el.outerHTML).length)).toBeLessThanOrEqual(2560);
-      await expect(cards.nth(AVATAR_CARD).locator('img')).toHaveCount(0);
+      await expect(page.locator('#nosotros svg[data-collage="avatar"]')).toHaveCount(0);
+      await expect(page.locator('#nosotros img')).toHaveCount(4);
+      for (let i = 0; i < 4; i++) {
+        await expect(cards.nth(i).locator('img')).toHaveCount(1);
+        await expect(cards.nth(i).locator('img')).toHaveAttribute('alt', '');
+      }
       const widths = (await boxes(page, '#nosotros .team-avatar')).map((b) => Math.round(b.width));
       expect(widths).toEqual([widths[0], widths[0], widths[0], widths[0]]);
       expect(widths[0]).toBe(viewport.width >= 640 ? 120 : 96);
@@ -453,7 +463,7 @@ test.describe('Lotes C y D: contraste medido', () => {
 
 test.describe('Lote C: tarjetas del equipo', () => {
   for (const vp of FIVE_WIDTHS) {
-    test(`(4) tarjetas pop y avatares a ${vp.width} px`, async ({ page }) => {
+    test(`(4) tarjetas pop y retratos a ${vp.width} px`, async ({ page }) => {
       await page.setViewportSize(vp);
       await page.goto('/');
       const cards = page.locator('#nosotros li.team-card');
@@ -484,8 +494,13 @@ test.describe('Lote C: tarjetas del equipo', () => {
         expect(s.cursor).toBe(i === 0 || i === JUAN_CARD ? 'pointer' : 'auto');
       }
       expect(new Set(styles.map((s) => s.radius)).size).toBe(1);
+      // La tarjeta entra con una animación de scroll (transform + opacity): se mide cuando ya terminó.
+      await cards.first().scrollIntoViewIfNeeded();
+      await settleMotion(page);
       const before = await cards.first().evaluate((el) => getComputedStyle(el).transform);
+      expect(before).toBe('none');
       await cards.first().hover();
+      await settleMotion(page);
       const after = await cards.first().evaluate((el) => getComputedStyle(el).transform);
       expect(after).toBe(before);
       expect(after === 'none' || after === before).toBe(true);
@@ -511,8 +526,8 @@ test.describe('Quiénes somos: retratos y enlace de Juan', () => {
       const cards = page.locator('#nosotros li.team-card');
       await cards.first().scrollIntoViewIfNeeded();
       const imgs = page.locator('#nosotros img');
-      await expect(imgs).toHaveCount(3);
-      for (let i = 0; i < 3; i++) {
+      await expect(imgs).toHaveCount(4);
+      for (let i = 0; i < 4; i++) {
         const img = cards.nth(i).locator('img');
         await expect(img).toHaveCount(1);
         await expect(img).toHaveAttribute('alt', '');
@@ -525,24 +540,28 @@ test.describe('Quiénes somos: retratos y enlace de Juan', () => {
       }
       // La foto termina de cargar y sale a 240x240 reales.
       await expect.poll(() => imgs.evaluateAll((els) => els.every((el) => (el as HTMLImageElement).complete && (el as HTMLImageElement).naturalWidth === 240))).toBe(true);
-      // Disco de foto = disco del avatar Loopy: mismo diámetro, misma esquina superior izquierda dentro de la caja de 96 o 120 px.
+      // Geometría del disco: 5/6 de la caja de 96 o 120 px (la medida que tenía el avatar Loopy), bajado 1/15 del lado
+      // y pegado al borde izquierdo de la caja, igual en los cuatro retratos. La entrada por scroll (transform) termina antes de medir.
+      await settleMotion(page);
       const geo = await page.evaluate(() => {
         const rel = (el: Element, box: Element) => {
           const r = el.getBoundingClientRect();
           const b = box.getBoundingClientRect();
-          return { d: r.width, h: r.height, x: r.left - b.left, y: r.top - b.top };
+          return { d: r.width, h: r.height, x: r.left - b.left, y: r.top - b.top, box: b.width };
         };
         const cs = [...document.querySelectorAll('#nosotros li.team-card')];
-        const photo = rel(cs[0].querySelector('img')!, cs[0].querySelector('.team-avatar')!);
-        const loopy = rel(cs[3].querySelector('svg circle[class*="cw-f-"]')!, cs[3].querySelector('.team-avatar')!);
+        const photos = cs.map((c) => rel(c.querySelector('img')!, c.querySelector('.team-avatar')!));
         const radius = getComputedStyle(cs[0].querySelector('img')!).borderTopLeftRadius;
-        return { photo, loopy, radius };
+        return { photos, radius };
       });
-      expect(Math.abs(geo.photo.d - geo.photo.h)).toBeLessThanOrEqual(0.5);
-      expect(Math.abs(geo.photo.d - geo.loopy.d)).toBeLessThanOrEqual(1);
-      expect(Math.abs(geo.photo.x - geo.loopy.x)).toBeLessThanOrEqual(1);
-      expect(Math.abs(geo.photo.y - geo.loopy.y)).toBeLessThanOrEqual(1);
-      expect(geo.photo.d).toBeGreaterThanOrEqual(vp.width >= 640 ? 99 : 79);
+      for (const ph of geo.photos) {
+        expect(Math.abs(ph.d - ph.h)).toBeLessThanOrEqual(0.5);
+        expect(Math.abs(ph.d - (ph.box * 5) / 6)).toBeLessThanOrEqual(1);
+        expect(Math.abs(ph.x)).toBeLessThanOrEqual(1);
+        expect(Math.abs(ph.y - ph.box / 15)).toBeLessThanOrEqual(1);
+        expect(Math.abs(ph.d - geo.photos[0].d)).toBeLessThanOrEqual(1);
+        expect(ph.d).toBeGreaterThanOrEqual(vp.width >= 640 ? 99 : 79);
+      }
       expect(geo.radius).toBe('50%');
       // Filas parejas: las tarjetas de una fila miden lo mismo y sus nombres y cargos arrancan a la misma altura.
       const rows = await page.evaluate(() => {
@@ -588,12 +607,13 @@ test.describe('Quiénes somos: retratos y enlace de Juan', () => {
     });
   }
 
-  test('Miguel conserva el avatar Loopy y ninguna foto se inventa para él', async ({ page }) => {
+  test('Miguel lleva su retrato aprobado, sin avatar Loopy y sin enlace', async ({ page }) => {
     await page.goto('/');
-    const card = page.locator('#nosotros li.team-card').nth(AVATAR_CARD);
-    await expect(card.locator('h3')).toHaveText(es.team.members[AVATAR_CARD].name.text);
-    await expect(card.locator('svg[data-collage="avatar"]')).toHaveAttribute('data-variant', AVATAR_VARIANT);
-    await expect(card.locator('img, a')).toHaveCount(0);
+    const card = page.locator('#nosotros li.team-card').nth(MIGUEL_CARD);
+    await expect(card.locator('h3')).toHaveText(es.team.members[MIGUEL_CARD].name.text);
+    await expect(card.locator('img')).toHaveAttribute('data-team-photo', 'miguel');
+    await expect(card.locator('svg[data-collage="avatar"]')).toHaveCount(0);
+    await expect(card.locator('a')).toHaveCount(0);
   });
 
   test('las tarjetas enlazadas: href, target y rel exactos; el nombre accesible es el visible', async ({ page }) => {
@@ -608,7 +628,8 @@ test.describe('Quiénes somos: retratos y enlace de Juan', () => {
       await expect(link).toHaveAttribute('rel', 'noopener noreferrer');
       await expect(link).not.toHaveAttribute('aria-label', /.*/);
       await expect(link).toHaveAttribute('aria-labelledby', `team-member-${card}`);
-      await expect(page.getByRole('link', { name: es.team.members[card].name.text })).toHaveCount(1);
+      // El nombre también enlaza desde el pie (Arianna), por eso se acota a la sección.
+      await expect(page.locator('#nosotros').getByRole('link', { name: es.team.members[card].name.text })).toHaveCount(1);
       expect(await link.evaluate((a) => getComputedStyle(a).textDecorationLine)).toBe('underline');
     }
   });
@@ -649,13 +670,13 @@ test.describe('Quiénes somos: retratos y enlace de Juan', () => {
     const sizes: number[] = [];
     page.on('request', (r) => seen.push({ url: r.url(), type: r.resourceType() }));
     page.on('response', async (r) => {
-      if (/\/_astro\/(arianna|veronica|juan)\.[^/]+\.webp$/.test(r.url())) sizes.push((await r.body()).length);
+      if (/\/_astro\/(arianna|veronica|juan|miguel)\.[^/]+\.webp$/.test(r.url())) sizes.push((await r.body()).length);
     });
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto('/');
     await page.locator('#nosotros li.team-card').first().scrollIntoViewIfNeeded();
     await page.locator('#nosotros li.team-card').last().scrollIntoViewIfNeeded();
-    await expect.poll(() => sizes.length).toBe(3);
+    await expect.poll(() => sizes.length).toBe(4);
     // Ninguna imagen viene de fuera del origen, y nadie pidió aprendoclub.com ni juan-tech.com.
     for (const r of seen.filter((s) => s.type === 'image')) expect(r.url.startsWith(origin), r.url).toBe(true);
     expect(seen.filter((s) => /aprendoclub\.com|juan-tech\.com/.test(s.url))).toEqual([]);

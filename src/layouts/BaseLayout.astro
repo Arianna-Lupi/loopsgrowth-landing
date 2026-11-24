@@ -4,6 +4,7 @@ import { Font } from 'astro:assets';
 import SkipLinks from '../components/SkipLinks.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
+import RevealScripts from '../components/RevealScripts.astro';
 import { isProduction, canonicalUrl, siteUrl } from '../lib/site';
 import { THEME_COLOR, DEFAULT_OG_IMAGE } from '../lib/seo';
 
@@ -17,16 +18,19 @@ interface Props {
   ogImage?: string;
   ogType?: string;
   schema?: Record<string, unknown>;
+  /** Activa las entradas por scroll (reveal.ts). */
+  reveal?: boolean;
 }
 
 const {
   title,
-  description = "Agencia de SEO y GEO (AEO). Crecemos tu tienda y negocio a través de Google, ChatGPT y Gemini con estrategias de tráfico orgánico enfocadas en ventas sin depender de ads.",
+  description = "Agencia SEO para LATAM: aparece en Google y en ChatGPT. Un equipo con 8 años de experiencia ejecuta tu SEO y tu posicionamiento en IA. Habla con nosotros.",
   noindex = false,
   path = '/',
   ogImage = DEFAULT_OG_IMAGE,
   ogType = 'website',
   schema,
+  reveal = false,
 } = Astro.props;
 
 const canonical = canonicalUrl(path);
@@ -77,6 +81,9 @@ const fullOgImage = ogImage.startsWith('http')
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <Font cssVariable="--font-brand" preload={[{ subset: "latin", style: "normal" }]} />
+
+    <slot name="head" />
+    {reveal && <RevealScripts />}
 
     {schema && (
       <script is:inline type="application/ld+json" set:html={JSON.stringify(schema)} />

@@ -1,0 +1,126 @@
+---
+/**
+ * Nosotros. Hero con mosaico de retratos, marcas, texto de dirección en oscuro, fila partida con la mascota,
+ * pasos de la home, equipo en oscuro, resultados y cierre. Ritmo de tonos: light, dark, light, light, dark, yellow, purple.
+ */
+import { Image } from 'astro:assets';
+import CtaLink from '../CtaLink.astro';
+import Crumbs from './Crumbs.astro';
+import Prose from './Prose.astro';
+import Logos from './Logos.astro';
+import Results from './Results.astro';
+import Closing from './Closing.astro';
+import { getLanding, ctaLabel } from '../../lib/content';
+import { getLivePaths } from '../../lib/paginas';
+import { toBlocks } from '../../lib/text';
+import isotipo from '../../assets/brand/isotipo-13-blanco.svg';
+
+interface Props { d: any; crumbs: { name: string; path: string }[] }
+const { d, crumbs } = Astro.props;
+const data = await getLanding();
+const label = ctaLabel(data);
+const portraits = import.meta.glob('../../assets/team/treated/*.png', { eager: true, import: 'default' }) as Record<string, ImageMetadata>;
+const team = data.team.members.map((m, i) => ({ name: m.name.text, role: m.role.text, src: portraits[`../../assets/team/treated/${['arianna', 'veronica', 'juan', 'miguel'][i]}.png`] }));
+const live = await getLivePaths();
+const slugs = ['arianna-lupi', 'veronica-romero', 'juan-carlos-angulo', 'miguel-pacheco'];
+const personHref = (i: number) => (live.has(`/equipo/${slugs[i]}/`) ? `/equipo/${slugs[i]}/` : undefined);
+const paras = toBlocks(d.intro).filter((b) => b.kind === 'p').map((b: any) => b.text);
+const [lead, how] = d.secciones;
+const steps = data.how_it_works.steps;
+---
+
+<article>
+  <section class="hero" data-tone="light" aria-labelledby="hero-title">
+    <div class="wrap">
+      <Crumbs crumbs={crumbs} />
+      <div class="hero-grid">
+        <div>
+          <h1 id="hero-title" data-rv>{d.h1}</h1>
+          {paras.map((t, i) => <p data-rv class:list={['sub', i > 0 && 'more']}>{t}</p>)}
+          <p class="actions" data-rv><CtaLink label={label} location="pagina" href="/#agenda" /></p>
+        </div>
+        <ul class="mosaic" role="list">
+          {team.map((m) => (<li data-rv><Image src={m.src} alt={`Retrato de ${m.name}`} width={240} height={240} loading="eager" /></li>))}
+        </ul>
+      </div>
+      <div class="logos-wrap" data-rv><Logos /></div>
+    </div>
+  </section>
+
+  <section class="lead" data-tone="dark" aria-labelledby="lead-title">
+    <div class="wrap lead-grid">
+      <h2 id="lead-title" data-rv>{lead.titulo}</h2>
+      <div data-rv data-rv-index="1"><Prose text={lead.cuerpo} /></div>
+    </div>
+  </section>
+
+  <section class="split" data-tone="light" aria-labelledby="how-title">
+    <div class="wrap split-grid">
+      <div>
+        <h2 id="how-title" data-rv>{how.titulo}</h2>
+        <div data-rv data-rv-index="1"><Prose text={how.cuerpo} /></div>
+      </div>
+      <div class="art" data-rv aria-hidden="true"><Image src={isotipo} alt="" width={240} height={240} /></div>
+    </div>
+  </section>
+
+  <section class="steps-sec" data-tone="light" aria-labelledby="proc-title">
+    <div class="wrap">
+      <h2 id="proc-title" data-rv>{data.how_it_works.title.text}</h2>
+      <ol class="steps" role="list">
+        {steps.map((st, i) => (<li data-rv><span class="n" aria-hidden="true">{i + 1}</span><h3>{st.title.text}</h3><p>{st.description.text}</p><span class="pill">{st.timeframe.text}</span></li>))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="people-sec" data-tone="dark" aria-labelledby="team-title">
+    <div class="wrap">
+      <h2 id="team-title" data-rv>{data.team.title.text}</h2>
+      <ul class="people" role="list">
+        {team.map((m, i) => (<li data-rv><Image src={m.src} alt={`Retrato de ${m.name}`} width={240} height={240} loading="lazy" decoding="async" />{personHref(i) ? <a href={personHref(i)}><strong>{m.name}</strong><span class="role"> {m.role}</span></a> : <strong>{m.name}</strong>}{!personHref(i) && <span>{m.role}</span>}</li>))}
+      </ul>
+    </div>
+  </section>
+
+  <Results tone="yellow" />
+  <Closing tone="purple" title="¿Quieres revisar tu caso?" text="Agenda una llamada con el equipo de Loops Growth y revisamos tu situación. Sin costo y sin compromiso." />
+</article>
+
+<style>
+  section { padding-block: var(--section-y); }
+  h2 { letter-spacing: -0.02em; text-wrap: balance; }
+  .hero { padding-block: 1.5rem var(--section-y); }
+  .hero-grid { display: grid; gap: 2.5rem; align-items: center; }
+  h1 { max-width: 14ch; letter-spacing: -0.03em; text-wrap: balance; }
+  .sub { max-width: 52ch; margin-top: 1.25rem; font-size: var(--text-title); line-height: 1.45; }
+  .sub.more { font-size: var(--text-body); margin-top: 0.75rem; }
+  .actions { margin-top: 2rem; }
+  .mosaic { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 0; padding: 0; list-style: none; }
+  .mosaic :global(img) { display: block; width: 100%; aspect-ratio: 1; object-fit: cover; border: var(--border-pop); border-radius: var(--radius-card); box-shadow: var(--shadow-pop); }
+  .mosaic li:nth-child(even) { translate: 0 1.25rem; }
+  .logos-wrap { margin-top: 3.5rem; }
+  .lead-grid, .split-grid { display: grid; gap: 1.5rem; align-items: center; }
+  .lead h2, .split h2 { max-width: 16ch; font-size: var(--text-heading); }
+  .art { display: grid; place-items: center; max-width: 18rem; aspect-ratio: 1; border: var(--border-pop); border-radius: var(--radius-card); background: var(--color-brand-yellow); box-shadow: var(--shadow-pop); }
+  .art :global(img) { width: 70%; height: auto; }
+  .steps-sec h2, .people-sec h2 { margin-bottom: 2rem; }
+  .steps { display: grid; gap: 1rem; margin: 0; padding: 0; list-style: none; }
+  .steps li { display: grid; align-content: start; gap: 0.5rem; padding: 1.25rem; border-radius: var(--radius-card); background: var(--color-brand-cream); color: var(--color-brand-dark); box-shadow: 0 0 0 1px rgb(33 33 33 / 0.12), 0 8px 24px rgb(0 0 0 / 0.06); }
+  .steps h3 { color: inherit; }
+  .n { font-size: 3rem; line-height: 1; font-weight: 700; letter-spacing: -0.04em; color: var(--color-brand-purple); font-variant-numeric: tabular-nums; }
+  .pill { justify-self: start; padding: 0.125rem 0.75rem; border-radius: var(--radius-pill); background: var(--color-brand-white); font-size: var(--text-label); font-weight: 600; }
+  .people { display: grid; grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr)); gap: 1.5rem; margin: 0; padding: 0; list-style: none; }
+  .people li { display: grid; gap: 0.25rem; }
+  .people :global(img) { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: var(--radius-card); box-shadow: var(--shadow-pop); }
+  .people a { display: grid; gap: 0.125rem; min-height: var(--target-min); color: var(--link); text-decoration: none; }
+  .people a strong { text-decoration: underline; text-underline-offset: 4px; }
+  .people .role { font-size: var(--text-label); color: var(--on-surface); }
+  .people span { font-size: var(--text-label); opacity: 0.85; }
+  @media (min-width: 40em) { .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (min-width: 64em) {
+    .hero-grid { grid-template-columns: 1.1fr 0.9fr; }
+    .lead-grid { grid-template-columns: 0.8fr 1.2fr; align-items: start; }
+    .split-grid { grid-template-columns: 1.2fr 0.8fr; }
+    .steps { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  }
+</style>

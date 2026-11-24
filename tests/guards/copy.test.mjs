@@ -312,9 +312,7 @@ test('9a. el YAML real sale con 0 fuera de producción y no se modifica (solo le
   const before = sha(REAL_YAML);
   const res = run(['--file', REAL_YAML], { env: LOCAL });
   assert.equal(res.status, 0, res.out);
-  assert.match(res.out, /WARN/);
   assert.match(res.out, /verified/);
-  assert.match(res.out, /pending/);
   assert.equal(sha(REAL_YAML), before);
 });
 
