@@ -5,7 +5,8 @@ pubDate: 2027-01-25
 author: ari
 cluster: L3-contenido
 keyword: "cómo hacer keyword research"
-draft: true
+draft: false
+reviewedBy: "Juan Angulo (revisión, 2026-11-24)"
 related: []
 ---
 

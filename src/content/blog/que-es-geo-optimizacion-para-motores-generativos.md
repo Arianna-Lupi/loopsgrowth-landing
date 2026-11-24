@@ -5,7 +5,8 @@ pubDate: 2026-12-29
 author: ari
 cluster: L2-geo
 keyword: "qué es geo"
-draft: true
+draft: false
+reviewedBy: "Juan Angulo (revisión, 2026-11-24)"
 related: ["que-es-aeo", "geo-vs-aeo-vs-seo"]
 ---
 

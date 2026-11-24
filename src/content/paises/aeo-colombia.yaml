@@ -3,7 +3,8 @@
 tipo: pais
 familia: aeo
 nombre: Colombia
-draft: true
+draft: false
+reviewedBy: "Juan Angulo (revisión, 2026-11-24)"
 publishAt: 2027-04-22
 title: "Agencia AEO en Colombia: que la IA te cite | Loops Growth"
 description: "Agencia AEO en Colombia: preparamos tu información para que los asistentes de IA la usen al responder. Un mercado de adopción temprana. Trabajo remoto."

@@ -5,7 +5,8 @@ pubDate: 2027-06-22
 author: ari
 cluster: L3-contenido
 keyword: "cómo redactar un artículo seo"
-draft: true
+draft: false
+reviewedBy: "Juan Angulo (revisión, 2026-11-24)"
 related: []
 ---
 

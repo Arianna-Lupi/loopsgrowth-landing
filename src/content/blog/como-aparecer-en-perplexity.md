@@ -5,7 +5,8 @@ pubDate: 2027-04-27
 author: ari
 cluster: L2-geo
 keyword: "cómo aparecer en perplexity"
-draft: true
+draft: false
+reviewedBy: "Juan Angulo (revisión, 2026-11-24)"
 related: ["que-es-aeo", "que-es-geo-optimizacion-para-motores-generativos"]
 ---
 

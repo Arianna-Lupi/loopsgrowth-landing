@@ -5,7 +5,8 @@ pubDate: 2027-01-26
 author: ari
 cluster: L5-mercados
 keyword: "seo en venezuela"
-draft: true
+draft: false
+reviewedBy: "Juan Angulo (revisión, 2026-11-24)"
 related: ["seo-en-mexico", "seo-en-colombia"]
 ---
 

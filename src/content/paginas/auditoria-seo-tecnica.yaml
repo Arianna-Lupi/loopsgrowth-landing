@@ -2,7 +2,8 @@
 tipo: servicio
 ruta: /servicios/auditoria-seo-tecnica/
 nombre: Auditoría SEO técnica
-draft: true
+draft: false
+reviewedBy: "Juan Angulo (revisión, 2026-11-24)"
 grupo: tecnico
 publishAt: 2026-12-01
 title: "Auditoría SEO técnica por plantillas de página"

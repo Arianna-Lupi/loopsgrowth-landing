@@ -4,7 +4,8 @@ ruta: /servicios/seo-para-ecommerce/
 nombre: SEO para ecommerce
 grupo: negocio
 publishAt: 2027-03-23
-draft: true
+draft: false
+reviewedBy: "Juan Angulo (revisión, 2026-11-24)"
 title: "SEO para ecommerce: categorías, fichas y filtros que Google lee"
 description: "SEO para ecommerce en español: ordenamos categorías, fichas de producto, filtros y paginación para que Google rastree tu tienda y entienda cada producto."
 h1: "SEO para ecommerce: tu tienda online ordenada para Google"

@@ -5,7 +5,8 @@ pubDate: 2027-05-27
 author: ari
 cluster: L1-tecnico
 keyword: "redirección 301"
-draft: true
+draft: false
+reviewedBy: "Juan Angulo (revisión, 2026-11-24)"
 related: []
 ---
 

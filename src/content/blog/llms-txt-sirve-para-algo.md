@@ -5,7 +5,8 @@ pubDate: 2027-05-04
 author: ari
 cluster: L2-geo
 keyword: "llms.txt"
-draft: true
+draft: false
+reviewedBy: "Juan Angulo (revisión, 2026-11-24)"
 related: []
 ---
 

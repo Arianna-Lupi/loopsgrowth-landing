@@ -5,7 +5,8 @@ pubDate: 2027-03-02
 author: ari
 cluster: L2-geo
 keyword: "cómo aparecer en ai overviews"
-draft: true
+draft: false
+reviewedBy: "Juan Angulo (revisión, 2026-11-24)"
 related: ["que-es-aeo", "que-es-geo-optimizacion-para-motores-generativos"]
 ---
 

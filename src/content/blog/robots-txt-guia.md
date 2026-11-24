@@ -5,7 +5,8 @@ pubDate: 2027-03-09
 author: ari
 cluster: L1-tecnico
 keyword: "robots.txt"
-draft: true
+draft: false
+reviewedBy: "Juan Angulo (revisión, 2026-11-24)"
 related: []
 ---
 

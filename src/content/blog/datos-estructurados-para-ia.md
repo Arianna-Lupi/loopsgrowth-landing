@@ -5,7 +5,8 @@ pubDate: 2027-05-11
 author: ari
 cluster: L2-geo
 keyword: "schema para ia"
-draft: true
+draft: false
+reviewedBy: "Juan Angulo (revisión, 2026-11-24)"
 related: []
 ---
 

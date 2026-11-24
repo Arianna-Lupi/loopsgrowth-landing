@@ -5,7 +5,8 @@ pubDate: 2027-03-25
 author: ari
 cluster: L5-mercados
 keyword: "seo en colombia"
-draft: true
+draft: false
+reviewedBy: "Juan Angulo (revisión, 2026-11-24)"
 related: ["seo-en-mexico", "seo-en-venezuela"]
 ---
 

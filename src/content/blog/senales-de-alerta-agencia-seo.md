@@ -5,7 +5,8 @@ pubDate: 2027-02-22
 author: ari
 cluster: L4-eleccion
 keyword: "señales de alerta agencia seo"
-draft: true
+draft: false
+reviewedBy: "Juan Angulo (revisión, 2026-11-24)"
 related: ["que-incluye-un-servicio-de-seo-mensual", "como-leer-un-reporte-seo"]
 ---
 

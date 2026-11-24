@@ -5,7 +5,8 @@ pubDate: 2027-04-19
 author: ari
 cluster: L4-eleccion
 keyword: "cuándo contratar una agencia seo"
-draft: true
+draft: false
+reviewedBy: "Juan Angulo (revisión, 2026-11-24)"
 related: ["seo-in-house-vs-agencia", "senales-de-alerta-agencia-seo"]
 ---
 

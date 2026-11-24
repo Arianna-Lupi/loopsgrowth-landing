@@ -5,7 +5,8 @@ pubDate: 2027-03-17
 author: ari
 cluster: L3-contenido
 keyword: "topic cluster"
-draft: true
+draft: false
+reviewedBy: "Juan Angulo (revisión, 2026-11-24)"
 related: []
 ---
 

@@ -5,7 +5,8 @@ pubDate: 2027-01-06
 author: ari
 cluster: L2-geo
 keyword: "qué es aeo"
-draft: true
+draft: false
+reviewedBy: "Juan Angulo (revisión, 2026-11-24)"
 related: ["que-es-geo-optimizacion-para-motores-generativos", "geo-vs-aeo-vs-seo"]
 ---
 

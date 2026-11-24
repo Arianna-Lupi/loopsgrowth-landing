@@ -2,7 +2,8 @@
 tipo: servicio
 ruta: /servicios/auditoria-de-backlinks/
 nombre: Auditoría de backlinks
-draft: true
+draft: false
+reviewedBy: "Juan Angulo (revisión, 2026-11-24)"
 publishAt: 2027-05-18
 grupo: autoridad
 title: "Auditoría de backlinks: revisa tus enlaces y los de tu competencia"

@@ -3,7 +3,8 @@ tipo: servicio
 ruta: /servicios/investigacion-de-palabras-clave/
 nombre: Investigación de palabras clave
 grupo: contenido
-draft: true
+draft: false
+reviewedBy: "Juan Angulo (revisión, 2026-11-24)"
 publishAt: 2026-12-08
 title: "Investigación de palabras clave: de la lista al mapa"
 description: "Investigación de palabras clave en español: intención de búsqueda, dificultad real y un mapa frase-página que evita que tus páginas compitan entre sí."

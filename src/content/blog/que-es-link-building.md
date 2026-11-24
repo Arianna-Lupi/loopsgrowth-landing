@@ -5,7 +5,8 @@ pubDate: 2027-06-16
 author: ari
 cluster: L3-contenido
 keyword: "qué es link building"
-draft: true
+draft: false
+reviewedBy: "Juan Angulo (revisión, 2026-11-24)"
 related: []
 ---
 

@@ -3,7 +3,8 @@ tipo: servicio
 ruta: /servicios/arquitectura-web-y-enlazado-interno/
 nombre: Arquitectura web y enlazado interno
 grupo: contenido
-draft: true
+draft: false
+reviewedBy: "Juan Angulo (revisión, 2026-11-24)"
 publishAt: 2027-03-04
 title: "Arquitectura web y enlazado interno para tu sitio"
 description: "Arquitectura web y enlazado interno: estructura de categorías, páginas huérfanas y anclas, para llegar a lo importante en pocos clics."

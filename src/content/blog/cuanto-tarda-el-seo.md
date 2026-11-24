@@ -5,7 +5,8 @@ pubDate: 2026-12-03
 author: ari
 cluster: L6-fundamentos
 keyword: "cuánto tarda el seo en dar resultados"
-draft: true
+draft: false
+reviewedBy: "Juan Angulo (revisión, 2026-11-24)"
 related: ["que-es-seo-y-como-funciona", "seo-vs-sem"]
 ---
 
