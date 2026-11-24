@@ -32,6 +32,8 @@ export const MOTION_ALLOWLIST: AllowedMotion[] = [
   { type: 'CSSAnimation', names: ['lead-in-right', 'lead-in-left'], selector: '#agenda .lead-step', properties: ['opacity', 'transform'] },
   { type: 'CSSAnimation', names: ['lead-chip-in'], selector: '#agenda .lead-chip', properties: ['opacity', 'transform'] },
   { type: 'CSSTransition', names: ['width'], selector: '#lead-bar-fill', properties: ['width'] },
+  // Acordeones del FAQ (src/scripts/accordion.ts): al abrir o cerrar un details anima su altura 280 ms con Web Animations.
+  { type: 'Animation', names: ['acc'], selector: '#faq details', properties: ['height'] },
   // Icono del FAQ: la barra vertical rota al abrir.
   { type: 'CSSTransition', names: ['transform'], selector: '.faq-icon-v', properties: ['transform'] },
   // Hover del CTA y del enlace de respaldo del formulario (fase 1).
