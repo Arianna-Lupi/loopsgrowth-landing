@@ -50,7 +50,8 @@ test.describe('idioma de las partes en /', () => {
     }
     // El texto de la tarjeta se lee igual que en el YAML: el span no añade espacios ni signos.
     await expect(page.locator('#casos')).toContainText('software de email marketing (SaaS B2B)');
-    await expect(page.locator('#solucion')).toContainText('Miguel (Especialista SEO): keywords, contenido, link building.');
+    // El equipo ya no se lista en #solucion (vive en #nosotros): se comprueba otra frase con términos marcados.
+    await expect(page.locator('#incluye')).toContainText(/link building/i);
     await expect(page.locator('#incluye')).toContainText('(Core Web Vitals, velocidad, indexación, schema), para que Google y la IA puedan leerte y confiar en ti.');
   });
 
