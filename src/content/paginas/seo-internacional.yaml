@@ -1,0 +1,84 @@
+# Borrador sin cifras ni casos inventados. Publicar exige draft: false y reviewedBy.
+tipo: servicio
+ruta: /servicios/seo-internacional/
+nombre: SEO internacional
+draft: true
+grupo: tecnico
+publishAt: 2027-04-15
+title: "SEO internacional para varios países hispanos con hreflang"
+description: "Servicio de SEO internacional en español: hreflang, estructura de URL, español neutro frente a variantes locales y qué páginas se duplican o se separan."
+h1: "SEO internacional: un sitio para varios países hispanos"
+intro: |
+  Vender en México, Colombia, Chile y España con el mismo idioma parece simple, pero genera una pregunta técnica: cómo le explicas a Google qué página corresponde a qué país sin que se canibalicen entre sí. El SEO internacional resuelve esa estructura.
+
+  En Loops Growth definimos contigo qué se comparte en español neutro, qué se adapta a cada mercado y cómo se señala todo para los buscadores.
+secciones:
+  - titulo: Hreflang, la señal que conecta las versiones
+    cuerpo: |
+      Hreflang indica a Google qué versión de una página corresponde a cada idioma o región. La [documentación oficial de Google](https://developers.google.com/search/docs/specialty/international/localized-versions) detalla las reglas que más fallan:
+
+      - Se puede implementar en etiquetas HTML, en cabeceras HTTP o en el sitemap, y Google considera equivalentes los tres métodos.
+      - Los enlaces deben ser recíprocos: si la página X apunta a Y, Y debe apuntar a X, o Google ignora la anotación.
+      - Cada versión debe incluir un enlace a sí misma y el mismo conjunto de enlaces que las demás.
+      - El código de región no puede usarse solo; va siempre junto al idioma, por ejemplo es-mx.
+      - x-default marca la versión de respaldo para quien no coincide con ninguna.
+
+      Detectar errores de reciprocidad es de lo primero que revisamos.
+  - titulo: Español neutro o variantes locales
+    cuerpo: |
+      Con un mismo idioma, no siempre conviene duplicar cada página por país. Google contempla anotar pequeñas variaciones regionales dentro de un idioma, como inglés para Estados Unidos, Reino Unido e Irlanda, y la misma lógica sirve para el español.
+
+      Nuestro criterio de trabajo: se comparte una versión en español neutro cuando la oferta, la moneda y las condiciones son las mismas, y se separa por país cuando cambian el producto, las condiciones de entrega, el lenguaje comercial o la normativa. Conviene también revisar el vocabulario con el que busca cada mercado, algo que aterrizamos en la [auditoría SEO técnica](/servicios/auditoria-seo-tecnica/) y en la investigación de palabras clave.
+  - titulo: Estructura de URL
+    cuerpo: |
+      Tienes tres caminos: dominios por país, subdominios o subdirectorios. Google aclara que las versiones alternativas no tienen que compartir dominio, pero en la documentación consultada no compara las ventajas de cada estructura, así que no la tratamos como un asunto de ranking.
+
+      Elegimos según tu operación: quién administra cada mercado, cuántos equipos publican y cómo está montado el sitio. Lo importante es que la estructura se mantenga estable, porque cambiarla después es una [migración SEO](/servicios/migracion-seo/).
+  - titulo: Qué se duplica y qué se separa
+    cuerpo: |
+      Duplicar una página para cinco países sin cambiar nada produce versiones casi idénticas que compiten entre sí. Para cada tipo de página decidimos si se comparte, se adapta o se separa, y definimos canonicals y hreflang coherentes.
+
+      Después verificamos que cada versión se pueda descubrir y se indexe. Ese control se apoya en [indexación y rastreo](/servicios/indexacion-y-rastreo/), y la velocidad de cada versión se revisa en [Core Web Vitals](/servicios/core-web-vitals/). Para el punto de partida, revisa [cómo indexar una página en Google](/blog/como-indexar-una-pagina-en-google/) y [Core Web Vitals: qué son](/blog/core-web-vitals-que-son/).
+senales:
+  - "Vendes o piensas vender en varios países de habla hispana con un mismo sitio."
+  - "Una versión de tu sitio aparece en Google de un país donde no corresponde."
+  - "Tus páginas por país son casi idénticas y compiten entre sí."
+  - "Usaste hreflang pero Search Console o tu rastreo reportan errores de etiquetas."
+  - "No sabes si te conviene un dominio por país, un subdominio o subdirectorios."
+entregables:
+  - titulo: Estrategia de mercados y páginas
+    texto: Documento que define qué países se atienden, qué páginas se comparten y cuáles se separan por mercado.
+  - titulo: Estructura de URL recomendada
+    texto: Propuesta de dominios, subdominios o subdirectorios, con la razón de la elección para tu operación.
+  - titulo: Plan de hreflang
+    texto: Tabla con el código de idioma y región de cada versión, el método de implementación y las reglas de reciprocidad.
+  - titulo: Auditoría de errores de hreflang
+    texto: Si ya usas hreflang, revisión de enlaces recíprocos, autorreferencias y códigos incorrectos, con la lista de correcciones.
+  - titulo: Guía de español neutro y variantes
+    texto: Criterios de qué vocabulario se mantiene común y cuál se adapta por mercado, con ejemplos de tus propias páginas.
+proceso:
+  - titulo: Definición de mercados
+    texto: Acordamos contigo qué países se atienden y qué diferencias reales existen entre ellos en oferta y condiciones.
+  - titulo: Decisión de estructura
+    texto: Elegimos la estructura de URL y qué tipos de página se comparten, se adaptan o se separan.
+  - titulo: Diseño del hreflang
+    texto: Armamos el mapa de versiones, con reciprocidad, autorreferencia y versión de respaldo.
+  - titulo: Revisión tras la implementación
+    texto: Rastreamos el sitio ya publicado para comprobar que las anotaciones sean válidas y que cada versión se indexe.
+faq:
+  - pregunta: "¿Necesito una página distinta para cada país hispano?"
+    respuesta: |
+      No siempre. Si la oferta y las condiciones son iguales, puede bastar una versión en español neutro. Se separa cuando cambian el producto, la entrega o la normativa. Lo definimos en la [auditoría SEO técnica](/servicios/auditoria-seo-tecnica/) del sitio.
+  - pregunta: "¿Qué código uso para el español de toda Latinoamérica?"
+    respuesta: |
+      Google exige códigos ISO 639-1 para el idioma y ISO 3166-1 Alpha 2 para la región, y indica que no admite códigos no estándar como es-419. Puedes usar es para el idioma sin región, o es más el país. Está en su [guía de versiones localizadas](https://developers.google.com/search/docs/specialty/international/localized-versions).
+  - pregunta: "¿Dominio por país, subdominio o subdirectorio?"
+    respuesta: |
+      Depende de tu operación y de tu equipo. La documentación de Google no compara las tres opciones. Lo importante es elegir una estructura estable, porque cambiarla después implica una [migración SEO](/servicios/migracion-seo/).
+  - pregunta: "¿Cómo compruebo que Google indexa cada versión?"
+    respuesta: |
+      Con Search Console y un rastreo propio, revisando cada versión por separado. Ese seguimiento forma parte de [indexación y rastreo](/servicios/indexacion-y-rastreo/), y la velocidad por versión se mide en [Core Web Vitals](/servicios/core-web-vitals/).
+pendientes:
+  - "Juan o Ari: confirmar que Loops presta este servicio."
+  - "Ari: confirmar los países que Loops atiende y si el servicio incluye adaptar vocabulario por mercado."
+  - "Verificado en la documentación de Google: métodos de hreflang, reciprocidad, autorreferencia, x-default, formato de códigos, es-419 no admitido. Fuera del texto: cualquier recomendación de dominio por país frente a subdirectorio como factor de ranking, porque Google no la compara."

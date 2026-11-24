@@ -1,5 +1,5 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
-import { isProduction } from './site';
+import { isPublished } from './site';
 
 export type Post = CollectionEntry<'blog'>;
 
@@ -10,7 +10,7 @@ export const AUTHORS = {
 
 /** Artículos visibles: en producción se excluyen los borradores. Más recientes primero. */
 export async function getPosts(): Promise<Post[]> {
-  const all = await getCollection('blog', (p) => !(isProduction && p.data.draft));
+  const all = await getCollection('blog', (p) => isPublished(p.data.draft, p.data.pubDate));
   return all.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 }
 

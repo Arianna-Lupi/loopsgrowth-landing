@@ -1,0 +1,89 @@
+# Borrador para revisión. Sin precios, sin garantía, sin cifras ni casos inventados. Publicar exige draft: false y reviewedBy.
+tipo: servicio
+ruta: /servicios/optimizacion-para-ai-overviews/
+nombre: Optimización para AI Overviews
+draft: true
+publishAt: 2027-01-12
+grupo: ia
+title: "Optimización para AI Overviews: prepara tus páginas para Google"
+description: "Optimización para AI Overviews: preparamos tus páginas según lo que Google documenta, sin trucos ni marcado especial, y medimos si aparecen en sus resúmenes."
+h1: "Optimización para AI Overviews: lo que Google documenta y lo que no"
+intro: |
+  Las AI Overviews son los resúmenes que Google muestra en la parte superior de algunas búsquedas, con enlaces a las páginas que apoyan la respuesta. Aparecer como uno de esos enlaces es posible, pero nadie puede asegurarlo ni comprarlo.
+
+  En Loops Growth preparamos tu sitio con lo que Google dice por escrito y no inventamos fórmulas. Trabajamos en español y para empresas de LATAM, junto con tu SEO y con el resto de tu [posicionamiento en IA](/servicios/posicionamiento-en-ia/).
+secciones:
+  - titulo: Lo que Google documenta
+    cuerpo: |
+      Según la guía de Google sobre las [funciones de IA en Search](https://developers.google.com/search/docs/appearance/ai-features), para aparecer como enlace de apoyo una página debe estar indexada y ser elegible para mostrarse en Google Search con un fragmento. Google afirma que no hay requisitos técnicos adicionales.
+
+      La misma guía dice que no hace falta crear archivos nuevos para máquinas, archivos de texto para IA ni marcado especial, y que no existe un schema.org específico que haya que añadir. Tampoco asegura la inclusión: Google aclara que indexar y mostrar una página no está asegurado.
+  - titulo: Lo que Google no documenta
+    cuerpo: |
+      La guía de Google no enumera factores que decidan qué página entra en un resumen concreto, ni cuántas veces aparecerá. Cualquiera que te venda una fórmula exacta está afirmando algo que no puede demostrar con la documentación oficial.
+
+      Por eso en este servicio separamos dos cosas. Lo que está documentado lo aplicamos y lo verificamos. Lo que es una hipótesis, por ejemplo qué tipo de formato de respuesta se cita más, lo probamos con tus páginas y lo tratamos como una prueba, no como una regla.
+  - titulo: Qué preparamos en la práctica
+    cuerpo: |
+      Con lo documentado como base, el trabajo se concentra en cuatro puntos:
+
+      - Que tus páginas importantes estén indexadas, con un fragmento posible y sin bloqueos por error. Google menciona controles como `nosnippet`, `max-snippet` y `noindex`, y revisamos que no los tengas en páginas que quieres mostrar.
+      - Que cada página responda con claridad la pregunta que atiende, con una respuesta directa al comienzo y el detalle después.
+      - Que la información de tu empresa coincida entre tu sitio y tus perfiles públicos.
+      - Que la página tenga autoría visible y datos que se puedan comprobar.
+
+      Estos puntos son las bases del SEO, y Google dice que sigue aplicando sus fundamentos a estas funciones.
+  - titulo: Cómo se relaciona con el resto de tu visibilidad en IA
+    cuerpo: |
+      Las AI Overviews son una de varias superficies. ChatGPT y Perplexity funcionan con sus propios rastreadores y criterios, y lo explicamos en [optimización para ChatGPT y Perplexity](/servicios/optimizacion-para-chatgpt-y-perplexity/). Si quieres entender los términos, tenemos guías sobre [qué es AEO](/blog/que-es-aeo/) y [qué es GEO](/blog/que-es-geo-optimizacion-para-motores-generativos/).
+
+      Para saber si lo que haces se refleja, usamos la [medición de menciones en IA](/servicios/medicion-de-menciones-en-ia/), con una batería fija de preguntas que repetimos cada mes.
+senales:
+  - "Tus páginas posicionan bien en Google, pero no apareces como enlace en los resúmenes de IA de tus temas."
+  - "Tus competidores aparecen como fuente en los resúmenes de IA para preguntas de tu sector."
+  - "No sabes si tus páginas clave están indexadas o si algún ajuste bloquea sus fragmentos."
+  - "Alguien te ofreció marcado o archivos especiales para aparecer en IA y quieres saber si hacen falta."
+  - "Tu contenido responde bien, pero está escondido entre texto largo y sin una respuesta clara al comienzo."
+entregables:
+  - titulo: Revisión de elegibilidad
+    texto: Comprobamos que tus páginas clave estén indexadas, se puedan mostrar con un fragmento y no tengan controles que lo impidan.
+  - titulo: Diagnóstico por pregunta
+    texto: Para las preguntas de tu sector que importan, revisamos qué fuentes citan hoy los resúmenes de IA y qué hacen mejor que tú.
+  - titulo: Reescritura de páginas prioritarias
+    texto: Ajustamos la estructura de las páginas elegidas con una respuesta directa, autoría visible y datos verificables.
+  - titulo: Consistencia de datos de empresa
+    texto: Revisamos que el nombre, los servicios y los datos de contacto coincidan entre tu sitio, tus perfiles y tu schema.
+  - titulo: Registro de pruebas
+    texto: Un documento donde anotamos cada cambio, la fecha y lo que observamos después, para separar lo documentado de lo que es hipótesis.
+  - titulo: Informe mensual
+    texto: Un resumen por escrito del trabajo hecho, de las páginas que aparecen como enlace y de lo que sigue en el plan.
+proceso:
+  - titulo: Verificar la base técnica
+    texto: Revisamos indexación, fragmentos y controles de rastreo de tus páginas importantes antes de tocar ningún contenido.
+  - titulo: Elegir preguntas y páginas
+    texto: Definimos con ti las preguntas de tus clientes que quieres cubrir y qué página responde a cada una.
+  - titulo: Mapear lo que cita Google
+    texto: Observamos qué fuentes aparecen hoy en los resúmenes para esas preguntas y qué tienen en común sus páginas.
+  - titulo: Ajustar el contenido
+    texto: Mejoramos las páginas con respuestas claras, autoría y datos comprobables, sin añadir marcado que Google no pide.
+  - titulo: Probar, medir y registrar
+    texto: Medimos cada mes con las mismas preguntas y anotamos qué cambió, tratando lo no documentado como prueba.
+faq:
+  - pregunta: "¿Hay que añadir marcado especial para aparecer en AI Overviews?"
+    respuesta: |
+      Según Google, no. Su [guía oficial](https://developers.google.com/search/docs/appearance/ai-features) indica que no hace falta marcado especial ni archivos nuevos y que no hay un schema.org específico para estas funciones. Nuestro trabajo se centra en lo que sí documenta.
+  - pregunta: "¿Pueden asegurar que mi página aparezca en un resumen de IA?"
+    respuesta: |
+      No. Google aclara que la inclusión no está asegurada y su guía no enumera factores que la determinen, y nadie fuera de Google puede asegurarlo. Lo que hacemos es cumplir lo documentado y medir cada mes si se refleja.
+  - pregunta: "¿Es distinto de hacer SEO?"
+    respuesta: |
+      Se apoya en el SEO, no lo sustituye. Una página que Google no indexa no puede mostrarse como enlace de apoyo. Por eso lo trabajamos junto con el resto de tu [posicionamiento en IA](/servicios/posicionamiento-en-ia/).
+  - pregunta: "¿Cómo sé si estoy apareciendo?"
+    respuesta: |
+      Repetimos cada mes una batería fija de preguntas y anotamos si tus páginas aparecen como enlace. Es parte de la [medición de menciones en IA](/servicios/medicion-de-menciones-en-ia/). Como las respuestas cambian, miramos la tendencia y no una sola consulta.
+pendientes:
+  - "Juan o Ari: confirmar que Loops presta este servicio."
+  - "Ari: confirmar que la medición mensual de AI Overviews se hace con una batería fija de preguntas, y con qué herramienta."
+  - "Ari: confirmar el formato del informe mensual."
+  - "No verificado y dejado fuera: qué formatos de respuesta se citan más en AI Overviews, cuántas páginas citan en promedio y cualquier dato de tráfico de estas funciones."
+  - "Las rutas /blog/que-es-aeo/, /blog/que-es-geo-optimizacion-para-motores-generativos/ y /servicios/medicion-de-menciones-en-ia/ aún pueden no existir: el sitio quita el enlace hasta que salgan."

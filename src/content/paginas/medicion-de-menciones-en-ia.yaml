@@ -1,0 +1,90 @@
+# Borrador. Sin precios, garantía, cifras ni casos. Publicar exige draft: false y reviewedBy.
+tipo: servicio
+ruta: /servicios/medicion-de-menciones-en-ia/
+nombre: Medición de menciones en IA
+grupo: ia
+publishAt: 2027-03-16
+draft: true
+title: "Medición de menciones en IA: qué dicen ChatGPT y Gemini de ti"
+description: "Servicio de medición de menciones en IA: repetimos cada mes una batería fija de preguntas y registramos si los asistentes mencionan o citan tu negocio."
+h1: "Medición de menciones en IA: qué dicen los asistentes de tu negocio"
+intro: |
+  Una persona le pregunta a un asistente qué proveedor elegir y recibe una respuesta con dos o tres nombres. Si el tuyo no aparece, no hay un informe de posiciones que te lo avise. La medición de menciones en IA existe para cubrir ese vacío: saber qué responden hoy los asistentes sobre tu negocio y cómo cambia con el tiempo.
+
+  En Loops Growth diseñamos esa medición, la repetimos cada mes y la leemos junto con tus datos de SEO. No prometemos menciones, porque ningún equipo las controla. Prometemos un registro honesto que te permita decidir qué trabajar después.
+secciones:
+  - titulo: Por qué medir las menciones no se parece a medir posiciones
+    cuerpo: |
+      En una búsqueda tradicional, una página ocupa una posición y esa posición se puede consultar. En un asistente, la respuesta se redacta en el momento, puede nombrar varias marcas, puede enlazar fuentes o no hacerlo, y puede cambiar si repites la pregunta.
+
+      Por eso una captura de pantalla suelta no mide nada. Una sola respuesta es una anécdota. Lo que sirve es un conjunto fijo de preguntas, repetido en las mismas condiciones, que muestre una tendencia durante varios meses.
+  - titulo: La batería de prompts
+    cuerpo: |
+      Todo empieza por definir qué le preguntaría un cliente tuyo antes de comprar. Armamos la lista con tres tipos de preguntas:
+
+      - Preguntas de categoría, como "qué agencia contratar para mi tienda online" o "qué software usan las empresas de logística".
+      - Preguntas de comparación, donde el cliente ya tiene dos o tres nombres en la cabeza.
+      - Preguntas sobre tu marca, para ver qué datos tiene el asistente sobre ti y si son correctos.
+
+      Esa lista se congela. Si cambiamos las preguntas cada mes, no podemos comparar un mes con el siguiente. Solo la ampliamos cuando tu negocio lanza algo nuevo, y lo anotamos.
+  - titulo: Qué registramos y cómo leemos la variabilidad
+    cuerpo: |
+      Cada mes ejecutamos la misma batería y anotamos en una hoja de seguimiento si el asistente nombra tu marca, si enlaza una página tuya como fuente, qué competidores aparecen y qué fuentes de terceros cita. También guardamos el texto de la respuesta, porque a veces el problema no es que no te nombren sino que digan algo desactualizado.
+
+      Para no sacar conclusiones de un golpe de suerte, repetimos cada pregunta más de una vez y miramos con qué frecuencia aparece cada marca. Una mención en una de cinco ejecuciones es una señal distinta a una mención en las cinco. Con varios meses de datos ya se ve si la tendencia sube, baja o se mueve en torno a lo mismo.
+  - titulo: Qué parte se mide con herramientas oficiales
+    cuerpo: |
+      Las respuestas de IA de Google sí dejan rastro en tus datos. Google indica que el tráfico de [AI Overviews y AI Mode se incluye en el informe de rendimiento de Search Console](https://developers.google.com/search/docs/appearance/ai-features), dentro del tipo de búsqueda Web. Eso significa que tus clics e impresiones en esas funciones se mezclan con el resto y no vienen separados, así que la batería de prompts complementa el dato en lugar de reemplazarlo.
+
+      Para entender cómo se prepara una página para esas respuestas, mira el servicio de [optimización para AI Overviews](/servicios/optimizacion-para-ai-overviews/). Para el caso de los asistentes de OpenAI y Perplexity, revisa la [optimización para ChatGPT y Perplexity](/servicios/optimizacion-para-chatgpt-y-perplexity/). La medición es la parte que te dice si ese trabajo se nota, y forma parte del [posicionamiento en IA](/servicios/posicionamiento-en-ia/) completo.
+  - titulo: Para qué sirven los datos
+    cuerpo: |
+      Un registro de menciones solo vale si cambia decisiones. Cuando el asistente te ignora en preguntas de categoría, miramos si tus páginas responden esa pregunta con claridad. Cuando te nombra pero con información errónea, corregimos la fuente que la origina. Cuando cita a un competidor desde un sitio de terceros, evaluamos si tiene sentido que tú también estés ahí.
+
+      Si quieres más contexto sobre los términos, lee [qué es AEO](/blog/que-es-aeo/) y [qué es GEO](/blog/que-es-geo-optimizacion-para-motores-generativos/).
+senales:
+  - No sabes qué responde ChatGPT cuando alguien pregunta por tu categoría de negocio.
+  - Tus clientes te dicen que "lo vieron en ChatGPT" y no puedes comprobar qué leyeron.
+  - Ya trabajas el SEO y quieres saber si ese trabajo se refleja en los asistentes de IA.
+  - Un competidor aparece citado en respuestas de IA y no sabes por qué.
+  - Quieres un reporte mensual que separe la tendencia de las respuestas aisladas.
+entregables:
+  - titulo: Batería de prompts a medida
+    texto: Una lista fija de preguntas de categoría, comparación y marca, redactadas como las haría tu cliente real.
+  - titulo: Registro mensual por asistente
+    texto: Una hoja donde anotamos menciones, citas, competidores y fuentes de cada ejecución, en los mismos asistentes cada mes.
+  - titulo: Lectura de la variabilidad
+    texto: Repetimos cada pregunta y reportamos la frecuencia de aparición, no una respuesta aislada que engañe.
+  - titulo: Revisión de datos sobre tu marca
+    texto: Detectamos si los asistentes dicen algo incorrecto o desactualizado sobre tu negocio y de qué fuente sale.
+  - titulo: Informe con acciones priorizadas
+    texto: Cada mes entregamos qué cambió, qué lo explica con la información disponible y qué conviene trabajar a continuación.
+proceso:
+  - titulo: Definir las preguntas
+    texto: Hablamos contigo sobre cómo compran tus clientes y armamos la batería de prompts que se va a repetir.
+  - titulo: Línea base
+    texto: Ejecutamos la batería por primera vez para saber desde dónde partes, tus competidores incluidos.
+  - titulo: Repetición mensual
+    texto: Corremos las mismas preguntas en las mismas condiciones y registramos cada resultado con su fecha.
+  - titulo: Lectura junto con SEO
+    texto: Cruzamos el registro con Search Console y tu analítica para ver si las dos curvas cuentan la misma historia.
+  - titulo: Acciones
+    texto: Convertimos lo que ves en tareas concretas de contenido, datos estructurados o menciones externas.
+faq:
+  - pregunta: "¿Pueden decirme exactamente cuántas veces me recomienda ChatGPT?"
+    respuesta: |
+      No con una cifra exacta y estable. Las respuestas cambian entre consultas, así que reportamos la frecuencia con la que apareces en una batería repetida y la tendencia a lo largo de los meses. Es una estimación honesta, no un conteo oficial.
+  - pregunta: "¿Esta medición mejora mis menciones?"
+    respuesta: |
+      Medir no cambia lo que dice un asistente. Sirve para decidir qué trabajar y comprobar si funcionó. El trabajo que sí busca mejorar las menciones está en el [posicionamiento en IA](/servicios/posicionamiento-en-ia/).
+  - pregunta: "¿Qué asistentes se miden?"
+    respuesta: |
+      Lo acordamos contigo según dónde busca tu cliente. Lo habitual es incluir ChatGPT, Gemini y las respuestas de IA de Google, y sumar Perplexity si tu sector lo usa. La lista queda fija para poder comparar mes a mes.
+  - pregunta: "¿Puedo hacerlo yo mismo?"
+    respuesta: |
+      Sí, y es un buen punto de partida: escribe diez preguntas reales de tus clientes, hazlas en el mismo asistente, anota quién aparece y repítelas el mes siguiente. Si quieres que lo hagamos nosotros, aporta orden, repetición y lectura junto con tus datos de SEO. La guía de [Search Console para AI Overviews](https://developers.google.com/search/docs/appearance/ai-features) te dice qué parte puedes ver sin herramientas extra.
+pendientes:
+  - "Juan o Ari: confirmar que Loops presta este servicio de medición de menciones como servicio independiente."
+  - "Ari: confirmar que el registro mensual incluye repetir cada pregunta más de una vez y qué asistentes se miden."
+  - "No verificado y dejado fuera: cómo Perplexity o ChatGPT muestran fuentes en cada versión; no se afirmó nada sobre su funcionamiento interno."
+  - "No verificado y dejado fuera: cualquier cifra de frecuencia de cambio entre respuestas de un asistente."

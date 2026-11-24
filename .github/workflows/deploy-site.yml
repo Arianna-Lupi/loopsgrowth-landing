@@ -6,6 +6,10 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+  # Publicación programada: cada día se reconstruye el sitio y sale el contenido cuya fecha (`publishAt`
+  # o `pubDate`) ya llegó. Contenido con `draft: true` nunca sale. 11:15 UTC = 07:15 en Caracas.
+  schedule:
+    - cron: '15 11 * * *'
 
 concurrency:
   group: deploy-site

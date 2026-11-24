@@ -13,7 +13,7 @@ import { getLanding } from '../../lib/content';
 import { siteUrl } from '../../lib/site';
 
 export async function getStaticPaths() {
-  const paises = (await getPaises()).filter((p) => p.data.tipo === 'pais');
+  const paises = (await getPaises()).filter((p) => p.data.tipo === 'pais' && p.data.familia === 'seo');
   return paises.map((pais) => ({ params: { pais: pais.id }, props: { pais } }));
 }
 

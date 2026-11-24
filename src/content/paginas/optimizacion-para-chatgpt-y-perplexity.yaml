@@ -1,0 +1,84 @@
+# Borrador para revisión. Sin precios, sin garantía, sin cifras ni casos inventados. Publicar exige draft: false y reviewedBy.
+tipo: servicio
+ruta: /servicios/optimizacion-para-chatgpt-y-perplexity/
+nombre: Optimización para ChatGPT y Perplexity
+draft: true
+publishAt: 2027-01-21
+grupo: ia
+title: "Optimización para ChatGPT y Perplexity: rastreadores y fuentes"
+description: "Optimización para ChatGPT y Perplexity: revisamos sus rastreadores, tus páginas citables y tus menciones, y te decimos con claridad qué controlas y qué no."
+h1: "Optimización para ChatGPT y Perplexity: qué se controla y qué no"
+intro: |
+  ChatGPT y Perplexity pueden buscar en la web y enlazar las páginas que usan para responder. Que tu negocio aparezca ahí depende en parte de cosas que puedes controlar, como permitir que sus rastreadores lean tu sitio, y en parte de decisiones que toma cada plataforma.
+
+  En Loops Growth trabajamos la parte que sí se puede controlar y te explicamos con claridad el resto. Lo hacemos en español, para empresas de LATAM y dentro de tu estrategia de [posicionamiento en IA](/servicios/posicionamiento-en-ia/).
+secciones:
+  - titulo: Los rastreadores de OpenAI
+    cuerpo: |
+      OpenAI documenta [tres agentes distintos](https://developers.openai.com/api/docs/bots). OAI-SearchBot sirve para mostrar sitios en las funciones de búsqueda de ChatGPT, y los sitios que lo bloquean no aparecen en esas respuestas. GPTBot rastrea contenido que puede usarse para entrenar modelos, y bloquearlo indica que tu contenido no debe usarse para eso.
+
+      ChatGPT-User actúa cuando una persona pide algo concreto, como abrir una página, y OpenAI aclara que las reglas de robots.txt pueden no aplicarse a esas acciones. Son decisiones separadas: puedes permitir la búsqueda y bloquear el entrenamiento. OpenAI indica que un cambio en robots.txt puede tardar cerca de 24 horas en reflejarse para la búsqueda.
+  - titulo: Los rastreadores de Perplexity
+    cuerpo: |
+      Perplexity [documenta](https://docs.perplexity.ai/guides/bots) PerplexityBot, que sirve para mostrar y enlazar sitios en sus resultados y que, según la empresa, no se usa para rastrear contenido para modelos de fundación. Si quieres aparecer ahí, conviene permitirlo en robots.txt.
+
+      Perplexity-User actúa cuando alguien hace una consulta y la plataforma visita una página para responder. Perplexity señala que, como la solicitud la inicia un usuario, este agente generalmente ignora las reglas de robots.txt. También indica que los cambios pueden tardar hasta 24 horas en reflejarse.
+  - titulo: Páginas que se pueden citar
+    cuerpo: |
+      Un asistente que enlaza una fuente necesita encontrar en ella una respuesta clara. Eso lo controlas tú. Una página citable responde una pregunta concreta al principio, explica el detalle con ejemplos, muestra quién la escribe y mantiene los datos al día.
+
+      Para preguntas de tu sector como "qué agencia elegir" o "cuánto tarda un proyecto de SEO", una página con respuesta directa y criterio propio le da al asistente algo claro que usar. No sabemos qué página elegirá cada plataforma, pero una página vaga no tiene opciones.
+  - titulo: Menciones y lo que no se controla
+    cuerpo: |
+      Lo que otras fuentes dicen de tu negocio también cuenta, y lo trabajamos con [relaciones públicas digitales](/servicios/relaciones-publicas-digitales/). Pero en la documentación de ambas plataformas no encontramos una lista de factores que decida quién aparece, y las respuestas cambian de una consulta a otra.
+
+      Por eso medimos con una batería fija de preguntas, como describimos en la [medición de menciones en IA](/servicios/medicion-de-menciones-en-ia/). Para Google, que funciona distinto, mira [optimización para AI Overviews](/servicios/optimizacion-para-ai-overviews/). Y si quieres entender los conceptos, tenemos guías sobre [qué es AEO](/blog/que-es-aeo/) y [qué es GEO](/blog/que-es-geo-optimizacion-para-motores-generativos/).
+senales:
+  - "No sabes si tu robots.txt permite o bloquea a los rastreadores de OpenAI y Perplexity."
+  - "Bloqueaste a todos los bots de IA por precaución y no sabes si eso te saca de las respuestas con enlaces."
+  - "Preguntas a ChatGPT o Perplexity por tu sector y nombran a tus competidores, no a ti."
+  - "Tus páginas responden bien a los clientes, pero no tienen una respuesta directa que un asistente pueda citar."
+  - "Quieres decidir qué se usa para entrenar modelos y qué se muestra en búsquedas, y no tienes claro cómo."
+entregables:
+  - titulo: Revisión de robots.txt y acceso
+    texto: Comprobamos qué agentes de OpenAI y Perplexity pueden leer tus páginas importantes y proponemos reglas según lo que quieras permitir.
+  - titulo: Mapa de lo que controlas y lo que no
+    texto: Un documento breve que separa lo que depende de tu sitio y lo que depende de cada plataforma, para fijar expectativas realistas.
+  - titulo: Páginas citables prioritarias
+    texto: Elegimos y mejoramos las páginas que responden preguntas clave, con respuesta directa, autoría visible y datos al día.
+  - titulo: Revisión de menciones
+    texto: Revisamos qué fuentes hablan hoy de tu negocio y qué falta frente a tus competidores, con propuestas de acción.
+  - titulo: Batería de preguntas
+    texto: Definimos con ti las preguntas que haría un cliente y las repetimos cada mes en ChatGPT y en Perplexity.
+  - titulo: Informe mensual
+    texto: Un resumen por escrito de lo que cambió, qué fuentes aparecen y qué ajustes siguen, con la tendencia y no una sola respuesta.
+proceso:
+  - titulo: Revisar el acceso
+    texto: Verificamos tu robots.txt y la respuesta de tu servidor ante los agentes documentados de OpenAI y Perplexity.
+  - titulo: Decidir qué permitir
+    texto: Hablamos contigo sobre qué quieres que se muestre en búsquedas y qué no quieres que se use para entrenamiento, y lo configuramos.
+  - titulo: Preparar las páginas
+    texto: Elegimos las páginas que deben responder tus preguntas clave y las reescribimos con claridad, autoría y datos comprobables.
+  - titulo: Trabajar las menciones
+    texto: Identificamos fuentes donde convendría que se hablara de tu negocio y las abordamos con una propuesta editorial.
+  - titulo: Medir cada mes
+    texto: Repetimos la misma batería de preguntas, anotamos qué aparece y ajustamos el plan según la tendencia.
+faq:
+  - pregunta: "¿Qué rastreador debo permitir para aparecer en ChatGPT?"
+    respuesta: |
+      OpenAI indica que OAI-SearchBot es el agente que muestra sitios en las funciones de búsqueda de ChatGPT, y que bloquearlo te saca de esas respuestas. Los detalles están en su [documentación de rastreadores](https://developers.openai.com/api/docs/bots). Permitirlo no asegura que aparezcas.
+  - pregunta: "¿Bloquear GPTBot me saca de ChatGPT?"
+    respuesta: |
+      Según OpenAI, GPTBot se relaciona con el entrenamiento de modelos, y la visibilidad en la búsqueda de ChatGPT depende de OAI-SearchBot. Son controles separados y revisamos tu configuración para que cada uno haga lo que decidiste.
+  - pregunta: "¿Pueden asegurar que Perplexity me cite?"
+    respuesta: |
+      No. Perplexity decide con sus propios criterios y su documentación de rastreadores no detalla cómo elige fuentes. Lo que podemos hacer es permitir su rastreador si lo quieres, preparar páginas claras y medir cada mes lo que ocurre, con una [medición de menciones en IA](/servicios/medicion-de-menciones-en-ia/).
+  - pregunta: "¿Esto sirve también para Google?"
+    respuesta: |
+      Google funciona con sus propias reglas, que son distintas. Para ese caso, revisa [optimización para AI Overviews](/servicios/optimizacion-para-ai-overviews/). Un buen SEO ayuda en ambos frentes.
+pendientes:
+  - "Juan o Ari: confirmar que Loops presta este servicio."
+  - "Ari: confirmar que la batería de preguntas se mide cada mes en ChatGPT y en Perplexity, y con qué herramienta."
+  - "Ari: confirmar el formato del informe mensual."
+  - "No verificado y dejado fuera: cómo decide cada plataforma qué fuentes cita, cuántas páginas enlaza por respuesta y el peso de las menciones externas frente al contenido propio."
+  - "Las rutas /blog/que-es-aeo/, /blog/que-es-geo-optimizacion-para-motores-generativos/ y /servicios/medicion-de-menciones-en-ia/ aún pueden no existir: el sitio quita el enlace hasta que salgan."

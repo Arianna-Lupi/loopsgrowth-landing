@@ -1,0 +1,83 @@
+# Borrador sin cifras ni casos inventados. Publicar exige draft: false y reviewedBy.
+tipo: servicio
+ruta: /servicios/indexacion-y-rastreo/
+nombre: Indexación y rastreo
+draft: true
+grupo: tecnico
+publishAt: 2027-02-09
+title: "Indexación y rastreo: por qué Google no indexa tus páginas"
+description: "Servicio de indexación y rastreo: encontramos por qué Google no indexa páginas útiles, lo corregimos y lo vigilamos con Search Console, robots y sitemap."
+h1: "Indexación y rastreo: que Google encuentre y guarde tus páginas"
+intro: |
+  Si una página no está en el índice de Google, no puede aparecer en los resultados. Y no está en el índice por una razón concreta: Google no la encontró, no pudo rastrearla, la rastreó y decidió no guardarla, o le dijimos sin querer que no lo hiciera.
+
+  En Loops Growth diagnosticamos cuál de esas razones aplica a cada grupo de páginas, la corregimos junto con tu equipo y dejamos un seguimiento para detectar a tiempo cuando vuelva a ocurrir.
+secciones:
+  - titulo: Dónde se pierden las páginas
+    cuerpo: |
+      El informe de indexación de páginas de Search Console, según su [documentación oficial](https://support.google.com/webmasters/answer/7440203), distingue motivos muy distintos. Algunos son errores: respuesta 5xx del servidor, bucle de redirecciones, página marcada con noindex o bloqueada por robots.txt. Otros son decisiones de Google, como "Rastreada, actualmente sin indexar" o "Descubierta, actualmente sin indexar".
+
+      Cada estado pide una acción diferente. Tratarlos todos igual hace perder semanas. Parte del trabajo consiste en separar lo que se arregla de lo que es normal y no necesita intervención.
+  - titulo: Las piezas que controlan el acceso
+    cuerpo: |
+      Cuatro elementos deciden gran parte del resultado, y pueden contradecirse entre sí:
+
+      - robots.txt: indica qué se rastrea. Google explica que bloquear con robots.txt reduce mucho la probabilidad de que otros sistemas, como la indexación, procesen esa URL, y que no sirve para ocultar páginas.
+      - noindex: pide que una página no se indexe, pero Google tiene que poder rastrearla para leerlo.
+      - Canonical: señala cuál es la versión preferida de varias URL parecidas. Google lo trata como una señal fuerte, no como una orden, y recomienda usar URL absolutas y enlazar internamente a la versión canónica. Lo detalla en su guía de [URL duplicadas](https://developers.google.com/search/docs/crawling-indexing/consolidate-duplicate-urls).
+      - Sitemap: lista las URL que quieres que se rastreen. Debe incluir contenido que quieres indexar y mantenerse actualizado.
+
+      Revisamos que las cuatro piezas cuenten la misma historia para cada plantilla.
+  - titulo: "Crawl budget: cuándo importa y cuándo no"
+    cuerpo: |
+      El crawl budget es la cantidad de URL que Google puede y quiere rastrear en tu sitio. La [guía de Google sobre sitios grandes](https://developers.google.com/search/docs/crawling-indexing/large-site-managing-crawl-budget) lo orienta a sitios de más de un millón de páginas, o de más de diez mil con cambios diarios, y aclara que son cifras aproximadas. Si tu sitio es más pequeño, basta con mantener el sitemap al día y revisar el informe de indexación.
+
+      Si tu sitio sí entra en ese perfil, atacamos lo que Google señala como desperdicio: errores soft 404 y contenido duplicado que genera URL innecesarias.
+  - titulo: Cómo se corrige y se vigila
+    cuerpo: |
+      Corregir un motivo de no indexación sin monitorear deja el problema latente. Después de cada cambio revisamos el informe de indexación, probamos las URL clave con la herramienta de inspección y solicitamos nueva revisión cuando corresponde.
+
+      El seguimiento continúa con una revisión periódica de los estados que el informe muestra. El trabajo se apoya en una [auditoría SEO técnica](/servicios/auditoria-seo-tecnica/) y se complementa con [Core Web Vitals](/servicios/core-web-vitals/). Si tu caso nace de un cambio de sitio, mira la [migración SEO](/servicios/migracion-seo/). Para empezar por lo básico, lee [cómo indexar una página en Google](/blog/como-indexar-una-pagina-en-google/) y [Core Web Vitals: qué son](/blog/core-web-vitals-que-son/).
+senales:
+  - "Publicas contenido nuevo y semanas después no aparece al buscar la URL en Google."
+  - "Search Console lista muchas páginas como rastreadas o descubiertas sin indexar."
+  - "Tu sitemap incluye páginas con noindex, redirecciones o errores 404."
+  - "Tras un cambio de plugin o de tema, páginas importantes pasaron a bloquearse sin que nadie lo notara."
+  - "Google elige como canónica una URL distinta de la que declaraste."
+entregables:
+  - titulo: Diagnóstico de indexación por plantilla
+    texto: Informe que clasifica cada grupo de páginas según el motivo de no indexación y la acción que corresponde.
+  - titulo: Revisión de robots, canonicals y sitemap
+    texto: Comprobación de que las tres señales coinciden entre sí y con las páginas que quieres posicionar.
+  - titulo: Lista de correcciones priorizada
+    texto: Cambios ordenados por número de páginas afectadas y esfuerzo, con especificaciones para tu equipo técnico.
+  - titulo: Evaluación de crawl budget
+    texto: Análisis de si tu sitio entra en el perfil donde importa y, si es así, qué URL generan desperdicio.
+  - titulo: Plan de seguimiento
+    texto: Rutina periódica de revisión de Search Console para detectar nuevos bloqueos, errores o caídas en el índice.
+proceso:
+  - titulo: Lectura del informe de Search Console
+    texto: Clasificamos las URL por estado de indexación y separamos errores reales de decisiones normales de Google.
+  - titulo: Rastreo propio del sitio
+    texto: Rastreamos el sitio como lo haría un buscador para comparar lo que ve con lo que informa Search Console.
+  - titulo: Corrección y verificación
+    texto: Tu equipo aplica los cambios con nuestras especificaciones y nosotros inspeccionamos las URL clave para confirmarlos.
+  - titulo: Vigilancia continua
+    texto: Revisamos los estados de indexación con una frecuencia acordada y avisamos si aparece un patrón nuevo.
+faq:
+  - pregunta: "¿Por qué Google no indexa mis páginas aunque estén publicadas?"
+    respuesta: |
+      Puede ser un bloqueo técnico, una señal contradictoria o una decisión de Google tras rastrear la página. Search Console indica el motivo por grupo de URL. Tienes los pasos básicos en [cómo indexar una página en Google](/blog/como-indexar-una-pagina-en-google/).
+  - pregunta: "¿Puedo forzar que Google indexe una página?"
+    respuesta: |
+      Puedes solicitar una revisión con la herramienta de inspección de URL, pero Google decide si indexa. Por eso corregimos la causa, no solo pedimos reindexación. El diagnóstico completo entra en una [auditoría SEO técnica](/servicios/auditoria-seo-tecnica/).
+  - pregunta: "¿Mi sitio necesita preocuparse por el crawl budget?"
+    respuesta: |
+      Según Google, esa guía se dirige a sitios muy grandes o con cambios diarios y muchas páginas. En los demás casos, basta con un sitemap actualizado y revisar el informe de indexación.
+  - pregunta: "¿Qué relación tiene esto con una migración o con la velocidad?"
+    respuesta: |
+      En una [migración SEO](/servicios/migracion-seo/) los problemas de indexación suelen aparecer justo después del cambio. Y la velocidad, que cubrimos en [Core Web Vitals](/servicios/core-web-vitals/), mejora la experiencia de las páginas que ya están en el índice.
+pendientes:
+  - "Juan o Ari: confirmar que Loops presta este servicio."
+  - "Ari: confirmar que Loops ofrece un seguimiento periódico de indexación y con qué frecuencia."
+  - "Verificado en documentación de Google: estados del informe de indexación, canonical como señal, robots.txt y crawl budget. Fuera del texto: cualquier plazo en que Google indexa una página, porque no existe fuente oficial."

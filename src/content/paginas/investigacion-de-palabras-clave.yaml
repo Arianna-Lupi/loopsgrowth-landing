@@ -1,0 +1,85 @@
+# Borrador. Redacción pendiente de revisión de Juan y Ari. Sin precios, garantías ni cifras.
+tipo: servicio
+ruta: /servicios/investigacion-de-palabras-clave/
+nombre: Investigación de palabras clave
+grupo: contenido
+draft: true
+publishAt: 2026-12-08
+title: "Investigación de palabras clave: de la lista al mapa"
+description: "Investigación de palabras clave en español: intención de búsqueda, dificultad real y un mapa frase-página que evita que tus páginas compitan entre sí."
+h1: "Investigación de palabras clave que termina en un mapa, no en un Excel"
+intro: |
+  Una lista de frases con volumen de búsqueda sirve poco si nadie decide qué página trabaja cada una. La investigación de palabras clave de Loops Growth parte de cómo busca tu cliente y termina en un mapa que asigna cada frase a una página concreta, existente o por crear.
+
+  Trabajamos en español para empresas de LATAM, con una idea simple: antes de escribir o de tocar el sitio, tienes que saber qué intención hay detrás de cada búsqueda y qué página le corresponde. Ese orden evita trabajo repetido y páginas que compiten entre sí.
+secciones:
+  - titulo: Intención antes que volumen
+    cuerpo: |
+      Dos frases parecidas pueden pedir cosas distintas. Quien busca "qué es el SEO" quiere entender un concepto. Quien busca "agencia SEO para tienda online" quiere comparar proveedores. Si las mezclas en una sola página, no sirves bien a ninguna de las dos.
+
+      Por eso clasificamos cada frase por lo que la persona intenta hacer: aprender, comparar, comprar o encontrar un lugar. Después revisamos qué tipo de páginas muestra hoy Google para esa búsqueda, porque ese resultado dice qué formato espera el usuario. Si ves guías largas, una ficha de producto no encaja. Si ves listados de comparación, un artículo de opinión tampoco.
+  - titulo: Dificultad real, no solo un número
+    cuerpo: |
+      Las herramientas de SEO dan un puntaje de dificultad, pero ese puntaje no conoce tu negocio. Lo leemos junto con tres preguntas prácticas:
+
+      - Quién ocupa hoy los primeros resultados y si su sitio se parece al tuyo.
+      - Qué tan específica es la frase y cuánta competencia directa tiene en tu país.
+      - Si ya tienes una página que se acerque a lo que pide la búsqueda.
+
+      Con eso separamos las frases que conviene atacar primero de las que conviene dejar para cuando el sitio tenga más base. Google recomienda crear contenido pensado para las personas y no para manipular los rankings, como explica su guía de [contenido útil y centrado en las personas](https://developers.google.com/search/docs/fundamentals/creating-helpful-content). Elegir bien las frases es parte de ese enfoque.
+  - titulo: El mapa frase-página y la canibalización
+    cuerpo: |
+      El entregable central es un mapa: una tabla donde cada frase queda asignada a una sola página, con su intención, su prioridad y la acción que corresponde (crear, actualizar o consolidar). Cuando dos páginas apuntan a la misma frase, compiten entre sí y ninguna rinde como podría. El mapa lo detecta antes de que ocurra.
+
+      Ese mapa alimenta el resto del trabajo. Con él armamos la [estrategia de contenidos](/servicios/estrategia-de-contenidos/), decidimos qué piezas se escriben en la [redacción de artículos SEO](/servicios/redaccion-de-articulos-seo/) y qué páginas se revisan en la [optimización de contenido existente](/servicios/optimizacion-de-contenido-existente/).
+
+      Si quieres el contexto general, empieza por [qué es el SEO y cómo funciona](/blog/que-es-seo-y-como-funciona/) y por [cuánto tarda el SEO](/blog/cuanto-tarda-el-seo/), para fijar expectativas realistas sobre los plazos.
+  - titulo: Qué haces tú y qué hacemos nosotros
+    cuerpo: |
+      Tú aportas lo que solo tu equipo sabe: cómo hablan tus clientes, qué preguntas repiten en ventas, qué servicios quieres impulsar. Nosotros traducimos eso a búsquedas reales, revisamos los resultados y armamos el mapa.
+
+      Antes de cerrar el mapa lo revisamos contigo, porque una frase con buen volumen que no corresponde a tu oferta es ruido. La [guía de inicio de Google sobre SEO](https://developers.google.com/search/docs/fundamentals/seo-starter-guide) insiste en pensar en lo que sería útil para los usuarios, y esa es la vara con la que filtramos.
+senales:
+  - "Tienes una lista de palabras clave en una hoja de cálculo, pero nadie sabe qué página trabaja cada una."
+  - "Dos o más páginas de tu sitio responden a la misma búsqueda y se pisan entre sí."
+  - "Escribes artículos por intuición y no puedes explicar por qué elegiste ese tema."
+  - "Vas a lanzar un sitio, una línea de servicios o un mercado nuevo y no sabes cómo busca tu cliente allí."
+  - "Posicionas para frases que traen visitas, pero esas visitas no se convierten en consultas."
+entregables:
+  - titulo: Mapa frase-página
+    texto: Tabla con cada frase asignada a una única página, con su intención, prioridad y la acción a tomar sobre ella.
+  - titulo: Clasificación por intención
+    texto: Cada frase queda marcada como informativa, comparativa, transaccional o local, con el formato de página que le corresponde.
+  - titulo: Lectura de la competencia
+    texto: Revisión de quién ocupa hoy los resultados de tus frases principales y qué tipo de páginas premia Google en cada una.
+  - titulo: Lista de prioridades
+    texto: Orden recomendado de trabajo, separando lo que conviene atacar primero de lo que espera a que el sitio gane base.
+  - titulo: Alertas de canibalización
+    texto: Aviso de las páginas que hoy compiten por la misma frase y propuesta de qué hacer con cada una.
+proceso:
+  - titulo: Entender el negocio
+    texto: Hablamos contigo sobre tu oferta, tus clientes y los mercados donde vendes, y revisamos lo que ya posiciona tu sitio.
+  - titulo: Reunir y agrupar frases
+    texto: Sacamos frases de herramientas, de tus datos de Search Console y de las preguntas reales de tus clientes, y las agrupamos por tema.
+  - titulo: Leer la intención y los resultados
+    texto: Revisamos qué muestra Google en cada grupo para decidir el formato de página y medir la dificultad con criterio.
+  - titulo: Entregar el mapa
+    texto: Cerramos contigo el mapa frase-página, con prioridades y acciones, listo para pasar a contenido y a producción.
+faq:
+  - pregunta: "¿Qué diferencia hay entre una lista de palabras clave y un mapa?"
+    respuesta: |
+      La lista dice qué frases existen. El mapa dice qué página trabaja cada una, con qué intención y qué acción hace falta. Sin esa asignación es fácil que dos páginas compitan por lo mismo. Si quieres ver cómo se arma paso a paso, el siguiente trabajo es la [estrategia de contenidos](/servicios/estrategia-de-contenidos/).
+  - pregunta: "¿Sirve si mi sitio es nuevo y casi no tiene páginas?"
+    respuesta: |
+      Sí, y es el mejor momento. El mapa te dice qué páginas crear primero y evita que construyas contenido sin rumbo. Luego puedes pasar esas páginas a la [redacción de artículos SEO](/servicios/redaccion-de-articulos-seo/).
+  - pregunta: "¿Y si ya tengo contenido publicado?"
+    respuesta: |
+      Entonces el mapa también revisa lo que ya existe. Detectamos páginas que compiten entre sí o que no responden a ninguna búsqueda clara, y proponemos actualizarlas o unirlas dentro de la [optimización de contenido existente](/servicios/optimizacion-de-contenido-existente/).
+  - pregunta: "¿Cuánto tarda en verse el efecto?"
+    respuesta: |
+      La investigación es la base y no cambia tu posición por sí sola. El efecto llega cuando se publica y se mejora contenido siguiendo el mapa, y eso toma tiempo. Explicamos los plazos con realismo en [cuánto tarda el SEO](/blog/cuanto-tarda-el-seo/).
+pendientes:
+  - "Juan o Ari: confirmar que Loops presta este servicio."
+  - "Ari: confirmar que el entregable se llama 'mapa frase-página' y que incluye las columnas descritas."
+  - "Ari: confirmar las fuentes de datos que usa Loops (herramientas, Search Console) para no nombrar una que no se use."
+  - "No verificado y dejado fuera: cualquier dato sobre volumen de búsqueda, puntajes de dificultad de herramientas o plazos."

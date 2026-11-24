@@ -1,0 +1,81 @@
+# Borrador sin cifras ni casos inventados. Publicar exige draft: false y reviewedBy.
+tipo: servicio
+ruta: /servicios/auditoria-seo-tecnica/
+nombre: Auditoría SEO técnica
+draft: true
+grupo: tecnico
+publishAt: 2026-12-01
+title: "Auditoría SEO técnica por plantillas de página"
+description: "Auditoría SEO técnica que revisa rastreo, indexación, velocidad y datos estructurados por plantilla, con un informe priorizado por impacto y esfuerzo."
+h1: "Auditoría SEO técnica: diagnóstico por plantillas de página"
+intro: |
+  Una auditoría SEO técnica responde una pregunta concreta: qué impide que Google rastree, entienda e indexe las páginas que te importan. La respuesta casi nunca está en una URL aislada. Está en la plantilla que la genera.
+
+  En Loops Growth auditamos por plantillas: la ficha de producto, la categoría, el artículo, la página de servicio. Un solo problema en una plantilla se repite en cientos de páginas, y corregirlo una vez limpia todas. Así el informe que recibes es corto, ordenado y accionable.
+secciones:
+  - titulo: Por qué auditamos por plantilla y no URL por URL
+    cuerpo: |
+      Revisar página por página produce hojas de cálculo enormes que nadie termina de leer. Muchos sitios, además, generan sus páginas desde pocas plantillas: si el título se duplica en la plantilla de categoría, se duplica en todas las categorías.
+
+      Por eso agrupamos las URL por tipo, revisamos una muestra representativa de cada grupo y confirmamos el hallazgo con datos de Search Console y de un rastreo completo. El resultado es una lista de causas, no una lista de síntomas.
+
+      Si tu duda es cuánto tarda en notarse una corrección técnica, lee [cuánto tarda el SEO en dar resultados](/blog/cuanto-tarda-el-seo/).
+  - titulo: Qué revisamos en la auditoría
+    cuerpo: |
+      Cubrimos cuatro frentes, siempre sobre las plantillas que más pesan en tu negocio:
+
+      - Rastreo: archivo robots.txt, códigos de respuesta, cadenas de redirecciones y enlaces internos rotos. Detalle en nuestro servicio de [indexación y rastreo](/servicios/indexacion-y-rastreo/).
+      - Indexación: etiquetas noindex, canonicals, duplicados y lo que Search Console informa como no indexado.
+      - Velocidad: LCP, INP y CLS con datos de campo. Lo desarrollamos en [Core Web Vitals](/servicios/core-web-vitals/).
+      - Datos estructurados: que el marcado sea válido y coincida con lo que muestra la página.
+
+      Cuando el sitio va a cambiar de dominio, de CMS o de diseño, la auditoría se convierte en el punto de partida de una [migración SEO](/servicios/migracion-seo/).
+  - titulo: Cómo ordenamos el informe
+    cuerpo: |
+      Cada hallazgo lleva tres datos: cuántas páginas afecta, qué tan grave es para el rastreo o la indexación y cuánto esfuerzo de desarrollo exige. Con eso armamos una cola de trabajo. Primero van los cambios de alto impacto y poco esfuerzo; al final, los que conviene planificar con el equipo técnico.
+
+      Cada punto incluye la evidencia, la plantilla afectada y la corrección que proponemos, escrita para que un desarrollador la aplique sin llamadas de aclaración. Si quieres entender el marco general antes, empieza por [qué es SEO y cómo funciona](/blog/que-es-seo-y-como-funciona/).
+senales:
+  - "Publicas páginas nuevas y Google tarda semanas en mostrarlas, o no las muestra."
+  - "Search Console informa muchas URL como rastreadas o descubiertas sin indexar."
+  - "Tu tráfico cayó después de un rediseño, un cambio de plugin o una actualización del sitio."
+  - "Nadie en tu equipo sabe cuántas plantillas tiene el sitio ni qué etiquetas usa cada una."
+  - "Tu agencia anterior entregó un reporte de cientos de filas y ninguna prioridad."
+entregables:
+  - titulo: Informe priorizado
+    texto: Lista de hallazgos ordenada por impacto y esfuerzo, con la plantilla afectada y la evidencia de cada uno.
+  - titulo: Mapa de plantillas
+    texto: Inventario de los tipos de página del sitio, con el estado de rastreo, indexación y datos estructurados de cada uno.
+  - titulo: Hoja de ruta de correcciones
+    texto: Cola de trabajo con el orden recomendado, lista para pasar a tu equipo de desarrollo o a tu proveedor del sitio.
+  - titulo: Especificaciones para desarrollo
+    texto: Instrucciones concretas por cada corrección, con ejemplos de cómo debe verse el código o la configuración final.
+  - titulo: Sesión de revisión
+    texto: Videollamada para recorrer el informe contigo y con tu equipo, resolver dudas y acordar qué se hace primero.
+proceso:
+  - titulo: Inventario de plantillas
+    texto: Rastreamos el sitio y agrupamos las URL por tipo de página para saber qué plantillas existen y cuánto pesa cada una.
+  - titulo: Cruce con Search Console
+    texto: Comparamos lo que encuentra el rastreo con lo que Google informa sobre cobertura, indexación y rendimiento.
+  - titulo: Diagnóstico por plantilla
+    texto: Revisamos muestras de cada grupo en rastreo, indexación, velocidad y datos estructurados, y confirmamos las causas.
+  - titulo: Priorización y entrega
+    texto: Ordenamos los hallazgos por impacto y esfuerzo, redactamos las especificaciones y presentamos el informe en una sesión.
+faq:
+  - pregunta: "¿En qué se diferencia una auditoría técnica de una auditoría SEO completa?"
+    respuesta: |
+      La auditoría técnica mira cómo Google accede a tu sitio y lo procesa: rastreo, indexación, velocidad y datos estructurados. Una auditoría completa suma contenido, autoridad y estrategia. Muchos proyectos empiezan por la técnica porque es la base: si el sitio no se rastrea bien, el resto rinde menos. Para ver cómo encaja todo, lee [qué es SEO y cómo funciona](/blog/que-es-seo-y-como-funciona/).
+  - pregunta: "¿Cuánto tarda en verse el efecto de las correcciones?"
+    respuesta: |
+      Depende del tamaño del sitio, de la frecuencia con que Google lo rastrea y de cuándo tu equipo publique los cambios. Nadie puede fijar un plazo exacto. Explicamos los factores en [cuánto tarda el SEO en dar resultados](/blog/cuanto-tarda-el-seo/).
+  - pregunta: "¿Necesito acceso a mi sitio para auditarlo?"
+    respuesta: |
+      Necesitamos acceso de lectura a Search Console y, si existe, a tu analítica. El rastreo lo hacemos desde afuera. No modificamos nada en tu sitio: las correcciones las aplica tu equipo o tu proveedor con nuestras especificaciones.
+  - pregunta: "¿La auditoría incluye la velocidad del sitio?"
+    respuesta: |
+      Sí, como una de las cuatro áreas. Si la velocidad es tu principal preocupación, el servicio de [Core Web Vitals](/servicios/core-web-vitals/) profundiza en LCP, INP y CLS. Y si tu duda es por qué Google no indexa páginas, mira [indexación y rastreo](/servicios/indexacion-y-rastreo/).
+pendientes:
+  - "Juan o Ari: confirmar que Loops presta este servicio."
+  - "Ari: confirmar que los cuatro frentes de revisión y los cinco entregables coinciden con lo que Loops ejecuta hoy."
+  - "Ari: confirmar que Loops pide acceso de lectura a Search Console y no modifica el sitio del cliente."
+  - "No verificado y fuera del texto: ninguna cifra sobre plazos de mejora ni sobre qué porcentaje de sitios tiene fallos técnicos."

@@ -1,5 +1,6 @@
 import { getLanding } from './content';
-import { getLivePaths } from './paginas';
+import { getLivePaths, paisPath } from './paginas';
+import { getPaises } from './paises';
 
 export interface NavLink {
   label: string;
@@ -15,7 +16,7 @@ export interface NavLink {
 export async function getMainNav(): Promise<NavLink[]> {
   const [{ nav }, live] = await Promise.all([getLanding(), getLivePaths()]);
   const all: NavLink[] = [
-    { label: nav.services.text, href: '/servicios/posicionamiento-en-ia/' },
+    { label: nav.services.text, href: '/servicios/' },
     { label: nav.venezuela.text, href: '/agencia-seo-venezuela/' },
     { label: nav.results.text, href: '/#casos' },
     { label: nav.blog.text, href: '/blog/' },
@@ -28,6 +29,7 @@ export async function getMainNav(): Promise<NavLink[]> {
 export async function getFooterExplore(): Promise<NavLink[]> {
   const [{ nav }, live] = await Promise.all([getLanding(), getLivePaths()]);
   const all: NavLink[] = [
+    { label: nav.services.text, href: '/servicios/' },
     { label: nav.service_ia.text, href: '/servicios/posicionamiento-en-ia/' },
     { label: nav.venezuela_full.text, href: '/agencia-seo-venezuela/' },
     { label: nav.caracas.text, href: '/agencia-seo-venezuela/caracas/' },
@@ -35,5 +37,12 @@ export async function getFooterExplore(): Promise<NavLink[]> {
     { label: nav.about.text, href: '/nosotros/' },
     { label: nav.author.text, href: '/equipo/arianna-lupi/' },
   ];
-  return all.filter((l) => l.href === '/#casos' || live.has(l.href));
+  // Países y variantes AEO publicados que el YAML de la home no nombra: se añaden con su h1 corto.
+  const known = new Set(all.map((l) => l.href));
+  const extras: NavLink[] = (await getPaises())
+    .filter((p) => p.data.tipo === 'pais')
+    .map((p) => ({ label: `Agencia ${p.data.familia === 'aeo' ? 'AEO' : 'SEO'} en ${p.data.nombre}`, href: paisPath(p) }))
+    .filter((l) => !known.has(l.href) && live.has(l.href));
+  const links = all.filter((l) => l.href === '/#casos' || live.has(l.href));
+  return [...links, ...extras];
 }

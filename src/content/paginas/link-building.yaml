@@ -1,0 +1,85 @@
+# Borrador para revisión. Sin precios, sin garantía, sin cifras ni casos inventados. Publicar exige draft: false y reviewedBy.
+tipo: servicio
+ruta: /servicios/link-building/
+nombre: Link building
+draft: true
+publishAt: 2027-01-05
+grupo: autoridad
+title: "Link building: enlaces ganados por mérito, no comprados"
+description: "Servicio de link building para empresas de LATAM: buscamos enlaces que tu contenido se gana, evitamos prácticas que Google considera spam y medimos la calidad."
+h1: "Link building: enlaces que tu contenido se gana por mérito"
+intro: |
+  El link building es el trabajo de conseguir que otros sitios enlacen al tuyo. Un enlace funciona como una recomendación: alguien decide mandar a sus lectores a tu página porque les sirve. Por eso el valor está en quién enlaza y por qué, no en cuántos enlaces suman.
+
+  En Loops Growth lo hacemos desde el contenido y la relación con medios y sitios del sector, en español y para empresas de LATAM. No compramos enlaces ni los intercambiamos en bloque, y no te vamos a prometer cantidades.
+secciones:
+  - titulo: Qué enlaces valen la pena
+    cuerpo: |
+      Un buen enlace viene de un sitio real, con lectores del mismo tema que el tuyo, y aparece dentro de un texto donde el enlace tiene sentido. Una tienda de repuestos que recibe un enlace de un blog de mecánica tiene algo útil. La misma tienda enlazada desde un directorio genérico sin lectores tiene casi nada.
+
+      Para decidir si una fuente sirve nos hacemos cuatro preguntas. ¿Su público se parece al tuyo? ¿Publica contenido propio y actualizado? ¿El enlace se entiende como una recomendación editorial? ¿Lo pondrían igual si no existiera ninguna agencia de por medio?
+  - titulo: Qué prácticas evitamos y por qué
+    cuerpo: |
+      Google define el spam de enlaces como crear enlaces hacia o desde un sitio con el fin principal de manipular el posicionamiento. Sus [políticas contra el spam](https://developers.google.com/search/docs/essentials/spam-policies) citan como ejemplos los enlaces pagados, los intercambios excesivos de enlaces y la creación automática de enlaces.
+
+      La misma política aclara que comprar y vender enlaces es parte normal de la economía de la web, por ejemplo en publicidad y patrocinios. El problema aparece cuando el enlace pagado intenta pasar por recomendación. Un enlace patrocinado se marca como tal con el atributo `rel="sponsored"` o `rel="nofollow"`.
+
+      Por eso evitamos las redes de blogs creadas para vender enlaces, los intercambios masivos entre sitios sin relación y las páginas de "socios" que solo existen para enlazarse entre sí.
+  - titulo: Cómo ganamos enlaces
+    cuerpo: |
+      El camino más estable empieza en tu propio sitio. Si tienes una guía, un estudio propio, una herramienta o una explicación mejor que la de los demás, hay una razón concreta para que alguien te cite. Sin esa pieza, pedir enlaces suele terminar en respuestas vacías.
+
+      Desde ahí trabajamos en tres frentes: contenido que otros quieran citar, contacto con medios y sitios del sector con una historia real (lo desarrollamos en [relaciones públicas digitales](/servicios/relaciones-publicas-digitales/)) y recuperación de menciones de tu marca que todavía no enlazan a tu sitio.
+  - titulo: Cómo medimos la calidad
+    cuerpo: |
+      Medimos la calidad antes que el volumen. En cada enlace nuevo registramos el sitio de origen, el tema, la página que recibe el enlace, el texto del enlace y si se puede rastrear. Google recomienda un [texto de enlace descriptivo](https://developers.google.com/search/docs/crawling-indexing/links-crawlable) y que el enlace sea un elemento `<a>` con `href`, y lo revisamos en cada caso.
+
+      Antes de empezar revisamos qué enlaces tienes hoy con una [auditoría de backlinks](/servicios/auditoria-de-backlinks/), para saber desde qué punto partes y qué ya funciona.
+senales:
+  - "Tu competencia aparece citada en medios y blogs del sector y tu marca casi no."
+  - "Tienes buen contenido, pero casi nadie lo enlaza ni lo menciona fuera de tu sitio."
+  - "Una agencia anterior compró enlaces o te ofrece paquetes de enlaces sin explicar de dónde vienen."
+  - "Tus páginas de servicio no reciben enlaces, solo la página de inicio."
+  - "Quieres que fuentes confiables hablen de tu negocio, también para que los asistentes de IA te conozcan."
+entregables:
+  - titulo: Diagnóstico de punto de partida
+    texto: Revisamos los enlaces que ya recibes y los de tus competidores directos para ubicar oportunidades reales y riesgos.
+  - titulo: Lista de fuentes priorizadas
+    texto: Una lista de sitios y medios relevantes para tu sector, ordenada por afinidad temática y por esfuerzo, con el motivo de cada uno.
+  - titulo: Activos enlazables
+    texto: Definimos qué páginas o piezas de contenido de tu sitio dan una razón concreta para ser citadas y las mejoramos si hace falta.
+  - titulo: Contacto con editores
+    texto: Redactamos y enviamos los mensajes a editores y autores, con una propuesta pensada para su audiencia y no una plantilla masiva.
+  - titulo: Registro de enlaces ganados
+    texto: Un documento vivo con cada enlace logrado, la fuente, la página destino y el texto del enlace, para que veas qué entra y por qué.
+  - titulo: Informe mensual de calidad
+    texto: Un resumen por escrito de lo que avanzó, lo que descartamos y lo que sigue, con foco en la calidad de las fuentes.
+proceso:
+  - titulo: Revisar el punto de partida
+    texto: Analizamos tu perfil de enlaces actual y el de dos o tres competidores para entender qué tipo de fuentes los enlazan.
+  - titulo: Elegir qué merece enlaces
+    texto: Seleccionamos las páginas que tienen algo propio que ofrecer y definimos cuáles se refuerzan antes de pedir ningún enlace.
+  - titulo: Armar la lista de fuentes
+    texto: Buscamos sitios y editores donde tu tema encaje de forma natural y descartamos los que solo venden espacio.
+  - titulo: Contactar y dar seguimiento
+    texto: Escribimos a cada fuente con una razón concreta, registramos las respuestas y ajustamos la propuesta según lo que funciona.
+  - titulo: Medir y corregir
+    texto: Revisamos cada mes la calidad de lo conseguido y movemos el esfuerzo hacia las fuentes y los temas que sí responden.
+faq:
+  - pregunta: "¿Compran enlaces?"
+    respuesta: |
+      No. Los enlaces pagados que buscan manipular el posicionamiento entran en lo que Google llama spam de enlaces. Si una colaboración incluye un patrocinio, el enlace se marca como patrocinado, como indican las [políticas de Google](https://developers.google.com/search/docs/essentials/spam-policies).
+  - pregunta: "¿Cuántos enlaces van a conseguir al mes?"
+    respuesta: |
+      No fijamos una cantidad, porque un número comprometido empuja a aceptar cualquier enlace. Definimos qué fuentes buscamos y medimos la calidad de lo que entra. Para ver tu punto de partida empezamos con una [auditoría de backlinks](/servicios/auditoria-de-backlinks/).
+  - pregunta: "¿Cuál es la diferencia con las relaciones públicas digitales?"
+    respuesta: |
+      El link building busca el enlace como objetivo. Las [relaciones públicas digitales](/servicios/relaciones-publicas-digitales/) buscan que un medio cuente una historia real sobre tu negocio, y el enlace llega como consecuencia. Se complementan.
+  - pregunta: "¿Cuál es la inversión?"
+    respuesta: |
+      La inversión depende de tu sector, de la competencia y del estado de tu sitio. Después de revisar tu punto de partida presentamos una propuesta con alcance y prioridades, no un paquete igual para todos.
+pendientes:
+  - "Juan o Ari: confirmar que Loops presta este servicio."
+  - "Ari: confirmar que el proceso descrito (diagnóstico, activos, lista de fuentes, contacto, informe mensual) coincide con cómo trabaja Loops."
+  - "Ari: confirmar que el informe mensual del servicio se entrega por escrito."
+  - "No verificado y dejado fuera: cualquier afirmación sobre cuánto pesa un enlace en el ranking de Google o sobre el impacto de los enlaces en menciones de IA."

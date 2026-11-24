@@ -1,33 +1,42 @@
-# Borrador para Ari. Ancla del patrón país plano /agencia-seo-venezuela/. Sin hechos de mercado todavía:
-# los datos propios (GSC de aprendoseo con país VEN y demanda_terminos_venezuela.md) los tiene Ari.
+# Borrador. Página ancla de Venezuela: ángulo propio = el ecosistema de Google domina (búsqueda y asistentes de IA),
+# el celular es el canal y la diáspora busca desde fuera. Hechos con fuente https leídos el 2026-11-24 (docs/seo/investigacion/venezuela.md).
 tipo: pais
+familia: seo
 nombre: Venezuela
 draft: true
+publishAt: 2026-12-08
 title: "Agencia SEO en Venezuela: Google y ChatGPT | Loops Growth"
 description: "Agencia SEO para empresas de Venezuela: trabajamos tu SEO y tu posicionamiento en IA para que te encuentren en Google y en ChatGPT. Trabajo remoto y reportes."
 h1: "Agencia SEO en Venezuela para crecer en Google y en la IA"
 intro: |
-  Si tu empresa está en Venezuela y quieres que tus clientes te encuentren en Google y en asistentes como ChatGPT, esta página explica cómo trabajamos con negocios de tu país. Somos Loops Growth, un equipo que ejecuta SEO y posicionamiento en IA en español, de forma remota y con reportes por escrito.
+  Si tu empresa está en Venezuela y quieres que tus clientes te encuentren en Google y en asistentes como Gemini o ChatGPT, esta página explica cómo trabajamos con negocios de tu país. Somos Loops Growth, un equipo que ejecuta SEO y posicionamiento en IA en español, de forma remota y con reportes por escrito.
+
+  Venezuela no se parece a sus vecinos en cómo busca la gente, y por eso esta página parte de datos del país y no de una plantilla regional.
 secciones:
-  - titulo: Cómo busca hoy tu cliente en Venezuela
+  - titulo: Google manda en la búsqueda, y también en la IA
     cuerpo: |
-      Tu cliente sigue usando Google para comparar proveedores y, cada vez más, le hace preguntas a un asistente de IA antes de decidir. Esa conversación se parece a una recomendación de boca en boca: la persona recibe pocos nombres y avanza con ellos.
+      En octubre de 2026, Google concentraba el 93,11 % de las búsquedas en Venezuela según StatCounter. Los asistentes de IA siguen un patrón propio: en esa misma medición, Google Gemini tenía el 87,19 % de la cuota de chatbots de IA en el país y ChatGPT el 4 %. La medición mide tráfico web de una muestra, no personas, pero la diferencia con otros mercados es grande.
 
-      Nuestro trabajo en Venezuela parte de una pregunta práctica: con qué palabras busca tu cliente a un proveedor como tú y qué respuestas encuentra hoy. A partir de ahí ordenamos qué páginas necesita tu web, qué debe explicar cada una y qué señales de confianza faltan.
-  - titulo: Qué hacemos por empresas de Venezuela
+      Para tu negocio eso cambia las prioridades. Posicionar en Google y entender cómo Google resume tus respuestas en sus propios resultados pesa más que perseguir una sola plataforma. Seguimos trabajando tu presencia en ChatGPT y en Perplexity, pero el orden de trabajo parte de lo que usa tu cliente venezolano hoy.
+  - titulo: El celular es el canal, la computadora es donde se decide
     cuerpo: |
-      Combinamos dos frentes en una sola estrategia. El primero es el SEO: la parte técnica de tu web, el contenido que responde lo que tus clientes preguntan y la autoridad hacia tu sitio. El segundo es el [posicionamiento en IA](/servicios/posicionamiento-en-ia/): lograr que ChatGPT, Gemini y las respuestas de IA de Google puedan encontrar y considerar tu negocio.
+      En octubre de 2026, el 65,36 % del tráfico web medido en Venezuela vino de móviles. Tus páginas tienen que cargar bien en una pantalla pequeña y con una conexión que varía según la zona: según DataReportal, la velocidad mediana móvil fue de 25,42 Mbps a mediados de 2025, y aun así 11 millones de personas seguían sin conexión.
 
-      Cada mes compartimos qué se hizo y qué se movió. La inversión se define según la auditoría de tu caso, no con un paquete igual para todos.
-  - titulo: Una sola estrategia para todo el país
+      En las herramientas de palabras clave que usamos vemos otra cosa en las búsquedas de agencias: quien busca contratar un servicio lo hace sobre todo desde computadora y muchas veces sin escribir el nombre del país. Por eso revisamos las dos experiencias. La móvil para que te encuentren y lean rápido. La de escritorio para que quien evalúa a un proveedor vea tu propuesta completa y pueda contactarte.
+  - titulo: Tu cliente también busca desde fuera del país
     cuerpo: |
-      Trabajamos por videollamada y compartimos el avance por escrito, así que no necesitas estar cerca de nosotros ni nosotros de ti. Esto aplica a empresas de Caracas, Valencia, Maracaibo, Barquisimeto y cualquier otra ciudad del país.
+      La plataforma R4V de la ONU registraba casi 7 millones de refugiados y migrantes venezolanos en América Latina y el Caribe en agosto de 2026. Muchos siguen comprando, contratando y recomendando negocios de su país desde otro lugar, y lo hacen buscando en Google y preguntándole a la IA.
 
-      Para quien está en la capital preparamos la página de [agencia SEO en Caracas](/agencia-seo-venezuela/caracas/), con lo que cambia al competir en esa ciudad. Las demás ciudades se atienden con esta misma estrategia, sin páginas propias.
+      Si tu empresa atiende a venezolanos en el exterior, tu sitio debe dejar claro desde qué país atiendes, cómo se contacta y qué idioma y moneda usas, y debe poder encontrarse con búsquedas que no incluyan la palabra Venezuela. Eso se resuelve con la estructura de tus páginas y con datos claros sobre quién eres, no con más texto repetido.
+  - titulo: Cómo trabajamos con empresas de Venezuela
+    cuerpo: |
+      Combinamos dos frentes en una sola estrategia. El primero es el SEO: la parte técnica de tu web, el contenido que responde lo que tus clientes preguntan y la autoridad hacia tu sitio. El segundo es el [posicionamiento en IA](/servicios/posicionamiento-en-ia/): lograr que Gemini, ChatGPT y las respuestas de IA de Google puedan encontrar y considerar tu negocio.
+
+      Cada mes compartimos por escrito qué se hizo y qué se movió. La inversión se define según la auditoría de tu caso, no con un paquete igual para todos. Si prefieres empezar por entender mejor la base, mira cómo [funciona Google](/blog/como-funciona-google/) o qué incluye un [servicio de SEO mensual](/blog/que-incluye-un-servicio-de-seo-mensual/).
 remoto_titulo: Trabajo remoto, sin importar la ciudad
 ciudades:
   - nombre: Caracas
-    pagina: true
+    pagina: false
   - nombre: Valencia
   - nombre: Maracaibo
   - nombre: Barquisimeto
@@ -38,23 +47,35 @@ remoto:
     texto: Cada mes compartimos por escrito qué se hizo y qué se movió, para que lo revises con tu equipo.
   - titulo: Misma estrategia en todo el país
     texto: Atendemos negocios de Caracas, Valencia, Maracaibo, Barquisimeto y del resto de Venezuela.
+hechos:
+  - dato: "En octubre de 2025, Venezuela tenía 17,6 millones de usuarios de internet, el 61,6 % de la población, y 11,0 millones de personas seguían sin conexión."
+    fuente: https://datareportal.com/reports/digital-2026-venezuela
+  - dato: "La velocidad mediana de descarga móvil en Venezuela fue de 25,42 Mbps y la de banda fija de 92,09 Mbps, según Ookla hasta agosto de 2025."
+    fuente: https://datareportal.com/reports/digital-2026-venezuela
+  - dato: "En octubre de 2026, el 65,36 % del tráfico web medido en Venezuela vino de móviles y el 34,31 % de computadoras de escritorio."
+    fuente: https://gs.statcounter.com/platform-market-share/desktop-mobile-tablet/venezuela
+  - dato: "En octubre de 2026, Google concentraba el 93,11 % de las búsquedas en Venezuela, seguido de Bing con 5,39 %."
+    fuente: https://gs.statcounter.com/search-engine-market-share/all/venezuela
+  - dato: "En octubre de 2026, StatCounter registraba en Venezuela una cuota de chatbots de IA de 87,19 % para Google Gemini, 8,52 % para Perplexity y 4 % para ChatGPT."
+    fuente: https://gs.statcounter.com/ai-chatbot-market-share/all/venezuela
+  - dato: "La plataforma R4V registraba 6.978.009 refugiados y migrantes venezolanos en América Latina y el Caribe, con actualización de agosto de 2026."
+    fuente: https://www.r4v.info/en/refugeeandmigrants
 faq:
   - pregunta: "¿Trabajan con empresas de Venezuela aunque estén en otra ciudad?"
     respuesta: |
       Sí. Trabajamos de forma remota, por videollamada y con reportes escritos. Lo que importa es que tu negocio tenga una web que podamos mejorar y un objetivo claro de crecimiento orgánico.
-  - pregunta: "¿Atienden empresas fuera de Caracas?"
+  - pregunta: "¿Conviene posicionarme en ChatGPT si en Venezuela domina Gemini?"
     respuesta: |
-      Sí. Atendemos negocios de cualquier ciudad de Venezuela con la misma estrategia. Caracas tiene su propia página porque allí compiten más negocios por las mismas búsquedas.
+      En la medición de StatCounter de octubre de 2026, Gemini concentraba la mayor cuota de chatbots de IA en el país. Por eso empezamos por Google y sus respuestas de IA y sumamos ChatGPT y Perplexity después. Las cuotas cambian cada mes, así que las revisamos cada cierto tiempo.
+  - pregunta: "¿Atienden a venezolanos que viven fuera del país?"
+    respuesta: |
+      Atendemos negocios venezolanos cuyo público incluye a la diáspora. Ajustamos la estructura del sitio para que se encuentre con búsquedas sin la palabra Venezuela y para que quede claro desde dónde operas.
   - pregunta: "¿Cuánto tarda el SEO en dar resultados?"
     respuesta: |
-      Es una estrategia de medio y largo plazo. Pensamos el plan en un horizonte de 6 a 12 meses: primero las bases, después el crecimiento y con el tiempo se acumula.
-  - pregunta: "¿Cuál es la inversión?"
-    respuesta: |
-      La inversión depende de la auditoría. Después de analizar tu negocio presentamos una propuesta con el alcance, las prioridades y la inversión.
+      Es una estrategia de medio y largo plazo. Pensamos el plan en un horizonte de 6 a 12 meses: primero las bases, después el crecimiento y con el tiempo se acumula. Hay más detalle en esta guía sobre [cuánto tarda el SEO](/blog/cuanto-tarda-el-seo/).
 pendientes:
-  - "Ari: aprobar el texto (la hoja aprobó la página y su estructura, no esta redacción)."
-  - "Ari: 3 hechos del mercado venezolano con fuente https pública (la guarda exige 3 para publicar). Los datos propios de GSC de aprendoseo con país VEN no sirven como fuente pública sin un enlace."
-  - "Ari: demanda_terminos_venezuela.md, que no está en disco, con cómo busca hoy el cliente venezolano (la sección 1 es genérica hasta tenerlo)."
-  - "Ari: confirmar que 'videollamada y reportes escritos' describe el modo de trabajo (la hoja menciona videollamada y WhatsApp)."
-  - "Ari: confirmar si Loops tiene clientes de Venezuela que se puedan mencionar (hoy ninguno se menciona)."
-  - "Ari: confirmar la afirmación de la sección 3 de que en Caracas compiten más negocios (hoy es una suposición sin dato)."
+  - "Revisar: las cifras de StatCounter son de octubre de 2026 y cambian cada mes. Releer antes de publicar y actualizar si cambian mucho."
+  - "Revisar: StatCounter mide tráfico de una muestra, no personas. La frase sobre Gemini ya lo dice; mantener el matiz."
+  - "Revisar: la frase sobre búsquedas de agencias desde escritorio sale de datos internos de Ahrefs (no citables como fuente pública)."
+  - "Juan o Ari: confirmar que 'videollamada y reportes escritos' describe el modo de trabajo."
+  - "Juan o Ari: clientes de Venezuela que se puedan mencionar (hoy ninguno)."

@@ -1,0 +1,81 @@
+# Borrador. Redacción pendiente de revisión de Juan y Ari. Sin precios, garantías ni cifras.
+tipo: servicio
+ruta: /servicios/arquitectura-web-y-enlazado-interno/
+nombre: Arquitectura web y enlazado interno
+grupo: contenido
+draft: true
+publishAt: 2027-03-04
+title: "Arquitectura web y enlazado interno para tu sitio"
+description: "Arquitectura web y enlazado interno: estructura de categorías, páginas huérfanas y anclas, para llegar a lo importante en pocos clics."
+h1: "Arquitectura web y enlazado interno: llegar a lo importante en pocos clics"
+intro: |
+  La arquitectura web es el orden de tus páginas: qué cuelga de qué, cómo se llega a cada una y qué enlaces las conectan. Cuando está bien pensada, una persona encuentra lo que busca sin esfuerzo y Google descubre tus páginas importantes con facilidad.
+
+  En Loops Growth revisamos la estructura de tu sitio y el enlazado interno como una sola tarea. Trabajamos en español para empresas de LATAM, con cambios concretos que tu equipo puede aplicar.
+secciones:
+  - titulo: Estructura de categorías
+    cuerpo: |
+      Una buena estructura agrupa tus páginas por temas que un cliente reconoce. En una tienda, eso pueden ser categorías y subcategorías con nombres claros. En un sitio de servicios, una página por servicio y un blog ordenado por temas.
+
+      Buscamos que las páginas más valiosas estén a pocos clics de la portada y que cada una tenga un lugar lógico. Las URL también cuentan: la [guía de inicio de SEO de Google](https://developers.google.com/search/docs/fundamentals/seo-starter-guide) recomienda incluir palabras útiles para las personas y evitar identificadores aleatorios.
+
+      Esa estructura se apoya en lo que ya definimos en la [estrategia de contenidos](/servicios/estrategia-de-contenidos/), donde los clusters de temas sirven de esqueleto para las secciones del sitio.
+  - titulo: Páginas huérfanas
+    cuerpo: |
+      Una página huérfana es una página a la que ningún otro enlace del sitio apunta. Aunque exista, es difícil que alguien la encuentre, y Google tiene menos pistas para descubrirla. La documentación de Google sobre [enlaces rastreables](https://developers.google.com/search/docs/crawling-indexing/links-crawlable) recomienda que cada página que te importe reciba un enlace desde al menos otra página de tu sitio.
+
+      Para encontrarlas comparamos la lista de URL de tu sitio con las que reciben enlaces internos al rastrearlo. Las que no aparecen se revisan una a una: algunas necesitan enlaces, otras se unen a una página más fuerte y otras sobran. Ese último caso se coordina con la [optimización de contenido existente](/servicios/optimizacion-de-contenido-existente/).
+  - titulo: Anclas que dicen algo
+    cuerpo: |
+      El ancla es el texto del enlace. Google indica que un buen ancla es descriptivo, razonablemente breve y relevante para la página a la que lleva. "Haz clic aquí" no dice nada, mientras que "guía de [qué es un topic cluster](/blog/que-es-un-topic-cluster/)" sí.
+
+      También revisamos que los enlaces sean realmente enlaces: Google solo puede rastrear los que son elementos con atributo de destino. Un botón que navega con script puede verse bien para una persona y ser invisible para el buscador.
+  - titulo: Enlazado que acompaña al contenido
+    cuerpo: |
+      Cada pieza nueva sale con sus enlaces ya pensados, como se hace en la [redacción de artículos SEO](/servicios/redaccion-de-articulos-seo/), y las piezas antiguas reciben enlaces hacia ellas cuando se publican temas relacionados. Así la estructura se mantiene viva y no depende de una revisión puntual.
+
+      Para ordenar qué enlaza a qué usamos el [mapa de palabras clave](/servicios/investigacion-de-palabras-clave/), que dice qué página trabaja cada tema. Si quieres el fondo teórico, lee [cómo hacer keyword research](/blog/como-hacer-keyword-research/).
+senales:
+  - "Para llegar a una página importante hacen falta muchos clics desde la portada."
+  - "Tienes páginas que no aparecen en ningún menú ni reciben enlaces de otras páginas del sitio."
+  - "Tus enlaces internos usan anclas como 'ver más' o 'haz clic aquí'."
+  - "Tus categorías crecieron sin orden y los clientes no encuentran lo que buscan."
+  - "Vas a rediseñar o a migrar tu sitio y quieres decidir la estructura antes de construir."
+entregables:
+  - titulo: Mapa de estructura
+    texto: Diagrama de tus secciones y categorías con la profundidad de cada página y los cambios propuestos respecto a hoy.
+  - titulo: Lista de páginas huérfanas
+    texto: "Páginas sin enlaces internos, con la decisión recomendada para cada una: enlazar, unir o retirar."
+  - titulo: Matriz de enlazado interno
+    texto: Tabla de qué páginas deben enlazar a cuáles, con el ancla sugerida para cada enlace importante.
+  - titulo: Revisión de enlaces rastreables
+    texto: Detección de enlaces que dependen de scripts o no tienen destino real, con la corrección que debe hacer tu equipo.
+  - titulo: Guía de enlazado para tu equipo
+    texto: Reglas cortas para que quien publique contenido nuevo sepa a qué enlazar y con qué ancla, sin depender de nosotros.
+proceso:
+  - titulo: Rastrear y mapear el sitio
+    texto: Recorremos tu sitio como lo haría un buscador y dibujamos cómo está organizado hoy, con la profundidad de cada página.
+  - titulo: Detectar problemas de acceso
+    texto: Marcamos páginas huérfanas, enlaces rotos o no rastreables y anclas que no describen su destino.
+  - titulo: Proponer la estructura y los enlaces
+    texto: Diseñamos la estructura de categorías y la matriz de enlaces, y la revisamos contigo antes de aplicarla.
+  - titulo: Aplicar y verificar
+    texto: Acompañamos a tu equipo en los cambios y volvemos a rastrear el sitio para comprobar que todo quedó conectado.
+faq:
+  - pregunta: "¿Cuántos clics debería haber hasta una página importante?"
+    respuesta: |
+      No existe un número oficial que Google exija. La idea práctica es que tus páginas más valiosas se alcancen con pocos pasos y tengan enlaces desde otras páginas. Lo revisamos según el tamaño y el tipo de tu sitio.
+  - pregunta: "¿Necesito un sitemap si ya tengo buen enlazado?"
+    respuesta: |
+      Google indica que un sitemap no es obligatorio y que encuentra páginas sobre todo a través de enlaces. Un buen enlazado interno sigue siendo la base. Un sitemap puede complementarlo, pero no lo reemplaza.
+  - pregunta: "¿Este trabajo cambia las URL de mi sitio?"
+    respuesta: |
+      Solo cuando hay una razón clara. Cambiar una URL exige redirecciones para no perder enlaces, así que lo evitamos si no aporta valor. Cuando hace falta, lo coordinamos con la [optimización de contenido existente](/servicios/optimizacion-de-contenido-existente/).
+  - pregunta: "¿Cómo se relaciona con los clusters de contenido?"
+    respuesta: |
+      Los clusters definen qué temas existen y cómo se agrupan. La arquitectura los traduce en secciones y enlaces concretos del sitio. Se explican en la [estrategia de contenidos](/servicios/estrategia-de-contenidos/) y en [qué es un topic cluster](/blog/que-es-un-topic-cluster/).
+pendientes:
+  - "Juan o Ari: confirmar que Loops presta este servicio."
+  - "Ari: confirmar con qué herramienta se rastrea el sitio para describir el entregable sin nombrar una que no se use."
+  - "Ari: confirmar si Loops aplica los cambios o los entrega a tu equipo o a tu desarrollador."
+  - "No verificado y dejado fuera: profundidad máxima ideal en clics, límites de enlaces por página y efecto del enlazado interno en el posicionamiento."

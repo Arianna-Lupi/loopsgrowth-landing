@@ -38,7 +38,7 @@ const sub = toBlocks(intro).filter((b) => b.kind === 'p').map((b: any) => b.text
           <p class="actions" data-rv><CtaLink label={label} location="pagina" href="/#agenda" /></p>
           {
             d.ciudades.length > 0 && (
-              <ul class="chips" role="list" aria-label="Ciudades de Venezuela que atendemos a distancia">
+              <ul class="chips" role="list" aria-label={`Ciudades de ${d.nombre} que atendemos a distancia`}>
                 {d.ciudades.map((c: any) => {
                   const href = c.pagina ? cityPaths[c.nombre] : undefined;
                   return <li data-rv>{href && live.has(href) ? <a href={href}>{c.nombre}</a> : <span>{c.nombre}</span>}</li>;

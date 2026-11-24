@@ -1,0 +1,146 @@
+---
+/**
+ * Página de servicio genérica (los servicios que no son "posicionamiento en IA"). Mundo de producto: hero oscuro,
+ * señales de que hace falta, secciones de texto, entregables en bento, proceso en línea de tiempo, resultados, FAQ y
+ * cierre. Todo el texto sale del YAML de `src/content/paginas`; cada servicio trae su propio ángulo.
+ * Ritmo de tonos: dark, light, yellow, light, light, yellow, light, purple.
+ */
+import CtaLink from '../CtaLink.astro';
+import Crumbs from './Crumbs.astro';
+import Prose from './Prose.astro';
+import Results from './Results.astro';
+import Faq from './Faq.astro';
+import Closing from './Closing.astro';
+import { getLanding, ctaLabel } from '../../lib/content';
+import { toBlocks } from '../../lib/text';
+
+interface Props { d: any; crumbs: { name: string; path: string }[] }
+const { d, crumbs } = Astro.props;
+const label = ctaLabel(await getLanding());
+const sub = toBlocks(d.intro)[0];
+const extra = toBlocks(d.intro).slice(1).filter((b) => b.kind === 'p').map((b: any) => b.text);
+const entregables = d.entregables ?? [];
+const proceso = d.proceso ?? [];
+const senales = d.senales ?? [];
+---
+
+<article>
+  <section class="hero" data-tone="dark" aria-labelledby="hero-title">
+    <div class="wrap">
+      <Crumbs crumbs={crumbs} />
+      <h1 id="hero-title" data-rv>{d.h1}</h1>
+      <p class="sub" data-rv>{sub.kind === 'p' ? sub.text : ''}</p>
+      {extra.map((t: string) => <p class="sub more" data-rv>{t}</p>)}
+      <p class="actions" data-rv><CtaLink label={label} location="pagina" href="/#agenda" /></p>
+    </div>
+  </section>
+
+  {
+    senales.length > 0 && (
+      <section class="signs" data-tone="light" aria-labelledby="signs-title">
+        <div class="wrap">
+          <h2 id="signs-title" data-rv>Señales de que lo necesitas</h2>
+          <ul class="sign-list" role="list">
+            {senales.map((s: string) => <li data-rv><span aria-hidden="true">✓</span>{s}</li>)}
+          </ul>
+        </div>
+      </section>
+    )
+  }
+
+  <section class="rows" data-tone="light" aria-label="Cómo lo abordamos">
+    <div class="wrap">
+      {
+        d.secciones.map((s: any) => (
+          <div class="row">
+            <h2 data-rv>{s.titulo}</h2>
+            <div data-rv data-rv-index="1"><Prose text={s.cuerpo} /></div>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  {
+    entregables.length > 0 && (
+      <section class="bento-sec" data-tone="yellow" aria-labelledby="ent-title">
+        <div class="wrap">
+          <h2 id="ent-title" data-rv>Qué incluye el servicio</h2>
+          <ul class="bento" role="list">
+            {entregables.map((e: any, i: number) => (
+              <li data-rv class:list={['b', i === 0 && 'b-lead']}>
+                <h3>{e.titulo}</h3>
+                <p>{e.texto}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    )
+  }
+
+  {
+    proceso.length > 0 && (
+      <section class="timeline" data-tone="light" aria-labelledby="proc-title">
+        <div class="wrap">
+          <h2 id="proc-title" data-rv>Cómo trabajamos</h2>
+          <ol class="tl" role="list">
+            {proceso.map((p: any, i: number) => (
+              <li data-rv-tl>
+                <span class="dot" aria-hidden="true">{i + 1}</span>
+                {i < proceso.length - 1 && <span class="line" aria-hidden="true"></span>}
+                <div class="tl-body">
+                  <h3>{p.titulo}</h3>
+                  <p>{p.texto}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+    )
+  }
+
+  <Results tone="yellow" compact />
+  <Faq items={d.faq} tone="light" />
+  <Closing tone="purple" title="¿Quieres revisar tu caso?" text="Agenda una llamada con el equipo de Loops Growth y revisamos tu situación. Sin costo y sin compromiso." />
+</article>
+
+<style>
+  section { padding-block: var(--section-y); }
+  h2 { letter-spacing: -0.02em; max-width: 22ch; margin-bottom: 1rem; text-wrap: balance; }
+  .hero { padding-block: 1.5rem var(--section-y); }
+  h1 { max-width: 20ch; letter-spacing: -0.03em; text-wrap: balance; }
+  .sub { max-width: 58ch; margin-top: 1.25rem; font-size: var(--text-title); line-height: 1.45; }
+  .sub.more { margin-top: 0.75rem; font-size: var(--text-body, 1rem); }
+  .actions { margin-top: 2rem; }
+
+  .sign-list { display: grid; gap: 0.75rem; margin: 1.5rem 0 0; padding: 0; list-style: none; }
+  .sign-list li { display: flex; gap: 0.75rem; align-items: flex-start; padding: 1rem 1.25rem; border: var(--border-pop); border-radius: var(--radius-card); background: var(--color-brand-white); color: var(--color-brand-dark); }
+  .sign-list span { display: inline-grid; place-items: center; flex: none; width: 1.75rem; height: 1.75rem; border-radius: 50%; background: var(--color-brand-yellow); font-weight: 700; }
+
+  .row { display: grid; gap: 1rem; padding-block: 2rem; border-top: var(--border-pop); }
+  .row:first-child { border-top: 0; padding-top: 0; }
+
+  .bento { display: grid; gap: 1rem; margin: 1.5rem 0 0; padding: 0; list-style: none; }
+  .b { display: grid; align-content: start; gap: 0.5rem; padding: 1.5rem; border: var(--border-pop); border-radius: var(--radius-card); background: var(--color-brand-white); color: var(--color-brand-dark); }
+  .b h3 { color: inherit; }
+  .b-lead { background: var(--color-brand-purple); color: var(--color-brand-white); box-shadow: var(--shadow-pop); }
+
+  .tl { display: grid; margin: 1.5rem 0 0; padding: 0; list-style: none; position: relative; max-width: 46rem; }
+  .tl li { position: relative; display: grid; grid-template-columns: 3rem 1fr; gap: 1rem; padding-bottom: 2rem; }
+  .line { position: absolute; left: 1.4375rem; top: 3rem; bottom: 0; width: 3px; background: var(--color-brand-dark); transform-origin: top center; }
+  .dot { display: grid; place-items: center; width: 3rem; height: 3rem; border: var(--border-pop); border-radius: 50%; background: var(--color-brand-yellow); font-weight: 700; font-variant-numeric: tabular-nums; }
+  .tl h3 { margin-bottom: 0.25rem; }
+
+  @media (min-width: 40em) {
+    .sign-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .bento { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .b-lead { grid-column: 1 / -1; }
+  }
+  @media (min-width: 64em) {
+    .row { grid-template-columns: 5fr 7fr; column-gap: 3rem; }
+    .bento { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .b-lead { grid-column: span 2; }
+  }
+</style>

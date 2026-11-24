@@ -1,0 +1,85 @@
+# Borrador sin cifras ni casos inventados. Publicar exige draft: false y reviewedBy.
+tipo: servicio
+ruta: /servicios/core-web-vitals/
+nombre: Core Web Vitals
+draft: true
+grupo: tecnico
+publishAt: 2027-02-02
+title: "Core Web Vitals: mejora LCP, INP y CLS con datos reales"
+description: "Servicio de Core Web Vitals: medimos LCP, INP y CLS con datos de campo, priorizamos los cambios que mueven cada métrica y verificamos la mejora."
+h1: "Core Web Vitals: LCP, INP y CLS medidos con datos de campo"
+intro: |
+  Core Web Vitals son tres métricas con las que Google describe la experiencia real de quien visita tu página: cuánto tarda en verse el contenido principal, qué tan rápido responde a un toque y cuánto se mueve el diseño mientras carga. El trabajo consiste en medirlas bien y corregir lo que de verdad las empeora.
+
+  En Loops Growth partimos de datos de campo, los que generan tus visitantes reales, y usamos las pruebas de laboratorio para encontrar la causa. Probamos siempre con perfil móvil y conexión limitada, porque muchos de tus visitantes entran desde el teléfono.
+secciones:
+  - titulo: Las tres métricas y su umbral
+    cuerpo: |
+      Según la [documentación de Google en web.dev](https://web.dev/articles/vitals), una página tiene buena experiencia cuando cumple tres objetivos: LCP de 2,5 segundos o menos, INP de 200 milisegundos o menos y CLS de 0,1 o menos. La evaluación se hace en el percentil 75 de las cargas de página, separando móvil y escritorio.
+
+      - LCP (Largest Contentful Paint): mide la carga del elemento principal, normalmente una imagen grande o un bloque de texto.
+      - INP (Interaction to Next Paint): mide la capacidad de respuesta cuando alguien toca, hace clic o escribe.
+      - CLS (Cumulative Layout Shift): mide la estabilidad visual, es decir, cuánto saltan los elementos mientras la página carga.
+  - titulo: Datos de campo frente a laboratorio
+    cuerpo: |
+      Una prueba de laboratorio simula una visita en condiciones controladas. Sirve para depurar, pero web.dev aclara que Core Web Vitals son principalmente métricas de campo y que la medición de laboratorio no las sustituye. Lighthouse, por ejemplo, no puede medir INP porque no interactúa con la página, y usa otra métrica como aproximación.
+
+      Por eso empezamos por el informe de Core Web Vitals de [Search Console](https://support.google.com/webmasters/answer/9205520), que usa datos de usuarios reales, agrupa las URL con experiencia similar y separa móvil y escritorio, y por los datos de usuarios reales. Después reproducimos el problema en laboratorio para saber qué lo provoca.
+  - titulo: Qué cambios suelen mover cada métrica
+    cuerpo: |
+      Cada métrica responde a causas distintas, y por eso no existe una receta única:
+
+      - Para LCP revisamos el peso y el formato de la imagen principal, la prioridad de carga, el tiempo de respuesta del servidor y los recursos que bloquean el renderizado.
+      - Para INP revisamos el JavaScript pesado, los scripts de terceros y los manejadores de eventos lentos.
+      - Para CLS revisamos imágenes y anuncios sin dimensiones reservadas, fuentes que cambian el texto al cargar y bloques que se insertan tarde.
+
+      Los cambios se aplican por plantilla, igual que en una [auditoría SEO técnica](/servicios/auditoria-seo-tecnica/). Para el concepto desde cero, lee [Core Web Vitals: qué son](/blog/core-web-vitals-que-son/).
+  - titulo: Cómo se relaciona con indexación y migraciones
+    cuerpo: |
+      Una página lenta no siempre deja de indexarse, pero sí empeora la experiencia de quien llega. La velocidad convive con el resto del trabajo técnico: si primero hay que resolver por qué Google no indexa tus páginas, ve a [indexación y rastreo](/servicios/indexacion-y-rastreo/). Y si vas a cambiar de plataforma, mide antes y después dentro de una [migración SEO](/servicios/migracion-seo/).
+
+      Para repasar el camino completo de una URL, desde que se publica hasta que Google la muestra, consulta [cómo indexar una página en Google](/blog/como-indexar-una-pagina-en-google/).
+senales:
+  - 'Search Console marca URL como "necesitan mejorar" o "deficientes" en el informe de Core Web Vitals.'
+  - "Tus páginas cargan lento al abrirlas desde el teléfono con datos móviles."
+  - "El contenido salta mientras lees y tus visitantes tocan el botón equivocado."
+  - "Tu equipo optimiza según Lighthouse, pero los datos de campo no cambian."
+  - "Agregaste scripts de chat, analítica o publicidad y el sitio se siente más lento."
+entregables:
+  - titulo: Diagnóstico de campo y laboratorio
+    texto: Informe que separa lo que viven tus visitantes reales de lo que reproducimos en pruebas, con las URL y plantillas afectadas.
+  - titulo: Causas por métrica
+    texto: Para LCP, INP y CLS, qué elemento, script o recurso provoca el problema en cada plantilla.
+  - titulo: Lista de cambios priorizada
+    texto: Correcciones ordenadas por el efecto esperado en cada métrica y por el esfuerzo de desarrollo que exigen.
+  - titulo: Especificaciones para desarrollo
+    texto: Instrucciones concretas para tu equipo, con ejemplos del cambio de código o de configuración.
+  - titulo: Verificación posterior
+    texto: Revisamos los datos de campo después de publicar los cambios y te informamos qué métricas mejoraron y cuáles siguen pendientes.
+proceso:
+  - titulo: Lectura de datos de campo
+    texto: Revisamos el informe de Search Console y los datos de usuarios reales para ubicar las plantillas con peor experiencia.
+  - titulo: Reproducción en laboratorio
+    texto: Probamos esas plantillas con herramientas de laboratorio, en perfil móvil y con conexión limitada, para encontrar la causa.
+  - titulo: Plan de cambios
+    texto: Convertimos las causas en una lista de correcciones, cada una asociada a la métrica que debería mover.
+  - titulo: Medición tras la publicación
+    texto: Esperamos a que los datos de campo se actualicen, comparamos con la línea base y ajustamos lo que no avanzó.
+faq:
+  - pregunta: "¿Cuáles son los umbrales de Core Web Vitals?"
+    respuesta: |
+      Google considera buena la experiencia con LCP de 2,5 segundos o menos, INP de 200 milisegundos o menos y CLS de 0,1 o menos, medidos en el percentil 75. Lo detalla [web.dev](https://web.dev/articles/vitals). Tienes la explicación completa en [Core Web Vitals: qué son](/blog/core-web-vitals-que-son/).
+  - pregunta: "¿Por qué mi sitio saca buena nota en Lighthouse y mal en Search Console?"
+    respuesta: |
+      Porque Lighthouse es una prueba de laboratorio y Search Console muestra datos de visitantes reales, con sus dispositivos y sus conexiones. Los datos de campo son la referencia principal. Si quieres entender cómo se conecta con el resto, revisa la [auditoría SEO técnica](/servicios/auditoria-seo-tecnica/).
+  - pregunta: "¿Mejorar Core Web Vitals me asegura subir en Google?"
+    respuesta: |
+      No. Mejora la experiencia de quien visita tu página, pero nadie puede asegurar una posición. El ranking depende de muchos factores, y la relevancia del contenido pesa de forma central.
+  - pregunta: "¿Qué pasa si mi página ni siquiera se indexa?"
+    respuesta: |
+      Entonces el primer paso es otro. Antes de optimizar la velocidad, resolvemos por qué Google no la indexa, dentro del servicio de [indexación y rastreo](/servicios/indexacion-y-rastreo/). Si estás por rediseñar o cambiar de plataforma, lo medimos antes y después en la [migración SEO](/servicios/migracion-seo/).
+pendientes:
+  - "Juan o Ari: confirmar que Loops presta este servicio."
+  - "Ari: confirmar que Loops trabaja con el informe de Search Console y datos de usuarios reales como punto de partida."
+  - "Verificados en web.dev y Search Console: umbrales de LCP, INP y CLS, percentil 75, campo frente a laboratorio. Fuera del texto: cualquier dato sobre redes móviles de LATAM, porque no se consultó una fuente oficial."
+  - "Fuera del texto: cuánto influyen Core Web Vitals en el ranking; no se verificó."

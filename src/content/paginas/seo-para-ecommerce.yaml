@@ -1,0 +1,81 @@
+# Borrador. Sin precios, garantía, cifras ni casos. Publicar exige draft: false y reviewedBy.
+tipo: servicio
+ruta: /servicios/seo-para-ecommerce/
+nombre: SEO para ecommerce
+grupo: negocio
+publishAt: 2027-03-23
+draft: true
+title: "SEO para ecommerce: categorías, fichas y filtros que Google lee"
+description: "SEO para ecommerce en español: ordenamos categorías, fichas de producto, filtros y paginación para que Google rastree tu tienda y entienda cada producto."
+h1: "SEO para ecommerce: tu tienda online ordenada para Google"
+intro: |
+  Una tienda online genera URL sin parar: categorías, productos, variantes de talla y color, filtros, páginas de resultados. Esa abundancia es su ventaja y su problema, porque Google tiene que decidir cuáles de esas páginas merecen rastrearse, indexarse y mostrarse.
+
+  En Loops Growth trabajamos el SEO para ecommerce con un orden claro: primero la estructura de la tienda, después las fichas y los datos de producto, y al final el contenido que atrae a quien todavía no sabe qué comprar. Lo hacemos en español para tiendas de LATAM.
+secciones:
+  - titulo: Categorías y fichas, el centro de la tienda
+    cuerpo: |
+      Las categorías suelen captar las búsquedas más amplias ("zapatos deportivos para mujer") y las fichas las más específicas ("zapato de running modelo X"). Cada una necesita un propósito distinto y una frase de búsqueda propia, para que no compitan entre sí. Ese reparto se decide con una [investigación de palabras clave](/servicios/investigacion-de-palabras-clave/) hecha por página, no por producto suelto.
+
+      Google recomienda usar [URL con palabras descriptivas](https://developers.google.com/search/docs/specialty/ecommerce/designing-a-url-structure-for-ecommerce-sites) en lugar de números sueltos, usar enlaces `<a href>` en vez de navegación solo con JavaScript y dar a cada página indexable una etiqueta canonical que apunte a sí misma. También indica que una categoría sin productos puede llevar `noindex`, o devolver un 404 si desaparece del todo.
+  - titulo: Filtros y facetas sin regalar el rastreo
+    cuerpo: |
+      Los filtros de color, talla o marca multiplican las URL. Google explica en su guía de [navegación por facetas](https://developers.google.com/search/docs/crawling-indexing/crawling-managing-faceted-navigation) que esas combinaciones pueden ser un conjunto enorme de URL, que los rastreadores no saben si son útiles hasta que las abren, y que ese gasto deja menos tiempo para descubrir páginas nuevas.
+
+      Según esa guía, si no necesitas filtros indexados, puedes bloquear el rastreo de los parámetros en robots.txt. Si sí los necesitas, conviene usar `&` como separador, mantener el mismo orden de filtros y devolver un 404 para las combinaciones sin resultados. Decidimos contigo qué filtros tienen demanda de búsqueda real (por ejemplo "zapatos de cuero negro") y cuáles solo sirven para navegar.
+  - titulo: Paginación y variantes
+    cuerpo: |
+      Cuando una categoría tiene cien productos, se reparte en páginas. Google indica que [cada página debe tener su propia URL y su propio canonical](https://developers.google.com/search/docs/specialty/ecommerce/pagination-and-incremental-page-loading), y que no se debe usar la primera página como canonical de toda la secuencia. También recomienda enlazar cada página con la siguiente mediante `<a href>`.
+
+      Las variantes de un producto (color, talla) se resuelven con otra regla: según Google, cada variante puede tener su URL y, si usas parámetros, el canonical debe ser la versión sin parámetro. Revisamos que tu plataforma haga eso y no deje cientos de copias casi idénticas.
+  - titulo: Datos de producto y contenido
+    cuerpo: |
+      Los datos estructurados de producto ayudan a Google a entender qué vendes. Google distingue entre [fragmentos de producto y fichas de comerciante](https://developers.google.com/search/docs/appearance/structured-data/product): los primeros para páginas donde no se compra directamente y las segundas para páginas donde sí. Añadir los datos no asegura que se muestren.
+
+      Además, una tienda necesita contenido para quien aún compara: guías de compra, comparativas y respuestas a dudas frecuentes. Ese material sale de la [estrategia de contenidos](/servicios/estrategia-de-contenidos/) y se apoya en las búsquedas reales de tus clientes. Si tienes tienda física además de web, mira también el [SEO local y Google Business Profile](/servicios/seo-local-y-google-business-profile/). Si vendes software a empresas, consulta [SEO para SaaS B2B](/servicios/seo-para-saas-b2b/).
+senales:
+  - Tu tienda tiene miles de URL pero Search Console indexa solo una parte de ellas.
+  - Los filtros generan URL con parámetros que aparecen en los resultados de Google.
+  - Varias categorías o fichas compiten por las mismas búsquedas y ninguna despunta.
+  - Tus fichas de producto repiten la descripción del fabricante palabra por palabra.
+  - Las páginas de producto no muestran datos enriquecidos y tu competencia sí.
+entregables:
+  - titulo: Auditoría de arquitectura de la tienda
+    texto: Revisamos categorías, fichas, filtros, paginación y variantes, y señalamos qué URL deben indexarse y cuáles no.
+  - titulo: Mapa de palabras clave por categoría y ficha
+    texto: Una asignación clara de frase a página para que ninguna URL compita con otra de tu propia tienda.
+  - titulo: Reglas de facetas y parámetros
+    texto: Un criterio documentado de qué filtros se rastrean, cuáles se bloquean y cómo se tratan las combinaciones vacías.
+  - titulo: Plantilla de ficha de producto
+    texto: Estructura de título, descripción, atributos y datos estructurados para aplicar a todo el catálogo.
+  - titulo: Plan de contenido de compra
+    texto: Guías y comparativas para las búsquedas previas a la compra, con prioridad por demanda y por margen del negocio.
+proceso:
+  - titulo: Inventario de la tienda
+    texto: Listamos las plantillas de página de tu tienda y cuántas URL genera cada una, empezando por categorías y filtros.
+  - titulo: Diagnóstico por plantilla
+    texto: Revisamos cada tipo de página una sola vez, en lugar de producto por producto, y priorizamos por impacto y esfuerzo.
+  - titulo: Reglas para el catálogo
+    texto: Definimos cómo se escriben títulos, URL, canonicals y datos de producto para que se apliquen solos a lo nuevo.
+  - titulo: Implementación con tu equipo
+    texto: Entregamos instrucciones claras para tu desarrollador o tu plataforma y revisamos el resultado antes de darlo por cerrado.
+  - titulo: Seguimiento mensual
+    texto: Medimos indexación, clics e impresiones por tipo de página en Search Console y ajustamos el plan.
+faq:
+  - pregunta: "¿Funciona igual en Shopify, WooCommerce o una tienda a medida?"
+    respuesta: |
+      Los principios son los mismos, pero cada plataforma resuelve distinto las URL, los canonicals y los filtros. Por eso empezamos revisando qué hace tu plataforma por defecto y qué se puede cambiar. A veces el arreglo está en un ajuste y a veces hace falta desarrollo.
+  - pregunta: "¿Debo indexar las páginas de filtros?"
+    respuesta: |
+      Depende de si alguien busca esa combinación. Una página de "zapatos de cuero negro" puede tener demanda propia y merecer URL indexable. Un filtro por orden de llegada no. Decidimos caso por caso con tus datos de búsqueda y la guía de Google sobre [navegación por facetas](https://developers.google.com/search/docs/crawling-indexing/crawling-managing-faceted-navigation).
+  - pregunta: "¿Los datos estructurados me aseguran datos enriquecidos en Google?"
+    respuesta: |
+      No. Google los usa para entender la página y puede mostrar o no elementos enriquecidos. Los implementamos bien porque son la base para que existan esas opciones, sin prometer cómo se verán.
+  - pregunta: "¿Por dónde conviene empezar?"
+    respuesta: |
+      Por la estructura: categorías y filtros. Si Google gasta su atención en miles de URL sin valor, mejorar las fichas rinde menos. Para el orden completo, empieza con la [investigación de palabras clave](/servicios/investigacion-de-palabras-clave/) de tus categorías principales.
+pendientes:
+  - "Juan o Ari: confirmar que Loops presta este servicio de SEO para ecommerce."
+  - "Ari: confirmar que Loops trabaja con plataformas concretas (Shopify, WooCommerce, otras); el texto no las nombra como compromiso."
+  - "No verificado y dejado fuera: cualquier efecto de los datos estructurados de producto sobre el posicionamiento; Google no lo documenta."
+  - "No verificado y dejado fuera: cómo trata cada plataforma de ecommerce los canonicals y filtros por defecto."
