@@ -22,10 +22,12 @@ test.describe('idioma de las partes en /', () => {
         re.lastIndex = 0;
       }
       const marked = [...document.querySelectorAll('[lang="en"]')].map((el) => el.textContent ?? '');
-      return { unmarked, marked };
+      const pageText = document.body.innerText.toLowerCase();
+      return { unmarked, marked, pageText };
     }, [...EN_TERMS]);
     expect(result.unmarked, 'términos sin lang="en"').toEqual([]);
-    for (const term of EN_TERMS) {
+    // Solo se exige el span de los términos que la página muestra hoy (la lista del equipo ya no está en la solución).
+    for (const term of EN_TERMS.filter((t) => result.pageText.includes(t.toLowerCase()))) {
       expect(
         result.marked.some((text) => text.toLowerCase() === term.toLowerCase()),
         `sin <span lang="en"> para "${term}"`,

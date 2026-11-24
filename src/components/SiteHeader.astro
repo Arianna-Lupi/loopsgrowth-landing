@@ -6,7 +6,7 @@
  * Monta el sprite del collage una sola vez por página, fuera del landmark (si BaseLayout lo
  * asume después, basta mover esa línea).
  * Menú principal: `<nav>` con enlaces reales, sin JavaScript. Bajo 48em baja a una segunda fila del header
- * (que deja de ser pegajoso para no ocupar la pantalla); desde 48em va en línea entre el logo y la CTA.
+ * (que deja de ser pegajoso bajo 64em para no ocupar la pantalla); desde 48em va en línea entre el logo y la CTA.
  * El CTA del header se muestra siempre; bajo 40em va compacto (36 a 40 px de alto, cumple SC 2.5.8).
  */
 import CtaLink from './CtaLink.astro';
@@ -71,7 +71,14 @@ const tone = 'light';
     flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
-    gap: 0.25rem 0.75rem;
+    /* Área de salvado del logo (BrandBook p.7): 2rem libres a su derecha y debajo antes de la CTA o el menú. */
+    gap: 2rem;
+  }
+
+  @media (min-width: 40em) {
+    .bar {
+      row-gap: 2.5rem;
+    }
   }
 
   .main-nav {
@@ -114,7 +121,7 @@ const tone = 'light';
     outline-offset: var(--focus-offset);
   }
 
-  @media (max-width: 47.99em) {
+  @media (max-width: 63.99em) {
     .site-header {
       position: static;
     }
