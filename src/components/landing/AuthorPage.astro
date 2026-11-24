@@ -1,0 +1,114 @@
+---
+/**
+ * Página de autora. Mundo de perfil: tarjeta fija con el retrato y los enlaces a la izquierda; a la derecha la bio, la
+ * trayectoria como línea de hitos y los artículos que firma. Resultados y cierre. Solo datos confirmados.
+ * Ritmo de tonos: light, yellow, light, purple.
+ */
+import { Image } from 'astro:assets';
+import CtaLink from '../CtaLink.astro';
+import Crumbs from './Crumbs.astro';
+import Prose from './Prose.astro';
+import Results from './Results.astro';
+import Closing from './Closing.astro';
+import { getLanding, ctaLabel } from '../../lib/content';
+import { getPosts, formatDate } from '../../lib/blog';
+import { toBlocks } from '../../lib/text';
+const portraits = import.meta.glob('../../assets/team/treated/*.png', { eager: true, import: 'default' }) as Record<string, ImageMetadata>;
+
+interface Props { d: any; crumbs: { name: string; path: string }[] }
+const { d, crumbs } = Astro.props;
+const label = ctaLabel(await getLanding());
+const portrait = portraits[`../../assets/team/treated/${d.retrato ?? 'arianna'}.png`];
+const bg = d.retrato === 'arianna' ? 'orange' : d.retrato === 'juan' ? 'cream' : 'yellow';
+const posts = d.firma_blog ? (await getPosts()).slice(0, 4) : [];
+const paras = toBlocks(d.intro).filter((b) => b.kind === 'p').map((b: any) => b.text);
+const links = d.persona.sameAs.map((u: string) => ({ href: u, text: u.includes('linkedin') ? 'LinkedIn' : u.replace('https://', '').replace(/\/$/, '') }));
+---
+
+<article>
+  <section class="profile" data-tone="light" aria-labelledby="hero-title">
+    <div class="wrap">
+      <Crumbs crumbs={crumbs} />
+      <div class="grid">
+        <aside class="card" data-rv>
+          <div class:list={['photo', `photo--${bg}`]}><Image src={portrait} alt={`Retrato de ${d.persona.nombre}`} width={480} height={480} loading="eager" /></div>
+          <p class="role">{d.persona.cargo}</p>
+          <ul role="list" aria-label="Dónde encontrarla">
+            {links.map((l: any) => (<li><a href={l.href} target="_blank" rel="noopener noreferrer">{l.text}<span class="sr"> (se abre en una pestaña nueva)</span></a></li>))}
+          </ul>
+          <p class="cta"><CtaLink label={label} location="pagina" href="/#agenda" /></p>
+        </aside>
+        <div class="main">
+          <h1 id="hero-title" data-rv>{d.h1}</h1>
+          {paras.map((t, i) => <p data-rv class:list={['sub', i > 0 && 'more']}>{t}</p>)}
+          {
+            d.trayectoria && (
+              <ol class="path" role="list" aria-label="Trayectoria">
+                {d.trayectoria.map((t: any, i: number) => (<li data-rv-tl><span class="dot" aria-hidden="true"></span>{i < d.trayectoria.length - 1 && <span class="line" aria-hidden="true"></span>}<div class="tl-body"><strong>{t.titulo}</strong><span>{t.texto}</span></div></li>))}
+              </ol>
+            )
+          }
+          {d.secciones.map((s: any) => (<div class="block" data-rv><h2>{s.titulo}</h2><Prose text={s.cuerpo} /></div>))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {
+    posts.length > 0 && (
+      <section class="posts" data-tone="yellow" aria-labelledby="posts-title">
+        <div class="wrap">
+          <h2 id="posts-title" data-rv>Artículos de {d.persona.nombre}</h2>
+          <ul role="list">
+            {posts.map((p) => (
+              <li data-rv>
+                <a href={`/blog/${p.id}/`}><span class="pt">{p.data.title}</span><span class="pd">{formatDate(p.data.pubDate)}</span></a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    )
+  }
+
+  <Results tone="light" compact />
+  <Closing tone="purple" title="¿Quieres revisar tu caso?" text="Agenda una llamada con el equipo de Loops Growth y revisamos tu situación. Sin costo y sin compromiso." />
+</article>
+
+<style>
+  section { padding-block: var(--section-y); }
+  h2 { letter-spacing: -0.02em; text-wrap: balance; }
+  .profile { padding-block: 1.5rem var(--section-y); }
+  .grid { display: grid; gap: 2.5rem; align-items: start; }
+  .card { display: grid; gap: 1rem; padding: 1.25rem; border: var(--border-pop); border-radius: var(--radius-card); background: var(--color-brand-cream); box-shadow: var(--shadow-pop); }
+  .photo { overflow: hidden; border: var(--border-pop); border-radius: var(--radius-card); background: var(--color-brand-orange); aspect-ratio: 1; }
+  .photo--yellow { background: var(--color-brand-yellow); }
+  .photo--cream { background: var(--color-brand-cream); }
+  .photo :global(img) { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .role { font-weight: 700; font-size: var(--text-title); }
+  .card ul { display: grid; gap: 0; margin: 0; padding: 0; list-style: none; }
+  .card a { display: inline-flex; align-items: center; min-height: var(--target-min); color: var(--link); font-weight: 600; text-underline-offset: 4px; }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  h1 { max-width: 16ch; letter-spacing: -0.03em; text-wrap: balance; }
+  .sub { max-width: 54ch; margin-top: 1.25rem; font-size: var(--text-title); line-height: 1.45; }
+  .sub.more { font-size: var(--text-body); margin-top: 0.75rem; }
+  .path { display: grid; margin: 2rem 0 0; padding: 0; list-style: none; }
+  .path li { position: relative; display: grid; grid-template-columns: 1.25rem 1fr; gap: 1rem; padding-bottom: 1.75rem; }
+  .path li:last-child { padding-bottom: 0; }
+  .path .dot { width: 1.25rem; height: 1.25rem; margin-top: 0.2rem; border: var(--border-pop); border-radius: 50%; background: var(--color-brand-yellow); box-sizing: border-box; }
+  /* Línea de dot a dot: arranca bajo el centro del punto y llega al siguiente; el último paso no lleva. */
+  .path .line { position: absolute; left: calc(0.625rem - 1.5px); top: 1.45rem; bottom: -0.05rem; width: 3px; background: var(--color-brand-dark); transform-origin: top center; }
+  .path .tl-body { display: grid; gap: 0.25rem; min-width: 0; }
+  .block { margin-top: 2rem; }
+  .block h2 { font-size: var(--text-heading); margin-bottom: 0.75rem; }
+  .posts h2 { margin-bottom: 1.5rem; }
+  .posts ul { display: grid; gap: 0.75rem; margin: 0; padding: 0; list-style: none; }
+  .posts a { display: grid; gap: 0.25rem; padding: 1rem 1.25rem; border: var(--border-pop); border-radius: var(--radius-card); background: var(--color-brand-white); color: var(--color-brand-dark); text-decoration: none; box-shadow: 4px 4px 0 var(--color-brand-dark); }
+  .posts a:focus-visible { outline: var(--focus-width) solid var(--focus-ring); outline-offset: var(--focus-offset); }
+  .pt { font-weight: 700; font-size: var(--text-title); }
+  .pd { font-size: var(--text-label); }
+  @media (min-width: 64em) {
+    .grid { grid-template-columns: 20rem 1fr; gap: 4rem; }
+    .card { position: sticky; top: 6.5rem; }
+  }
+</style>

@@ -1,0 +1,34 @@
+---
+/** FAQ de las landings: la misma pregunta (`ui/FaqItem`) que el home, con respuestas en párrafos y enlaces en línea. */
+import FaqItem from '../ui/FaqItem.astro';
+import Prose from './Prose.astro';
+interface Props { items: { pregunta: string; respuesta: string }[]; tone?: 'light' | 'yellow' | 'dark'; title?: string; side?: boolean }
+const { items, tone = 'light', title = 'Preguntas frecuentes', side = true } = Astro.props;
+---
+
+{
+  items.length > 0 && (
+    <section class="faq" data-tone={tone} aria-labelledby="faq-title">
+      <div class:list={['wrap', side && 'side']}>
+        <h2 id="faq-title" data-rv>{title}</h2>
+        <div class="list">
+          {items.map((f) => (
+            <div data-rv>
+              <FaqItem>
+                <Fragment slot="question">{f.pregunta}</Fragment>
+                <Prose text={f.respuesta} />
+              </FaqItem>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+<style>
+  .faq { padding-block: var(--section-y); }
+  .faq h2 { margin-bottom: 1.5rem; letter-spacing: -0.02em; max-width: 14ch; }
+  .list { display: grid; gap: 1rem; min-width: 0; }
+  @media (min-width: 64em) { .side { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); column-gap: 3rem; align-items: start; } }
+</style>

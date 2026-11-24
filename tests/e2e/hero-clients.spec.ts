@@ -1,8 +1,14 @@
 // Bloque de clientes del hero (quick 260920-hero-clients): 12 tarjetas estáticas bajo el CTA, en el orden de
 // ariannalupi.com, con logo local (alt vacío) y el nombre como texto visible.
 import { test, expect, type Page } from '@playwright/test';
+import { readFileSync } from 'node:fs';
+import { parse } from 'yaml';
 
-const NAMES = ['Holafly', 'HubSpot', 'Unilever', 'Alchemy', 'Ambl', 'TravelPerk', 'Skale', 'Sendlane', 'ChartMogul', 'Holded', 'Flodesk', 'Piktochart'];
+// Los nombres salen del YAML (`hero.clients.items`) para que un cambio de cliente no deje la prueba vieja.
+const NAMES: string[] = (
+  parse(readFileSync('src/content/landing.es.yaml', 'utf8')) as { es: { hero: { clients: { items: { text: string }[] } } } }
+).es.hero.clients.items.map((i) => i.text);
+const idOf = (name: string) => name.toLowerCase().replace(/\s+/g, '-');
 const LIST = '#inicio .hero-clients-list';
 const box = (page: Page, selector: string) =>
   page.locator(selector).first().evaluate((el) => {
@@ -23,7 +29,7 @@ test.describe('clientes del hero', () => {
       await expect(img).toHaveAttribute('height', '128');
       await expect(img).toHaveAttribute('loading', 'lazy');
       await expect(img).toHaveAttribute('src', /^\/_astro\/.+\.webp$/);
-      await expect(items.nth(i)).toHaveAttribute('data-client', name.toLowerCase());
+      await expect(items.nth(i)).toHaveAttribute('data-client', idOf(name));
       await expect(items.nth(i).locator('a')).toHaveCount(0);
     }
   });
@@ -38,7 +44,8 @@ test.describe('clientes del hero', () => {
     const cta = await box(page, '#inicio a[data-cta="hero"]');
     const clients = await box(page, '#inicio .hero-clients');
     expect(clients.top).toBeGreaterThan(cta.bottom);
-    expect(clients.top - cta.bottom).toBeLessThan(96);
+    // En escritorio la fila de clientes baja bajo el arte (más alto que el copy): queda a menos de 220 px del CTA.
+    expect(clients.top - cta.bottom).toBeLessThan(220);
   });
 
   for (const width of [320, 390, 768, 1024, 1280]) {
@@ -90,7 +97,7 @@ test.describe('clientes del hero', () => {
     const external: string[] = [];
     const logoBytes: number[] = [];
     page.on('response', async (res) => {
-      if (/\/_astro\/(holafly|hubspot|unilever|alchemy|ambl|travelperk|skale|sendlane|chartmogul|holded|flodesk|piktochart)\./.test(new URL(res.url()).pathname)) logoBytes.push((await res.body()).length);
+      if (new RegExp(`/_astro/(${NAMES.map(idOf).join('|')})\\.`).test(new URL(res.url()).pathname)) logoBytes.push((await res.body()).length);
     });
     page.on('request', (req) => {
       const url = new URL(req.url());
@@ -106,6 +113,8 @@ test.describe('clientes del hero', () => {
     expect(logoBytes).toHaveLength(12);
     for (const b of logoBytes) expect(b).toBeLessThanOrEqual(8192);
     expect(logoBytes.reduce((a, b) => a + b, 0)).toBeLessThanOrEqual(32768);
+    // La fila entra con la animación de reveal.ts (opacity y transform, finita): al terminar no queda ninguna viva.
+    await page.evaluate(() => Promise.all(document.getAnimations().map((a) => a.finished.catch(() => undefined))));
     const animated = await page.locator('#inicio .hero-clients').evaluate((el) => el.getAnimations({ subtree: true }).length);
     expect(animated).toBe(0);
     const loaded = await page.locator(`${LIST} img`).evaluateAll((imgs) => imgs.every((i) => (i as HTMLImageElement).complete && (i as HTMLImageElement).naturalWidth === 128));
@@ -115,9 +124,10 @@ test.describe('clientes del hero', () => {
   test('el orden de tabulación del hero no cambia: los párrafos y las tarjetas no son enfocables', async ({ page }) => {
     await page.goto('/');
     expect(await page.locator('#inicio .hero-desc [tabindex], #inicio .hero-clients [tabindex]').count()).toBe(0);
-    const focusables = await page.locator('#inicio a[href], #inicio button, #inicio [tabindex]').count();
-    expect(focusables).toBe(1);
-    await page.locator('#inicio a[data-cta="hero"]').focus();
+    // Dos enfocables en el hero: el CTA y el enlace secundario "Ver casos de éxito" (#casos). Ni los clientes ni nada más.
+    const focusables = await page.locator('#inicio a[href], #inicio button, #inicio [tabindex]').evaluateAll((els) => els.map((e) => e.getAttribute('href')));
+    expect(focusables).toEqual(['#agenda', '#casos']);
+    await page.locator('#inicio a.hero-secondary-btn').focus();
     await page.keyboard.press('Tab');
     const active = await page.evaluate(() => document.activeElement?.closest('#inicio') ? 'dentro' : 'fuera');
     expect(active).toBe('fuera');

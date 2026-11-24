@@ -4,7 +4,7 @@ import { parse } from 'yaml';
 import { findInversion } from '../../scripts/lib/copy-rules.mjs';
 import { CHIP_WORDS } from '../../src/components/collage/collage-rules.mjs';
 import { EMAIL_RE } from '../../src/lib/email.mjs';
-import { PURPLE_RGB } from './lib/brand';
+import { PURPLE_RGB, rgbOfToken } from './lib/brand';
 import { expectMotionWithinBudget, expectNoMotion } from './lib/motion';
 
 // Secciones de cierre y footer (plan 02-06). Los textos y las cantidades esperadas salen del YAML y
@@ -115,7 +115,8 @@ test.describe('/privacidad a 1280 px', () => {
   test('orden de tabulación: skip, CTA del header y enlace de privacidad, sin tabindex positivo', async ({ page }) => {
     await page.goto(PRIVACY_PATH);
     const stops: string[] = [];
-    for (let i = 0; i < 8; i++) {
+    // Con el menú principal en el header y los enlaces del pie hay unas 19 paradas hasta /privacidad/.
+    for (let i = 0; i < 24; i++) {
       await page.keyboard.press('Tab');
       stops.push(
         await page.evaluate(() => {
@@ -308,9 +309,10 @@ test.describe('FAQ a 1280 px', () => {
     const first = page.locator('#faq details').first();
     await page.locator('#faq summary').first().focus();
     await page.keyboard.press('Enter');
-    expect(await first.evaluate((el) => (el as HTMLDetailsElement).open)).toBe(true);
+    await expect.poll(() => first.evaluate((el) => (el as HTMLDetailsElement).open)).toBe(true);
     await page.keyboard.press('Space');
-    expect(await first.evaluate((el) => (el as HTMLDetailsElement).open)).toBe(false);
+    // El cierre anima la altura (accordion.ts, 280 ms) y `open` pasa a false al terminar la animación.
+    await expect.poll(() => first.evaluate((el) => (el as HTMLDetailsElement).open)).toBe(false);
   });
 
   test('abrir uno no cierra los demás (no exclusivos)', async ({ page }) => {
@@ -343,7 +345,8 @@ test.describe('FAQ a 1280 px', () => {
       const cs = getComputedStyle(el);
       return { borderWidth: cs.borderTopWidth, borderStyle: cs.borderTopStyle, radius: cs.borderTopLeftRadius, bg: cs.backgroundColor };
     });
-    expect(card).toEqual({ borderWidth: '3px', borderStyle: 'solid', radius: '16px', bg: WHITE_RGB });
+    // Tras la ronda 2 las tarjetas del FAQ van sobre crema (FaqItem, data-tone light).
+    expect(card).toEqual({ borderWidth: '3px', borderStyle: 'solid', radius: '16px', bg: rgbOfToken('cream') });
     const a = await boxOf(page, '#faq details', 0);
     const b = await boxOf(page, '#faq details', 1);
     expect(Math.round(b.y - (a.y + a.height))).toBe(16);
@@ -458,7 +461,7 @@ for (const width of [390, 768, 1023, 1024, 1280]) {
   test.describe(`#agenda a ${width} px`, () => {
     test.use({ viewport: { width, height: 900 } });
 
-    test('h2 con el texto del YAML, id, tabindex, peso, color y barra de 48x8', async ({ page }) => {
+    test('h2 con el texto del YAML, id, tabindex, peso, color y sin barra decorativa', async ({ page }) => {
       await page.goto('/');
       const h2 = page.locator('#agenda-title');
       expect(norm((await h2.textContent()) ?? '')).toBe(norm(es.agenda.title.text));
@@ -466,12 +469,9 @@ for (const width of [390, 768, 1023, 1024, 1280]) {
       await expect(h2).toHaveClass(/section-title/);
       await expect(h2).toHaveCSS('font-weight', '700');
       await expect(h2).toHaveCSS('color', DARK_HEX_RGB_WHITE);
-      const bar = await h2.evaluate((el) => {
-        const cs = getComputedStyle(el, '::before');
-        return { w: parseFloat(cs.width), h: parseFloat(cs.height) };
-      });
-      expect(bar.w).toBeCloseTo(48, 0);
-      expect(bar.h).toBeCloseTo(8, 0);
+      // La barra decorativa de 48x8 bajo los h2 se retiró en la ronda 2 (commit 00dddf5): el título va sin ::before.
+      const bar = await h2.evaluate((el) => getComputedStyle(el, '::before').content);
+      expect(bar).toBe('none');
     });
 
     test('padding vertical de 64 px bajo 1024 px y de 96 px desde 1024 px', async ({ page }) => {
@@ -639,7 +639,8 @@ test.describe('footer completo', () => {
   });
 });
 
-const COLUMNS: Record<number, number> = { 390: 1, 768: 2, 1024: 3, 1280: 3 };
+// Pie: marca y tres bloques de enlaces. 1 columna en móvil, marca + bloques apilados en 2 a 768 px y 4 desde 1024 px.
+const COLUMNS: Record<number, number> = { 390: 1, 768: 2, 1024: 4, 1280: 4 };
 for (const [w, cols] of Object.entries(COLUMNS)) {
   test.describe(`footer a ${w} px`, () => {
     test.use({ viewport: { width: Number(w), height: 900 } });
@@ -661,10 +662,12 @@ for (const [w, cols] of Object.entries(COLUMNS)) {
         };
       });
       expect(info.cols).toBe(cols);
-      if (cols === 3) {
-        expect(info.brand / info.blocks[0]).toBeGreaterThan(1.2 - 0.03);
-        expect(info.brand / info.blocks[0]).toBeLessThan(1.2 + 0.03);
+      if (cols === 4) {
+        // Marca más ancha que cada bloque (hoy unas 1,9 veces) y los tres bloques del mismo ancho.
+        expect(info.brand / info.blocks[0]).toBeGreaterThan(1.5);
+        expect(info.brand / info.blocks[0]).toBeLessThan(2.3);
         expect(Math.abs(info.blocks[0] - info.blocks[1])).toBeLessThan(1);
+        expect(Math.abs(info.blocks[1] - info.blocks[2])).toBeLessThan(1);
       }
       // Área de salvado: ningún bloque vecino a menos de la altura del logo (en el eje que los separa).
       for (const b of info.blockBoxes) {
@@ -681,21 +684,28 @@ test.describe('/privacidad con el footer completo', () => {
 
   test('el footer llega al borde inferior de la ventana aunque la página sea corta', async ({ page }) => {
     await page.goto(PRIVACY_PATH);
-    const gap = await page.evaluate(() => innerHeight - document.querySelector('footer')!.getBoundingClientRect().bottom);
+    // El pie termina donde termina el documento: si la página es más corta que la ventana, en el borde inferior; si es más
+    // larga (hoy el pie con menú y enlaces mide más de 900 px), al final del scroll. Nunca queda un hueco debajo.
+    const gap = await page.evaluate(() => {
+      const bottom = document.querySelector('footer')!.getBoundingClientRect().bottom + scrollY;
+      return Math.max(innerHeight, document.documentElement.scrollHeight) - bottom;
+    });
     expect(Math.abs(gap), 'hueco bajo el footer').toBeLessThanOrEqual(0.5);
   });
 
-  test('orden de tabulación exacto: skip, logo del header, CTA del header, logo del footer y privacidad', async ({ page }) => {
+  test('orden de tabulación exacto: skip, logo y menú del header, CTA del header, y el pie con logo, enlaces, correo, LinkedIn y privacidad', async ({ page }) => {
     await page.goto(PRIVACY_PATH);
-    const expected = ['skip:#main', 'header:/', 'header:cta', 'footer:/'];
-    if (EMAIL_RE.test(es.footer.email.text.trim())) {
-      expected.push(`footer:mailto:${es.footer.email.text.trim()}`);
-    }
+    // El menú y los enlaces del pie salen del DOM (en este orden); lo fijo es que el skip va primero, el CTA cierra el header
+    // y el pie arranca en su logo y termina en /privacidad/.
+    const headerNav = await page.locator('header nav a').evaluateAll((els) => els.map((e) => `header:${e.getAttribute('href')}`));
+    const footerLinks = await page.locator('footer a').evaluateAll((els) => els.map((e) => `footer:${e.getAttribute('href')}`));
+    expect(headerNav.length, 'el header trae el menú principal').toBeGreaterThanOrEqual(4);
+    const expected = ['skip:#main', 'header:/', ...headerNav, 'header:cta', ...footerLinks];
+    expect(footerLinks[0]).toBe('footer:/');
+    expect(footerLinks.at(-1)).toBe('footer:/privacidad/');
+    if (EMAIL_RE.test(es.footer.email.text.trim())) expect(footerLinks).toContain(`footer:mailto:${es.footer.email.text.trim()}`);
     const socialLink = page.locator('footer nav a:has-text("LinkedIn")');
-    if ((await socialLink.count()) > 0) {
-      expected.push(`footer:${await socialLink.getAttribute('href')}`);
-    }
-    expected.push('footer:/privacidad/');
+    if ((await socialLink.count()) > 0) expect(footerLinks).toContain(`footer:${await socialLink.getAttribute('href')}`);
 
     const stops: string[] = [];
     for (let i = 0; i < expected.length; i++) {

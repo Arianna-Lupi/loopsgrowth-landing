@@ -1,0 +1,22 @@
+---
+/**
+ * Entradas por scroll (src/scripts/reveal.ts). Se monta solo en las páginas que lo piden (`<BaseLayout reveal>`): el
+ * home y las landings que ya tienen sus entradas. Script en línea del head: pone `html.js-reveal` (reveal.css oculta lo que
+ * se va a animar, sin parpadeo) solo si hay IntersectionObserver y movimiento permitido, y la retira a los 1,5 s si el módulo
+ * no llegó a ejecutarse. Sin JavaScript o con `reduce` todo se ve desde el primer cuadro.
+ */
+---
+
+<script is:inline>
+  if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.documentElement.classList.add('js-reveal');
+    setTimeout(function () {
+      if (!window.__rvReady) document.documentElement.classList.remove('js-reveal');
+    }, 1500);
+  }
+</script>
+<script>
+  import '../scripts/reveal';
+  import '../scripts/accordion';
+  import '../styles/reveal.css';
+</script>

@@ -1,0 +1,52 @@
+---
+/**
+ * Páginas de servicio, nosotros y autora (colección `paginas`). La URL sale del campo `ruta` del YAML y cada tipo
+ * tiene su propia composición (ServiceIA, AboutPage, AuthorPage). Sin páginas publicadas no se genera nada. Un
+ * borrador (solo visible fuera de producción) sale `noindex`. Sin LocalBusiness, dirección ni precios.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ServiceIA from '../components/landing/ServiceIA.astro';
+import AboutPage from '../components/landing/AboutPage.astro';
+import AuthorPage from '../components/landing/AuthorPage.astro';
+import { getPaginas } from '../lib/paginas';
+import { AREA_SERVED, buildPerson, buildPageGraph } from '../lib/seo';
+import { siteUrl } from '../lib/site';
+
+export async function getStaticPaths() {
+  const paginas = await getPaginas();
+  return paginas.map((pagina) => ({ params: { slug: pagina.data.ruta.slice(1, -1) }, props: { pagina } }));
+}
+
+const { pagina } = Astro.props;
+const d = pagina.data;
+const base = siteUrl.replace(/\/+$/, '');
+const path = d.ruta;
+
+// Sin página `/servicios/`: la miga de un servicio es solo Inicio y el servicio, para no apuntar a un 404.
+const crumbs = [{ name: 'Inicio', path: '/' }];
+if (d.tipo === 'autora') crumbs.push({ name: 'Nosotros', path: '/nosotros/' });
+crumbs.push({ name: d.nombre, path });
+
+const extra: Record<string, unknown>[] = [];
+if (d.tipo === 'servicio') {
+  extra.push({
+    '@type': 'Service',
+    '@id': `${base}${path}#service`,
+    name: d.h1,
+    serviceType: 'Posicionamiento en IA (GEO y AEO)',
+    provider: { '@id': `${base}/#organization` },
+    areaServed: AREA_SERVED,
+    url: `${base}${path}`,
+  });
+}
+if (d.tipo === 'autora' && d.persona) {
+  extra.push(buildPerson({ siteUrl: base, path, nombre: d.persona.nombre, cargo: d.persona.cargo, descripcion: d.persona.descripcion, sameAs: d.persona.sameAs, conoceDe: d.persona.conoceDe }));
+}
+const schema = buildPageGraph(base, path, crumbs, d.faq, extra);
+---
+
+<BaseLayout reveal title={d.title} description={d.description} path={path} noindex={d.draft} schema={schema} ogType={d.tipo === 'autora' ? 'profile' : 'website'}>
+  {d.tipo === 'servicio' && <ServiceIA d={d} crumbs={crumbs} />}
+  {d.tipo === 'nosotros' && <AboutPage d={d} crumbs={crumbs} />}
+  {d.tipo === 'autora' && <AuthorPage d={d} crumbs={crumbs} />}
+</BaseLayout>

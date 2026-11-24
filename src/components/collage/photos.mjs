@@ -22,22 +22,10 @@ export const PHOTOS = [
     params: { crop: { left: 0.26, top: 0.28, width: 0.58, height: 0.5017 }, out: { w: 384, h: 500 }, cell: 6, angle: 45, contrast: 1.0, brightness: 175 },
   },
   {
-    id: 'hero-b',
-    slot: 'hero',
-    chosen: false,
-    params: { crop: { left: 0.02, top: 0, width: 0.512, height: 1 }, out: { w: 384, h: 500 }, cell: 6, angle: 45, contrast: 1.0, brightness: 118 },
-  },
-  {
     id: 'whynow-a',
     slot: 'whynow',
     chosen: true,
     params: { crop: { left: 0.24, top: 0.565, width: 0.46, height: 0.3185 }, out: { w: 208, h: 256 }, cell: 4, angle: 45, contrast: 1.0, brightness: 92 },
-  },
-  {
-    id: 'whynow-b',
-    slot: 'whynow',
-    chosen: false,
-    params: { crop: { left: 0.47, top: 0, width: 0.457, height: 1 }, out: { w: 208, h: 256 }, cell: 4, angle: 45, contrast: 1.0, brightness: 105 },
   },
 ];
 

@@ -128,6 +128,12 @@ export function findInversion(text) {
   return [...matchesOf(INVERSION_MONTHLY_RE, clean), ...matchesOf(INVERSION_CURRENCY_RE, clean)];
 }
 
+/** Extractos con voseo (formas de "vos"): el sitio escribe español neutro con tuteo. @param {string} text */
+export function findVoseo(text) {
+  const clean = cleanText(text);
+  return [...matchesOf(VOSEO_RE, clean), ...matchesOf(VOSEO_CASE_RE, clean)];
+}
+
 const inInversionScope = (path) => INVERSION_PATH_PREFIXES.some((prefix) => path.startsWith(prefix));
 
 const isPlainObject = (v) => v !== null && typeof v === 'object' && !Array.isArray(v);

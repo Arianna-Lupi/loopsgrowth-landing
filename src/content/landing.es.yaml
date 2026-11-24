@@ -39,15 +39,18 @@ es:
       status: verified
   meta:
     title_template:
-      text: "Agencia de SEO/GEO Growth | loops growth"
+      text: "Agencia SEO en LATAM: aparece en Google y ChatGPT | Loops"
       status: verified
+      reason: "Title (57) aprobado por Ari el 17-nov-2026 (hoja Content Strategy, fila 'agencia seo')."
     description:
-      text: "Un equipo dedicado y especializado que ejecuta tu SEO/GEO y tu visibilidad en asistentes de IA (ChatGPT, Gemini)."
+      text: "Agencia SEO para LATAM: aparece en Google y en ChatGPT. Un equipo con 8 años de experiencia ejecuta tu SEO y tu posicionamiento en IA. Habla con nosotros."
       status: verified
+      reason: "Aprobado por Ari por escrito en Slack el 2026-11-24."
   hero:
     h1:
-      text: "Crecemos tu tienda a través de Google, ChatGPT y Gemini."
+      text: "Agencia SEO en LATAM para aparecer en Google y en ChatGPT"
       status: verified
+      reason: "H1 aprobado por Ari el 17-nov-2026 (hoja Content Strategy, fila 'agencia seo')."
     subtitle:
       text: "Un equipo dedicado y especializado que ejecuta tu {term} y tu visibilidad en asistentes de IA (ChatGPT, Gemini)."
       status: verified
@@ -61,9 +64,8 @@ es:
     clients:
       label:
         text: "Marcas que han confiado en nuestro trabajo"
-        status: pending
-        confirm_by: Ari
-        reason: "Texto nuevo, no está en el doc de Ari. En ariannalupi.com la sección dice \"Marcas que han confiado en mi trabajo\" (primera persona); aquí va en plural de agencia. Ari debe aprobarlo o reemplazarlo."
+        status: verified
+        reason: "Aprobado por Juan Carlos Angulo el 2026-11-23. Texto nuevo, no está en el doc de Ari. En ariannalupi.com la sección dice \"Marcas que han confiado en mi trabajo\" (primera persona); aquí va en plural de agencia. Ari debe aprobarlo o reemplazarlo."
       items:
         - text: "Holafly"
           status: verified
@@ -541,6 +543,14 @@ es:
         answer:
           text: "La inversión depende del tamaño del proyecto, la situación actual de tu web y el nivel de trabajo necesario.\nDespués de analizar tu negocio y las principales oportunidades, presentamos una propuesta con el alcance, prioridades e inversión.\nNo trabajamos con un paquete idéntico para todos los negocios."
           status: verified
+      - question:
+          text: "¿Qué hace una agencia SEO?"
+          status: verified
+          reason: "Aprobado por Ari por escrito en Slack el 2026-11-24."
+        answer:
+          text: "Trabaja para que tus clientes te encuentren en Google: mejora la parte técnica de tu web, crea el contenido que responde lo que buscan y construye señales de confianza.\nEn Loops Growth sumamos el posicionamiento en IA, para que ChatGPT y Gemini también puedan considerar tu negocio."
+          status: verified
+          reason: "Aprobado por Ari por escrito en Slack el 2026-11-24."
   agenda:
     title:
       text: "¿Listo para que te encuentren cuando te estan buscando?"
@@ -618,6 +628,55 @@ es:
         doingSeo: { text: "¿Actualmente están haciendo SEO?", status: verified }
         budget: { text: "¿Cuánto podrías destinar específicamente a SEO y GEO al mes? (USD)", status: verified }
         source: { text: "¿De dónde nos conoces?", status: verified }
+  nav:
+    label:
+      text: "Menú principal"
+      status: verified
+      reason: "Microcopy estructural: nombra el menú de navegación."
+    services:
+      text: "Servicios"
+      status: verified
+      reason: "Etiqueta del menú en la hoja de Ari (Estrategia 3 Meses, 'Menú de navegación principal', 17-nov-2026)."
+    venezuela:
+      text: "Venezuela"
+      status: verified
+      reason: "Etiqueta del menú en la hoja de Ari (17-nov-2026)."
+    venezuela_full:
+      text: "Agencia SEO en Venezuela"
+      status: verified
+      reason: "Anchor de la hoja de Ari (enlazado interno, 17-nov-2026)."
+    blog:
+      text: "Blog"
+      status: verified
+      reason: "Etiqueta del menú en la hoja de Ari (17-nov-2026)."
+    about:
+      text: "Nosotros"
+      status: verified
+      reason: "Etiqueta del menú en la hoja de Ari (17-nov-2026)."
+    results:
+      text: "Resultados"
+      status: verified
+      reason: "Etiqueta del menú en la hoja de Ari ('Resultados', 17-nov-2026); lleva a la sección de casos de la home (#casos)."
+    all_results:
+      text: "Ver todos"
+      status: verified
+      reason: "Microcopy estructural: enlace a la sección de casos de la home."
+    service_ia:
+      text: "Posicionamiento en IA"
+      status: verified
+      reason: "Nombre del servicio aprobado por Ari (17-nov-2026), usado como anchor en el pie."
+    caracas:
+      text: "Agencia SEO en Caracas"
+      status: verified
+      reason: "Anchor de la hoja de Ari (enlazado interno, 17-nov-2026)."
+    author:
+      text: "Arianna Lupi"
+      status: verified
+      reason: "Nombre de la autora, ya publicado en la sección del equipo."
+    explore_label:
+      text: "Explora"
+      status: verified
+      reason: "Microcopy estructural: título del bloque de enlaces del pie."
   footer:
     nav_label:
       text: "Enlaces del pie de página"
@@ -625,6 +684,10 @@ es:
     privacy_link:
       text: "Política de privacidad"
       status: verified
+    blog_link:
+      text: "Blog"
+      status: verified
+      reason: "La etiqueta 'Blog' está en el menú de la hoja de Ari (Estrategia 3 Meses, 17-nov-2026); antes estaba pendiente por falta de fuente directa."
     contact_label:
       text: "Contacto"
       status: verified

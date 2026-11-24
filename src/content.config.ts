@@ -1,5 +1,5 @@
 import { defineCollection } from 'astro:content';
-import { file } from 'astro/loaders';
+import { file, glob } from 'astro/loaders';
 import { z } from 'astro/zod';
 
 /**
@@ -166,9 +166,25 @@ const landing = defineCollection({
     }),
     // Pie de página y política de privacidad (plan 02-06). El cuerpo de la política es una lista de
     // afirmaciones: un `<p>` por elemento. Correo y redes del pie son pendientes de Ari.
+    // Menú principal y enlaces del pie hacia las páginas nuevas (estrategia de Ari, dic-2026). Solo nombres de control.
+    nav: z.strictObject({
+      label: claim,
+      services: claim,
+      venezuela: claim,
+      venezuela_full: claim,
+      blog: claim,
+      about: claim,
+      results: claim,
+      all_results: claim,
+      service_ia: claim,
+      caracas: claim,
+      author: claim,
+      explore_label: claim,
+    }),
     footer: z.strictObject({
       nav_label: claim,
       privacy_link: claim,
+      blog_link: claim,
       contact_label: claim,
       email: claim,
       social_label: claim,
@@ -181,4 +197,135 @@ const landing = defineCollection({
   }),
 });
 
-export const collections = { landing };
+/**
+ * Blog (milestone SEO). Los artículos viven en `src/content/blog/*.md`. Reglas duras de Ari:
+ * sin precios ni garantía, sin casos ni reseñas inventados, firma y revisa Ari.
+ * `draft` nace en `true`: un borrador no se publica en producción (ni ruta, ni sitemap, ni lista).
+ * `reviewedBy` queda vacío hasta que Ari apruebe por escrito; sin eso `draft` no puede pasar a `false`.
+ * `cluster` y `intent` salen de `clusters.md` y fijan la regla "una frase, una página".
+ */
+const blog = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: 'src/content/blog' }),
+  schema: z
+    .strictObject({
+      title: z.string().min(10).max(70),
+      description: z.string().min(70).max(160),
+      pubDate: z.coerce.date(),
+      updatedDate: z.coerce.date().optional(),
+      author: z.enum(['ari']).default('ari'),
+      cluster: z.enum(['L2-geo', 'L4-eleccion', 'L6-fundamentos']),
+      keyword: z.string().min(3),
+      draft: z.boolean().default(true),
+      reviewedBy: z.string().min(1).optional(),
+      related: z.array(z.string()).max(3).default([]),
+    })
+    .refine((d) => d.draft || d.reviewedBy, {
+      message: 'Un artículo con draft: false necesita reviewedBy (aprobación escrita de Ari).',
+      path: ['reviewedBy'],
+    }),
+});
+
+/**
+ * Páginas de país y ciudad (SEO programático, estrategia de Ari de dic-2026). Un archivo YAML por página en
+ * `src/content/paises/`. URLs: país plano `/agencia-seo-<pais>/` y ciudad anidada `/agencia-seo-<pais>/<ciudad>/`
+ * (sin hub `/agencia-seo/`). El id del archivo del país es `<pais>` y el de la ciudad `<pais>-<ciudad>`.
+ * Sin archivo no hay página: solo se genera un lugar con contenido único y verdadero. Cada `hecho` lleva su
+ * fuente https; no se admiten precios, direcciones, oficinas ni reseñas (los vigila `scripts/check-programmatic.mjs`,
+ * que corre en `prebuild`). `draft` nace en `true` y `pendientes` lista lo que solo Ari puede confirmar:
+ * no se renderiza nunca. Un borrador no existe en producción.
+ */
+const faqItem = z.strictObject({ pregunta: z.string().min(10), respuesta: z.string().min(20) });
+
+const pais = defineCollection({
+  loader: glob({ pattern: '*.yaml', base: 'src/content/paises' }),
+  schema: z
+    .strictObject({
+      tipo: z.enum(['pais', 'ciudad']),
+      /** Solo en ciudades: id del país padre (nombre del archivo del país). */
+      pais: z.string().min(3).optional(),
+      /** Solo en ciudades: segmento de la URL (`caracas`). */
+      ciudad: z.string().min(3).optional(),
+      nombre: z.string().min(3),
+      draft: z.boolean().default(true),
+      reviewedBy: z.string().min(1).optional(),
+      title: z.string().min(10).max(70),
+      description: z.string().min(70).max(160),
+      h1: z.string().min(10),
+      intro: z.string().min(250),
+      secciones: z.array(z.strictObject({ titulo: z.string().min(5), cuerpo: z.string().min(350) })).min(3),
+      // Sin mínimo en el esquema: los borradores aún no traen hechos con fuente. La guarda exige 3 para publicar.
+      hechos: z.array(z.strictObject({ dato: z.string().min(20), fuente: z.url({ protocol: /^https$/ }) })).default([]),
+      faq: z.array(faqItem).default([]),
+      /** País: ciudades que se mencionan; `pagina: true` solo si existe su página propia. */
+      ciudades: z.array(z.strictObject({ nombre: z.string().min(3), pagina: z.boolean().default(false) })).default([]),
+      /** País: cómo se trabaja a distancia (3 bloques cortos). */
+      remoto_titulo: z.string().min(5).optional(),
+      remoto: z.array(z.strictObject({ titulo: z.string().min(3), texto: z.string().min(20) })).default([]),
+      /** Ciudad: qué se revisa en esa ciudad (lista corta con marca de verificación). */
+      senales: z.array(z.string().min(10)).default([]),
+      pendientes: z.array(z.string().min(5)).default([]),
+    })
+    .refine((d) => d.draft || d.reviewedBy, { message: 'Publicar una página de país o ciudad requiere reviewedBy (Ari).', path: ['reviewedBy'] })
+    .refine((d) => d.tipo === 'pais' || (d.pais && d.ciudad), { message: 'Una ciudad necesita `pais` y `ciudad`.', path: ['ciudad'] }),
+});
+
+/**
+ * Páginas de servicio y de equipo (`/servicios/<servicio>/`, `/nosotros/`, `/equipo/<persona>/`). Un YAML por
+ * página en `src/content/paginas/`. `ruta` fija la URL. Mismas reglas duras: sin precios ni garantía, sin casos
+ * inventados, sin dirección. `draft` nace en `true`; publicar exige `reviewedBy`. `pendientes` lista lo que
+ * falta confirmar y no se renderiza. `persona` solo en la página de una autora: alimenta el JSON-LD Person.
+ */
+const paginas = defineCollection({
+  loader: glob({ pattern: '*.yaml', base: 'src/content/paginas' }),
+  schema: z
+    .strictObject({
+      tipo: z.enum(['servicio', 'nosotros', 'autora']),
+      ruta: z.string().regex(/^\/[a-z0-9-]+(?:\/[a-z0-9-]+)*\/$/),
+      nombre: z.string().min(3),
+      draft: z.boolean().default(true),
+      reviewedBy: z.string().min(1).optional(),
+      title: z.string().min(10).max(70),
+      description: z.string().min(70).max(160),
+      h1: z.string().min(10),
+      intro: z.string().min(120),
+      secciones: z.array(z.strictObject({ titulo: z.string().min(5), cuerpo: z.string().min(120) })).min(1),
+      /** Servicio: las etapas de visibilidad (encontrado, mencionado, citado, recomendado) como paso a paso visual. */
+      etapas: z.array(z.strictObject({ titulo: z.string().min(3), texto: z.string().min(20) })).min(3).max(5).optional(),
+      /** Servicio: los entregables en un bento (el primero es el protagonista). */
+      entregables: z.array(z.strictObject({ titulo: z.string().min(5), texto: z.string().min(30) })).min(4).max(6).optional(),
+      /** Servicio: cómo se mide, con la lista de lo que se registra cada mes. */
+      medicion: z.strictObject({ titulo: z.string().min(5), cuerpo: z.string().min(80), registro: z.array(z.string().min(5)).min(3) }).optional(),
+      /** Servicio: ventana de chat ilustrativa del hero. */
+      chat: z
+        .strictObject({
+          pregunta: z.string().min(10),
+          filas: z.array(z.strictObject({ nombre: z.string().min(3), estado: z.string().min(3), tu: z.boolean().default(false) })).min(2),
+        })
+        .optional(),
+      /** Autora: trayectoria en hitos cortos (solo datos confirmados). */
+      trayectoria: z.array(z.strictObject({ titulo: z.string().min(3), texto: z.string().min(10) })).optional(),
+      /** Persona: retrato tratado de la web (id del archivo en src/assets/team/treated). */
+      retrato: z.enum(['arianna', 'veronica', 'juan', 'miguel']).optional(),
+      /** Persona: si firma artículos del blog (muestra la lista de sus artículos). */
+      firma_blog: z.boolean().default(false),
+      /** Nosotros: muestra los retratos del equipo (los de la home). */
+      equipo: z.boolean().default(false),
+      faq: z.array(faqItem).default([]),
+      /** Enlace de cierre a los casos de la home (`/#casos`), único lugar de casos. */
+      casos: z.strictObject({ texto: z.string().min(20), ancla: z.string().min(5) }).optional(),
+      persona: z
+        .strictObject({
+          nombre: z.string().min(3),
+          cargo: z.string().min(3),
+          descripcion: z.string().min(30),
+          sameAs: z.array(z.url({ protocol: /^https$/ })).default([]),
+          conoceDe: z.array(z.string().min(3)).default([]),
+        })
+        .optional(),
+      pendientes: z.array(z.string().min(5)).default([]),
+    })
+    .refine((d) => d.draft || d.reviewedBy, { message: 'Publicar una página requiere reviewedBy (Ari).', path: ['reviewedBy'] })
+    .refine((d) => d.tipo !== 'autora' || d.persona, { message: 'La página de autora necesita `persona`.', path: ['persona'] }),
+});
+
+export const collections = { landing, blog, pais, paginas };

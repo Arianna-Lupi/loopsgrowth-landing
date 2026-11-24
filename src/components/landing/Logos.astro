@@ -1,0 +1,34 @@
+---
+/** Marcas de la home (YAML verificado, `hero.clients`) en azulejos blancos. La etiqueta sigue pendiente de Ari. */
+import { Image } from 'astro:assets';
+import { getLanding } from '../../lib/content';
+import { CLIENT_LOGO_SIZE, CLIENT_LOGOS } from '../sections/hero-clients.mjs';
+
+interface Props { max?: number }
+const { max = 12 } = Astro.props;
+const data = await getLanding();
+const files = import.meta.glob('../../assets/clients/*.webp', { eager: true, import: 'default' }) as Record<string, ImageMetadata>;
+const clients = data.hero.clients.items
+  .flatMap((item) => {
+    const id = item.text.toLowerCase().replace(/\s+/g, '-');
+    const src = files[`../../assets/clients/${id}.webp`];
+    return src && CLIENT_LOGOS.includes(id) ? [{ name: item.text, src }] : [];
+  })
+  .slice(0, max);
+---
+
+<div class="logos">
+  <p id="logos-label">{data.hero.clients.label.text}</p>
+  <ul role="list" aria-labelledby="logos-label">
+    {clients.map((c) => <li><Image src={c.src} alt={c.name} width={CLIENT_LOGO_SIZE} height={CLIENT_LOGO_SIZE} loading="lazy" decoding="async" /></li>)}
+  </ul>
+</div>
+
+<style>
+  .logos { display: grid; gap: 0.75rem; }
+  p { font-size: var(--text-label); font-weight: 600; }
+  ul { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.75rem; margin: 0; padding: 0; list-style: none; }
+  li { display: grid; place-items: center; min-width: 0; aspect-ratio: 5 / 3; padding: 0.5rem; border-radius: var(--radius-s); background: var(--color-brand-white); box-shadow: 0 0 0 1px rgb(33 33 33 / 0.12); }
+  li :global(img) { max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; }
+  @media (min-width: 40em) { ul { grid-template-columns: repeat(6, minmax(0, 1fr)); } }
+</style>

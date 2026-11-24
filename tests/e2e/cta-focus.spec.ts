@@ -70,7 +70,7 @@ function listJs(dir: string): string[] {
   return out;
 }
 
-test('(e) el único JS propio del build es el script de foco y pesa menos de 6 KB', () => {
+test('(e) el JS propio del build son tres scripts (guarda inline de reveal, reveal y formulario con foco) y pesa menos de 12 KB', () => {
   const dist = resolve('dist');
   const html = readFileSync(join(dist, 'index.html'), 'utf8');
 
@@ -89,15 +89,23 @@ test('(e) el único JS propio del build es el script de foco y pesa menos de 6 K
     }
   }
 
-  expect(own, 'debe haber exactamente una etiqueta <script> propia').toHaveLength(1);
-  expect(own[0].code).toContain('agenda-title');
+  // Tras la ronda 2: una guarda inline mínima de reveal (evita el parpadeo), el módulo de entradas por scroll y el
+  // módulo de #agenda (foco al h2 y formulario conversacional). Ningún otro script propio ni de terceros.
+  expect(own, 'deben ser exactamente tres etiquetas <script> propias').toHaveLength(3);
+  expect(own.filter((s) => !s.src), 'una sola guarda inline').toHaveLength(1);
+  expect(own.find((s) => !s.src)!.code.length, 'la guarda inline es mínima').toBeLessThan(512);
+  expect(own.filter((s) => s.src?.includes('RevealScripts')), 'módulo de reveal').toHaveLength(1);
+  const agendaModule = own.filter((s) => s.src?.includes('AgendaSection'));
+  expect(agendaModule, 'módulo de #agenda').toHaveLength(1);
+  expect(agendaModule[0].code).toContain('agenda-title');
 
   // Suma: todo .js bajo dist más los scripts propios en línea (sin contar dos veces
   // el que apunta por src, que ya está entre los .js de dist).
   const jsBytes = listJs(dist).reduce((sum, f) => sum + statSync(f).size, 0);
   const inlineBytes = own.filter((s) => !s.src).reduce((sum, s) => sum + Buffer.byteLength(s.code), 0);
   const total = jsBytes + inlineBytes;
-  console.log(`JS propio: ${own[0].src ? `archivo ${own[0].src}` : 'inlinado en dist/index.html'}, ${total} bytes`);
-  // 6 KB: el foco de #agenda más el formulario conversacional (validación, pasos y Turnstile bajo demanda).
-  expect(total).toBeLessThan(6144);
+  console.log(`JS propio: ${own.length} scripts, ${total} bytes`);
+  // 12 KB (medido: unos 9,8 KB): foco de #agenda y formulario conversacional (validación, pasos y Turnstile bajo
+  // demanda, ~4 KB) más reveal.ts (entradas por scroll y conteo de cifras, ~5,5 KB) y la guarda inline.
+  expect(total).toBeLessThan(12288);
 });

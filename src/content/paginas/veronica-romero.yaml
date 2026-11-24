@@ -1,0 +1,37 @@
+# Borrador. Solo datos ya publicados en la home (sección Quiénes somos y Solución). Faltan bio y enlaces de Verónica.
+tipo: autora
+ruta: /equipo/veronica-romero/
+nombre: Verónica Romero
+draft: true
+retrato: veronica
+title: "Verónica Romero: directora de proyectos de Loops Growth"
+description: "Verónica Romero es directora de proyectos de Loops Growth: coordina el calendario, los reportes y es tu contacto directo. Más de 4 años en SEO."
+h1: "Verónica Romero, directora de proyectos"
+intro: |
+  Verónica Romero es la directora de proyectos de Loops Growth. Tiene más de 4 años de experiencia en SEO y ha trabajado SEO para e-commerce.
+
+  Es el contacto directo de cada cliente durante el proyecto.
+trayectoria:
+  - titulo: Más de 4 años en SEO
+    texto: Experiencia en SEO que hoy aplica a la gestión de proyectos.
+  - titulo: SEO para e-commerce
+    texto: 300k dólares generados en e-commerce SEO.
+  - titulo: Loops Growth
+    texto: Directora de proyectos del equipo.
+secciones:
+  - titulo: Qué hace en Loops Growth
+    cuerpo: |
+      Lleva el calendario del proyecto y los reportes mensuales, y es tu contacto directo. Cada mes te muestra qué se hizo, qué se movió y cuánto generó, en términos de ventas y no solo de posiciones.
+
+      Conoce al [equipo de Loops Growth](/nosotros/) o cómo trabajamos el [posicionamiento en IA](/servicios/posicionamiento-en-ia/).
+persona:
+  nombre: Verónica Romero
+  cargo: Directora de Proyectos
+  descripcion: "Directora de proyectos de Loops Growth, con más de 4 años de experiencia en SEO y trabajo en SEO para e-commerce."
+  sameAs: []
+  conoceDe:
+    - SEO
+    - SEO para e-commerce
+pendientes:
+  - "Verónica: bio en sus palabras, LinkedIn u otros enlaces que quiera publicar, y confirmar la cifra de 300k dólares."
+  - "Ari: aprobar la página y el texto."
