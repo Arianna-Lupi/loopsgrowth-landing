@@ -31,7 +31,7 @@ Se pueden publicar primero estas páginas, sin esperar a Venezuela.
 
 1. **Páginas de casos.** Se quitaron por decisión de Juan el 2026-11-23. `#casos` de la home queda como único lugar y el menú "Resultados" apunta a `/#casos`.
 2. **Resultados dentro de las landings.** Cada landing muestra resultados reales de la home. Confirma que los datos se pueden repetir ahí.
-3. **Menú "Resultados".** El header lleva un enlace a `/casos/`. Si no hay casos, el enlace desaparece solo.
+3. **Menú "Resultados".** El header y el pie llevan un enlace "Resultados" a `/#casos`.
 
 ## 4. Lo que hace Juan
 
