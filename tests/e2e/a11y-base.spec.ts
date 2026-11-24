@@ -28,7 +28,7 @@ const TEAM_LINK_URLS = es.team.members.filter((m) => m.link).map((m) => `a:${m.l
 // Un resumen del FAQ por elemento del YAML (plan 02-06): cada uno es una parada de Tab antes del enlace de respaldo.
 const FAQ_COUNT = es.faq.items.length;
 // Menú principal del header (SiteHeader): cinco enlaces entre el skip link 2 y la CTA del header.
-const NAV_LINKS = ['a:/servicios/posicionamiento-en-ia/', 'a:/agencia-seo-venezuela/', 'a:/casos/', 'a:/blog/', 'a:/nosotros/'];
+const NAV_LINKS = ['a:/servicios/posicionamiento-en-ia/', 'a:/agencia-seo-venezuela/', 'a:/#casos', 'a:/blog/', 'a:/nosotros/'];
 const SUMMARIES = Array.from({ length: FAQ_COUNT }, () => 'summary');
 // El formulario conversacional de #agenda: el primer paso trae 2 campos y el botón Siguiente.
 const FIELDS = Array.from({ length: 2 }, () => 'field');
