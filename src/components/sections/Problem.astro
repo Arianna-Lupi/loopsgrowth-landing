@@ -102,7 +102,8 @@ const data = await getLanding();
     min-width: 0;
   }
 
-  .blocker-sticker {
+  /* :global porque la clase se pasa a CollageScene: el estilo con alcance no llega a la raíz del hijo. */
+  .blocker-col :global(.blocker-sticker) {
     width: 6rem;
     height: 5rem;
     margin-bottom: 1.25rem;
