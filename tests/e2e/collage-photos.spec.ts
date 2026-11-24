@@ -1,4 +1,5 @@
-import { mkdirSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { parse } from 'yaml';
 import { test, expect, type Page } from '@playwright/test';
 import { rgbOfToken } from './lib/brand';
 import { PHOTOS, PHOTO_LOADING } from '../../src/components/collage/photos.mjs';
@@ -26,11 +27,16 @@ async function scrollThrough(page: Page) {
     await page.evaluate((v) => window.scrollTo(0, v), y);
     await page.waitForTimeout(60);
   }
-  await page.waitForFunction(() => Array.from(document.images).every((i) => i.complete));
+  // Las img de los collages ocultos (display: none, p. ej. la foto lazy de Por qué ahora) nunca cargan: solo cuentan las que se pintan.
+  await page.waitForFunction(() => Array.from(document.images).filter((i) => i.checkVisibility()).every((i) => i.complete));
   await page.evaluate(() => window.scrollTo(0, 0));
 }
 
-const CLIENT_LOGO_FILE = /\/_astro\/(holafly|hubspot|unilever|alchemy|ambl|travelperk|skale|sendlane|chartmogul|holded|flodesk|piktochart)\./;
+// Los logos de clientes salen del YAML (hero.clients.items), igual que en Hero.astro.
+const CLIENT_IDS = (
+  parse(readFileSync('src/content/landing.es.yaml', 'utf8')) as { es: { hero: { clients: { items: { text: string }[] } } } }
+).es.hero.clients.items.map((i) => i.text.toLowerCase().replace(/\s+/g, '-'));
+const CLIENT_LOGO_FILE = new RegExp(`/_astro/(${CLIENT_IDS.join('|')})\\.`);
 
 test.describe('fotos en media tinta', () => {
   test('un marco por foto elegida con una sola img decorativa, dimensiones y carga según su ranura', async ({ page }) => {
@@ -67,48 +73,31 @@ test.describe('fotos en media tinta', () => {
     await open(page, 1280);
     await expect(page.locator('[data-photo-frame]')).toHaveCount(2);
     await expect(page.locator('.hero-collage [data-photo-frame="hero"] img')).toHaveAttribute('loading', 'eager');
-    const wn = page.locator('#por-que-ahora .whynow-art [data-photo-frame="whynow"]');
+    const wn = page.locator('#por-que-ahora [data-collage-scene="whynow"] [data-photo-frame="whynow"]');
     await expect(wn).toHaveCount(1);
     await expect(wn.locator('img')).toHaveCount(1);
     await expect(wn.locator('img')).toHaveAttribute('loading', 'lazy');
     expect(await wn.locator('img').evaluate((img: HTMLImageElement) => img.alt)).toBe('');
   });
 
+  // Tras la ronda 2 los dos collages con foto viven ocultos (`.hero-collage-fallback` y `.whynow-preserve`, display: none)
+  // y las cajas que los medían (`.whynow-art`, `.whynow-list`) ya no existen. Lo que se protege ahora: el respaldo sigue
+  // en el DOM con su marco y su ranura, no ocupa lugar, no cruza el h2 ni las cajas y no provoca scroll horizontal.
   for (const width of WIDTHS) {
-    test(`a ${width}px Por qué ahora conserva su caja, no cruza el h2 ni la lista y no desborda`, async ({ page }) => {
+    test(`a ${width}px los collages con foto quedan ocultos, sin ocupar lugar y sin desbordar`, async ({ page }) => {
       await open(page, width);
-      const wide = width >= 1024;
-      const box = (sel: string) => page.locator(sel).first().evaluate((el) => { const b = el.getBoundingClientRect(); return { x: b.left, y: b.top, w: b.width, h: b.height }; });
       await page.locator('#por-que-ahora').scrollIntoViewIfNeeded();
-      const art = await box('#por-que-ahora .whynow-art');
-      const h2 = await box('#por-que-ahora h2');
-      const list = await box('#por-que-ahora .whynow-list');
-      // Lote B (02-03): desde 1024 px el collage ocupa su columna con tope de 416 px (nunca menos de 320).
-      if (wide) {
-        expect(art.w).toBeGreaterThanOrEqual(319);
-        expect(art.w).toBeLessThanOrEqual(417);
-      } else {
-        expect(Math.abs(art.w - 224)).toBeLessThanOrEqual(1);
+      for (const hidden of ['#inicio .hero-collage-fallback', '#por-que-ahora .whynow-preserve']) {
+        await expect(page.locator(hidden)).toHaveCount(1);
+        await expect(page.locator(hidden)).toBeHidden();
+        await expect(page.locator(hidden)).toHaveAttribute('aria-hidden', 'true');
       }
-      const hit = (a: typeof art, b: typeof art) => a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h;
-      expect(hit(art, h2)).toBe(false);
-      expect(hit(art, list)).toBe(false);
-      expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);
-    });
-  }
-
-  for (const width of WIDTHS) {
-    test(`a ${width}px el marco coincide con su ranura y no hay scroll horizontal`, async ({ page }) => {
-      await open(page, width);
       for (const p of CHOSEN) {
-        const slot = page.locator(`[data-photo-slot="${p.slot}"]`);
-        await slot.scrollIntoViewIfNeeded();
-        const [s, f] = await Promise.all([
-          slot.evaluate((el) => { const b = el.getBoundingClientRect(); return [b.left, b.top, b.width, b.height]; }),
-          page.locator(`[data-photo-frame="${p.slot}"]`).evaluate((el) => { const b = el.getBoundingClientRect(); return [b.left, b.top, b.width, b.height]; }),
-        ]);
-        s.forEach((v, i) => expect(Math.abs(v - f[i]), `${p.slot} ${['x', 'y', 'w', 'h'][i]}`).toBeLessThanOrEqual(0.5));
+        await expect(page.locator(`[data-photo-slot="${p.slot}"]`)).toHaveCount(1);
+        await expect(page.locator(`[data-photo-frame="${p.slot}"]`)).toHaveCount(1);
       }
+      const h2 = await page.locator('#por-que-ahora h2').evaluate((el) => { const b = el.getBoundingClientRect(); return { x: b.left, y: b.top, w: b.width, h: b.height }; });
+      expect(h2.w).toBeGreaterThan(0);
       expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);
     });
   }
@@ -146,7 +135,9 @@ test.describe('fotos en media tinta', () => {
   });
 
   for (const [w, h] of [[390, 844], [1280, 800]] as const) {
-    test(`a ${w}x${h} el elemento LCP no es una img ni cae dentro del collage y el CLS es 0`, async ({ page }) => {
+    test(`a ${w}x${h} el LCP no cae dentro de un collage, solo puede ser la vitrina del hero y el CLS es 0`, async ({ page }) => {
+      // La página mide miles de píxeles y el recorrido por pasos de scrollThrough tarda más de 20 s en móvil con la máquina cargada.
+      test.setTimeout(60000);
       await page.addInitScript(() => {
         (window as any).__cls = 0;
         new PerformanceObserver((list) => {
@@ -157,14 +148,17 @@ test.describe('fotos en media tinta', () => {
       await page.waitForTimeout(500);
       const lcp = await page.evaluate(
         () =>
-          new Promise<{ tag: string; inCollage: boolean }>((resolve) => {
-            new PerformanceObserver((list) => {
-              const e = list.getEntries().at(-1) as any;
-              resolve({ tag: e.element?.tagName ?? 'NONE', inCollage: !!e.element?.closest('[data-collage]') });
-            }).observe({ type: 'largest-contentful-paint', buffered: true });
+          new Promise<{ tag: string; showcase: boolean; inCollage: boolean }>((resolve) => {
+            const done = (e: any) =>
+              resolve({ tag: e.element?.tagName ?? 'NONE', showcase: !!e.element?.matches('.hero-card-img'), inCollage: !!e.element?.closest('[data-collage]') });
+            // Si el LCP ya se emitió se lee directo; si no, se espera al observador (buffered).
+            const seen = performance.getEntriesByType('largest-contentful-paint').at(-1);
+            if (seen) return done(seen);
+            new PerformanceObserver((list) => done(list.getEntries().at(-1))).observe({ type: 'largest-contentful-paint', buffered: true });
           }),
       );
-      expect(lcp.tag).not.toBe('IMG');
+      // Desde la ronda 2 la vitrina del hero (img eager con fetchpriority alto) puede ser el LCP; cualquier otra img no.
+      if (lcp.tag === 'IMG') expect(lcp.showcase, 'una img como LCP solo puede ser la vitrina del hero').toBe(true);
       expect(lcp.inCollage).toBe(false);
       await scrollThrough(page);
       await page.waitForTimeout(300);
@@ -172,24 +166,32 @@ test.describe('fotos en media tinta', () => {
     });
   }
 
-  test('las peticiones de imagen son del mismo origen, cada una de 25600 bytes o menos y en conjunto 40960 o menos', async ({ page }) => {
+  test('las peticiones de imagen son del mismo origen; las fotos de collage pesan 25600 bytes o menos cada una y 40960 o menos en conjunto, y la vitrina del hero 32768 o menos', async ({ page }) => {
     const origin = new URL(String(test.info().project.use.baseURL)).origin;
-    const sizes: number[] = [];
+    const bySrc = new Map<string, number>();
     const foreign: string[] = [];
     page.on('response', async (res) => {
       if (res.request().resourceType() !== 'image') return;
       const url = new URL(res.url());
       if (url.origin !== origin) foreign.push(res.url());
       // Los logos de clientes del hero (quick 260920-hero-clients) tienen su propio presupuesto en hero-clients.spec.ts.
-      if (url.pathname.startsWith('/_astro/') && !CLIENT_LOGO_FILE.test(url.pathname)) sizes.push((await res.body()).length);
+      if (url.pathname.startsWith('/_astro/') && !CLIENT_LOGO_FILE.test(url.pathname)) bySrc.set(url.pathname, (await res.body()).length);
     });
     await open(page, 1280);
     await scrollThrough(page);
     await page.waitForTimeout(300);
     expect(foreign).toEqual([]);
-    expect(sizes.length).toBeGreaterThanOrEqual(CHOSEN.length);
+    // Fotos de collage: las img dentro de un marco. Sus pesos son el presupuesto original; el resto de imágenes de /_astro/
+    // (retratos del equipo, vitrina del hero) tienen sus propios topes en otros specs o más abajo.
+    const photoSrcs = await page.locator('[data-photo-frame] img').evaluateAll((els) => els.map((el) => new URL((el as HTMLImageElement).src).pathname));
+    const sizes = photoSrcs.map((src) => bySrc.get(src)).filter((n): n is number => typeof n === 'number');
+    // Las del collage oculto (display: none) no se piden con carga diferida: basta con que las que se pidan cumplan.
+    expect(sizes.length).toBeGreaterThanOrEqual(1);
     for (const s of sizes) expect(s).toBeLessThanOrEqual(25600);
     expect(sizes.reduce((a, b) => a + b, 0)).toBeLessThanOrEqual(40960);
+    const showcase = await page.locator('#inicio .hero-card-img').evaluate((el) => new URL((el as HTMLImageElement).src).pathname);
+    expect(bySrc.get(showcase), 'vitrina del hero pedida').toBeGreaterThan(0);
+    expect(bySrc.get(showcase)!, 'peso de la vitrina del hero (hoy ~26 KB)').toBeLessThanOrEqual(32768);
   });
 
   test('sin JavaScript la foto se pinta', async ({ browser }) => {
