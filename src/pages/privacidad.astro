@@ -13,7 +13,7 @@ const { privacy, brand } = await getLanding();
 const title = `${privacy.title.text}: ${brand.name.text}`;
 ---
 
-<BaseLayout title={title} noindex path="/privacidad/">
+<BaseLayout title={title} description="Política de privacidad de Loops Growth: cómo tratamos los datos que compartes al agendar una llamada." noindex path="/privacidad/">
   <section id="privacidad" class="privacy" aria-labelledby="privacy-title" data-tone="light">
     <div class="wrap">
       <h1 id="privacy-title" class="privacy-title">{privacy.title.text}</h1>
