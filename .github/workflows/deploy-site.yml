@@ -51,3 +51,8 @@ jobs:
           wranglerVersion: '4.160.1'
           accountId: 2440cecb1195a265bd32c8f80f465977
           command: deploy
+
+      # Avisa a Bing y otros buscadores de IndexNow. No bloquea el despliegue si falla.
+      - name: Notificar a IndexNow
+        continue-on-error: true
+        run: node scripts/indexnow.mjs dist
