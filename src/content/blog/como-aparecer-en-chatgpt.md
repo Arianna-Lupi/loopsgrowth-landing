@@ -5,7 +5,8 @@ pubDate: 2026-12-01
 author: ari
 cluster: L2-geo
 keyword: cómo aparecer en chatgpt
-draft: true
+draft: false
+reviewedBy: "Arianna Lupi (aprobación verbal por Juan, 2026-11-23)"
 ---
 
 > **Respuesta corta:** no existe un botón para aparecer en ChatGPT y nadie puede asegurarlo. Lo que sí puedes hacer es facilitar que ChatGPT encuentre tu sitio, entienda qué haces y vea que otras fuentes confiables hablan de tu negocio. Ese trabajo se llama posicionamiento en IA.

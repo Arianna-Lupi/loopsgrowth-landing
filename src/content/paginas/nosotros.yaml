@@ -2,7 +2,8 @@
 tipo: nosotros
 ruta: /nosotros/
 nombre: Nosotros
-draft: true
+draft: false
+reviewedBy: "Arianna Lupi (aprobación verbal por Juan, 2026-11-23)"
 title: "Nosotros: el equipo de Loops Growth, agencia SEO en LATAM"
 description: "Conoce al equipo de Loops Growth, una agencia SEO para LATAM que ejecuta tu SEO y tu posicionamiento en IA. Fundada por Arianna Lupi, con más de 8 años en SEO."
 h1: "Nosotros: el equipo de Loops Growth"

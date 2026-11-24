@@ -8,7 +8,6 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import ServiceIA from '../components/landing/ServiceIA.astro';
 import AboutPage from '../components/landing/AboutPage.astro';
 import AuthorPage from '../components/landing/AuthorPage.astro';
-import CasesIndex from '../components/landing/CasesIndex.astro';
 import { getPaginas } from '../lib/paginas';
 import { AREA_SERVED, buildPerson, buildPageGraph } from '../lib/seo';
 import { siteUrl } from '../lib/site';
@@ -50,5 +49,4 @@ const schema = buildPageGraph(base, path, crumbs, d.faq, extra);
   {d.tipo === 'servicio' && <ServiceIA d={d} crumbs={crumbs} />}
   {d.tipo === 'nosotros' && <AboutPage d={d} crumbs={crumbs} />}
   {d.tipo === 'autora' && <AuthorPage d={d} crumbs={crumbs} />}
-  {d.tipo === 'casos' && <CasesIndex d={d} crumbs={crumbs} />}
 </BaseLayout>

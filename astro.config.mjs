@@ -37,8 +37,6 @@ const yamlEntries = (dir) =>
 for (const [, d] of yamlEntries('src/content/paginas')) {
   if (d.draft === false) continue;
   draftPaths.add(d.ruta);
-  // Las fichas de casos cuelgan del índice: si el índice es borrador, ellas también.
-  if (d.tipo === 'casos') for (const slug of ['ventas-ecommerce', 'conversiones-saas', 'clics-app-infantil', 'trafico-marca-personal']) draftPaths.add(`${d.ruta}${slug}/`);
 }
 for (const [id, d] of yamlEntries('src/content/paises')) {
   if (d.draft === false) continue;

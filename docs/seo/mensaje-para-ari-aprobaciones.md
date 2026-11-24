@@ -29,7 +29,7 @@ Se pueden publicar primero estas páginas, sin esperar a Venezuela.
 
 ## 3. Tres decisiones donde me salí de tu hoja
 
-1. **Páginas de casos.** Tu hoja del 17-nov decía no crearlas. Juan las pidió el 23-nov y creé `/casos/` con 4 fichas, que usan solo los datos de la home. Necesito que confirmes si se quedan. Si no, se borran sin tocar nada más.
+1. **Páginas de casos.** Se quitaron por decisión de Juan el 2026-11-23. `#casos` de la home queda como único lugar y el menú "Resultados" apunta a `/#casos`.
 2. **Resultados dentro de las landings.** Cada landing muestra resultados reales de la home. Confirma que los datos se pueden repetir ahí.
 3. **Menú "Resultados".** El header lleva un enlace a `/casos/`. Si no hay casos, el enlace desaparece solo.
 

@@ -44,9 +44,8 @@ es:
       reason: "Title (57) aprobado por Ari el 17-nov-2026 (hoja Content Strategy, fila 'agencia seo')."
     description:
       text: "Agencia SEO para LATAM: aparece en Google y en ChatGPT. Un equipo con 8 años de experiencia ejecuta tu SEO y tu posicionamiento en IA. Habla con nosotros."
-      status: pending
-      confirm_by: Ari
-      reason: "Meta description redactada como borrador sobre el title aprobado el 17-nov-2026; Ari aprobó el alcance (title, meta, H1) pero no este texto exacto."
+      status: verified
+      reason: "Aprobado por Ari de forma verbal (confirmado por Juan, 2026-11-23); pendiente su confirmación escrita en Slack."
   hero:
     h1:
       text: "Agencia SEO en LATAM para aparecer en Google y en ChatGPT"
@@ -547,14 +546,12 @@ es:
           status: verified
       - question:
           text: "¿Qué hace una agencia SEO?"
-          status: pending
-          confirm_by: Ari
-          reason: "Pregunta pedida en la hoja de Ari (Page idea de la home); la respuesta es un borrador sin cifras ni promesas."
+          status: verified
+          reason: "Aprobado por Ari de forma verbal (confirmado por Juan, 2026-11-23); pendiente su confirmación escrita en Slack."
         answer:
           text: "Trabaja para que tus clientes te encuentren en Google: mejora la parte técnica de tu web, crea el contenido que responde lo que buscan y construye señales de confianza.\nEn Loops Growth sumamos el posicionamiento en IA, para que ChatGPT y Gemini también puedan considerar tu negocio."
-          status: pending
-          confirm_by: Ari
-          reason: "Respuesta redactada como borrador; Ari debe aprobarla o reemplazarla."
+          status: verified
+          reason: "Aprobado por Ari de forma verbal (confirmado por Juan, 2026-11-23); pendiente su confirmación escrita en Slack."
   agenda:
     title:
       text: "¿Listo para que te encuentren cuando te estan buscando?"
@@ -660,11 +657,11 @@ es:
     results:
       text: "Resultados"
       status: verified
-      reason: "Etiqueta del menú en la hoja de Ari ('Resultados', 17-nov-2026); lleva al índice de casos."
+      reason: "Etiqueta del menú en la hoja de Ari ('Resultados', 17-nov-2026); lleva a la sección de casos de la home (#casos)."
     all_results:
       text: "Ver todos"
       status: verified
-      reason: "Microcopy estructural: enlace al índice de casos, pedido por Juan el 2026-11-23."
+      reason: "Microcopy estructural: enlace a la sección de casos de la home."
     service_ia:
       text: "Posicionamiento en IA"
       status: verified

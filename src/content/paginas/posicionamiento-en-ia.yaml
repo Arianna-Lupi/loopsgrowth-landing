@@ -3,7 +3,8 @@
 tipo: servicio
 ruta: /servicios/posicionamiento-en-ia/
 nombre: Posicionamiento en IA
-draft: true
+draft: false
+reviewedBy: "Arianna Lupi (aprobación verbal por Juan, 2026-11-23)"
 title: "Posicionamiento en IA: aparece en ChatGPT, Gemini y Google"
 description: "Servicio de posicionamiento en IA: trabajamos para que ChatGPT, Gemini y Google encuentren y consideren tu negocio. Auditoría, entregables y medición."
 h1: "Posicionamiento en IA: aparece en ChatGPT, Gemini y Google"

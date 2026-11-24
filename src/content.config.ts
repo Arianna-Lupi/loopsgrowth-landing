@@ -279,7 +279,7 @@ const paginas = defineCollection({
   loader: glob({ pattern: '*.yaml', base: 'src/content/paginas' }),
   schema: z
     .strictObject({
-      tipo: z.enum(['servicio', 'nosotros', 'autora', 'casos']),
+      tipo: z.enum(['servicio', 'nosotros', 'autora']),
       ruta: z.string().regex(/^\/[a-z0-9-]+(?:\/[a-z0-9-]+)*\/$/),
       nombre: z.string().min(3),
       draft: z.boolean().default(true),

@@ -5,17 +5,15 @@
  */
 import { getLanding } from '../../lib/content';
 import { getLivePaths } from '../../lib/paginas';
-import { CASOS_PATH, CASO_SLUGS, casoPath } from '../../lib/casos';
 
 interface Props { tone?: 'yellow' | 'light' | 'dark'; compact?: boolean }
 const { tone = 'yellow', compact = false } = Astro.props;
 const data = await getLanding();
 const { cases } = data;
 const live = await getLivePaths();
-// Con el índice de casos en este build, cada resultado abre su ficha; si no, todo apunta a la sección de la home.
-const hasCasos = live.has(CASOS_PATH);
-const allHref = hasCasos ? CASOS_PATH : '/#casos';
-const hrefOf = (i: number) => (hasCasos ? casoPath(CASO_SLUGS[i]) : '/#casos');
+// Todo apunta a la sección de casos de la home, único lugar de casos (decisión Ari 17-nov-2026).
+const allHref = '/#casos';
+const hrefOf = (_i: number) => '/#casos';
 const [lead, ...others] = cases.items;
 const list = compact ? others.slice(0, 2) : others;
 ---

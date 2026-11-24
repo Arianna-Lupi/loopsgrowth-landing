@@ -2,7 +2,6 @@ import { getCollection, type CollectionEntry } from 'astro:content';
 import { isProduction } from './site';
 import { getPaises, type Pais } from './paises';
 import { getPosts } from './blog';
-import { CASO_SLUGS, CASOS_PATH, casoPath } from './casos';
 
 export type Pagina = CollectionEntry<'paginas'>;
 
@@ -26,8 +25,6 @@ export async function getLivePaths(): Promise<Set<string>> {
   for (const p of paginas) paths.add(p.data.ruta);
   for (const p of paises) paths.add(paisPath(p));
   if (posts.length > 0) paths.add('/blog/');
-  // Las fichas de casos existen mientras exista el índice /casos/.
-  if (paths.has(CASOS_PATH)) for (const slug of CASO_SLUGS) paths.add(casoPath(slug));
   return paths;
 }
 
