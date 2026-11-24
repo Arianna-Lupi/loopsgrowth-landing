@@ -1,0 +1,83 @@
+# Borrador. Página SEO de México: ángulo propio = comercio electrónico grande y maduro, redes que compiten con el
+# buscador, Google dominante con un Bing relevante y WhatsApp como cierre. Hechos con fuente https leídos el 2026-11-24
+# (docs/seo/investigacion/mexico.md).
+tipo: pais
+familia: seo
+nombre: México
+draft: true
+publishAt: 2027-02-04
+title: "Agencia SEO en México: Google, redes y WhatsApp | Loops Growth"
+description: "Agencia SEO para empresas de México: planeamos tu SEO como una pieza del recorrido de compra, junto a redes y WhatsApp. Trabajo remoto con reportes escritos."
+h1: "Agencia SEO en México para vender más desde el buscador"
+intro: |
+  México es de los mercados más grandes de la región para vender en línea, y también de los más disputados. Esta página explica cómo trabajamos el SEO con empresas mexicanas: somos Loops Growth, un equipo remoto que ejecuta SEO y posicionamiento en IA en español, con reportes por escrito.
+
+  Aquí el reto no es que la gente use internet, porque ya lo usa. El reto es aparecer en el momento correcto de un recorrido que pasa por el buscador, las redes y un chat de WhatsApp, y medir qué parte de ese recorrido deja una conversación o una compra.
+secciones:
+  - titulo: Un comercio electrónico grande que ya compite en madurez
+    cuerpo: |
+      Según el comunicado de INEGI de junio de 2026, el 86,1 % de las personas de 6 años y más usó internet en 2025, unos 104,9 millones. Sobre esa base, el eCommerce retail alcanzó 941 mil millones de pesos en 2025 y creció 19,2 % en un año, según el Estudio de Venta Online 2026 de AMVO, que lo ubica en el 17,7 % del retail total del país.
+
+      Con 77,2 millones de compradores digitales y 7 de cada 10 viviendo la omnicanalidad, tu cliente ya sabe comprar en línea y compara contra otras tiendas y contra la tienda física. Tu sitio tiene que responder las dudas de antes de comprar y coincidir con lo que él ve en persona. Empezamos por ahí, con [SEO para ecommerce](/servicios/seo-para-ecommerce/) y con una [investigación de palabras clave](/servicios/investigacion-de-palabras-clave/) hecha con el vocabulario de tu comprador.
+  - titulo: El buscador comparte el recorrido con las redes
+    cuerpo: |
+      AMVO afirma en ese mismo estudio que el descubrimiento de productos migró hacia las redes sociales, que ya superan a los buscadores tradicionales como principal fuente de información, sobre todo entre jóvenes de 18 a 24 años. Un plan de SEO honesto en México parte de esa frase y no la esconde.
+
+      Por eso no prometemos que el buscador lo resuelva todo. Lo planeamos como una pieza: contenido que alguien encuentra después de ver un producto en redes, páginas que cierran la duda y un botón de WhatsApp visible, porque ahí termina buena parte de las conversaciones comerciales del país. Medimos las visitas que acaban en un mensaje o una compra, y no solo las que llegan. Si defines primero qué busca cada visitante, el [contenido estratégico](/servicios/estrategia-de-contenidos/) rinde más; esta guía sobre la [intención de búsqueda](/blog/que-es-la-intencion-de-busqueda/) te da la base.
+  - titulo: Google domina, pero Bing pesa más que en otros países
+    cuerpo: |
+      En octubre de 2026, Google tuvo el 86,55 % de la cuota de búsqueda en México y Bing el 10,66 %, según StatCounter. Entre los tres países que hemos investigado, ese Bing es cerca del doble del que mide la misma fuente en Colombia o en Venezuela. StatCounter mide tráfico de los sitios que usan su código, no el total del mercado, y conviene leerlo como una señal.
+
+      En la práctica trabajamos para Google y cuidamos que tu sitio también funcione bien en Bing, algo que pide poco trabajo extra si la base técnica está limpia. La otra señal viene de nuestras herramientas de palabras clave: el término amplio "agencia de marketing digital" mueve muchas búsquedas, pero está mucho más disputado que "agencia SEO". Por eso atacamos primero las frases específicas donde tu negocio sí puede competir. Para entender el reparto entre buscadores, revisa [cómo funciona Google](/blog/como-funciona-google/).
+  - titulo: Cómo trabajamos con empresas de México
+    cuerpo: |
+      Combinamos la parte técnica del sitio, el contenido y la autoridad en un plan que sigue la ruta de compra mexicana, y lo sumamos al [posicionamiento en IA](/servicios/posicionamiento-en-ia/) para que las respuestas de los asistentes también te consideren. Si te interesa ese frente, mira la página de [Agencia AEO en México](/agencia-aeo-mexico/).
+
+      Cada mes compartimos por escrito qué se revisó, qué cambió y qué sigue. La inversión se define después de una [auditoría SEO técnica](/servicios/auditoria-seo-tecnica/) de tu caso y no con un paquete igual para todos. Para el panorama de cómo busca y compra el mercado, lee [SEO en México](/blog/seo-en-mexico/).
+remoto_titulo: Trabajo remoto en todo México
+ciudades:
+  - nombre: Ciudad de México
+  - nombre: Monterrey
+  - nombre: Guadalajara
+remoto:
+  - titulo: Por videollamada
+    texto: Las reuniones de arranque y de seguimiento se hacen por videollamada, sin traslados ni husos horarios complicados.
+  - titulo: Avance por escrito
+    texto: Cada mes compartimos por escrito qué se hizo y qué se movió, para que lo revises con tu equipo.
+  - titulo: Misma estrategia en todo el país
+    texto: Atendemos negocios de Ciudad de México, Monterrey, Guadalajara y del resto de México con el mismo método.
+hechos:
+  - dato: "En 2025, el 86,1 % de la población mexicana de 6 años y más usó internet, unos 104,9 millones de personas, según INEGI."
+    fuente: https://www.inegi.org.mx/contenidos/saladeprensa/boletines/2026/endutih/ENDUTIH_25.pdf
+  - dato: "El eCommerce retail en México alcanzó 941 mil millones de pesos en 2025, con un crecimiento anual de 19,2 % y el 17,7 % del retail total, según AMVO."
+    fuente: https://images.produ.com/wp-content/uploads/2026/03/12132700/AMVO_Estudio-de-Venta-Online-2026-Prensa-1_compressed.pdf
+  - dato: "La base de compradores digitales llegó a 77,2 millones de personas en 2025 y México ocupa el octavo lugar mundial en eCommerce retail, según AMVO."
+    fuente: https://images.produ.com/wp-content/uploads/2026/03/12132700/AMVO_Estudio-de-Venta-Online-2026-Prensa-1_compressed.pdf
+  - dato: "AMVO señala que el descubrimiento de productos migró hacia las redes sociales, que superan a los buscadores tradicionales como principal fuente de información, sobre todo entre jóvenes de 18 a 24 años."
+    fuente: https://images.produ.com/wp-content/uploads/2026/03/12132700/AMVO_Estudio-de-Venta-Online-2026-Prensa-1_compressed.pdf
+  - dato: "En octubre de 2026, Google tuvo el 86,55 % de cuota de búsqueda en México, Bing el 10,66 %, Yahoo el 2,15 % y DuckDuckGo el 0,26 %, según StatCounter."
+    fuente: https://gs.statcounter.com/search-engine-market-share/all/mexico
+  - dato: "Según el estudio 2026 de la Asociación de Internet MX, citado por SDP Noticias, WhatsApp lidera con 91 % de presencia activa entre los internautas, seguido de Facebook con 85 %."
+    fuente: https://www.sdpnoticias.com/estados/aimx-revela-habitos-digitales-de-mexicanos-en-2026-ia-redes-sociales-y-compras-online/
+faq:
+  - pregunta: "¿El SEO sigue valiendo la pena en México si la gente descubre productos en redes?"
+    respuesta: |
+      Sí, como una pieza del recorrido y no como único canal. AMVO indica que las redes superan a los buscadores como fuente de información de producto, sobre todo entre jóvenes. Por eso conectamos el contenido con lo que la gente ve en redes y medimos cuántas visitas terminan en un mensaje o una compra.
+  - pregunta: "¿Trabajan solo para Google o también para Bing?"
+    respuesta: |
+      Trabajamos sobre todo para Google, que concentra la mayor parte de las búsquedas en México. Como Bing tiene una cuota relevante en la medición de StatCounter, verificamos que tu sitio se pueda rastrear y mostrar bien allí también, sin duplicar el esfuerzo.
+  - pregunta: "¿Pueden ayudar a una tienda en línea que depende de WhatsApp para cerrar ventas?"
+    respuesta: |
+      Sí. Diseñamos las páginas para que el botón de WhatsApp aparezca donde el visitante ya resolvió su duda y medimos cuántas visitas del buscador terminan en esa conversación. Parte del trabajo de una tienda es el [SEO para ecommerce](/servicios/seo-para-ecommerce/).
+  - pregunta: "¿Atienden empresas fuera de la Ciudad de México?"
+    respuesta: |
+      Sí. Trabajamos a distancia con negocios de Monterrey, Guadalajara y de cualquier otro lugar del país. Lo que necesitamos es un sitio que podamos mejorar y un objetivo claro de crecimiento orgánico.
+pendientes:
+  - "Revisar: las cifras de StatCounter son de octubre de 2026 y cambian cada mes. Releer antes de publicar y actualizar si cambian mucho. La página no confirma la mezcla de plataformas (filtro All Platforms)."
+  - "Revisar: la cifra AMVO viene de la versión pública alojada en Produ, no en amvo.org.mx. Citar como AMVO, Estudio de Venta Online 2026."
+  - "Revisar: WhatsApp 91 % y Facebook 85 % son del estudio AIMX 2026 leído solo en la nota de SDP Noticias, no en el estudio original."
+  - "Revisar: la frase sobre 'agencia de marketing digital' más disputada que 'agencia SEO' sale de datos internos de Ahrefs (no citables como fuente pública)."
+  - "Revisar: la comparación de Bing con Colombia y Venezuela usa las cifras de StatCounter de las tres investigaciones (10,66 % frente a 5,31 % y 5,39 %)."
+  - "Revisar: Guadalajara se menciona por búsquedas locales (dato interno de Ahrefs); no hay fuente pública que la ubique entre las ciudades con más actividad digital."
+  - "Juan o Ari: confirmar que 'videollamada y reportes escritos' describe el modo de trabajo."
+  - "Juan o Ari: clientes de México que se puedan mencionar (hoy ninguno)."

@@ -1,0 +1,81 @@
+# Borrador. Página SEO de Colombia: ángulo propio = pago contra entrega y medios de pago en línea, comercio electrónico
+# medido por la CCCE, intención local en Bogotá y Medellín y autorización de datos (Ley 1581). Hechos con fuente https
+# leídos el 2026-11-24 (docs/seo/investigacion/colombia.md, sección A).
+tipo: pais
+familia: seo
+nombre: Colombia
+draft: true
+publishAt: 2027-02-18
+title: "Agencia SEO en Colombia: contra entrega y ciudades | Loops Growth"
+description: "Agencia SEO para empresas de Colombia: trabajamos tu SEO pensando en el pago contra entrega, las búsquedas por ciudad y la autorización de datos."
+h1: "Agencia SEO en Colombia para vender donde se paga a la colombiana"
+intro: |
+  En Colombia se compra mucho en línea, pero no se paga igual que en otros países de la región. Esta página cuenta cómo trabajamos el SEO con empresas colombianas desde Loops Growth, un equipo remoto que ejecuta SEO y posicionamiento en IA en español, con reportes escritos cada mes.
+
+  Partimos de tres cosas que cambian el trabajo: cómo paga el comprador, cómo busca por ciudad y qué exige la ley cuando tu sitio recoge datos de una persona. Con eso armamos un plan que se parece a tu mercado y no a una plantilla regional.
+secciones:
+  - titulo: Aquí se compra en línea y se paga contra entrega
+    cuerpo: |
+      Entre quienes compraron por internet en 2024, el 75,3 % pagó contra entrega, el 65,5 % con tarjeta débito o transferencia electrónica, como PSE, y el 50,3 % con una cuenta asociada al número del celular, según el DANE. Las opciones no se excluyen: una misma persona puede usar varias.
+
+      Para tu tienda eso se traduce en trabajo concreto. La ficha de producto y el pago tienen que decir qué medios aceptas, si hay contra entrega en la ciudad del cliente y cuánto tarda el envío, porque esa duda frena más la compra que el diseño. Lo resolvemos con contenido y con datos claros dentro del [SEO para ecommerce](/servicios/seo-para-ecommerce/), y lo conectamos con la [investigación de palabras clave](/servicios/investigacion-de-palabras-clave/) de las preguntas que tu cliente hace antes de pagar.
+  - titulo: Un comercio electrónico grande, con compras más frecuentes y de menor valor
+    cuerpo: |
+      La Cámara Colombiana de Comercio Electrónico reportó, según Forbes Colombia, que el comercio electrónico cerró 2025 con ventas de 145,4 billones de pesos, un 11,1 % más que en 2024, y con 684,6 millones de transacciones, un 19,9 % más. El ticket promedio fue de 212.373 pesos, un 7,4 % menos que el año anterior.
+
+      Más transacciones con un ticket menor invitan a pensar en compras repetidas y en categorías que se piden seguido. Por categoría, la CCCE ubica a tecnología con el 17,3 % del valor transado. Cuando trabajamos tu [estrategia de contenidos](/servicios/estrategia-de-contenidos/), miramos qué compra tu cliente de nuevo y qué páginas lo traen de vuelta, no solo qué páginas captan una primera visita.
+  - titulo: "Bogotá y Medellín: búsquedas con ciudad aunque tu agencia sea remota"
+    cuerpo: |
+      Bogotá lidera en el boletín del DANE de 2024: el 82,7 % de sus hogares tenía internet y el 88,4 % de sus personas usó la red. Fuera de las cabeceras, la brecha es amplia: el 72,5 % de los hogares conectados en cabeceras baja al 41,9 % en centros poblados y zona rural dispersa. La audiencia digital real se concentra en lo urbano.
+
+      Nuestras herramientas muestran que en Colombia mucha gente añade la ciudad cuando busca un servicio, con Bogotá y Medellín entre las más usadas. Eso marca intención local, aun cuando quien presta el servicio trabaja a distancia. Revisamos si tu negocio necesita [SEO local y Google Business Profile](/servicios/seo-local-y-google-business-profile/) y escribimos páginas que dejen claro a qué ciudades atiendes. Para el contexto de Google en el país, que en octubre de 2026 tuvo el 92,48 % de las búsquedas, lee [cómo funciona Google](/blog/como-funciona-google/).
+  - titulo: Datos personales y cómo trabajamos con empresas de Colombia
+    cuerpo: |
+      La Ley 1581 de 2012 desarrolla el derecho de las personas a conocer, actualizar y rectificar la información que se recoge sobre ellas en bases de datos, y su artículo 9 pide autorización previa e informada del titular para tratar sus datos. En un sitio web eso toca los formularios, los chats y las herramientas de medición. Dejamos esos puntos señalados en la [auditoría SEO técnica](/servicios/auditoria-seo-tecnica/), sin dar asesoría legal: la decisión final la toma tu abogado.
+
+      El trabajo mensual combina la parte técnica del sitio, el contenido y la autoridad, y lo reportamos por escrito. La inversión se define según el caso y no con un paquete igual para todos. Si quieres ver el panorama del mercado antes de decidir, lee [SEO en Colombia](/blog/seo-en-colombia/), y si te interesa aparecer en respuestas de asistentes de IA, mira [Agencia AEO en Colombia](/agencia-aeo-colombia/).
+remoto_titulo: Trabajo remoto en todo Colombia
+ciudades:
+  - nombre: Bogotá
+  - nombre: Medellín
+remoto:
+  - titulo: Por videollamada
+    texto: Las reuniones de arranque y de seguimiento se hacen por videollamada, sin traslados ni husos horarios complicados.
+  - titulo: Avance por escrito
+    texto: Cada mes compartimos por escrito qué se hizo y qué se movió, para que lo revises con tu equipo.
+  - titulo: Misma estrategia en todo el país
+    texto: Atendemos negocios de Bogotá, Medellín y del resto de Colombia con el mismo método de trabajo.
+hechos:
+  - dato: "En 2024, el 75,3 % de quienes compraron por internet en Colombia pagó contra entrega, el 65,5 % con tarjeta débito o transferencia electrónica y el 50,3 % con una cuenta asociada al celular, según el DANE."
+    fuente: https://www.dane.gov.co/files/operaciones/ENTIC/bol-ENTICHogares-2024.pdf
+  - dato: "El comercio electrónico colombiano cerró 2025 con ventas de 145,4 billones de pesos y 684,6 millones de transacciones, según la CCCE citada por Forbes Colombia."
+    fuente: https://forbes.co/2026/02/19/tecnologia/comercio-electronico-en-colombia-alcanzo-1454-billones-en-ventas-en-2025
+  - dato: "El ticket promedio del comercio electrónico en Colombia fue de 212.373 pesos en 2025, un 7,4 % menos que en 2024, según la CCCE citada por Forbes Colombia."
+    fuente: https://forbes.co/2026/02/19/tecnologia/comercio-electronico-en-colombia-alcanzo-1454-billones-en-ventas-en-2025
+  - dato: "En 2024, el 79,3 % de las personas de 5 años o más usó internet en Colombia: 84,6 % en cabeceras y 61,7 % en centros poblados y rural disperso, según el DANE."
+    fuente: https://www.dane.gov.co/files/operaciones/ENTIC/bol-ENTICHogares-2024.pdf
+  - dato: "En octubre de 2026, Google tuvo el 92,48 % de la cuota de búsqueda en Colombia, Bing el 5,31 % y Yahoo el 1,8 %, según StatCounter."
+    fuente: https://gs.statcounter.com/search-engine-market-share/all/colombia
+  - dato: "La Ley 1581 de 2012 exige autorización previa e informada del titular para el tratamiento de sus datos personales, obtenida por un medio que permita consulta posterior (artículo 9)."
+    fuente: https://www.alcaldiabogota.gov.co/sisjur/normas/Norma1.jsp?i=49981
+faq:
+  - pregunta: "¿Debo mostrar el pago contra entrega en mi tienda para vender más?"
+    respuesta: |
+      Según el DANE, tres de cada cuatro compradores en línea pagaron contra entrega en 2024. Si tu logística lo permite, mostrarlo en la ficha y en el pago quita una duda frecuente. Si no lo ofreces, aclara qué medios sí aceptas.
+  - pregunta: "¿Las búsquedas por ciudad importan si mi empresa atiende todo el país?"
+    respuesta: |
+      Pueden importar. Hay gente que añade Bogotá o Medellín al buscar un servicio. Una página que explique cómo atiendes esas ciudades capta esa intención aunque tu equipo trabaje a distancia.
+  - pregunta: "¿Qué debo revisar de la Ley 1581 en mi sitio?"
+    respuesta: |
+      Revisa los formularios, los chats y la medición, y confirma que piden autorización previa e informada antes de tratar datos de una persona. Nosotros señalamos esos puntos en la auditoría, pero no damos asesoría legal.
+  - pregunta: "¿Trabajan con empresas fuera de Bogotá y Medellín?"
+    respuesta: |
+      Sí. Trabajamos de forma remota con negocios de todo el país. Lo importante es que tengas un sitio que podamos mejorar y un objetivo claro de crecimiento orgánico.
+pendientes:
+  - "Revisar: las cifras de StatCounter son de octubre de 2026 y cambian cada mes. Releer antes de publicar."
+  - "Revisar: los porcentajes DANE de pago (gráfico 33) salen de un PDF leído como texto; comprobar visualmente contra el gráfico antes de publicar. El texto de la sección dice 'tarjeta débito o transferencia electrónica, como PSE' porque el DANE las agrupa."
+  - "Revisar: las cifras de la CCCE (145,4 billones, 684,6 millones, ticket, 17,3 % tecnología) vienen de Forbes Colombia y DPL News; no se abrió el informe original de la CCCE. Atribuir siempre a la CCCE vía Forbes. La fuente secundaria las describe como preliminares."
+  - "Revisar: la frase sobre ciudades en búsquedas (Bogotá y Medellín) sale de datos internos de Ahrefs, no citables como cifra pública. Cali no se incluye: no hay dato verificado."
+  - "Revisar: la Ley 1581 se verificó en la copia de la Alcaldía de Bogotá (artículos 1 y 9 y fecha). No se leyó el texto de la Superintendencia de Industria y Comercio; no afirmar sanciones ni política de tratamiento."
+  - "Juan o Ari: confirmar que 'videollamada y reportes escritos' describe el modo de trabajo."
+  - "Juan o Ari: clientes de Colombia que se puedan mencionar (hoy ninguno)."

@@ -1,0 +1,86 @@
+# Borrador para revisión. Sin precios, sin garantía, sin cifras ni casos inventados. Publicar exige draft: false y reviewedBy.
+tipo: servicio
+ruta: /servicios/auditoria-de-backlinks/
+nombre: Auditoría de backlinks
+draft: true
+publishAt: 2027-05-18
+grupo: autoridad
+title: "Auditoría de backlinks: revisa tus enlaces y los de tu competencia"
+description: "Auditoría de backlinks: revisamos tu perfil de enlaces y el de tus competidores, detectamos riesgos reales y decidimos cuándo desautorizar y cuándo no."
+h1: "Auditoría de backlinks: tu perfil de enlaces, revisado con criterio"
+intro: |
+  Una auditoría de backlinks es una revisión de los enlaces que apuntan a tu sitio: quién te enlaza, desde qué páginas, con qué texto y hacia qué contenido. La comparamos con la de tus competidores para ver qué fuentes tienen ellos y tú no.
+
+  En Loops Growth la usamos como punto de partida del trabajo de autoridad, en español y para empresas de LATAM. Y la hacemos con una regla clara: no desautorizamos enlaces por reflejo, solo cuando hay una razón.
+secciones:
+  - titulo: Qué revisamos en tu perfil de enlaces
+    cuerpo: |
+      Miramos tres cosas. Primero, de dónde vienen los enlaces: qué sitios, qué temas y qué países. Segundo, a dónde llegan: si apuntan a tu página de inicio, a tus servicios o a artículos concretos. Tercero, cómo están escritos: el texto del enlace y si la página de origen sigue activa.
+
+      También buscamos enlaces rotos que apuntan a páginas que ya no existen en tu sitio. Cada uno es una visita que se pierde, y muchas veces se arregla con una redirección a la página correcta.
+  - titulo: Qué revisamos en el perfil de tus competidores
+    cuerpo: |
+      Tu perfil solo se entiende al compararlo. Revisamos los enlaces de dos o tres competidores directos y buscamos patrones: qué tipo de sitios los enlazan, qué contenido atrae enlaces y qué medios los citan.
+
+      El resultado es una lista de oportunidades con su motivo. Si tres competidores reciben enlaces de la misma asociación del sector, esa fuente merece una conversación. De ahí salen las acciones de [link building](/servicios/link-building/) y de [relaciones públicas digitales](/servicios/relaciones-publicas-digitales/).
+  - titulo: Cuándo un enlace daña y cuándo no hace falta desautorizar
+    cuerpo: |
+      Es la pregunta más común y la que más errores genera. Google explica que su herramienta de desautorización es una función avanzada, pensada para sitios con una acción manual por enlaces no naturales o a punto de recibirla, y que puede perjudicar el rendimiento si se usa mal. Lo detalla en su [página sobre la herramienta de desautorización](https://support.google.com/webmasters/answer/2648487).
+
+      Google añade que puede evaluar por sí mismo en qué enlaces confiar, así que la mayoría de los sitios no la necesitan. Tener un enlace extraño en un directorio no es motivo para desautorizar.
+
+      Sí intervenimos cuando hay señales claras: una acción manual en Search Console, o un patrón de enlaces comprados o automáticos que tú o alguien anterior crearon. En ese caso, primero se intenta retirar el enlace en el origen y la desautorización queda como último paso.
+  - titulo: Qué recibes al final
+    cuerpo: |
+      Recibes un documento con lo encontrado y un orden de acciones. Cada recomendación explica qué se hace, por qué y qué se deja como está. Si no hay riesgos, te lo decimos, porque una auditoría no tiene que terminar en una lista larga de problemas.
+
+      Las [políticas de Google contra el spam](https://developers.google.com/search/docs/essentials/spam-policies) son nuestra referencia para decidir qué prácticas son un riesgo y cuáles no.
+senales:
+  - "No sabes qué enlaces recibes hoy ni quién los consiguió."
+  - "Una agencia o un proveedor anterior pudo haber comprado enlaces en tu nombre."
+  - "Recibiste un aviso de acción manual por enlaces en Search Console."
+  - "Tus competidores aparecen enlazados desde sitios del sector y no sabes cómo llegar a ellos."
+  - "Tu sitio cambió de dominio o de estructura y quieres saber si perdiste enlaces."
+  - "Alguien te recomendó desautorizar enlaces y no tienes claro si es necesario."
+entregables:
+  - titulo: Radiografía de tu perfil de enlaces
+    texto: Un resumen claro de las fuentes que te enlazan, los temas, las páginas que reciben enlaces y el texto con el que te enlazan.
+  - titulo: Comparación con competidores
+    texto: Un cuadro con los enlaces de tus competidores directos, para ver qué fuentes comparten contigo y cuáles te faltan.
+  - titulo: Lista de enlaces a revisar
+    texto: Los enlaces que parecen artificiales o riesgosos, cada uno con el motivo y la acción sugerida, sin recomendar desautorizar de forma masiva.
+  - titulo: Enlaces rotos recuperables
+    texto: Enlaces que llegan a páginas que ya no existen, con la redirección propuesta para recuperar el valor de cada uno.
+  - titulo: Oportunidades de fuentes
+    texto: Sitios que enlazan a tus competidores y encajan con tu negocio, ordenados por afinidad y por facilidad de contacto.
+  - titulo: Plan de acciones ordenado
+    texto: Un documento con las acciones en orden de prioridad y una nota sobre lo que decidimos no tocar y por qué.
+proceso:
+  - titulo: Reunir los datos
+    texto: Exportamos los enlaces que apuntan a tu dominio y a los dominios de tus competidores con las herramientas de análisis de enlaces.
+  - titulo: Clasificar las fuentes
+    texto: Agrupamos los enlaces por tipo de sitio, tema y calidad, y marcamos los que necesitan una revisión manual.
+  - titulo: Buscar señales de riesgo
+    texto: Revisamos tu Search Console por acciones manuales y buscamos patrones de enlaces comprados o generados en masa.
+  - titulo: Comparar con el sector
+    texto: Contrastamos tu perfil con el de tus competidores para encontrar fuentes, temas y contenidos que ellos aprovechan mejor.
+  - titulo: Entregar un plan
+    texto: Presentamos los hallazgos por escrito y en videollamada, con acciones ordenadas y la decisión razonada sobre cada enlace dudoso.
+faq:
+  - pregunta: "¿Tengo que desautorizar los enlaces de mala calidad?"
+    respuesta: |
+      En la mayoría de los casos no. Google indica que puede evaluar por sí mismo en qué enlaces confiar y que la herramienta de desautorización es para casos avanzados, como se explica en su [documentación oficial](https://support.google.com/webmasters/answer/2648487). Revisamos tu caso antes de recomendar nada.
+  - pregunta: "¿Cada cuánto conviene hacer una auditoría?"
+    respuesta: |
+      Conviene una al empezar el trabajo de autoridad, y una revisión más corta cuando cambia algo importante, como una migración o la contratación de un proveedor nuevo. No hace falta repetirla sin motivo.
+  - pregunta: "¿La auditoría incluye conseguir enlaces?"
+    respuesta: |
+      No, es el diagnóstico. La parte de conseguir enlaces se trabaja en [link building](/servicios/link-building/) y en [relaciones públicas digitales](/servicios/relaciones-publicas-digitales/), con el diagnóstico como base.
+  - pregunta: "¿Qué herramientas usan?"
+    respuesta: |
+      Usamos herramientas de análisis de enlaces y tu Search Console para contrastar los datos. Ninguna herramienta ve todos los enlaces de la web, así que combinamos fuentes y las interpretamos con criterio.
+pendientes:
+  - "Juan o Ari: confirmar que Loops presta este servicio."
+  - "Ari: confirmar con qué herramientas de análisis de enlaces se hace la auditoría hoy, para ajustar la última respuesta del faq."
+  - "Ari: confirmar que la entrega incluye videollamada además del documento."
+  - "No verificado y dejado fuera: cualquier umbral de cantidad o de proporción de enlaces malos que supuestamente dañe un sitio, porque Google no lo documenta."

@@ -1,0 +1,88 @@
+# Borrador para revisión. Sin precios, sin garantía, sin cifras ni casos inventados. Publicar exige draft: false y reviewedBy.
+tipo: servicio
+ruta: /servicios/relaciones-publicas-digitales/
+nombre: Relaciones públicas digitales
+draft: true
+publishAt: 2027-04-29
+grupo: autoridad
+title: "Relaciones públicas digitales: menciones con una historia real"
+description: "Relaciones públicas digitales para SEO: buscamos que medios y sitios del sector cuenten una historia real de tu negocio, con menciones útiles para la IA."
+h1: "Relaciones públicas digitales: menciones con una historia real"
+intro: |
+  Las relaciones públicas digitales consisten en lograr que medios, blogs y sitios del sector hablen de tu negocio porque tienes algo que contar. Cuando la historia es buena, el medio publica, la audiencia te conoce y, muchas veces, el texto incluye un enlace a tu sitio.
+
+  En Loops Growth trabajamos esta línea como parte de tu autoridad en buscadores y en asistentes de IA, en español y para empresas de LATAM. No pagamos por aparecer ni te prometemos publicaciones concretas.
+secciones:
+  - titulo: Qué es y en qué se diferencia del link building
+    cuerpo: |
+      El [link building](/servicios/link-building/) parte del enlace: busca qué páginas pueden enlazarte y cómo conseguirlo. Las relaciones públicas digitales parten de la historia: buscan qué tiene de noticioso o de útil tu negocio para la audiencia de un medio concreto.
+
+      La diferencia importa porque un enlace transaccional se pide y se negocia, mientras que una historia se acepta o se rechaza por mérito. Quien publica tu historia lo hace porque le sirve a sus lectores. Esa decisión editorial es justo lo que hace valiosa la mención.
+  - titulo: Qué cuenta como una historia real
+    cuerpo: |
+      Una historia real tiene un hecho comprobable detrás. Algunos ejemplos de material que suele interesar a un editor:
+
+      - Un dato propio que recopilaste, como una encuesta a tus clientes o un análisis de tu sector, con la metodología a la vista.
+      - Una opinión fundamentada de una persona de tu equipo sobre un cambio que afecta a la industria.
+      - Una guía práctica que resuelve una duda frecuente mejor que lo que hay publicado.
+      - Un lanzamiento, una alianza o una apertura que cambia algo para los usuarios.
+
+      Si no hay un hecho real, no inventamos uno. Preferimos decirte que todavía no hay historia y ayudarte a crearla con trabajo propio.
+  - titulo: Por qué sirve para SEO y para IA
+    cuerpo: |
+      Una mención en un medio relevante puede traer visitas, y si incluye enlace, también aporta a tu perfil de enlaces. Google recuerda en sus [políticas contra el spam](https://developers.google.com/search/docs/essentials/spam-policies) que los enlaces hechos para manipular el posicionamiento van contra sus reglas, y por eso el enfoque editorial es el que no corre ese riesgo.
+
+      Las menciones también ayudan a que los asistentes de IA te conozcan. Los asistentes que buscan en la web consultan páginas para responder, y que tu negocio aparezca descrito en fuentes del sector es una señal que podemos trabajar. No podemos medir cuánto pesa cada una. Esto lo trabajamos dentro de [posicionamiento en IA](/servicios/posicionamiento-en-ia/), sin prometer menciones en ninguna plataforma.
+  - titulo: Cómo trabajamos con editores
+    cuerpo: |
+      Cada editor recibe mensajes distintos, escritos para su audiencia. Revisamos qué publicó en los últimos meses, qué formato usa y qué tipo de fuente cita. Después proponemos un ángulo, un vocero y, cuando existe, el dato que respalda la historia.
+
+      Antes de empezar revisamos tu situación actual con una [auditoría de backlinks](/servicios/auditoria-de-backlinks/): saber qué medios ya te mencionan evita repetir contactos y muestra qué tipo de cobertura te funciona.
+senales:
+  - "Tu empresa hace cosas interesantes, pero la prensa y los blogs del sector casi no la mencionan."
+  - "Los asistentes de IA y los buscadores muestran a tus competidores en medios y a ti no."
+  - "Tienes datos, experiencia o voceros con mucho que decir y no los estás aprovechando fuera de tu sitio."
+  - "Te ofrecen publicar artículos pagados con enlace y no sabes si es buena idea."
+  - "Vas a lanzar un producto, una alianza o una apertura y quieres que tenga cobertura."
+entregables:
+  - titulo: Mapa de historias posibles
+    texto: Revisamos tu negocio contigo y listamos las historias con hechos comprobables, con una nota sobre qué audiencia se interesaría en cada una.
+  - titulo: Lista de medios y sitios del sector
+    texto: Un listado de medios, blogs y newsletters donde tu tema encaja, con el tipo de contenido que publica cada uno y a quién contactar.
+  - titulo: Material para prensa
+    texto: Redactamos el comunicado, el resumen del dato propio o la nota de opinión, y preparamos una versión corta pensada para el editor.
+  - titulo: Contacto y seguimiento
+    texto: Enviamos las propuestas, damos seguimiento y registramos las respuestas, incluidas las negativas, para ajustar el ángulo.
+  - titulo: Registro de menciones obtenidas
+    texto: Un documento con cada publicación lograda, el medio, la fecha, si incluye enlace y a qué página de tu sitio apunta.
+  - titulo: Informe mensual
+    texto: Un resumen por escrito de lo contactado, lo publicado y lo que sigue, con la calidad de cada medio y no solo la cantidad.
+proceso:
+  - titulo: Encontrar la historia
+    texto: Conversamos con tu equipo para encontrar hechos propios que valga la pena contar y descartar lo que solo es publicidad.
+  - titulo: Preparar el material
+    texto: Armamos el dato, el texto y los respaldos que un editor necesita para decidir rápido si publica o no.
+  - titulo: Elegir a quién escribir
+    texto: Seleccionamos medios y sitios cuyo público coincide con el tuyo y revisamos su estilo antes de redactar el primer mensaje.
+  - titulo: Proponer y dar seguimiento
+    texto: Contactamos a cada editor con un ángulo propio, respondemos sus preguntas y registramos lo que sale y lo que no.
+  - titulo: Aprovechar lo publicado
+    texto: Revisamos que el enlace funcione, enlazamos la cobertura desde tu sitio cuando aporta y medimos qué medios responden mejor.
+faq:
+  - pregunta: "¿Pagan a los medios por publicar?"
+    respuesta: |
+      No. Buscamos publicaciones editoriales, que el medio decide por mérito. Un contenido patrocinado es otra cosa y se marca como tal. Para entender los límites de los enlaces pagados, mira nuestro servicio de [link building](/servicios/link-building/).
+  - pregunta: "¿Pueden asegurar que un medio publique mi historia?"
+    respuesta: |
+      No. La decisión es del editor y depende de su agenda y de su audiencia. Lo que sí hacemos es preparar una historia con respaldo y proponerla a las fuentes adecuadas.
+  - pregunta: "¿Las menciones ayudan a aparecer en ChatGPT?"
+    respuesta: |
+      Pueden ayudar a que tu negocio esté descrito en más fuentes que un asistente podría consultar, pero no hay forma de asegurarlo. Nadie controla lo que responde cada plataforma, y lo trabajamos dentro de [posicionamiento en IA](/servicios/posicionamiento-en-ia/).
+  - pregunta: "¿Qué pasa si mi empresa todavía no tiene una historia?"
+    respuesta: |
+      Lo decimos con claridad. A veces el primer paso es crear la historia: un dato propio, una guía mejor que la existente o una posición clara sobre un tema. Antes de salir a contactar medios, una [auditoría de backlinks](/servicios/auditoria-de-backlinks/) también muestra dónde estás hoy.
+pendientes:
+  - "Juan o Ari: confirmar que Loops presta este servicio."
+  - "Ari: confirmar que Loops redacta comunicados y notas de opinión y contacta editores directamente, o si ese trabajo se hace con aliados."
+  - "Ari: confirmar el formato del informe mensual de menciones."
+  - "No verificado y dejado fuera: que los asistentes de IA ponderen más las menciones en medios que otras fuentes, y cualquier dato de cuánto influye una mención en el posicionamiento o en las respuestas de IA."

@@ -213,7 +213,7 @@ const blog = defineCollection({
       pubDate: z.coerce.date(),
       updatedDate: z.coerce.date().optional(),
       author: z.enum(['ari']).default('ari'),
-      cluster: z.enum(['L2-geo', 'L4-eleccion', 'L6-fundamentos']),
+      cluster: z.enum(['L1-tecnico', 'L2-geo', 'L3-contenido', 'L4-eleccion', 'L5-mercados', 'L6-fundamentos']),
       keyword: z.string().min(3),
       draft: z.boolean().default(true),
       reviewedBy: z.string().min(1).optional(),
@@ -241,6 +241,10 @@ const pais = defineCollection({
   schema: z
     .strictObject({
       tipo: z.enum(['pais', 'ciudad']),
+      /** País: familia de la página. `aeo` vive en `/agencia-aeo-<pais>/` y su archivo se llama `aeo-<pais>.yaml`. */
+      familia: z.enum(['seo', 'aeo']).default('seo'),
+      /** Publicación programada: no sale en producción antes de esta fecha (el cron diario la activa). */
+      publishAt: z.coerce.date().optional(),
       /** Solo en ciudades: id del país padre (nombre del archivo del país). */
       pais: z.string().min(3).optional(),
       /** Solo en ciudades: segmento de la URL (`caracas`). */
@@ -281,6 +285,14 @@ const paginas = defineCollection({
     .strictObject({
       tipo: z.enum(['servicio', 'nosotros', 'autora']),
       ruta: z.string().regex(/^\/[a-z0-9-]+(?:\/[a-z0-9-]+)*\/$/),
+      /** Publicación programada: no sale en producción antes de esta fecha (el cron diario la activa). */
+      publishAt: z.coerce.date().optional(),
+      /** Servicio: grupo del índice `/servicios/` y `serviceType` del schema. */
+      grupo: z.enum(['tecnico', 'contenido', 'autoridad', 'ia', 'negocio']).optional(),
+      /** Servicio genérico: señales de que el servicio hace falta. */
+      senales: z.array(z.string().min(15)).min(3).max(6).optional(),
+      /** Servicio genérico: cómo se trabaja, en 3 a 5 pasos propios del servicio. */
+      proceso: z.array(z.strictObject({ titulo: z.string().min(3), texto: z.string().min(30) })).min(3).max(5).optional(),
       nombre: z.string().min(3),
       draft: z.boolean().default(true),
       reviewedBy: z.string().min(1).optional(),

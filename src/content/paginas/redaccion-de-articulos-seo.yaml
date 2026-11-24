@@ -1,0 +1,83 @@
+# Borrador. Redacción pendiente de revisión de Juan y Ari. Sin precios, garantías ni cifras.
+tipo: servicio
+ruta: /servicios/redaccion-de-articulos-seo/
+nombre: Redacción de artículos SEO
+grupo: contenido
+draft: true
+publishAt: 2027-02-16
+title: "Redacción de artículos SEO con autor, fuentes y revisión"
+description: "Redacción de artículos SEO en español: brief, borrador y revisión, con autor visible y fuentes verificadas, para evitar el contenido genérico."
+h1: "Redacción de artículos SEO con autor visible, fuentes y revisión"
+intro: |
+  Un artículo SEO que repite lo que ya dicen diez páginas más no tiene motivo para posicionar. La redacción de artículos SEO en Loops Growth parte de un ángulo propio, se apoya en fuentes que se pueden comprobar y lleva el nombre de quien lo firma.
+
+  Escribimos en español neutro para empresas de LATAM. Cada pieza sigue un proceso de tres etapas, brief, borrador y revisión, para que lo que se publica sea útil para el lector y fiel a tu negocio.
+secciones:
+  - titulo: Cómo evitamos el contenido genérico
+    cuerpo: |
+      El contenido genérico nace de escribir sin pregunta previa. Para evitarlo, cada artículo arranca con una pregunta concreta que tu cliente se hace y con un ángulo que lo distingue de lo que ya existe. Antes de escribir revisamos qué dicen los resultados actuales y qué les falta.
+
+      Después exigimos tres cosas a cada texto: ejemplos concretos, algo que el lector pueda hacer ese mismo día y una respuesta directa al inicio. Si un artículo no cumple, no sale. Google describe este enfoque en su guía sobre [contenido útil, fiable y centrado en las personas](https://developers.google.com/search/docs/fundamentals/creating-helpful-content), que plantea preguntas como si el contenido aporta información original o va más allá de lo obvio.
+  - titulo: Brief, borrador y revisión
+    cuerpo: |
+      El proceso tiene tres pasos y deja rastro en cada uno:
+
+      - Brief: frase principal, intención de búsqueda, ángulo, estructura, enlaces internos que debe incluir y fuentes a consultar.
+      - Borrador: redacción con voz activa, sin muletillas, con las afirmaciones sobre terceros comprobadas en su fuente oficial.
+      - Revisión: una persona que conoce tu negocio lee el texto, corrige lo que no es exacto y aprueba.
+
+      El brief nace de la [estrategia de contenidos](/servicios/estrategia-de-contenidos/) y de la [investigación de palabras clave](/servicios/investigacion-de-palabras-clave/), así que cada artículo ya sabe qué lugar ocupa en el sitio.
+  - titulo: Autor visible y fuentes
+    cuerpo: |
+      Cada artículo muestra quién lo firma y cita las fuentes de sus afirmaciones, con enlace a la documentación original cuando se habla de Google u otras plataformas. Eso protege tu reputación y le da al lector un motivo para confiar.
+
+      Google pregunta en su documentación si el contenido está escrito o revisado por alguien que demuestra conocer bien el tema. La [guía de inicio de SEO de Google](https://developers.google.com/search/docs/fundamentals/seo-starter-guide) también recomienda pensar primero en lo que resulta útil para los usuarios. Aplicamos ambas ideas como regla de trabajo, no como adorno.
+  - titulo: Enlaces y relación con el resto del sitio
+    cuerpo: |
+      Cada artículo se enlaza con las páginas que lo apoyan y con las que apoya. Un artículo sobre [cómo hacer keyword research](/blog/como-hacer-keyword-research/) lleva a la guía de [qué es un topic cluster](/blog/que-es-un-topic-cluster/), y ambos se conectan con los servicios cuando tiene sentido para el lector.
+
+      Si ya tienes artículos publicados, no los dejamos de lado: algunos conviene [actualizar o consolidar](/servicios/optimizacion-de-contenido-existente/) antes de escribir otros nuevos que compitan con ellos.
+senales:
+  - "Tus artículos se parecen a los de cualquier competidor y podrían llevar el logo de otra empresa."
+  - "Nadie firma los textos y no queda claro quién sabe del tema."
+  - "Publicas afirmaciones sobre Google u otras plataformas sin una fuente que las respalde."
+  - "Tus redactores no tienen un brief y cada artículo sale con un estilo distinto."
+  - "Tu equipo no tiene tiempo para escribir, pero tampoco quiere publicar textos de relleno."
+entregables:
+  - titulo: Brief por artículo
+    texto: Documento con frase principal, intención, ángulo, estructura, enlaces y fuentes, que sirve de contrato entre redactor y revisor.
+  - titulo: Artículo listo para publicar
+    texto: Texto con título, descripción, estructura de secciones, elemento práctico y preguntas frecuentes, formateado para tu sitio.
+  - titulo: Fuentes verificadas
+    texto: Lista de las fuentes oficiales consultadas, con el enlace a cada una, para que puedas comprobar cualquier afirmación.
+  - titulo: Autoría visible
+    texto: Firma y datos de quien escribe o revisa, de acuerdo con las personas que tu empresa quiera mostrar.
+  - titulo: Enlazado interno incluido
+    texto: Enlaces hacia y desde las páginas relacionadas de tu sitio, con anclas naturales y no genéricas.
+proceso:
+  - titulo: Brief aprobado
+    texto: Cerramos contigo la pregunta del lector, el ángulo y las fuentes antes de escribir una sola línea.
+  - titulo: Borrador con fuentes
+    texto: Redactamos y comprobamos cada afirmación sobre terceros en su documentación oficial, descartando lo que no se pueda verificar.
+  - titulo: Revisión por quien conoce el negocio
+    texto: Una persona de tu equipo o de Loops que conoce tu oferta corrige imprecisiones y aprueba el texto.
+  - titulo: Publicación y seguimiento
+    texto: Entregamos el artículo listo, con sus enlaces, y revisamos más adelante cómo se comporta para decidir si se mejora.
+faq:
+  - pregunta: "¿Usan inteligencia artificial para escribir los artículos?"
+    respuesta: |
+      Eso lo definimos contigo. Sea cual sea el proceso, cada texto lo revisa una persona, las afirmaciones se comprueban en su fuente y el artículo responde por quien lo firma. Google indica que las divulgaciones sobre IA son útiles cuando el lector podría esperarlas, y seguimos esa pauta.
+  - pregunta: "¿Quién firma los artículos?"
+    respuesta: |
+      La persona que tu empresa decida mostrar, normalmente alguien de tu equipo con conocimiento del tema, con apoyo de nuestra redacción. Lo acordamos en el brief. Para ver cómo pensamos la relación con tu equipo, lee [cómo elegir una agencia SEO](/blog/como-elegir-una-agencia-seo/).
+  - pregunta: "¿Cada artículo trae su frase principal definida?"
+    respuesta: |
+      Sí. Sale del trabajo de [investigación de palabras clave](/servicios/investigacion-de-palabras-clave/) y de la [estrategia de contenidos](/servicios/estrategia-de-contenidos/), para que ningún texto compita con otro de tu sitio.
+  - pregunta: "¿Pueden mejorar artículos que ya publiqué en lugar de escribir nuevos?"
+    respuesta: |
+      Sí, y muchas veces es la mejor primera decisión. Eso se trabaja en la [optimización de contenido existente](/servicios/optimizacion-de-contenido-existente/), donde se decide si cada artículo se actualiza, se une con otro o se retira.
+pendientes:
+  - "Juan o Ari: confirmar que Loops presta este servicio."
+  - "Ari: definir la política de uso de IA en la redacción antes de publicar la respuesta de la FAQ."
+  - "Ari: confirmar que la verificación de afirmaciones y la revisión previa a publicar son el proceso real."
+  - "No verificado y dejado fuera: cualquier dato sobre longitud ideal de un artículo, frecuencia de publicación o efecto directo de la autoría en el posicionamiento."

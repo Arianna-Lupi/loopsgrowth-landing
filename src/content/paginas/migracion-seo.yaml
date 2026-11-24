@@ -1,0 +1,85 @@
+# Borrador sin cifras ni casos inventados. Publicar exige draft: false y reviewedBy.
+tipo: servicio
+ruta: /servicios/migracion-seo/
+nombre: Migración SEO
+draft: true
+grupo: tecnico
+publishAt: 2027-04-01
+title: "Migración SEO: cambia de dominio, CMS o diseño sin perder"
+description: "Servicio de migración SEO para cambios de dominio, CMS o rediseño: mapa de redirecciones, pruebas antes y después y un plan de contingencia."
+h1: "Migración SEO: cambio de dominio, CMS o rediseño con control"
+intro: |
+  Cambiar de dominio, de plataforma o de diseño mueve las URL, los títulos, los enlaces internos y la estructura del sitio. Si Google no entiende ese cambio, las páginas que hoy te traen visitas pueden perder visibilidad. Una migración SEO existe para que ese riesgo se planifique, se pruebe y se pueda revertir.
+
+  En Loops Growth acompañamos el proyecto desde antes de que el equipo de desarrollo toque nada, durante el lanzamiento y en las semanas posteriores.
+secciones:
+  - titulo: Qué cambia en cada tipo de migración
+    cuerpo: |
+      No todas las migraciones pesan igual, y tratarlas igual es un error:
+
+      - Cambio de dominio: todas las URL cambian de ubicación. Es el caso con más riesgo y el único donde aplica la herramienta Change of Address de Search Console.
+      - Cambio de CMS o de plataforma: las URL pueden mantenerse o no, pero la plantilla, los metadatos y los datos estructurados casi siempre cambian.
+      - Rediseño: la estructura de navegación, los enlaces internos y el contenido visible se reorganizan.
+      - Paso de HTTP a HTTPS o de www a sin www: Google indica que estos cambios no requieren la herramienta Change of Address de Search Console.
+  - titulo: El mapa de redirecciones
+    cuerpo: |
+      Es la pieza central. Según la [guía de Google sobre mudanzas de sitio](https://developers.google.com/search/docs/crawling-indexing/site-move-with-url-changes), hay que armar la lista de URL antiguas a partir de sitemaps, registros del servidor, analítica o el propio CMS, e incluir imágenes y otros archivos. Cada URL antigua necesita su destino.
+
+      Google advierte que enviar muchas páginas a un destino no relacionado, como la página de inicio, puede tratarse como soft 404. Recomienda redirecciones permanentes del servidor, como 301 o 308, directas al destino final y con cadenas cortas.
+
+      Armamos ese mapa por plantilla, con una auditoría previa como la de nuestro servicio de [auditoría SEO técnica](/servicios/auditoria-seo-tecnica/).
+  - titulo: Pruebas antes y después
+    cuerpo: |
+      Antes del lanzamiento probamos el entorno de pruebas: que las redirecciones respondan como esperamos, que no queden etiquetas noindex ni bloqueos de robots.txt heredados y que el contenido eliminado devuelva 404 o 410. Google recomienda justamente comprobar estos puntos.
+
+      Después del lanzamiento comparamos con la línea base: páginas indexadas, errores de rastreo y rendimiento en Search Console. También revisamos la [indexación y el rastreo](/servicios/indexacion-y-rastreo/) y las métricas de [Core Web Vitals](/servicios/core-web-vitals/), porque una plantilla nueva puede cambiarlas.
+  - titulo: Plan de contingencia
+    cuerpo: |
+      Una migración sin plan de reversa depende de la suerte. Definimos antes del lanzamiento qué señales indican un problema serio, quién decide y qué se hace: corregir redirecciones, restaurar una plantilla o volver atrás.
+
+      Google también recomienda mantener las redirecciones al menos un año. Dejamos ese compromiso por escrito en el plan, junto con la actualización de enlaces internos y externos importantes. Para entender cómo Google procesa las páginas después del cambio, lee [cómo indexar una página en Google](/blog/como-indexar-una-pagina-en-google/) y [Core Web Vitals: qué son](/blog/core-web-vitals-que-son/).
+senales:
+  - "Vas a cambiar de dominio y no sabes qué pasará con las páginas que hoy te traen visitas."
+  - "Tu agencia de desarrollo rediseña el sitio y nadie del lado SEO revisó el plan."
+  - "Cambiarás de WordPress a otra plataforma, o al revés, y las URL van a cambiar."
+  - "No existe un inventario de las URL actuales ni de cuáles reciben tráfico."
+  - "Ya migraste y notas caídas de tráfico o páginas que desaparecieron de Google."
+entregables:
+  - titulo: Inventario de URL y línea base
+    texto: Lista de las URL actuales con su tráfico, enlaces y estado de indexación, para comparar después del lanzamiento.
+  - titulo: Mapa de redirecciones
+    texto: Documento que asigna a cada URL antigua su destino definitivo, listo para que el equipo de desarrollo lo implemente.
+  - titulo: Checklist de pruebas previas
+    texto: "Lista de verificaciones para el entorno de pruebas: redirecciones, etiquetas, robots.txt, sitemap y datos estructurados."
+  - titulo: Plan de lanzamiento y contingencia
+    texto: Cronograma, responsables, señales de alerta y acciones de reversa para el día del cambio y las semanas posteriores.
+  - titulo: Informe posterior a la migración
+    texto: Comparación contra la línea base con los hallazgos y las correcciones pendientes.
+proceso:
+  - titulo: Inventario y línea base
+    texto: Reunimos todas las URL actuales y medimos su estado antes del cambio para tener con qué comparar.
+  - titulo: Mapa de redirecciones
+    texto: Asignamos un destino a cada URL antigua, cuidando que la correspondencia sea de contenido equivalente.
+  - titulo: Pruebas en entorno de pruebas
+    texto: Revisamos redirecciones, etiquetas y bloqueos antes de publicar, y devolvemos una lista de correcciones.
+  - titulo: Lanzamiento y vigilancia
+    texto: Acompañamos el día del cambio, enviamos el sitemap nuevo y revisamos Search Console en las semanas siguientes.
+  - titulo: Cierre y mantenimiento
+    texto: Entregamos el informe final y dejamos acordado cuánto tiempo se mantienen las redirecciones.
+faq:
+  - pregunta: "¿Una migración puede hacerse sin perder visibilidad?"
+    respuesta: |
+      Nadie puede asegurar que no haya fluctuaciones. Lo que sí se hace es reducir el riesgo con un mapa de redirecciones completo, pruebas previas y vigilancia posterior. Empieza por una [auditoría SEO técnica](/servicios/auditoria-seo-tecnica/) del sitio actual.
+  - pregunta: "¿Cuánto tiempo hay que mantener las redirecciones?"
+    respuesta: |
+      Google recomienda mantenerlas al menos un año, para que pueda transferir las señales y recorrer los enlaces que apuntan a las URL antiguas. Lo explica en su [guía de mudanza de sitio](https://developers.google.com/search/docs/crawling-indexing/site-move-with-url-changes).
+  - pregunta: "¿Necesito usar la herramienta Change of Address de Search Console?"
+    respuesta: |
+      Solo si cambias de dominio o de subdominio. No hace falta para pasar de HTTP a HTTPS ni para cambiar entre www y sin www, según Google.
+  - pregunta: "¿Qué reviso después del lanzamiento?"
+    respuesta: |
+      Páginas indexadas, errores de rastreo y rendimiento, comparados con la línea base. Todo eso se cubre en [indexación y rastreo](/servicios/indexacion-y-rastreo/), y la velocidad de la plantilla nueva se revisa en [Core Web Vitals](/servicios/core-web-vitals/).
+pendientes:
+  - "Juan o Ari: confirmar que Loops presta este servicio."
+  - "Ari: confirmar el alcance real del acompañamiento (antes, durante y después del lanzamiento) y quién implementa las redirecciones."
+  - "Verificado en la guía de mudanza de sitio de Google: mapa de URL, 301 o 308, pruebas, Change of Address, un año de redirecciones, sitemap. Fuera del texto: cualquier dato sobre cuánta visibilidad se pierde en una migración."

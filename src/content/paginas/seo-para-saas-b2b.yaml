@@ -1,0 +1,85 @@
+# Borrador. Sin precios, garantía, cifras ni casos. Publicar exige draft: false y reviewedBy.
+tipo: servicio
+ruta: /servicios/seo-para-saas-b2b/
+nombre: SEO para SaaS B2B
+grupo: negocio
+publishAt: 2027-06-01
+draft: true
+title: "SEO para SaaS B2B: contenido para quien evalúa y quien decide"
+description: "SEO para SaaS B2B en español: casos de uso, integraciones y comparativas pensadas para compras largas con varios decisores. Qué trabajamos y qué recibes."
+h1: "SEO para SaaS B2B: contenido para quien evalúa y quien decide"
+intro: |
+  Vender software a empresas casi nunca es una compra de un solo clic. Alguien detecta el problema, otra persona prueba alternativas, un tercero valida la integración con lo que ya usa el equipo y un cuarto firma. Cada una de esas personas busca en Google cosas distintas, en momentos distintos.
+
+  El SEO para SaaS B2B de Loops Growth parte de ese recorrido. No buscamos solo tráfico: ordenamos páginas de caso de uso, integraciones y comparativas para que cada persona del proceso de compra encuentre una respuesta útil en español.
+secciones:
+  - titulo: Un solo producto, varias búsquedas
+    cuerpo: |
+      El responsable de operaciones busca "cómo automatizar conciliaciones". El gerente técnico busca "integración con nuestro ERP". El director financiero busca "alternativas a [herramienta que usa hoy]". Si tu sitio solo tiene una página de producto y un blog general, solo responde a la primera.
+
+      Empezamos con una [investigación de palabras clave](/servicios/investigacion-de-palabras-clave/) agrupada por rol y por etapa de compra, para saber qué preguntas hace cada persona antes de pedir una demostración. De ahí sale un mapa de páginas que cubre el recorrido completo.
+  - titulo: Casos de uso, integraciones y comparativas
+    cuerpo: |
+      Estos tres tipos de página hacen la mayor parte del trabajo comercial en un SaaS:
+
+      - Las páginas de caso de uso describen un problema concreto de un tipo de empresa y cómo lo resuelve el producto, con capturas y pasos reales.
+      - Las páginas de integración responden a la pregunta técnica que frena una compra: "¿funciona con lo que ya usamos?".
+      - Las comparativas atienden a quien ya tiene dos o tres opciones. Se escriben con datos comprobables y con honestidad sobre dónde el producto encaja y dónde no.
+
+      Cada página necesita contenido propio. Una plantilla repetida con el nombre de la integración cambiado no ayuda a nadie, y Google lo describe entre las [señales de contenido poco útil](https://developers.google.com/search/docs/fundamentals/creating-helpful-content): producir contenido en masa sin aportar análisis o perspectiva propia.
+  - titulo: Confianza para una compra con varios decisores
+    cuerpo: |
+      Google indica que, entre los factores de E-E-A-T, [la confianza es el más importante](https://developers.google.com/search/docs/fundamentals/creating-helpful-content), y recomienda mostrar con claridad quién escribe y con qué conocimiento. En B2B eso se traduce en autoría visible en las guías técnicas, fuentes citadas y descripciones del producto que coincidan con lo que el equipo de ventas explica en una llamada.
+
+      También ayuda a la lectura de los asistentes de IA. Una página que dice con claridad qué hace el producto, para quién y con qué se integra es más fácil de entender para una persona y para una máquina. Esa parte la cubrimos junto con el [posicionamiento en IA](/servicios/posicionamiento-en-ia/) cuando tu cliente también pregunta a asistentes.
+  - titulo: Qué se mide en un ciclo largo
+    cuerpo: |
+      El SEO de un SaaS rara vez termina en una compra en la misma visita. Medimos páginas que reciben visitas de calidad, solicitudes de demostración que llegan desde búsqueda orgánica y el recorrido de esas personas antes de convertir, siempre con la limitación de que parte de la decisión ocurre fuera de tu analítica, en reuniones internas del comprador.
+
+      Por eso acordamos desde el inicio qué es una señal útil: una solicitud de demostración, una descarga de una guía técnica, una visita a la página de integraciones. Si tu producto también tiene atención presencial en una ciudad, revisa el [SEO local](/servicios/seo-local-y-google-business-profile/). Si además vendes productos físicos en línea, consulta [SEO para ecommerce](/servicios/seo-para-ecommerce/).
+senales:
+  - Tu sitio tiene una página de producto y un blog, pero nada para quien compara o valida la integración.
+  - Ventas recibe preguntas repetidas sobre integraciones que tu web no responde.
+  - Los clientes potenciales te encuentran solo al buscar tu marca y no al buscar su problema.
+  - Tus competidores aparecen en comparativas y tu producto no figura en ninguna.
+  - Tu contenido está escrito por quien no conoce el producto y suena genérico.
+entregables:
+  - titulo: Mapa de búsquedas por rol y etapa
+    texto: Qué buscan quien detecta el problema, quien evalúa y quien decide, con la página que debe responder a cada búsqueda.
+  - titulo: Plan de páginas de caso de uso
+    texto: Los casos de uso priorizados por tipo de empresa, con un esquema de contenido para que escriba quien conoce el producto.
+  - titulo: Plan de páginas de integración
+    texto: Qué integraciones merecen página propia, qué debe explicar cada una y cómo enlazarlas con el resto del sitio.
+  - titulo: Esquema de comparativas
+    texto: Estructura honesta para comparar tu producto con alternativas, con datos que cualquiera pueda comprobar.
+  - titulo: Reporte de señales de negocio
+    texto: Un seguimiento mensual de visitas, solicitudes de demostración y recorrido desde búsqueda orgánica.
+proceso:
+  - titulo: Entender la compra
+    texto: Conversamos con ventas y producto para mapear quién participa en la decisión y qué pregunta en cada etapa.
+  - titulo: Mapa de páginas
+    texto: Cruzamos esas preguntas con la demanda de búsqueda y decidimos qué páginas existen, cuáles se mejoran y cuáles sobran.
+  - titulo: Briefs con quien conoce el producto
+    texto: Armamos briefs para que el contenido salga de quien domina el producto, con revisión técnica antes de publicar.
+  - titulo: Publicación y enlazado
+    texto: Conectamos casos de uso, integraciones y comparativas entre sí para que el recorrido tenga sentido.
+  - titulo: Lectura mensual
+    texto: Revisamos qué páginas generan solicitudes y ajustamos el plan según lo que ocurre en cada etapa.
+faq:
+  - pregunta: "¿Cuánto tarda el SEO en un SaaS con ciclo de compra largo?"
+    respuesta: |
+      Es un trabajo de mediano y largo plazo, y el ciclo de compra alarga la lectura de resultados. Lo normal es medir primero señales intermedias, como visitas a páginas de integración, y más tarde las solicitudes de demostración. El primer paso es una [investigación de palabras clave](/servicios/investigacion-de-palabras-clave/) por etapa de compra.
+  - pregunta: "¿Conviene publicar comparativas con competidores?"
+    respuesta: |
+      Sí, si las escribes con datos verificables y con honestidad sobre las diferencias. Una comparativa que solo elogia tu producto no convence a nadie que esté evaluando en serio. Cada afirmación sobre un competidor debe poder comprobarse en su sitio público.
+  - pregunta: "¿Necesito una página por cada integración?"
+    respuesta: |
+      Solo si cada una aporta algo propio: pasos de configuración, casos de uso, limitaciones. Una página casi idéntica por integración no ayuda a nadie. Priorizamos las que tus clientes preguntan más y las que se buscan de verdad.
+  - pregunta: "¿Trabajan con el equipo de producto y ventas?"
+    respuesta: |
+      Sí, porque el contenido B2B necesita conocimiento que solo ellos tienen. Nosotros ordenamos la estrategia, los briefs y la revisión. Para un servicio parecido en tiendas, mira el [SEO para ecommerce](/servicios/seo-para-ecommerce/).
+pendientes:
+  - "Juan o Ari: confirmar que Loops presta este servicio de SEO para SaaS B2B."
+  - "Ari: confirmar si Loops trabaja con equipos de producto y ventas del cliente en los briefs, tal como se describe en el proceso."
+  - "No verificado y dejado fuera: datos de mercado sobre la duración de ciclos de compra B2B en LATAM."
+  - "No verificado y dejado fuera: cualquier afirmación sobre cómo los asistentes de IA eligen software."

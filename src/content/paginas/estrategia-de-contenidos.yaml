@@ -1,0 +1,86 @@
+# Borrador. Redacción pendiente de revisión de Juan y Ari. Sin precios, garantías ni cifras.
+tipo: servicio
+ruta: /servicios/estrategia-de-contenidos/
+nombre: Estrategia de contenidos SEO
+grupo: contenido
+draft: true
+publishAt: 2026-12-17
+title: "Estrategia de contenidos SEO: clusters y calendario"
+description: "Estrategia de contenidos SEO en español: clusters por tema, calendario editorial y un criterio claro para decidir qué escribir primero."
+h1: "Estrategia de contenidos SEO con clusters y calendario editorial"
+intro: |
+  Publicar artículos sueltos rara vez construye autoridad. Una estrategia de contenidos SEO agrupa tus temas en clusters, define qué se escribe primero y fija un calendario que tu equipo puede cumplir.
+
+  En Loops Growth la armamos a partir del [mapa de palabras clave](/servicios/investigacion-de-palabras-clave/) y la revisamos contigo, porque nadie conoce tu negocio mejor que tú. Trabajamos en español para empresas de LATAM.
+secciones:
+  - titulo: Clusters por tema
+    cuerpo: |
+      Un cluster es un grupo de páginas que cubren un tema desde varios ángulos y se enlazan entre sí. Una página principal explica el tema completo y varios artículos más específicos responden las preguntas concretas que tiene tu cliente. Ese orden ayuda a las personas a seguir leyendo y ayuda a Google a entender de qué trata tu sitio.
+
+      Un ejemplo para una tienda de café de especialidad: una página principal sobre métodos de preparación y artículos separados sobre cada método, sobre molienda y sobre cómo conservar el grano. Cada artículo enlaza a la página principal y entre sí cuando tiene sentido.
+
+      Google indica que cada página importante debería recibir al menos un enlace desde otra página del sitio, según su documentación sobre [enlaces rastreables](https://developers.google.com/search/docs/crawling-indexing/links-crawlable). Los clusters hacen que eso ocurra por diseño.
+  - titulo: Cómo decidimos qué escribir primero
+    cuerpo: |
+      No todo tema merece el primer turno. Ordenamos las piezas con cuatro criterios que revisamos contigo:
+
+      - Cercanía con lo que vendes: un tema que lleva a una consulta pesa más que uno que solo trae curiosos.
+      - Base que ya tienes: si el sitio ya posiciona algo cercano, ese tema avanza más rápido.
+      - Competencia en los resultados: dejamos para después lo que hoy está dominado por sitios muy fuertes.
+      - Esfuerzo de producción: una pieza que exige entrevistas o datos propios necesita más tiempo de preparación.
+
+      El resultado es una lista priorizada, no una intuición. Si quieres entender cómo se valora una propuesta de este tipo, lee [cómo elegir una agencia SEO](/blog/como-elegir-una-agencia-seo/) y las [preguntas para hacer a una agencia SEO](/blog/preguntas-para-hacer-a-una-agencia-seo/).
+  - titulo: Calendario editorial realista
+    cuerpo: |
+      Un calendario ambicioso que nadie cumple es peor que uno modesto que sí sale. Fijamos el ritmo según el equipo que revisa y aprueba, no según lo que sería ideal. Cada pieza tiene fecha, responsable, frase principal, ángulo propio y enlaces que debe incluir.
+
+      Cuando una pieza ya existe, el calendario también la considera. Algunas se actualizan, otras se unen con una más fuerte, como se explica en la [optimización de contenido existente](/servicios/optimizacion-de-contenido-existente/). La producción de lo nuevo se apoya en la [redacción de artículos SEO](/servicios/redaccion-de-articulos-seo/).
+  - titulo: Revisión por quien conoce el negocio
+    cuerpo: |
+      Un artículo correcto en teoría puede decir algo falso sobre tu empresa. Por eso cada pieza pasa por una persona que conoce tu oferta antes de publicarse. Google pregunta en su guía de [contenido útil](https://developers.google.com/search/docs/fundamentals/creating-helpful-content) si el contenido está escrito o revisado por alguien que demuestra conocer bien el tema, y diseñamos el flujo de revisión con esa pregunta en mente.
+
+      Tú decides qué se publica. Nosotros preparamos, ordenamos y damos seguimiento.
+senales:
+  - "Publicas cuando se acuerdan, sin un calendario ni un criterio para elegir los temas."
+  - "Tienes muchos artículos, pero ninguno parece apoyar a los demás ni llevar a un servicio."
+  - "No sabes qué tema escribir primero y decides por el que más te gusta."
+  - "Tu equipo comercial responde las mismas dudas una y otra vez y esas respuestas no están en tu web."
+  - "Tu blog creció sin estructura y hoy es difícil encontrar lo importante."
+entregables:
+  - titulo: Mapa de clusters
+    texto: Los temas de tu negocio agrupados en páginas principales y artículos de apoyo, con la relación de enlaces entre ellos.
+  - titulo: Lista priorizada de piezas
+    texto: Cada pieza con su frase, su ángulo propio y el motivo por el que ocupa ese lugar en el orden de trabajo.
+  - titulo: Calendario editorial
+    texto: Fechas, responsables y enlaces obligatorios de cada pieza, ajustados a la capacidad real de tu equipo.
+  - titulo: Flujo de revisión
+    texto: Quién revisa qué antes de publicar, con una lista de verificación para que ninguna pieza salga sin aprobación.
+  - titulo: Guía de voz y criterios
+    texto: Un documento corto con el tono, los temas que no se tocan y las reglas de fuentes y enlaces para cualquier redactor.
+proceso:
+  - titulo: Partir del mapa de frases
+    texto: Usamos el mapa de palabras clave como base y revisamos qué temas ya cubre tu sitio y cuáles faltan.
+  - titulo: Armar los clusters
+    texto: Agrupamos los temas, definimos la página principal de cada grupo y los artículos que la apoyan.
+  - titulo: Priorizar con tu equipo
+    texto: Aplicamos los criterios de orden y ajustamos contigo lo que no encaja con tu oferta o tus tiempos.
+  - titulo: Fijar el calendario y la revisión
+    texto: Cerramos fechas, responsables y el flujo de aprobación, y dejamos todo en un documento que tu equipo usa.
+faq:
+  - pregunta: "¿Cuántos artículos necesito publicar por mes?"
+    respuesta: |
+      Depende de quién escribe, quién revisa y qué tan específico sea el tema. No existe un número mágico. Definimos un ritmo que tu equipo pueda sostener y lo ajustamos con el tiempo. Una cadencia menor con buena calidad rinde más que una mayor que se abandona.
+  - pregunta: "¿Qué pasa si ya tengo un blog con muchos artículos?"
+    respuesta: |
+      Primero revisamos lo que existe. Algunas piezas se actualizan o se unen y otras sirven de base para un cluster, como se detalla en la [optimización de contenido existente](/servicios/optimizacion-de-contenido-existente/). No partimos de cero si no hace falta.
+  - pregunta: "¿Quién decide qué se publica?"
+    respuesta: |
+      Tú. Nosotros proponemos el orden y preparamos las piezas, pero cada texto pasa por tu revisión antes de salir. Para ver cómo se evalúa una relación así, mira las [preguntas para hacer a una agencia SEO](/blog/preguntas-para-hacer-a-una-agencia-seo/).
+  - pregunta: "¿Incluye escribir los artículos?"
+    respuesta: |
+      La estrategia define qué escribir y cuándo. La producción de cada pieza es el trabajo de [redacción de artículos SEO](/servicios/redaccion-de-articulos-seo/). Puedes contratar la estrategia sola y escribir con tu equipo, o trabajar ambas cosas juntas.
+pendientes:
+  - "Juan o Ari: confirmar que Loops presta este servicio."
+  - "Ari: confirmar que el flujo de revisión y la guía de voz se entregan hoy como se describe."
+  - "Ari: validar el ejemplo de la tienda de café, que es ilustrativo y no un caso real."
+  - "No verificado y dejado fuera: cualquier afirmación sobre frecuencia ideal de publicación, o sobre cuánto tardan los clusters en rendir."

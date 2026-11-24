@@ -1,0 +1,80 @@
+# Borrador. Página AEO de México: ángulo propio = Gemini por delante de ChatGPT en la medición de StatCounter,
+# AI Overviews disponibles en México en español y asistentes de IA dentro de WhatsApp Business. Hechos con fuente https
+# leídos el 2026-11-24 (docs/seo/investigacion/mexico.md, sección B).
+tipo: pais
+familia: aeo
+nombre: México
+draft: true
+publishAt: 2027-04-08
+title: "Agencia AEO en México: aparece en respuestas de IA | Loops Growth"
+description: "Agencia AEO en México: optimizamos tu información para las respuestas de asistentes de IA como Gemini y ChatGPT. Trabajo remoto con reportes por escrito."
+h1: "Agencia AEO en México para aparecer en las respuestas de la IA"
+intro: |
+  AEO significa optimizar tu información para que los asistentes de IA, como Gemini, ChatGPT o las respuestas de IA de Google, la encuentren y la usen cuando alguien les pregunta algo. Esta página explica cómo hacemos ese trabajo con empresas de México desde Loops Growth, un equipo remoto que ejecuta SEO y posicionamiento en IA en español.
+
+  Hoy casi nadie en México busca el servicio con esa sigla. La gente busca "aparecer en ChatGPT" o "salir en las respuestas de IA", y así lo explicamos aquí. Ningún equipo puede asegurar que una IA te mencione, pero sí puedes preparar tu contenido para que tenga mejores opciones de hacerlo.
+secciones:
+  - titulo: En México la IA de Google va delante de ChatGPT
+    cuerpo: |
+      En octubre de 2026, StatCounter registró en México una cuota de uso entre chatbots de 53,51 % para Google Gemini, 35,53 % para ChatGPT, 6,06 % para Perplexity, 3,55 % para Microsoft Copilot y 1,2 % para Claude. La cifra mide visitas de referencia entre chatbots, no cantidad de personas, pero marca un orden claro.
+
+      Si quieres que te citen, preparar contenido solo para ChatGPT deja fuera a más de la mitad del uso medido. Nuestro orden de trabajo parte de Gemini y de las respuestas de Google, y suma después ChatGPT y Perplexity. Las cuotas cambian cada mes, así que las revisamos cada cierto tiempo y ajustamos las prioridades con ellas.
+  - titulo: Las vistas con IA de Google ya funcionan en México y en español
+    cuerpo: |
+      La página de ayuda de Google sobre las vistas creadas por IA lista a México entre los países con disponibilidad y el español entre los idiomas admitidos. El Modo IA, además, aparece disponible en móviles de todas las regiones. Google no dice con qué frecuencia aparecen, así que no lo damos por hecho en cada búsqueda.
+
+      Para quien quiere ser citado, eso significa que una respuesta clara, bien estructurada y con datos del negocio fáciles de leer tiene un lugar donde competir. Nadie decide por Google qué fuentes usa, pero sí puedes facilitar la lectura. Hay un paso a paso en esta guía sobre [cómo aparecer en AI Overviews](/blog/como-aparecer-en-ai-overviews/) y trabajamos esa línea con el servicio de [optimización para AI Overviews](/servicios/optimizacion-para-ai-overviews/).
+  - titulo: Los asistentes ya viven dentro de WhatsApp Business
+    cuerpo: |
+      Según una nota de ITSitio del 6 de noviembre de 2025, Meta anunció el 3 de noviembre que México fue el primer país del mundo en lanzar asistentes de IA integrados en WhatsApp Business, capaces de responder sobre productos, horarios y políticas con base en el perfil y el catálogo del negocio. La misma nota añade que más del 80 % de los pequeños negocios del país usa la plataforma.
+
+      Tu información queda entonces repartida en dos lugares: tu sitio y tu perfil de mensajería. Si se contradicen, la IA puede repetir cualquiera de las dos versiones. Revisamos que horarios, servicios y políticas digan lo mismo en ambos y que tu catálogo use el vocabulario que tu cliente escribe, no el interno de tu empresa.
+  - titulo: Cómo trabajamos el AEO con empresas de México
+    cuerpo: |
+      Empezamos por una revisión de cómo responden hoy los asistentes cuando alguien pregunta por tu categoría, para saber desde dónde partes. Después ordenamos tus páginas para que cada pregunta importante tenga una respuesta directa, ajustamos los datos estructurados y medimos qué menciones aparecen con el servicio de [medición de menciones en IA](/servicios/medicion-de-menciones-en-ia/).
+
+      Para ChatGPT y Perplexity usamos la línea de [optimización para ChatGPT y Perplexity](/servicios/optimizacion-para-chatgpt-y-perplexity/). Si quieres el concepto completo antes de decidir, lee [qué es AEO](/blog/que-es-aeo/). El trabajo parte de una base de SEO sólida, que puedes ver en la página de [Agencia SEO en México](/agencia-seo-mexico/).
+remoto_titulo: Trabajo remoto en todo México
+ciudades:
+  - nombre: Ciudad de México
+  - nombre: Monterrey
+  - nombre: Guadalajara
+remoto:
+  - titulo: Por videollamada
+    texto: Las reuniones de arranque y de seguimiento se hacen por videollamada, sin traslados ni husos horarios complicados.
+  - titulo: Avance por escrito
+    texto: Cada mes compartimos por escrito qué se hizo y qué se movió, para que lo revises con tu equipo.
+  - titulo: Misma estrategia en todo el país
+    texto: Atendemos negocios de Ciudad de México, Monterrey, Guadalajara y del resto de México con el mismo método.
+hechos:
+  - dato: "En octubre de 2026, StatCounter registró en México una cuota de chatbots de IA de 53,51 % para Google Gemini, 35,53 % para ChatGPT, 6,06 % para Perplexity, 3,55 % para Microsoft Copilot y 1,2 % para Claude."
+    fuente: https://gs.statcounter.com/ai-chatbot-market-share/all/mexico
+  - dato: "La página de ayuda de Google sobre las vistas creadas por IA lista a México entre los países con disponibilidad y el español entre los idiomas admitidos."
+    fuente: https://support.google.com/websearch/answer/14901683?hl=es-419
+  - dato: "Según el estudio 2026 de la Asociación de Internet MX, citado por DPL News, el 50 % de los internautas mexicanos usa una aplicación de IA y el 43 % dice no usar ninguna."
+    fuente: https://dplnews.com/usuarios-de-internet-en-mexico-ya-usa-inteligencia-artificial-aimx/
+  - dato: "El Estudio de Venta Online 2026 de AMVO indica que la IA se percibe ahora como un asistente de ventas, valorada por resolver dudas de forma inmediata y ayudar a encontrar ofertas personalizadas."
+    fuente: https://images.produ.com/wp-content/uploads/2026/03/12132700/AMVO_Estudio-de-Venta-Online-2026-Prensa-1_compressed.pdf
+  - dato: "Meta anunció el 3 de noviembre de 2025 que México fue el primer país en lanzar asistentes de IA integrados en WhatsApp Business, según una nota de ITSitio."
+    fuente: https://www.itsitio.com/mx/inteligencia-artificial/whatsapp-business-activa-ia-en-mexico-asi-pueden-usarla-los-negocios/
+faq:
+  - pregunta: "¿Qué es AEO dicho en palabras sencillas?"
+    respuesta: |
+      Es el trabajo de dejar tu información clara y fácil de usar para los asistentes de IA, de modo que puedan tomarla cuando alguien les hace una pregunta sobre tu tema. Puedes verlo como el paso siguiente al SEO, no como un reemplazo. Hay una explicación completa en [qué es AEO](/blog/que-es-aeo/).
+  - pregunta: "¿Por qué hablan de Gemini antes que de ChatGPT en México?"
+    respuesta: |
+      Porque en la medición de StatCounter de octubre de 2026 Gemini concentró más cuota que ChatGPT entre los chatbots en México. La medición cambia cada mes y mide visitas de referencia, no personas, así que la usamos como señal y no como regla fija.
+  - pregunta: "¿Pueden asegurar que ChatGPT o Gemini mencionen mi empresa?"
+    respuesta: |
+      No. Ningún equipo controla lo que responde un asistente de IA. Lo que sí hacemos es ordenar tu información, mejorar cómo se entiende y medir cada mes si empiezan a mencionarte.
+  - pregunta: "¿Hace falta tener SEO antes de trabajar el AEO?"
+    respuesta: |
+      Ayuda mucho, porque las respuestas de IA suelen apoyarse en páginas que ya se pueden rastrear y entender. Si tu sitio tiene problemas técnicos, los resolvemos primero o a la par.
+pendientes:
+  - "Revisar: la cuota de chatbots de StatCounter es de octubre de 2026 y cambia cada mes. Releer antes de publicar. Mide visitas de referencia entre chatbots, no usuarios."
+  - "Revisar: 50 % y 43 % del estudio AIMX 2026 salen de notas de prensa (DPL News y Cronista), no del estudio original."
+  - "Revisar: la nota de ITSitio atribuye a Meta el anuncio del 3 de noviembre de 2025 y el 80 % de pequeños negocios en WhatsApp; no se abrió el comunicado original de Meta."
+  - "Revisar: la página de ayuda de Google no muestra fecha de publicación; leída el 24 de noviembre de 2026."
+  - "Revisar: la baja demanda del término AEO en México (frase de la intro) sale de datos internos de Ahrefs, no citables como cifra pública."
+  - "Juan o Ari: confirmar que Loops presta optimización para respuestas de IA y que 'videollamada y reportes escritos' describe el modo de trabajo."
+  - "Juan o Ari: clientes de México que se puedan mencionar (hoy ninguno)."

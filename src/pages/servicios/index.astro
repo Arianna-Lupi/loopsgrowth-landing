@@ -1,0 +1,72 @@
+---
+/**
+ * Índice de servicios `/servicios/`. Lista solo los servicios publicados en este build, agrupados. Sin servicios
+ * publicados la página no se genera (el menú solo enlaza a rutas que existen).
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Crumbs from '../../components/landing/Crumbs.astro';
+import Closing from '../../components/landing/Closing.astro';
+import { getPaginas } from '../../lib/paginas';
+import { buildBreadcrumb } from '../../lib/seo';
+import { siteUrl } from '../../lib/site';
+
+const GRUPOS: Record<string, string> = {
+  ia: 'Posicionamiento en IA',
+  tecnico: 'SEO técnico',
+  contenido: 'SEO de contenido',
+  autoridad: 'Autoridad y enlaces',
+  negocio: 'Por tipo de negocio',
+};
+const servicios = (await getPaginas()).filter((p) => p.data.tipo === 'servicio');
+if (servicios.length === 0) throw new Error('Sin servicios publicados no existe /servicios/.');
+const grupos = Object.entries(GRUPOS)
+  .map(([id, nombre]) => ({ id, nombre, items: servicios.filter((s) => (s.data.grupo ?? 'ia') === id).sort((a, b) => a.data.nombre.localeCompare(b.data.nombre, 'es')) }))
+  .filter((g) => g.items.length > 0);
+const base = siteUrl.replace(/\/+$/, '');
+const crumbs = [{ name: 'Inicio', path: '/' }, { name: 'Servicios', path: '/servicios/' }];
+const schema = { '@context': 'https://schema.org', '@graph': [buildBreadcrumb(base, crumbs, `${base}/servicios/`)] };
+---
+
+<BaseLayout reveal title="Servicios de SEO y posicionamiento en IA | Loops Growth" description="Servicios de SEO técnico, contenido, autoridad y posicionamiento en IA para empresas de LATAM. Elige el que tu negocio necesita ahora." path="/servicios/" schema={schema}>
+  <section class="index" data-tone="light" aria-labelledby="idx-title">
+    <div class="wrap">
+      <Crumbs crumbs={crumbs} />
+      <h1 id="idx-title" data-rv>Servicios de SEO y posicionamiento en IA</h1>
+      <p class="lead" data-rv>Trabajamos SEO y posicionamiento en IA como una sola estrategia. Estos son los servicios que puedes contratar por separado o combinar.</p>
+      {
+        grupos.map((g) => (
+          <div class="group">
+            <h2 data-rv>{g.nombre}</h2>
+            <ul class="cards" role="list">
+              {g.items.map((s) => (
+                <li data-rv>
+                  <a href={s.data.ruta}>
+                    <h3>{s.data.nombre}</h3>
+                    <p>{s.data.description}</p>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+  <Closing tone="purple" title="¿No sabes cuál necesitas?" text="Agenda una llamada con el equipo de Loops Growth y revisamos tu caso para decidir por dónde empezar." />
+</BaseLayout>
+
+<style>
+  .index { padding-block: var(--section-y); }
+  h1 { max-width: 20ch; letter-spacing: -0.03em; text-wrap: balance; }
+  .lead { max-width: 58ch; margin-top: 1rem; font-size: var(--text-title); }
+  .group { margin-top: 3rem; }
+  .group h2 { margin-bottom: 1rem; }
+  .cards { display: grid; gap: 1rem; margin: 0; padding: 0; list-style: none; }
+  .cards a { display: grid; gap: 0.5rem; height: 100%; padding: 1.25rem; border: var(--border-pop); border-radius: var(--radius-card); background: var(--color-brand-white); color: var(--color-brand-dark); text-decoration: none; }
+  .cards a:hover h3 { text-decoration: underline; text-underline-offset: 4px; }
+  .cards a:focus-visible { outline: var(--focus-width) solid var(--focus-ring); outline-offset: var(--focus-offset); }
+  .cards h3 { color: inherit; }
+  .cards p { margin: 0; }
+  @media (min-width: 40em) { .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (min-width: 64em) { .cards { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+</style>

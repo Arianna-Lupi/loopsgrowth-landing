@@ -1,0 +1,85 @@
+# Borrador. Sin precios, garantía, cifras ni casos. Publicar exige draft: false y reviewedBy.
+tipo: servicio
+ruta: /servicios/seo-local-y-google-business-profile/
+nombre: SEO local y Google Business Profile
+grupo: negocio
+publishAt: 2027-06-15
+draft: true
+title: "SEO local y Google Business Profile para negocios con ubicación"
+description: "SEO local para negocios con ubicación física: ficha de Google, datos de contacto coherentes y páginas por ciudad sin duplicar. Qué trabajamos y qué recibes."
+h1: "SEO local y Google Business Profile para negocios con ubicación"
+intro: |
+  Cuando alguien busca "dentista cerca de mí" o "taller mecánico en Valencia", Google responde con un mapa, tres o cuatro fichas y una lista de páginas. Si tu negocio atiende en un local o visita a sus clientes, esa ficha es muchas veces tu primera impresión.
+
+  En Loops Growth trabajamos el SEO local de negocios con ubicación: ordenamos tu ficha de Google Business Profile, hacemos coherentes tus datos de contacto en toda la web y construimos páginas por ciudad que aporten algo propio. Lo hacemos en español para negocios de LATAM.
+secciones:
+  - titulo: Cómo decide Google qué negocio mostrar
+    cuerpo: |
+      Google explica que los resultados locales se basan principalmente en [relevancia, distancia y prominencia](https://support.google.com/business/answer/7091). La relevancia mide qué tan bien tu ficha coincide con lo que alguien busca. La distancia depende de dónde está la persona. La prominencia refleja qué tan conocido es el negocio, y Google menciona que influyen los enlaces de otros sitios web y otros factores de reconocimiento del negocio.
+
+      Google también aclara que no hay forma de pedir ni de pagar por una mejor posición local. Lo que sí controlas es la calidad y la coherencia de lo que publicas, y eso es donde trabajamos.
+  - titulo: La ficha de Google, bien hecha
+    cuerpo: |
+      Las [pautas de Google Business Profile](https://support.google.com/business/answer/3038177) fijan reglas claras que conviene revisar antes de tocar nada:
+
+      - El negocio debe tener un local que reciba clientes o ir hasta ellos. Los buzones remotos y los espacios virtuales sin atención real no sirven para crear una ficha.
+      - Cada local tiene una sola ficha, y el nombre debe ser el que usas en el mundo real, sin frases promocionales ni palabras añadidas.
+      - Los negocios que visitan al cliente sin atender en un local usan una ficha de área de servicio. Si trabajas desde casa, puedes ocultar la ubicación en la ficha.
+
+      Revisamos tu ficha contra esas pautas, corregimos lo que las incumple y completamos categorías, horarios, servicios y fotos reales. Por eso esta revisión va primero.
+  - titulo: Datos de contacto coherentes
+    cuerpo: |
+      Tu ubicación, teléfono y nombre aparecen en la ficha, en tu sitio, en directorios y en redes. Cuando no coinciden, Google tiene que adivinar cuál es el correcto. Hacemos un inventario de dónde aparecen tus datos de contacto y unificamos la forma de escribirlos.
+
+      En tu sitio, marcamos esos datos con datos estructurados. Google documenta que el tipo [LocalBusiness](https://developers.google.com/search/docs/appearance/structured-data/local-business) exige como mínimo el nombre y la ubicación, y recomienda incluir tantas propiedades como sea posible. Los datos marcados deben coincidir con lo que la persona ve en la página.
+  - titulo: Páginas por ciudad sin duplicar
+    cuerpo: |
+      Si atiendes en varias ciudades, la tentación es copiar una página y cambiar el nombre de la ciudad. Esa práctica produce páginas casi idénticas que no ayudan a quien busca ni a Google. Cada página de ciudad necesita algo propio: el equipo que atiende allí, los servicios que sí se ofrecen en esa zona, preguntas habituales de los clientes locales, cómo llegar.
+
+      Decidimos contigo en qué ciudades vale la pena una página y en cuáles basta con la ficha. Esas páginas se enlazan desde tus servicios y se apoyan en una [investigación de palabras clave](/servicios/investigacion-de-palabras-clave/) por ciudad. Si vendes también en línea, mira [SEO para ecommerce](/servicios/seo-para-ecommerce/). Para empresas de software, mira [SEO para SaaS B2B](/servicios/seo-para-saas-b2b/).
+senales:
+  - Tu ficha de Google tiene datos incompletos, un nombre distinto al de tu local o categorías mal elegidas.
+  - El teléfono o la ubicación cambian de un directorio a otro.
+  - Atiendes en varias ciudades pero tu web tiene una sola página genérica.
+  - Un competidor cercano aparece en el mapa y tú no, buscando lo mismo.
+  - No sabes cuántas llamadas o visitas a tu local vienen de Google.
+entregables:
+  - titulo: Revisión de la ficha contra las pautas
+    texto: Comparamos tu ficha con las pautas de Google Business Profile y corregimos nombre, categorías, horarios y servicios.
+  - titulo: Inventario de datos de contacto
+    texto: Una tabla con todos los sitios donde aparece tu negocio y la versión unificada de cada dato.
+  - titulo: Datos estructurados del negocio
+    texto: Marcado LocalBusiness en tu sitio que coincide con lo que muestra la página, listo para tu desarrollador.
+  - titulo: Plan de páginas por ciudad
+    texto: Qué ciudades tienen página propia, qué contenido único lleva cada una y cómo se enlazan con tus servicios.
+  - titulo: Seguimiento mensual
+    texto: Un reporte de visitas a la ficha y a las páginas locales, con los cambios del mes y lo que sigue.
+proceso:
+  - titulo: Verificar que el negocio califica
+    texto: Revisamos que tu negocio cumpla las pautas de Google, incluido si necesita una ficha de local o de área de servicio.
+  - titulo: Inventario de datos
+    texto: Buscamos todas las apariciones de tu nombre, ubicación y teléfono, y marcamos las inconsistencias.
+  - titulo: Corrección de ficha y directorios
+    texto: Actualizamos la ficha y los directorios con la versión unificada de tus datos de contacto.
+  - titulo: Páginas locales
+    texto: Escribimos las páginas por ciudad con información propia de cada una, sin copiar plantillas.
+  - titulo: Seguimiento
+    texto: Revisamos cada mes qué muestra la ficha y qué muestran las páginas locales, y ajustamos el plan.
+faq:
+  - pregunta: "¿Puedo tener una ficha de Google si trabajo desde casa?"
+    respuesta: |
+      Sí, si visitas a tus clientes. Según las pautas de Google, un negocio que trabaja desde casa puede ocultar su ubicación y usar una ficha de área de servicio. Lo que no sirve es un buzón remoto o un espacio virtual donde no atiendes. Revisamos cuál es tu caso antes de crear nada.
+  - pregunta: "¿Se puede pagar a Google para salir primero en el mapa?"
+    respuesta: |
+      No. Google afirma que no existe forma de pedir ni pagar por una mejor posición local. Lo que sí se trabaja es la relevancia, la coherencia de tus datos y la presencia de tu negocio en la web. Empieza por tu [investigación de palabras clave](/servicios/investigacion-de-palabras-clave/) local.
+  - pregunta: "¿Necesito una página por cada ciudad?"
+    respuesta: |
+      Solo si tienes algo propio que decir en cada una. Si atiendes en tres ciudades con el mismo servicio y sin diferencias, una página bien hecha con la ficha de cada local suele bastar. Una página copiada y adaptada empeora la situación. Mira también el [SEO para ecommerce](/servicios/seo-para-ecommerce/) si compartes catálogo entre ciudades.
+  - pregunta: "¿Qué pasa si mi negocio no tiene local?"
+    respuesta: |
+      Entonces probablemente no te corresponde una ficha de local. Si vendes solo en línea, el trabajo se parece más a un SEO general. Si tienes software para empresas, revisa el [SEO para SaaS B2B](/servicios/seo-para-saas-b2b/).
+pendientes:
+  - "Juan o Ari: confirmar que Loops presta este servicio de SEO local y Google Business Profile."
+  - "Ari: confirmar si Loops gestiona directamente la ficha del cliente o solo entrega las correcciones."
+  - "No verificado y dejado fuera: el peso de cada factor de prominencia más allá de lo que Google menciona."
+  - "No verificado y dejado fuera: límites de ciudades o de distancia para fichas de área de servicio, salvo lo que cita la pauta de Google."

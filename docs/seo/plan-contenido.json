@@ -1,0 +1,812 @@
+{
+ "servicios": [
+  {
+   "id": "auditoria-seo-tecnica",
+   "grupo": "tecnico",
+   "keyword": "auditoría seo técnica",
+   "angulo": "Diagnóstico por plantillas de página, no URL por URL; informe priorizado por impacto y esfuerzo; qué se revisa en rastreo, indexación, velocidad y datos estructurados.",
+   "publishAt": "2026-12-01",
+   "enlaces": [
+    "/blog/cuanto-tarda-el-seo/",
+    "/blog/que-es-seo-y-como-funciona/",
+    "/servicios/core-web-vitals/",
+    "/servicios/indexacion-y-rastreo/",
+    "/servicios/migracion-seo/"
+   ]
+  },
+  {
+   "id": "core-web-vitals",
+   "grupo": "tecnico",
+   "keyword": "core web vitals",
+   "angulo": "LCP, INP y CLS con datos de campo frente a laboratorio; foco en redes móviles de LATAM y en qué cambios mueven cada métrica.",
+   "publishAt": "2027-02-02",
+   "enlaces": [
+    "/blog/como-indexar-una-pagina-en-google/",
+    "/blog/core-web-vitals-que-son/",
+    "/servicios/auditoria-seo-tecnica/",
+    "/servicios/indexacion-y-rastreo/",
+    "/servicios/migracion-seo/"
+   ]
+  },
+  {
+   "id": "indexacion-y-rastreo",
+   "grupo": "tecnico",
+   "keyword": "indexación y rastreo",
+   "angulo": "Por qué Google no indexa páginas útiles: Search Console, robots, canonicals, sitemap y presupuesto de rastreo; cómo se corrige y se vigila.",
+   "publishAt": "2027-02-09",
+   "enlaces": [
+    "/blog/como-indexar-una-pagina-en-google/",
+    "/blog/core-web-vitals-que-son/",
+    "/servicios/auditoria-seo-tecnica/",
+    "/servicios/core-web-vitals/",
+    "/servicios/migracion-seo/"
+   ]
+  },
+  {
+   "id": "migracion-seo",
+   "grupo": "tecnico",
+   "keyword": "migración seo",
+   "angulo": "Cambio de dominio, de CMS o rediseño sin perder posiciones: mapa de redirecciones, pruebas antes y después, plan de contingencia.",
+   "publishAt": "2027-04-01",
+   "enlaces": [
+    "/blog/como-indexar-una-pagina-en-google/",
+    "/blog/core-web-vitals-que-son/",
+    "/servicios/auditoria-seo-tecnica/",
+    "/servicios/core-web-vitals/",
+    "/servicios/indexacion-y-rastreo/"
+   ]
+  },
+  {
+   "id": "seo-internacional",
+   "grupo": "tecnico",
+   "keyword": "seo internacional",
+   "angulo": "Un sitio para varios países hispanos: hreflang, español neutro frente a variantes locales, estructura de URL y qué páginas se duplican o se separan.",
+   "publishAt": "2027-04-15",
+   "enlaces": [
+    "/blog/como-indexar-una-pagina-en-google/",
+    "/blog/core-web-vitals-que-son/",
+    "/servicios/auditoria-seo-tecnica/",
+    "/servicios/core-web-vitals/",
+    "/servicios/indexacion-y-rastreo/"
+   ]
+  },
+  {
+   "id": "investigacion-de-palabras-clave",
+   "grupo": "contenido",
+   "keyword": "investigación de palabras clave",
+   "angulo": "De la lista de frases a un mapa frase-página: intención, dificultad real, cómo se evita la canibalización; el entregable es un mapa, no un Excel suelto.",
+   "publishAt": "2026-12-08",
+   "enlaces": [
+    "/blog/cuanto-tarda-el-seo/",
+    "/blog/que-es-seo-y-como-funciona/",
+    "/servicios/estrategia-de-contenidos/",
+    "/servicios/optimizacion-de-contenido-existente/",
+    "/servicios/redaccion-de-articulos-seo/"
+   ]
+  },
+  {
+   "id": "estrategia-de-contenidos",
+   "grupo": "contenido",
+   "keyword": "estrategia de contenidos seo",
+   "angulo": "Clusters por tema y calendario editorial; cómo se decide qué escribir primero; revisión por quien conoce el negocio.",
+   "publishAt": "2026-12-17",
+   "enlaces": [
+    "/blog/como-elegir-una-agencia-seo/",
+    "/blog/preguntas-para-hacer-a-una-agencia-seo/",
+    "/servicios/investigacion-de-palabras-clave/",
+    "/servicios/optimizacion-de-contenido-existente/",
+    "/servicios/redaccion-de-articulos-seo/"
+   ]
+  },
+  {
+   "id": "redaccion-de-articulos-seo",
+   "grupo": "contenido",
+   "keyword": "redacción de artículos seo",
+   "angulo": "Artículos con autor visible, fuentes y revisión; cómo se evita el contenido genérico; proceso de brief, borrador y revisión.",
+   "publishAt": "2027-02-16",
+   "enlaces": [
+    "/blog/como-hacer-keyword-research/",
+    "/blog/que-es-un-topic-cluster/",
+    "/servicios/estrategia-de-contenidos/",
+    "/servicios/investigacion-de-palabras-clave/",
+    "/servicios/optimizacion-de-contenido-existente/"
+   ]
+  },
+  {
+   "id": "optimizacion-de-contenido-existente",
+   "grupo": "contenido",
+   "keyword": "optimización de contenido existente",
+   "angulo": "Actualizar, consolidar o eliminar lo que ya tienes: criterios para decidir, cómo se detecta el contenido que cayó o compite contra sí mismo.",
+   "publishAt": "2027-02-25",
+   "enlaces": [
+    "/blog/como-hacer-keyword-research/",
+    "/blog/que-es-un-topic-cluster/",
+    "/servicios/estrategia-de-contenidos/",
+    "/servicios/investigacion-de-palabras-clave/",
+    "/servicios/redaccion-de-articulos-seo/"
+   ]
+  },
+  {
+   "id": "arquitectura-web-y-enlazado-interno",
+   "grupo": "contenido",
+   "keyword": "arquitectura web y enlazado interno",
+   "angulo": "Estructura de categorías y enlaces para que Google y las personas lleguen a lo importante en pocos clics; páginas huérfanas y anclas.",
+   "publishAt": "2027-03-04",
+   "enlaces": [
+    "/blog/como-hacer-keyword-research/",
+    "/blog/que-es-un-topic-cluster/",
+    "/servicios/estrategia-de-contenidos/",
+    "/servicios/investigacion-de-palabras-clave/",
+    "/servicios/redaccion-de-articulos-seo/"
+   ]
+  },
+  {
+   "id": "link-building",
+   "grupo": "autoridad",
+   "keyword": "link building",
+   "angulo": "Enlaces que ganan por mérito: qué fuentes sirven, qué prácticas se evitan y por qué; cómo se mide la calidad sin prometer cantidades.",
+   "publishAt": "2027-01-05",
+   "enlaces": [
+    "/servicios/auditoria-de-backlinks/",
+    "/servicios/relaciones-publicas-digitales/"
+   ]
+  },
+  {
+   "id": "relaciones-publicas-digitales",
+   "grupo": "autoridad",
+   "keyword": "relaciones públicas digitales",
+   "angulo": "Menciones en medios y sitios del sector con una historia real; diferencia con el link building transaccional; sirve también para IA.",
+   "publishAt": "2027-04-29",
+   "enlaces": [
+    "/servicios/auditoria-de-backlinks/",
+    "/servicios/link-building/"
+   ]
+  },
+  {
+   "id": "auditoria-de-backlinks",
+   "grupo": "autoridad",
+   "keyword": "auditoría de backlinks",
+   "angulo": "Revisar tu perfil de enlaces y el de tus competidores; cuándo un enlace daña y cuándo no hace falta desautorizar.",
+   "publishAt": "2027-05-18",
+   "enlaces": [
+    "/servicios/link-building/",
+    "/servicios/relaciones-publicas-digitales/"
+   ]
+  },
+  {
+   "id": "optimizacion-para-ai-overviews",
+   "grupo": "ia",
+   "keyword": "optimización para ai overviews",
+   "angulo": "Cómo se prepara una página para aparecer en los resúmenes de IA de Google: lo que Google documenta y lo que no.",
+   "publishAt": "2027-01-12",
+   "enlaces": [
+    "/blog/que-es-aeo/",
+    "/blog/que-es-geo-optimizacion-para-motores-generativos/",
+    "/servicios/medicion-de-menciones-en-ia/",
+    "/servicios/optimizacion-para-chatgpt-y-perplexity/",
+    "/servicios/posicionamiento-en-ia/"
+   ]
+  },
+  {
+   "id": "optimizacion-para-chatgpt-y-perplexity",
+   "grupo": "ia",
+   "keyword": "optimización para chatgpt y perplexity",
+   "angulo": "Rastreadores de OpenAI y Perplexity, páginas citables, menciones; qué se controla y qué no en cada plataforma.",
+   "publishAt": "2027-01-21",
+   "enlaces": [
+    "/blog/que-es-aeo/",
+    "/blog/que-es-geo-optimizacion-para-motores-generativos/",
+    "/servicios/medicion-de-menciones-en-ia/",
+    "/servicios/optimizacion-para-ai-overviews/",
+    "/servicios/posicionamiento-en-ia/"
+   ]
+  },
+  {
+   "id": "medicion-de-menciones-en-ia",
+   "grupo": "ia",
+   "keyword": "medición de menciones en ia",
+   "angulo": "Batería de prompts repetida cada mes, qué se registra, cómo se lee la variabilidad de las respuestas; sin promesas.",
+   "publishAt": "2027-03-16",
+   "enlaces": [
+    "/blog/que-es-aeo/",
+    "/blog/que-es-geo-optimizacion-para-motores-generativos/",
+    "/servicios/optimizacion-para-ai-overviews/",
+    "/servicios/optimizacion-para-chatgpt-y-perplexity/",
+    "/servicios/posicionamiento-en-ia/"
+   ]
+  },
+  {
+   "id": "seo-para-ecommerce",
+   "grupo": "negocio",
+   "keyword": "seo para ecommerce",
+   "angulo": "Categorías, fichas de producto, filtros y paginación; dolor propio de tiendas con muchas URL; datos de producto.",
+   "publishAt": "2027-03-23",
+   "enlaces": [
+    "/servicios/investigacion-de-palabras-clave/",
+    "/servicios/seo-local-y-google-business-profile/",
+    "/servicios/seo-para-saas-b2b/"
+   ]
+  },
+  {
+   "id": "seo-para-saas-b2b",
+   "grupo": "negocio",
+   "keyword": "seo para saas b2b",
+   "angulo": "Ciclos de compra largos, páginas de caso de uso, integraciones y comparativas; contenido para quien evalúa y para quien decide.",
+   "publishAt": "2027-06-01",
+   "enlaces": [
+    "/servicios/investigacion-de-palabras-clave/",
+    "/servicios/seo-local-y-google-business-profile/",
+    "/servicios/seo-para-ecommerce/"
+   ]
+  },
+  {
+   "id": "seo-local-y-google-business-profile",
+   "grupo": "negocio",
+   "keyword": "seo local",
+   "angulo": "Negocios con ubicación física de los clientes de Loops: ficha de Google, coherencia de datos de contacto y páginas por ciudad sin duplicar. Nunca decir que Loops tiene oficina ni usar las palabras dirección, oficina o sede en el texto: usa 'datos de contacto' y 'ubicación'.",
+   "publishAt": "2027-06-15",
+   "enlaces": [
+    "/servicios/investigacion-de-palabras-clave/",
+    "/servicios/seo-para-ecommerce/",
+    "/servicios/seo-para-saas-b2b/"
+   ]
+  }
+ ],
+ "articulos": [
+  {
+   "id": "que-es-seo-y-como-funciona",
+   "cluster": "L6-fundamentos",
+   "keyword": "qué es seo",
+   "angulo": "Explicación desde cero con el recorrido rastreo, indexación y posicionamiento; qué es SEO frente a lo que prometen los mitos.",
+   "pubDate": "2026-12-02",
+   "enlaces": [
+    "/blog/cuanto-tarda-el-seo/",
+    "/blog/seo-vs-sem/",
+    "/servicios/auditoria-seo-tecnica/",
+    "/servicios/investigacion-de-palabras-clave/"
+   ]
+  },
+  {
+   "id": "cuanto-tarda-el-seo",
+   "cluster": "L6-fundamentos",
+   "keyword": "cuánto tarda el seo en dar resultados",
+   "angulo": "Qué factores alargan o acortan el plazo; qué se ve en el mes 1, 3 y 6 sin cifras inventadas; horizonte de 6 a 12 meses.",
+   "pubDate": "2026-12-03",
+   "enlaces": [
+    "/blog/que-es-seo-y-como-funciona/",
+    "/blog/seo-vs-sem/",
+    "/servicios/auditoria-seo-tecnica/",
+    "/servicios/investigacion-de-palabras-clave/"
+   ]
+  },
+  {
+   "id": "seo-vs-sem",
+   "cluster": "L6-fundamentos",
+   "keyword": "seo vs sem",
+   "angulo": "Diferencia práctica y cuándo conviene cada uno; cómo se combinan; sin precios.",
+   "pubDate": "2026-12-09",
+   "enlaces": [
+    "/blog/cuanto-tarda-el-seo/",
+    "/blog/que-es-seo-y-como-funciona/",
+    "/servicios/auditoria-seo-tecnica/",
+    "/servicios/investigacion-de-palabras-clave/"
+   ]
+  },
+  {
+   "id": "como-funciona-google",
+   "cluster": "L6-fundamentos",
+   "keyword": "cómo funciona google",
+   "angulo": "Rastreo, indexación y clasificación con fuentes de Google Search Central.",
+   "pubDate": "2027-02-03",
+   "enlaces": [
+    "/blog/cuanto-tarda-el-seo/",
+    "/blog/que-es-seo-y-como-funciona/",
+    "/servicios/auditoria-seo-tecnica/",
+    "/servicios/investigacion-de-palabras-clave/"
+   ]
+  },
+  {
+   "id": "que-es-search-console",
+   "cluster": "L6-fundamentos",
+   "keyword": "qué es google search console",
+   "angulo": "Guía de uso: informes que importan, cómo leerlos y errores típicos de interpretación.",
+   "pubDate": "2027-02-08",
+   "enlaces": [
+    "/blog/cuanto-tarda-el-seo/",
+    "/blog/que-es-seo-y-como-funciona/",
+    "/servicios/auditoria-seo-tecnica/",
+    "/servicios/investigacion-de-palabras-clave/"
+   ]
+  },
+  {
+   "id": "que-es-la-intencion-de-busqueda",
+   "cluster": "L6-fundamentos",
+   "keyword": "intención de búsqueda",
+   "angulo": "Los cuatro tipos con ejemplos en español de LATAM y cómo se detectan mirando la SERP.",
+   "pubDate": "2027-02-10",
+   "enlaces": [
+    "/blog/cuanto-tarda-el-seo/",
+    "/blog/que-es-seo-y-como-funciona/",
+    "/servicios/auditoria-seo-tecnica/",
+    "/servicios/investigacion-de-palabras-clave/"
+   ]
+  },
+  {
+   "id": "errores-de-seo-mas-comunes",
+   "cluster": "L6-fundamentos",
+   "keyword": "errores de seo",
+   "angulo": "Errores reales que vemos al revisar sitios; cada uno con cómo detectarlo y arreglarlo.",
+   "pubDate": "2027-04-05",
+   "enlaces": [
+    "/blog/cuanto-tarda-el-seo/",
+    "/blog/que-es-seo-y-como-funciona/",
+    "/servicios/auditoria-seo-tecnica/",
+    "/servicios/investigacion-de-palabras-clave/"
+   ]
+  },
+  {
+   "id": "como-medir-resultados-seo",
+   "cluster": "L6-fundamentos",
+   "keyword": "métricas seo",
+   "angulo": "Qué medir según el objetivo; diferencia entre tráfico, visibilidad y negocio; fuentes de datos.",
+   "pubDate": "2027-04-12",
+   "enlaces": [
+    "/blog/cuanto-tarda-el-seo/",
+    "/blog/que-es-seo-y-como-funciona/",
+    "/servicios/auditoria-seo-tecnica/",
+    "/servicios/investigacion-de-palabras-clave/"
+   ]
+  },
+  {
+   "id": "como-elegir-una-agencia-seo",
+   "cluster": "L4-eleccion",
+   "keyword": "cómo elegir una agencia seo",
+   "angulo": "Criterios verificables y cómo comprobarlos antes de firmar.",
+   "pubDate": "2026-12-15",
+   "enlaces": [
+    "/",
+    "/blog/preguntas-para-hacer-a-una-agencia-seo/",
+    "/blog/seo-in-house-vs-agencia/",
+    "/servicios/auditoria-seo-tecnica/",
+    "/servicios/estrategia-de-contenidos/"
+   ]
+  },
+  {
+   "id": "preguntas-para-hacer-a-una-agencia-seo",
+   "cluster": "L4-eleccion",
+   "keyword": "preguntas para una agencia seo",
+   "angulo": "Lista de preguntas con la respuesta que debería darte una agencia seria y señales de evasión.",
+   "pubDate": "2026-12-21",
+   "enlaces": [
+    "/",
+    "/blog/como-elegir-una-agencia-seo/",
+    "/blog/seo-in-house-vs-agencia/",
+    "/servicios/auditoria-seo-tecnica/",
+    "/servicios/estrategia-de-contenidos/"
+   ]
+  },
+  {
+   "id": "seo-in-house-vs-agencia",
+   "cluster": "L4-eleccion",
+   "keyword": "seo in house vs agencia",
+   "angulo": "Cuándo conviene equipo interno, agencia o mixto, por tamaño y madurez del negocio.",
+   "pubDate": "2027-02-11",
+   "enlaces": [
+    "/",
+    "/blog/como-elegir-una-agencia-seo/",
+    "/blog/preguntas-para-hacer-a-una-agencia-seo/",
+    "/servicios/auditoria-seo-tecnica/",
+    "/servicios/estrategia-de-contenidos/"
+   ]
+  },
+  {
+   "id": "que-incluye-un-servicio-de-seo-mensual",
+   "cluster": "L4-eleccion",
+   "keyword": "qué incluye un servicio de seo",
+   "angulo": "Actividades y entregables habituales mes a mes; qué es humo; sin cifras de inversión.",
+   "pubDate": "2027-02-17",
+   "enlaces": [
+    "/",
+    "/blog/como-elegir-una-agencia-seo/",
+    "/blog/preguntas-para-hacer-a-una-agencia-seo/",
+    "/servicios/auditoria-seo-tecnica/",
+    "/servicios/estrategia-de-contenidos/"
+   ]
+  },
+  {
+   "id": "senales-de-alerta-agencia-seo",
+   "cluster": "L4-eleccion",
+   "keyword": "señales de alerta agencia seo",
+   "angulo": "Promesas de posición garantizada, enlaces masivos, reportes vacíos; cómo reaccionar.",
+   "pubDate": "2027-02-22",
+   "enlaces": [
+    "/",
+    "/blog/como-elegir-una-agencia-seo/",
+    "/blog/preguntas-para-hacer-a-una-agencia-seo/",
+    "/servicios/auditoria-seo-tecnica/",
+    "/servicios/estrategia-de-contenidos/"
+   ]
+  },
+  {
+   "id": "como-leer-un-reporte-seo",
+   "cluster": "L4-eleccion",
+   "keyword": "reporte seo mensual",
+   "angulo": "Cómo leer un reporte mensual sin perderte; métricas de vanidad frente a métricas útiles.",
+   "pubDate": "2027-02-23",
+   "enlaces": [
+    "/",
+    "/blog/como-elegir-una-agencia-seo/",
+    "/blog/preguntas-para-hacer-a-una-agencia-seo/",
+    "/servicios/auditoria-seo-tecnica/",
+    "/servicios/estrategia-de-contenidos/"
+   ]
+  },
+  {
+   "id": "cuando-contratar-una-agencia-seo",
+   "cluster": "L4-eleccion",
+   "keyword": "cuándo contratar una agencia seo",
+   "angulo": "Momentos del negocio en que tiene sentido y momentos en que todavía no.",
+   "pubDate": "2027-04-19",
+   "enlaces": [
+    "/",
+    "/blog/como-elegir-una-agencia-seo/",
+    "/blog/preguntas-para-hacer-a-una-agencia-seo/",
+    "/servicios/auditoria-seo-tecnica/",
+    "/servicios/estrategia-de-contenidos/"
+   ]
+  },
+  {
+   "id": "que-es-geo-optimizacion-para-motores-generativos",
+   "cluster": "L2-geo",
+   "keyword": "qué es geo",
+   "angulo": "Definición, qué cambia frente al SEO y qué sigue igual; sin promesas.",
+   "pubDate": "2026-12-29",
+   "enlaces": [
+    "/blog/geo-vs-aeo-vs-seo/",
+    "/blog/que-es-aeo/",
+    "/servicios/optimizacion-para-ai-overviews/",
+    "/servicios/optimizacion-para-chatgpt-y-perplexity/",
+    "/servicios/posicionamiento-en-ia/"
+   ]
+  },
+  {
+   "id": "que-es-aeo",
+   "cluster": "L2-geo",
+   "keyword": "qué es aeo",
+   "angulo": "Optimización para respuestas: asistentes, voz, fragmentos destacados; relación con GEO.",
+   "pubDate": "2027-01-06",
+   "enlaces": [
+    "/blog/geo-vs-aeo-vs-seo/",
+    "/blog/que-es-geo-optimizacion-para-motores-generativos/",
+    "/servicios/optimizacion-para-ai-overviews/",
+    "/servicios/optimizacion-para-chatgpt-y-perplexity/",
+    "/servicios/posicionamiento-en-ia/"
+   ]
+  },
+  {
+   "id": "geo-vs-aeo-vs-seo",
+   "cluster": "L2-geo",
+   "keyword": "geo vs seo",
+   "angulo": "Tabla comparativa y cuándo aplica cada término; por qué en la práctica se trabajan juntos.",
+   "pubDate": "2027-03-01",
+   "enlaces": [
+    "/blog/que-es-aeo/",
+    "/blog/que-es-geo-optimizacion-para-motores-generativos/",
+    "/servicios/optimizacion-para-ai-overviews/",
+    "/servicios/optimizacion-para-chatgpt-y-perplexity/",
+    "/servicios/posicionamiento-en-ia/"
+   ]
+  },
+  {
+   "id": "como-aparecer-en-ai-overviews",
+   "cluster": "L2-geo",
+   "keyword": "cómo aparecer en ai overviews",
+   "angulo": "Lo que Google documenta sobre AI Overviews y qué acciones razonables siguen de ahí.",
+   "pubDate": "2027-03-02",
+   "enlaces": [
+    "/blog/que-es-aeo/",
+    "/blog/que-es-geo-optimizacion-para-motores-generativos/",
+    "/servicios/optimizacion-para-ai-overviews/",
+    "/servicios/optimizacion-para-chatgpt-y-perplexity/",
+    "/servicios/posicionamiento-en-ia/"
+   ]
+  },
+  {
+   "id": "como-aparecer-en-perplexity",
+   "cluster": "L2-geo",
+   "keyword": "cómo aparecer en perplexity",
+   "angulo": "Cómo funciona Perplexity al citar fuentes y qué puedes preparar en tu sitio.",
+   "pubDate": "2027-04-27",
+   "enlaces": [
+    "/blog/que-es-aeo/",
+    "/blog/que-es-geo-optimizacion-para-motores-generativos/",
+    "/servicios/optimizacion-para-ai-overviews/",
+    "/servicios/optimizacion-para-chatgpt-y-perplexity/",
+    "/servicios/posicionamiento-en-ia/"
+   ]
+  },
+  {
+   "id": "como-saber-si-chatgpt-menciona-tu-marca",
+   "cluster": "L2-geo",
+   "keyword": "cómo saber si chatgpt menciona mi marca",
+   "angulo": "Método paso a paso con batería de prompts y registro; variabilidad de las respuestas.",
+   "pubDate": "2027-03-08",
+   "enlaces": [
+    "/blog/que-es-aeo/",
+    "/blog/que-es-geo-optimizacion-para-motores-generativos/",
+    "/servicios/optimizacion-para-ai-overviews/",
+    "/servicios/optimizacion-para-chatgpt-y-perplexity/",
+    "/servicios/posicionamiento-en-ia/"
+   ]
+  },
+  {
+   "id": "llms-txt-sirve-para-algo",
+   "cluster": "L2-geo",
+   "keyword": "llms.txt",
+   "angulo": "Qué es llms.txt, qué dicen las plataformas sobre usarlo y por qué no es prioridad; honestidad.",
+   "pubDate": "2027-05-04",
+   "enlaces": [
+    "/blog/que-es-aeo/",
+    "/blog/que-es-geo-optimizacion-para-motores-generativos/",
+    "/servicios/optimizacion-para-ai-overviews/",
+    "/servicios/optimizacion-para-chatgpt-y-perplexity/",
+    "/servicios/posicionamiento-en-ia/"
+   ]
+  },
+  {
+   "id": "datos-estructurados-para-ia",
+   "cluster": "L2-geo",
+   "keyword": "schema para ia",
+   "angulo": "Schema y entidades: qué ayuda a que una máquina entienda quién eres, con ejemplos JSON-LD.",
+   "pubDate": "2027-05-11",
+   "enlaces": [
+    "/blog/que-es-aeo/",
+    "/blog/que-es-geo-optimizacion-para-motores-generativos/",
+    "/servicios/optimizacion-para-ai-overviews/",
+    "/servicios/optimizacion-para-chatgpt-y-perplexity/",
+    "/servicios/posicionamiento-en-ia/"
+   ]
+  },
+  {
+   "id": "core-web-vitals-que-son",
+   "cluster": "L1-tecnico",
+   "keyword": "core web vitals qué son",
+   "angulo": "LCP, INP y CLS explicados con umbrales oficiales de Google y cómo medirlos.",
+   "pubDate": "2027-01-13",
+   "enlaces": [
+    "/blog/como-indexar-una-pagina-en-google/",
+    "/blog/robots-txt-guia/",
+    "/servicios/auditoria-seo-tecnica/",
+    "/servicios/core-web-vitals/",
+    "/servicios/indexacion-y-rastreo/"
+   ]
+  },
+  {
+   "id": "como-indexar-una-pagina-en-google",
+   "cluster": "L1-tecnico",
+   "keyword": "cómo indexar una página en google",
+   "angulo": "Pasos reales, por qué a veces no se indexa y qué no sirve.",
+   "pubDate": "2027-01-14",
+   "enlaces": [
+    "/blog/core-web-vitals-que-son/",
+    "/blog/robots-txt-guia/",
+    "/servicios/auditoria-seo-tecnica/",
+    "/servicios/core-web-vitals/",
+    "/servicios/indexacion-y-rastreo/"
+   ]
+  },
+  {
+   "id": "robots-txt-guia",
+   "cluster": "L1-tecnico",
+   "keyword": "robots.txt",
+   "angulo": "Sintaxis, ejemplos, errores que bloquean tu sitio y relación con rastreadores de IA.",
+   "pubDate": "2027-03-09",
+   "enlaces": [
+    "/blog/como-indexar-una-pagina-en-google/",
+    "/blog/core-web-vitals-que-son/",
+    "/servicios/auditoria-seo-tecnica/",
+    "/servicios/core-web-vitals/",
+    "/servicios/indexacion-y-rastreo/"
+   ]
+  },
+  {
+   "id": "sitemap-xml-guia",
+   "cluster": "L1-tecnico",
+   "keyword": "sitemap xml",
+   "angulo": "Qué es, qué incluir y excluir, cómo enviarlo en Search Console.",
+   "pubDate": "2027-03-11",
+   "enlaces": [
+    "/blog/como-indexar-una-pagina-en-google/",
+    "/blog/core-web-vitals-que-son/",
+    "/servicios/auditoria-seo-tecnica/",
+    "/servicios/core-web-vitals/",
+    "/servicios/indexacion-y-rastreo/"
+   ]
+  },
+  {
+   "id": "etiqueta-canonical-y-contenido-duplicado",
+   "cluster": "L1-tecnico",
+   "keyword": "etiqueta canonical",
+   "angulo": "Cuándo usar canonical, casos de contenido duplicado y errores frecuentes.",
+   "pubDate": "2027-05-20",
+   "enlaces": [
+    "/blog/como-indexar-una-pagina-en-google/",
+    "/blog/core-web-vitals-que-son/",
+    "/servicios/auditoria-seo-tecnica/",
+    "/servicios/core-web-vitals/",
+    "/servicios/indexacion-y-rastreo/"
+   ]
+  },
+  {
+   "id": "redirecciones-301-guia",
+   "cluster": "L1-tecnico",
+   "keyword": "redirección 301",
+   "angulo": "301 frente a 302, cadenas de redirecciones y cómo planear una migración.",
+   "pubDate": "2027-05-27",
+   "enlaces": [
+    "/blog/como-indexar-una-pagina-en-google/",
+    "/blog/core-web-vitals-que-son/",
+    "/servicios/auditoria-seo-tecnica/",
+    "/servicios/core-web-vitals/",
+    "/servicios/indexacion-y-rastreo/"
+   ]
+  },
+  {
+   "id": "hreflang-para-sitios-en-espanol",
+   "cluster": "L1-tecnico",
+   "keyword": "hreflang",
+   "angulo": "Cómo se marca el español de México, Colombia o Venezuela; errores comunes.",
+   "pubDate": "2027-06-03",
+   "enlaces": [
+    "/blog/como-indexar-una-pagina-en-google/",
+    "/blog/core-web-vitals-que-son/",
+    "/servicios/auditoria-seo-tecnica/",
+    "/servicios/core-web-vitals/",
+    "/servicios/indexacion-y-rastreo/"
+   ]
+  },
+  {
+   "id": "como-hacer-keyword-research",
+   "cluster": "L3-contenido",
+   "keyword": "cómo hacer keyword research",
+   "angulo": "Método paso a paso con herramientas gratuitas y de pago; sin cifras inventadas.",
+   "pubDate": "2027-01-25",
+   "enlaces": [
+    "/blog/enlazado-interno-seo/",
+    "/blog/que-es-un-topic-cluster/",
+    "/servicios/estrategia-de-contenidos/",
+    "/servicios/investigacion-de-palabras-clave/",
+    "/servicios/redaccion-de-articulos-seo/"
+   ]
+  },
+  {
+   "id": "que-es-un-topic-cluster",
+   "cluster": "L3-contenido",
+   "keyword": "topic cluster",
+   "angulo": "Pilares y satélites explicados con un ejemplo de sitio de servicios.",
+   "pubDate": "2027-03-17",
+   "enlaces": [
+    "/blog/como-hacer-keyword-research/",
+    "/blog/enlazado-interno-seo/",
+    "/servicios/estrategia-de-contenidos/",
+    "/servicios/investigacion-de-palabras-clave/",
+    "/servicios/redaccion-de-articulos-seo/"
+   ]
+  },
+  {
+   "id": "enlazado-interno-seo",
+   "cluster": "L3-contenido",
+   "keyword": "enlazado interno seo",
+   "angulo": "Reglas prácticas de anclas, profundidad y páginas huérfanas.",
+   "pubDate": "2027-03-18",
+   "enlaces": [
+    "/blog/como-hacer-keyword-research/",
+    "/blog/que-es-un-topic-cluster/",
+    "/servicios/estrategia-de-contenidos/",
+    "/servicios/investigacion-de-palabras-clave/",
+    "/servicios/redaccion-de-articulos-seo/"
+   ]
+  },
+  {
+   "id": "que-es-link-building",
+   "cluster": "L3-contenido",
+   "keyword": "qué es link building",
+   "angulo": "Qué es, qué prácticas están contra las políticas de Google y alternativas.",
+   "pubDate": "2027-06-16",
+   "enlaces": [
+    "/blog/como-hacer-keyword-research/",
+    "/blog/que-es-un-topic-cluster/",
+    "/servicios/estrategia-de-contenidos/",
+    "/servicios/investigacion-de-palabras-clave/",
+    "/servicios/redaccion-de-articulos-seo/"
+   ]
+  },
+  {
+   "id": "como-redactar-un-articulo-seo",
+   "cluster": "L3-contenido",
+   "keyword": "cómo redactar un artículo seo",
+   "angulo": "Estructura, intención, fuentes y revisión; cómo evitar el texto genérico.",
+   "pubDate": "2027-06-22",
+   "enlaces": [
+    "/blog/como-hacer-keyword-research/",
+    "/blog/que-es-un-topic-cluster/",
+    "/servicios/estrategia-de-contenidos/",
+    "/servicios/investigacion-de-palabras-clave/",
+    "/servicios/redaccion-de-articulos-seo/"
+   ]
+  },
+  {
+   "id": "seo-en-venezuela",
+   "cluster": "L5-mercados",
+   "keyword": "seo en venezuela",
+   "angulo": "Cómo busca y compra el usuario venezolano con datos verificados de la investigación de mercado.",
+   "pubDate": "2027-01-26",
+   "enlaces": [
+    "/agencia-seo-venezuela/",
+    "/blog/seo-en-colombia/",
+    "/blog/seo-en-mexico/"
+   ]
+  },
+  {
+   "id": "seo-en-mexico",
+   "cluster": "L5-mercados",
+   "keyword": "seo en méxico",
+   "angulo": "Competencia, marketplaces y búsqueda en México con datos verificados.",
+   "pubDate": "2027-03-24",
+   "enlaces": [
+    "/agencia-seo-mexico/",
+    "/blog/seo-en-colombia/",
+    "/blog/seo-en-venezuela/"
+   ]
+  },
+  {
+   "id": "seo-en-colombia",
+   "cluster": "L5-mercados",
+   "keyword": "seo en colombia",
+   "angulo": "Búsqueda y comercio digital en Colombia con datos verificados.",
+   "pubDate": "2027-03-25",
+   "enlaces": [
+    "/agencia-seo-colombia/",
+    "/blog/seo-en-mexico/",
+    "/blog/seo-en-venezuela/"
+   ]
+  }
+ ],
+ "paises": [
+  {
+   "id": "venezuela",
+   "familia": "seo",
+   "nombre": "Agencia SEO en Venezuela",
+   "publishAt": "2026-12-08",
+   "url": "/agencia-seo-venezuela/"
+  },
+  {
+   "id": "mexico",
+   "familia": "seo",
+   "nombre": "Agencia SEO en México",
+   "publishAt": "2027-02-04",
+   "url": "/agencia-seo-mexico/"
+  },
+  {
+   "id": "colombia",
+   "familia": "seo",
+   "nombre": "Agencia SEO en Colombia",
+   "publishAt": "2027-02-18",
+   "url": "/agencia-seo-colombia/"
+  },
+  {
+   "id": "aeo-mexico",
+   "familia": "aeo",
+   "nombre": "Agencia AEO en México",
+   "publishAt": "2027-04-08",
+   "url": "/agencia-aeo-mexico/"
+  },
+  {
+   "id": "aeo-colombia",
+   "familia": "aeo",
+   "nombre": "Agencia AEO en Colombia",
+   "publishAt": "2027-04-22",
+   "url": "/agencia-aeo-colombia/"
+  }
+ ]
+}

@@ -1,0 +1,76 @@
+# Borrador. Página AEO de Colombia: ángulo propio = uso de IA medido por el DANE (18,0 %, concentrado en Bogotá) y
+# adopción temprana. Hechos con fuente https leídos el 2026-11-24 (docs/seo/investigacion/colombia.md, sección B).
+tipo: pais
+familia: aeo
+nombre: Colombia
+draft: true
+publishAt: 2027-04-22
+title: "Agencia AEO en Colombia: que la IA te cite | Loops Growth"
+description: "Agencia AEO en Colombia: preparamos tu información para que los asistentes de IA la usen al responder. Un mercado de adopción temprana. Trabajo remoto."
+h1: "Agencia AEO en Colombia para que la IA te cite al responder"
+intro: |
+  AEO es optimizar tu información para las respuestas de los asistentes de IA, de modo que puedan encontrarla y usarla cuando alguien les pregunta por tu tema. Esta página explica cómo lo trabajamos con empresas de Colombia desde Loops Growth, un equipo remoto que ejecuta SEO y posicionamiento en IA en español.
+
+  Colombia está en una etapa temprana: el DANE midió por primera vez el uso de IA en 2024 y la cifra todavía es baja. Eso vuelve útil empezar ahora, y también pide cuidado para no exagerar la demanda. Aquí explicamos qué dicen los datos y qué puedes hacer con ellos.
+secciones:
+  - titulo: Un mercado que apenas empieza a usar IA
+    cuerpo: |
+      En 2024, el 18,0 % de las personas de 5 años o más que usaron internet en Colombia utilizó herramientas de inteligencia artificial, según el DANE: 20,4 % en cabeceras y 8,1 % en centros poblados y zona rural dispersa. Era la primera vez que la encuesta lo medía y no distingue entre ChatGPT, Gemini o Meta AI.
+
+      Un estudio privado del Centro Nacional de Consultoría, que reportó Valora Analitik en septiembre de 2025, habla del 24 %, frente al 9,6 % de 2023, y solo el 3 % se considera experto. No son cifras comparables, porque definen de forma distinta quién es usuario. Las dos cuentan la misma historia: crece, pero queda mucho por recorrer. Por eso no vendemos una urgencia que los datos no muestran.
+  - titulo: Bogotá concentra el uso, y otras regiones la siguen de cerca
+    cuerpo: |
+      Por departamento, el DANE ubica el uso de IA en 25,2 % en Bogotá, 25,0 % en Santander, 24,7 % en Quindío y 23,8 % en Atlántico. El patrón es claro: la IA se usa más en las zonas urbanas con mejor conexión, y la capital va delante.
+
+      Si tu cliente ideal vive en Bogotá o en otra gran ciudad, ya hay una base de personas que le pregunta cosas a una IA. Allí conviene que tu contenido diga con claridad qué ofreces, a quién atiendes y en qué ciudades. Los asistentes toman mejor lo que está escrito sin ambigüedad. Trabajamos esas páginas con la línea de [posicionamiento en IA](/servicios/posicionamiento-en-ia/).
+  - titulo: Para qué la usan, y por qué muchos todavía no
+    cuerpo: |
+      Según el DANE, entre quienes usaron IA en 2024, el 90,4 % la usó para comunicarse o consultar, por ejemplo con chatbots o traducción, y el 80,7 % para tareas académicas o laborales básicas. El 49,5 % dice que la usa sobre todo para ahorrar tiempo. Consultar es el uso más común, y ahí aparece la oportunidad de que tu respuesta sea la que se consulte.
+
+      Del lado de quienes no la usan, el 43,0 % dice que no sabe qué es la IA. Por eso tu mensaje no puede apoyarse en la sigla. Hablamos de "que te citen cuando alguien le pregunta a una IA" y de "aparecer en ChatGPT", el lenguaje de quien tiene el problema. Para el concepto en detalle, lee [qué es AEO](/blog/que-es-aeo/) y la comparación entre [GEO, AEO y SEO](/blog/geo-vs-aeo-vs-seo/).
+  - titulo: Cómo trabajamos el AEO con empresas de Colombia
+    cuerpo: |
+      Google lista a Colombia entre los países donde funcionan las vistas creadas por IA y el español entre los idiomas admitidos. La página de ayuda indica disponibilidad, no frecuencia, y no asumimos que aparezcan en todas las búsquedas. Partimos de revisar cómo responden hoy los asistentes sobre tu categoría y qué fuentes toman.
+
+      Después ordenamos tus páginas para que cada pregunta importante tenga una respuesta directa y medimos cada mes las menciones con la [medición de menciones en IA](/servicios/medicion-de-menciones-en-ia/). Ninguna agencia asegura que un asistente te cite, y nosotros tampoco. Si quieres una base práctica, mira cómo [aparecer en ChatGPT](/blog/como-aparecer-en-chatgpt/) y el trabajo de SEO que lo sostiene en [Agencia SEO en Colombia](/agencia-seo-colombia/).
+remoto_titulo: Trabajo remoto en todo Colombia
+ciudades:
+  - nombre: Bogotá
+remoto:
+  - titulo: Por videollamada
+    texto: Las reuniones de arranque y de seguimiento se hacen por videollamada, sin traslados ni husos horarios complicados.
+  - titulo: Avance por escrito
+    texto: Cada mes compartimos por escrito qué se hizo y qué se movió, para que lo revises con tu equipo.
+  - titulo: Misma estrategia en todo el país
+    texto: Atendemos negocios de Bogotá y del resto de Colombia con el mismo método de trabajo.
+hechos:
+  - dato: "En 2024, el 18,0 % de las personas de 5 años o más que usaron internet en Colombia utilizó herramientas de IA: 20,4 % en cabeceras y 8,1 % en centros poblados y rural disperso, según el DANE."
+    fuente: https://www.dane.gov.co/files/operaciones/ENTIC/bol-ENTICHogares-2024.pdf
+  - dato: "Por departamento, el uso de IA llegó a 25,2 % en Bogotá, 25,0 % en Santander, 24,7 % en Quindío y 23,8 % en Atlántico en 2024, según el DANE."
+    fuente: https://www.dane.gov.co/files/operaciones/ENTIC/bol-ENTICHogares-2024.pdf
+  - dato: "Entre quienes usaron IA en 2024, el 90,4 % la usó para comunicarse o consultar y el 49,5 % lo hizo principalmente para ahorrar tiempo, según el DANE."
+    fuente: https://www.dane.gov.co/files/operaciones/ENTIC/bol-ENTICHogares-2024.pdf
+  - dato: "Entre quienes no usaron IA en 2024, el 43,0 % dijo que no sabe qué es y el 32,0 % que no la considera necesaria, según el DANE."
+    fuente: https://www.dane.gov.co/files/operaciones/ENTIC/bol-ENTICHogares-2024.pdf
+  - dato: "El Estudio de Apropiación Digital 2025 del CNC indica que el 24 % de los colombianos usa IA, frente al 9,6 % de 2023, y que solo el 3 % se considera experto, según Valora Analitik."
+    fuente: https://www.valoraanalitik.com/?p=510978
+faq:
+  - pregunta: "¿Es demasiado pronto para trabajar el AEO en Colombia?"
+    respuesta: |
+      El uso de IA es todavía bajo: 18,0 % entre quienes usan internet, según el DANE de 2024. Empezar pronto permite ordenar tu información sin prisa. No esperes un volumen alto de consultas hoy; trabaja para el crecimiento que se ve en los datos.
+  - pregunta: "¿Por qué no hablan de cuánta gente usa ChatGPT en Colombia?"
+    respuesta: |
+      Porque no tenemos una cifra pública verificada. El DANE mide uso de IA en general y no distingue entre herramientas, así que preferimos no inventar un reparto.
+  - pregunta: "¿Mi cliente de provincia también usa IA?"
+    respuesta: |
+      Menos que el de las grandes ciudades. El DANE midió 8,1 % de uso de IA en centros poblados y zona rural dispersa frente a 20,4 % en cabeceras. Ajusta tus expectativas según dónde esté tu público.
+  - pregunta: "¿Cómo explico mi servicio sin usar la sigla AEO?"
+    respuesta: |
+      Descríbelo como el problema que resuelves: que una IA te mencione cuando alguien pregunta por tu categoría. Es el lenguaje que entiende quien aún no sabe qué es la IA y el que mejor encaja con lo que escribe la gente.
+pendientes:
+  - "Revisar: los porcentajes DANE de usos y razones de la IA (90,4 %, 80,7 %, 49,5 %, 43,0 %, 32,0 %) salen de los gráficos 26 a 28 leídos como texto; comprobar visualmente cuál es el total nacional antes de publicar."
+  - "Revisar: el 24 % del CNC viene de Valora Analitik (nota del 26 de septiembre de 2025), sin metodología visible; no se abrió el estudio. No es comparable con el 18,0 % del DANE."
+  - "Revisar: la página de ayuda de Google no muestra fecha propia (solo 2026 Google). Indica disponibilidad, no frecuencia."
+  - "Revisar: no hay cifra verificada de ChatGPT, Gemini ni Meta AI en Colombia; la página no las afirma. La baja demanda del término AEO es dato interno de Ahrefs y no se cita como cifra."
+  - "Juan o Ari: confirmar que Loops presta optimización para respuestas de IA y que 'videollamada y reportes escritos' describe el modo de trabajo."
+  - "Juan o Ari: clientes de Colombia que se puedan mencionar (hoy ninguno)."

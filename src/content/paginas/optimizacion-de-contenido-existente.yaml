@@ -1,0 +1,88 @@
+# Borrador. Redacción pendiente de revisión de Juan y Ari. Sin precios, garantías ni cifras.
+tipo: servicio
+ruta: /servicios/optimizacion-de-contenido-existente/
+nombre: Optimización de contenido existente
+grupo: contenido
+draft: true
+publishAt: 2027-02-25
+title: "Optimización de contenido existente: actualizar o unir"
+description: "Optimización de contenido existente: decidimos qué páginas actualizar, consolidar o eliminar, y cómo detectar el contenido que cayó o compite contra sí mismo."
+h1: "Optimización de contenido existente: actualizar, consolidar o eliminar"
+intro: |
+  Antes de escribir más, conviene mirar lo que ya tienes. Muchos sitios acumulan artículos desactualizados, páginas que compiten por la misma búsqueda y textos que dejaron de recibir visitas sin que nadie lo notara.
+
+  La optimización de contenido existente de Loops Growth revisa ese inventario página por página y decide, con criterios claros, qué se actualiza, qué se une con otra y qué se retira. Trabajamos en español para empresas de LATAM.
+secciones:
+  - titulo: Cómo detectamos el contenido que cayó
+    cuerpo: |
+      Partimos de tus datos en Search Console y en tu analítica. Comparamos periodos para encontrar páginas que recibían impresiones o visitas y ahora reciben menos. Después buscamos la causa, que puede ser distinta en cada caso:
+
+      - El contenido quedó viejo y otras páginas lo superaron.
+      - Cambió la intención de la búsqueda y tu formato ya no encaja.
+      - Una página nueva de tu propio sitio le quitó el lugar.
+      - Un cambio técnico, como una redirección o un enlace roto, afectó la página.
+
+      Antes de tocar nada, confirmamos cuál de estas causas aplica. Actualizar una página cuyo problema era técnico es trabajo perdido.
+  - titulo: Contenido que compite contra sí mismo
+    cuerpo: |
+      Cuando dos páginas de tu sitio responden a la misma búsqueda, Google tiene que elegir una y a veces alterna entre ambas. Eso diluye el rendimiento de las dos. Lo detectamos cruzando las búsquedas de Search Console con las URL que aparecen para cada una.
+
+      La solución depende del caso. Si las dos páginas dicen casi lo mismo, se unen en la más fuerte y la otra se redirige. Si responden a intenciones distintas, se separan con claridad y se enlazan entre sí. El [mapa de palabras clave](/servicios/investigacion-de-palabras-clave/) deja registrada esa asignación para que no vuelva a pasar.
+  - titulo: "Criterios para decidir: actualizar, consolidar o eliminar"
+    cuerpo: |
+      Aplicamos reglas simples a cada página, que revisamos contigo:
+
+      - Actualizar: el tema sigue siendo relevante y la página aún tiene una base que vale la pena mejorar.
+      - Consolidar: existe otra página más fuerte sobre lo mismo y unir ambas da un texto mejor.
+      - Eliminar o redirigir: la página ya no tiene sentido para tu negocio ni para ninguna búsqueda real.
+
+      Google recomienda crear contenido pensado para las personas, y su guía de [contenido útil](https://developers.google.com/search/docs/fundamentals/creating-helpful-content) sirve de vara para revisar cada página. Una página que no ayuda a nadie no necesita más palabras, necesita una decisión.
+  - titulo: Qué ocurre después de decidir
+    cuerpo: |
+      Cada acción queda en un plan con orden de trabajo. Las páginas que se actualizan siguen el mismo estándar que los textos nuevos de la [redacción de artículos SEO](/servicios/redaccion-de-articulos-seo/), y los cambios se alinean con la [estrategia de contenidos](/servicios/estrategia-de-contenidos/) para que cada pieza ocupe su lugar en un cluster.
+
+      Si quieres entender la lógica de agrupar temas, lee [qué es un topic cluster](/blog/que-es-un-topic-cluster/) y [cómo hacer keyword research](/blog/como-hacer-keyword-research/). La [guía de inicio de SEO de Google](https://developers.google.com/search/docs/fundamentals/seo-starter-guide) recuerda además que los buscadores encuentran páginas principalmente a través de enlaces, por eso cuidamos también los enlaces que apuntan a cada página que cambia.
+senales:
+  - "Tienes artículos de hace años con información que ya no es cierta."
+  - "Una página que traía visitas dejó de hacerlo y nadie sabe por qué."
+  - "Dos o más páginas de tu sitio aparecen para la misma búsqueda y se alternan en los resultados."
+  - "Tu blog tiene muchos textos flojos que nunca recibieron una sola visita."
+  - "Vas a lanzar contenido nuevo y quieres asegurarte de que no choque con el que ya existe."
+entregables:
+  - titulo: Inventario con diagnóstico
+    texto: Lista de tus páginas con su rendimiento reciente, su intención y la decisión recomendada para cada una.
+  - titulo: Detección de caídas
+    texto: Páginas que perdieron impresiones o visitas, con la causa probable de cada caída y la acción sugerida.
+  - titulo: Informe de canibalización
+    texto: Pares o grupos de páginas que compiten por la misma frase, con la propuesta de unir o separar cada caso.
+  - titulo: Plan de actualización
+    texto: "Orden de trabajo con instrucciones por página: qué corregir, qué agregar, qué enlaces mantener o cambiar."
+  - titulo: Mapa de redirecciones
+    texto: Para las páginas que se unen o se retiran, el destino de cada redirección para no perder los enlaces que ya apuntaban a ellas.
+proceso:
+  - titulo: Inventariar el contenido
+    texto: Reunimos todas tus páginas con sus datos de Search Console y analítica, y las ordenamos por tema.
+  - titulo: Diagnosticar caídas y choques
+    texto: Buscamos las páginas que cayeron y las que compiten entre sí, y confirmamos la causa de cada una.
+  - titulo: Decidir página por página
+    texto: Aplicamos los criterios de actualizar, consolidar o eliminar y los revisamos contigo antes de ejecutar.
+  - titulo: Ejecutar y vigilar
+    texto: Hacemos los cambios en orden, configuramos las redirecciones y revisamos el comportamiento de cada página en las semanas siguientes.
+faq:
+  - pregunta: "¿Siempre conviene actualizar en lugar de escribir algo nuevo?"
+    respuesta: |
+      No siempre. Si la página tiene un tema vigente y una base útil, actualizarla suele ser más rápido. Si el tema ya no encaja con tu negocio, es mejor retirarla. Para cubrir temas nuevos, usamos la [redacción de artículos SEO](/servicios/redaccion-de-articulos-seo/).
+  - pregunta: "¿Eliminar páginas no perjudica mi sitio?"
+    respuesta: |
+      Depende de cómo se haga. Una página que se retira sin plan puede dejar enlaces rotos. Por eso cada eliminación lleva su redirección o su decisión documentada. La [guía de enlaces de Google](https://developers.google.com/search/docs/crawling-indexing/links-crawlable) explica cómo Google sigue los enlaces, y la tenemos en cuenta.
+  - pregunta: "¿Cómo sé si dos de mis páginas compiten entre sí?"
+    respuesta: |
+      En Search Console puedes filtrar una búsqueda y ver qué páginas aparecen para ella. Si salen dos o más URL de tu sitio, hay un posible choque. Si prefieres que lo revisemos, es parte de este servicio y del trabajo de [investigación de palabras clave](/servicios/investigacion-de-palabras-clave/).
+  - pregunta: "¿Qué tan seguido conviene revisar el contenido existente?"
+    respuesta: |
+      Depende del ritmo de cambio de tu sector y del tamaño del sitio. En la [estrategia de contenidos](/servicios/estrategia-de-contenidos/) dejamos una rutina de revisión que tu equipo pueda sostener.
+pendientes:
+  - "Juan o Ari: confirmar que Loops presta este servicio."
+  - "Ari: confirmar que Loops entrega el mapa de redirecciones y el informe de canibalización como parte del servicio."
+  - "Ari: validar que el seguimiento posterior a los cambios forma parte del alcance."
+  - "No verificado y dejado fuera: afirmaciones sobre cómo Google elige entre dos páginas propias, penalizaciones por contenido duplicado y plazos de recuperación."

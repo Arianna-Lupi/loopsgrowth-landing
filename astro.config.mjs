@@ -3,8 +3,8 @@ import { defineConfig, fontProviders } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 import { loadEnv } from 'vite';
-import { existsSync, readdirSync, readFileSync } from 'node:fs';
-import { parse as parseYaml } from 'yaml';
+import { satteri } from '@astrojs/markdown-satteri';
+import { contentState, liveLinksPlugin } from './scripts/lib/live-content.mjs';
 
 // Superficie de entorno (FND-05). Solo el valor exacto `production` indexa;
 // cualquier otro valor (incluido `Production` o vacío) se trata como no productivo.
@@ -22,31 +22,10 @@ function parseSiteUrl(value) {
   }
 }
 
-// El índice del blog solo entra al sitemap si hay al menos un artículo publicado (`draft: false`).
-// Sin eso la página sale `noindex` (src/pages/blog/index.astro) y no debe listarse.
-const blogDir = 'src/content/blog';
-const hasPublishedPosts =
-  existsSync(blogDir) &&
-  readdirSync(blogDir).some((f) => f.endsWith('.md') && /^draft:\s*false\s*$/m.test(readFileSync(`${blogDir}/${f}`, 'utf8')));
-
-// Rutas de borradores (`draft: true`): salen `noindex` en cualquier build donde existan (local o preview) y no deben
-// entrar al sitemap. En producción no se generan. Países y ciudades: país plano, ciudad anidada.
-const draftPaths = new Set();
-const yamlEntries = (dir) =>
-  existsSync(dir) ? readdirSync(dir).filter((f) => f.endsWith('.yaml')).map((f) => [f.replace(/\.yaml$/, ''), parseYaml(readFileSync(`${dir}/${f}`, 'utf8')) ?? {}]) : [];
-for (const [, d] of yamlEntries('src/content/paginas')) {
-  if (d.draft === false) continue;
-  draftPaths.add(d.ruta);
-}
-for (const [id, d] of yamlEntries('src/content/paises')) {
-  if (d.draft === false) continue;
-  draftPaths.add(d.tipo === 'ciudad' ? `/agencia-seo-${d.pais}/${d.ciudad}/` : `/agencia-seo-${id}/`);
-}
-if (existsSync(blogDir)) {
-  for (const f of readdirSync(blogDir).filter((f) => f.endsWith('.md'))) {
-    if (!/^draft:\s*false\s*$/m.test(readFileSync(`${blogDir}/${f}`, 'utf8'))) draftPaths.add(`/blog/${f.replace(/\.md$/, '')}/`);
-  }
-}
+// Rutas que no existen en este build: borradores y contenido con fecha futura. Salen `noindex` donde existan (local o
+// preview), no entran al sitemap y en producción no se generan. El cron diario las activa cuando llega su fecha.
+const { live: livePaths, hidden: hiddenPaths } = contentState();
+const isProd = env.PUBLIC_ENV !== 'local' && env.PUBLIC_ENV !== 'preview';
 
 const site = parseSiteUrl(env.PUBLIC_SITE_URL) ?? 'https://loopsgrowth.com';
 
@@ -57,9 +36,10 @@ export default defineConfig({
   integrations: [
     sitemap({
       filter: (page) =>
-        !page.includes('/privacidad') && !draftPaths.has(new URL(page).pathname) && !page.includes('/marca/hoja') && (hasPublishedPosts || !/\/blog\/?$/.test(page)),
+        !page.includes('/privacidad') && !hiddenPaths.has(new URL(page).pathname) && !page.includes('/marca/hoja'),
     }),
   ],
+  markdown: isProd ? { processor: satteri({ mdastPlugins: [liveLinksPlugin(livePaths)] }) } : {},
   vite: {
     plugins: [tailwindcss()],
     // Los scripts de la página (entradas del home, formulario) salen como archivos y no inflan el HTML de `/` (presupuesto de peso).

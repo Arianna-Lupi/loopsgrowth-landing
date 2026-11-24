@@ -1,5 +1,5 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
-import { isProduction } from './site';
+import { isPublished } from './site';
 import { getPaises, type Pais } from './paises';
 import { getPosts } from './blog';
 
@@ -7,12 +7,13 @@ export type Pagina = CollectionEntry<'paginas'>;
 
 /** Páginas de servicio, nosotros y autora visibles: en producción solo las publicadas (`draft: false`). */
 export async function getPaginas(): Promise<Pagina[]> {
-  return getCollection('paginas', (p) => !(isProduction && p.data.draft));
+  return getCollection('paginas', (p) => isPublished(p.data.draft, p.data.publishAt));
 }
 
 /** Ruta pública de un país (`/agencia-seo-venezuela/`) o de una ciudad (`/agencia-seo-venezuela/caracas/`). */
 export function paisPath(p: Pais): string {
-  return p.data.tipo === 'pais' ? `/agencia-seo-${p.id}/` : `/agencia-seo-${p.data.pais}/${p.data.ciudad}/`;
+  if (p.data.tipo === 'ciudad') return `/agencia-seo-${p.data.pais}/${p.data.ciudad}/`;
+  return p.data.familia === 'aeo' ? `/agencia-aeo-${p.id.replace(/^aeo-/, '')}/` : `/agencia-seo-${p.id}/`;
 }
 
 /**
@@ -25,6 +26,7 @@ export async function getLivePaths(): Promise<Set<string>> {
   for (const p of paginas) paths.add(p.data.ruta);
   for (const p of paises) paths.add(paisPath(p));
   if (posts.length > 0) paths.add('/blog/');
+  if (paginas.some((p) => p.data.tipo === 'servicio')) paths.add('/servicios/');
   return paths;
 }
 

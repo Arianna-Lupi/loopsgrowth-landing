@@ -11,7 +11,8 @@ Fecha: 2026-11-16.
 - `draft` nace en `true`. Para publicar hace falta `draft: false` y `reviewedBy` con la aprobación de Ari. En producción un borrador no se genera.
 - Texto compartido entre páginas: `src/lib/pais-template.json`, tres frases.
 - Schema: BreadcrumbList, Organization (areaServed VE y LATAM, sin address), Service con `areaServed` (Country o City) y FAQPage. Nunca LocalBusiness, dirección, mapa ni Google Business.
-- Colombia (`/agencia-seo-colombia/`) queda condicionada al mes 3 y a tener cliente o caso allá: no se crea. Chile y México, después de febrero.
+- Actualización 2026-11-24: Ari pidió Venezuela, México y Colombia (SEO) y México y Colombia en versión AEO. Se retira la condición de caso real para Colombia y se adelanta México. Siguen fuera Chile y cualquier otro país. Las páginas AEO viven en `/agencia-aeo-<pais>/` (archivo `aeo-<pais>.yaml`, `familia: aeo`) y no pueden repetir texto de su página SEO hermana.
+- Publicación programada: cada página lleva `publishAt`; sale solo cuando `draft: false`, hay `reviewedBy` y la fecha llegó (cron diario). Calendario: `docs/seo/plan-contenido.md`.
 
 ## Guarda `npm run check:programmatic` (corre en `prebuild`)
 

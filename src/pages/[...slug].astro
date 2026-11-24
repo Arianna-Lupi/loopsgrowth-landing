@@ -6,6 +6,7 @@
  */
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ServiceIA from '../components/landing/ServiceIA.astro';
+import ServicePage from '../components/landing/ServicePage.astro';
 import AboutPage from '../components/landing/AboutPage.astro';
 import AuthorPage from '../components/landing/AuthorPage.astro';
 import { getPaginas } from '../lib/paginas';
@@ -22,8 +23,8 @@ const d = pagina.data;
 const base = siteUrl.replace(/\/+$/, '');
 const path = d.ruta;
 
-// Sin página `/servicios/`: la miga de un servicio es solo Inicio y el servicio, para no apuntar a un 404.
 const crumbs = [{ name: 'Inicio', path: '/' }];
+if (d.tipo === 'servicio') crumbs.push({ name: 'Servicios', path: '/servicios/' });
 if (d.tipo === 'autora') crumbs.push({ name: 'Nosotros', path: '/nosotros/' });
 crumbs.push({ name: d.nombre, path });
 
@@ -33,7 +34,7 @@ if (d.tipo === 'servicio') {
     '@type': 'Service',
     '@id': `${base}${path}#service`,
     name: d.h1,
-    serviceType: 'Posicionamiento en IA (GEO y AEO)',
+    serviceType: d.nombre,
     provider: { '@id': `${base}/#organization` },
     areaServed: AREA_SERVED,
     url: `${base}${path}`,
@@ -46,7 +47,7 @@ const schema = buildPageGraph(base, path, crumbs, d.faq, extra);
 ---
 
 <BaseLayout reveal title={d.title} description={d.description} path={path} noindex={d.draft} schema={schema} ogType={d.tipo === 'autora' ? 'profile' : 'website'}>
-  {d.tipo === 'servicio' && <ServiceIA d={d} crumbs={crumbs} />}
+  {d.tipo === 'servicio' && (d.chat && d.etapas ? <ServiceIA d={d} crumbs={crumbs} /> : <ServicePage d={d} crumbs={crumbs} />)}
   {d.tipo === 'nosotros' && <AboutPage d={d} crumbs={crumbs} />}
   {d.tipo === 'autora' && <AuthorPage d={d} crumbs={crumbs} />}
 </BaseLayout>
