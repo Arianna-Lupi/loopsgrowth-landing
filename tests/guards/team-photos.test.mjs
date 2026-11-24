@@ -105,11 +105,11 @@ test('check-photos.mjs: 0 sin producción, 1 en production mientras haya pendien
   assert.equal(run().status, 0, 'sin PUBLIC_ENV');
   assert.equal(run('Production').status, 0, 'Production no es production');
   const prod = run('production');
-  assert.equal(prod.status, pending ? 1 : prod.status);
+  assert.equal(prod.status, pending ? 1 : 0);
   if (pending) {
     const out = prod.stdout + prod.stderr;
     assert.ok(/FAIL check-photos \(equipo\)/.test(out) && /PROVENANCE\.md/.test(out) && /Cómo cerrar la aprobación/.test(out), out);
-    for (const id of ids) assert.ok(out.includes(`"${id}"`), `${id} sin mensaje`);
+    for (const r of rows.filter((x) => x.approval === 'pendiente' || x.consent === 'pendiente')) assert.ok(out.includes(`"${r.id}"`), `${r.id} sin mensaje`);
   }
   assert.equal(/WARN check-photos: La foto del equipo/.test(run().stdout + run().stderr), pending, 'los avisos salen sin producción solo si hay pendientes');
 });
