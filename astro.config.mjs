@@ -3,6 +3,7 @@ import { defineConfig, fontProviders } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 import { loadEnv } from 'vite';
+import { writeFileSync } from 'node:fs';
 import { satteri } from '@astrojs/markdown-satteri';
 import { contentState, liveLinksPlugin } from './scripts/lib/live-content.mjs';
 
@@ -29,11 +30,27 @@ const isProd = env.PUBLIC_ENV !== 'local' && env.PUBLIC_ENV !== 'preview';
 
 const site = parseSiteUrl(env.PUBLIC_SITE_URL) ?? 'https://loopsgrowth.com';
 
+// Workers Assets redirige `/ruta` a `/ruta/` con un 307. Con `_redirects` la redirección es permanente (301).
+/** @type {import('astro').AstroIntegration} */
+const redirectsSinBarra = {
+  name: 'redirects-sin-barra',
+  hooks: {
+    'astro:build:done': ({ dir, pages }) => {
+      const lines = pages
+        .map((p) => p.pathname)
+        .filter((p) => p.endsWith('/') && p !== '404/' && !p.startsWith('marca/'))
+        .map((p) => `/${p.slice(0, -1)} /${p} 301`);
+      writeFileSync(new URL('_redirects', dir), `${lines.sort().join('\n')}\n`);
+    },
+  },
+};
+
 // https://astro.build/config
 export default defineConfig({
   output: 'static',
   site,
   integrations: [
+    redirectsSinBarra,
     sitemap({
       filter: (page) =>
         !page.includes('/privacidad') && !page.includes('/404') && !hiddenPaths.has(new URL(page).pathname) && !page.includes('/marca/hoja'),

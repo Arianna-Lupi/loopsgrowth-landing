@@ -1,8 +1,10 @@
-# Borrador. Solo datos ya publicados en la home (sección Quiénes somos y Solución). Faltan bio y enlaces de Verónica.
+# Solo datos ya publicados en la home (sección Quiénes somos y Solución). Faltan bio y enlaces de Verónica.
 tipo: autora
 ruta: /equipo/veronica-romero/
 nombre: Verónica Romero
-draft: true
+draft: false
+reviewedBy: "Juan Angulo (publicación pedida por escrito, 2026-11-25)"
+publishAt: 2026-11-25
 retrato: veronica
 title: "Verónica Romero: directora de proyectos de Loops Growth"
 description: "Verónica Romero es directora de proyectos de Loops Growth: coordina el calendario, los reportes y es tu contacto directo. Más de 4 años en SEO."
@@ -15,7 +17,7 @@ trayectoria:
   - titulo: Más de 4 años en SEO
     texto: Experiencia en SEO que hoy aplica a la gestión de proyectos.
   - titulo: SEO para e-commerce
-    texto: 300k dólares generados en e-commerce SEO.
+    texto: Trabajo de SEO aplicado a tiendas en línea.
   - titulo: Loops Growth
     texto: Directora de proyectos del equipo.
 secciones:

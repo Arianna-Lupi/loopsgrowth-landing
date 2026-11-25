@@ -6,13 +6,13 @@ author: ari
 cluster: L2-geo
 keyword: cómo aparecer en chatgpt
 draft: false
-updatedDate: 2026-11-24
+updatedDate: 2026-11-25
 reviewedBy: "Juan Angulo (revisión de la ampliación, 2026-11-24)"
 ---
 
 > **Respuesta corta:** no existe un botón para aparecer en ChatGPT y nadie puede asegurarlo. Lo que sí puedes hacer es facilitar que ChatGPT encuentre tu sitio, entienda qué haces y vea que otras fuentes confiables hablan de tu negocio. Ese trabajo se llama posicionamiento en IA.
 
-## Encontrado, mencionado, citado y recomendado
+## ¿Qué significa aparecer en ChatGPT?
 
 Son cuatro cosas distintas y conviene separarlas:
 
@@ -115,7 +115,7 @@ El trabajo para los asistentes de IA y el SEO comparten base. Un sitio que carga
 
 En el caso de Google, su [documentación sobre las funciones de IA](https://developers.google.com/search/docs/appearance/ai-features?hl=es) indica que no hay requisitos adicionales para aparecer en AI Overviews o en el Modo IA: la página tiene que estar indexada y poder mostrarse con un fragmento en la búsqueda. También aclara que no hace falta crear archivos especiales para IA ni añadir un marcado propio. El tráfico de esas funciones figura en el informe de rendimiento de Search Console, dentro del tipo de búsqueda web.
 
-## Cómo saber si avanzas
+## ¿Cómo saber si avanzas?
 
 Define una lista fija de preguntas que haría un cliente antes de comprarte. Cada mes hazlas en ChatGPT y en otros asistentes, y anota si te mencionan, si te citan y qué fuentes aparecen. Las respuestas cambian de una consulta a otra, así que mira la tendencia de varios meses y no una sola respuesta.
 
@@ -136,7 +136,7 @@ Para que la comparación tenga sentido:
 
 Revisa además en tu analítica el tráfico de referencia que llega desde `chatgpt.com`. Muestra solo una parte, porque mucha gente lee una respuesta y busca tu marca más tarde.
 
-## Errores que frenan el avance
+## ¿Qué errores frenan el avance?
 
 - Bloquear rastreadores por precaución y olvidar la regla.
 - Tener datos distintos de tu negocio en cada sitio.

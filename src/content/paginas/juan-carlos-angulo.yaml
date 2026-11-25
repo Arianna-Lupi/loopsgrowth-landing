@@ -1,9 +1,11 @@
-# Borrador. Datos de Juan Carlos Angulo tomados de juan-tech.com y dev.juan-tech.com (indicado por él el 2026-11-23) y de la
+# Datos de Juan Carlos Angulo tomados de juan-tech.com y dev.juan-tech.com (indicado por él el 2026-11-23) y de la
 # sección Quiénes somos de la home. Sin precios, sin clientes nombrados fuera de la home y sin datos personales.
 tipo: autora
 ruta: /equipo/juan-carlos-angulo/
 nombre: Juan Carlos Angulo
-draft: true
+draft: false
+reviewedBy: "Juan Angulo (publicación pedida por escrito, 2026-11-25)"
+publishAt: 2026-11-25
 retrato: juan
 title: "Juan Carlos Angulo: director técnico de Loops Growth"
 description: "Juan Carlos Angulo es director técnico de Loops Growth: SEO técnico, Core Web Vitals, arquitectura web y optimización para IA. Ingeniero de software."
