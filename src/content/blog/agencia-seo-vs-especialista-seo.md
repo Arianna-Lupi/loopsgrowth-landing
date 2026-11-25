@@ -7,7 +7,7 @@ cluster: L4-eleccion
 keyword: agencia seo vs especialista seo
 draft: false
 updatedDate: 2026-11-24
-reviewedBy: "Ampliación del 2026-11-24 pendiente de lectura de Juan o Ari"
+reviewedBy: "Juan Angulo (revisión de la ampliación, 2026-11-24)"
 ---
 
 > **Respuesta corta:** contrata a un especialista SEO si necesitas criterio y guía sobre un trabajo que alguien de tu equipo puede ejecutar. Contrata a una agencia SEO si necesitas que otro equipo haga el trabajo completo: técnica, contenido y autoridad. Ninguna de las dos opciones es mejor en general. Depende de qué te falta hoy: criterio, tiempo o equipo.
