@@ -1,6 +1,6 @@
 import { test, expect, type Browser, type BrowserContext } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
-import { readdirSync, readFileSync } from 'node:fs';
+import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { gzipSync } from 'node:zlib';
 import { parse } from 'yaml';
 import { HTML_GZIP_MAX, HTML_RAW_MAX } from './lib/budgets.mjs';
@@ -51,13 +51,14 @@ test.describe('conexiones de fase', () => {
     });
   }
 
-  test('en / hay 1 collage del hero, 1 de #agenda y 1 avatar (los otros 3 integrantes llevan foto)', async ({ page }) => {
+  test('en / hay 1 collage del hero, 1 de #agenda y ningún avatar de respaldo (los 4 integrantes llevan foto)', async ({ page }) => {
     await page.goto('/');
     await expect(page.locator('[data-collage="hero"]')).toHaveCount(1);
     await expect(page.locator('div[data-collage="hero"]')).toHaveCount(1);
     await expect(page.locator('[data-collage="agenda"]')).toHaveCount(1);
     await expect(page.locator('#agenda div[data-collage="agenda"]')).toHaveCount(1);
-    await expect(page.locator('svg[data-collage="avatar"]')).toHaveCount(1);
+    await expect(page.locator('#nosotros [data-team-photo]')).toHaveCount(4);
+    await expect(page.locator('svg[data-collage="avatar"]')).toHaveCount(0);
   });
 
   test('en / hay 4 CTA a #agenda con el texto del YAML como nombre accesible', async ({ page }) => {
@@ -108,7 +109,8 @@ test.describe('axe de humo', () => {
       [1280, 800],
     ] as const) {
       test(`${path} a ${width} px: cero violaciones critical o serious`, async ({ browser, baseURL }, testInfo) => {
-        const context = await isolatedContext(browser, baseURL, width, height);
+        // Con `reduce` no hay entradas animadas: axe mide el estado final y no un cuadro a media opacidad.
+        const context = await isolatedContext(browser, baseURL, width, height, { reducedMotion: 'reduce' });
         const page = await context.newPage();
         await page.goto(path);
         const results = await new AxeBuilder({ page }).withTags(AXE_TAGS).exclude('iframe').analyze();
@@ -372,7 +374,8 @@ test.describe('objetivos, sombras y área de salvado', () => {
             if (el.closest('.collage-sprite') || el === art || el.contains(art) || logo.contains(el)) continue;
             if (el.tagName.toLowerCase() === 'svg' && (el.closest('[aria-hidden="true"]') || el.getAttribute('focusable') === 'false' && !el.getAttribute('role'))) continue;
             const cs = getComputedStyle(el);
-            if (cs.display === 'none' || cs.visibility === 'hidden') continue;
+            // `checkVisibility` descarta el contenido de un `<details>` cerrado, que conserva caja pero no se ve.
+            if (cs.display === 'none' || cs.visibility === 'hidden' || !el.checkVisibility()) continue;
             const b = el.getBoundingClientRect();
             if (b.width < 2 || b.height < 2) continue;
             if (b.left < zone.r && b.right > zone.l && b.top < zone.b && b.bottom > zone.t) {
@@ -400,6 +403,8 @@ test.describe('objetivos, sombras y área de salvado', () => {
       const wrapped = await page.locator('a[data-cta]').evaluateAll((els) =>
         els
           .map((el) => {
+            // Sin el alto mínimo del objetivo táctil, el alto del enlace depende solo de sus líneas.
+            (el as HTMLElement).style.minHeight = '0';
             const cs = getComputedStyle(el);
             const line = parseFloat(cs.lineHeight);
             const lines = Math.round((el.getBoundingClientRect().height - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom) - 6) / line);
@@ -457,6 +462,11 @@ test.describe('objetivos, sombras y área de salvado', () => {
 test.describe('peso y peticiones', () => {
   const COLLAGE_MAX = 42240;
   const INLINE_SCRIPT_MAX = 6144;
+  // Los dos módulos del sitio: el formulario por pasos y las entradas con el acordeón del FAQ.
+  const ALLOWED_SCRIPTS = ['AgendaSection', 'RevealScripts'].map(
+    (name) => new RegExp(`^dist/_astro/${name}\\.astro_astro_type_script_index_0_lang\\.[\\w-]+\\.js$`),
+  );
+  const SCRIPTS_MAX = 12288;
   const ALLOWED_HOSTS = ['localhost', 'forms.clickup.com', 'app-cdn.clickup.com'];
 
   test(`dist/index.html: por debajo de ${HTML_RAW_MAX} bytes crudos y de ${HTML_GZIP_MAX} con gzip -9`, () => {
@@ -467,7 +477,7 @@ test.describe('peso y peticiones', () => {
     expect(gz, `gzip -9 ${gz}`).toBeLessThan(HTML_GZIP_MAX);
   });
 
-  test('dist no contiene archivos .js', () => {
+  test(`dist solo contiene los dos scripts previstos y suman ${SCRIPTS_MAX} bytes o menos`, () => {
     const js: string[] = [];
     const walk = (dir: string) => {
       for (const entry of readdirSync(dir, { withFileTypes: true })) {
@@ -477,7 +487,10 @@ test.describe('peso y peticiones', () => {
       }
     };
     walk('dist');
-    expect(js).toEqual([]);
+    const unexpected = js.filter((file) => !ALLOWED_SCRIPTS.some((re) => re.test(file)));
+    expect(unexpected).toEqual([]);
+    const total = js.reduce((sum, file) => sum + statSync(file).size, 0);
+    expect(total, `bytes de script ${total}`).toBeLessThanOrEqual(SCRIPTS_MAX);
   });
 
   test('/: raíces [data-collage] más el sprite pesan 42240 bytes o menos y el script en línea menos de 6144', async ({
