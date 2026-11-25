@@ -1,8 +1,10 @@
-# Borrador. Solo datos ya publicados en la home (sección Solución). Faltan años de experiencia, bio y enlaces de Miguel.
+# Solo datos ya publicados en la home (sección Solución). Faltan años de experiencia, bio y enlaces de Miguel.
 tipo: autora
 ruta: /equipo/miguel-pacheco/
 nombre: Miguel Pacheco
-draft: true
+draft: false
+reviewedBy: "Juan Angulo (publicación pedida por escrito, 2026-11-25)"
+publishAt: 2026-11-25
 retrato: miguel
 title: "Miguel Pacheco: especialista SEO de Loops Growth"
 description: "Miguel Pacheco es especialista SEO de Loops Growth y se encarga de las palabras clave, el contenido y el trabajo de autoridad de cada proyecto."
