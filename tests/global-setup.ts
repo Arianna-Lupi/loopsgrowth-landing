@@ -21,6 +21,13 @@ export default function globalSetup(): void {
   if (!existsSync(built)) {
     throw new Error('No existe dist/index.html: ejecuta `npx astro build` antes de las pruebas de navegador.');
   }
+  // Un build de producción no genera la hoja de marca y rompe decenas de pruebas con errores confusos.
+  if (!existsSync(resolve('dist/marca/hoja/index.html'))) {
+    throw new Error(
+      'dist es un build de producción: detén el preview (`npx astro preview stop`) y reconstruye con ' +
+        '`PUBLIC_ENV=local npx astro build` antes de las pruebas de navegador.',
+    );
+  }
   const builtAt = statSync(built).mtimeMs;
   for (const source of ['src', 'public', 'astro.config.mjs']) {
     const path = resolve(source);
