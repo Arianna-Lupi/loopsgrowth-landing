@@ -64,6 +64,7 @@ export function buildOrganization(data: any, siteUrl: string, authorPath?: strin
     areaServed: AREA_SERVED,
     sameAs: [
       'https://www.linkedin.com/company/loops-growth/',
+      'https://clutch.co/profile/loops-growth',
       'https://ariannalupi.com',
       'https://www.linkedin.com/in/arianna-lupi/',
     ],
