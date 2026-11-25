@@ -3,7 +3,7 @@
  * Sección bajo clientes / Bloqueadores de crecimiento (Inspo 2).
  * Tono dark. Encabezado centrado con el titular principal y lead explicativo,
  * seguido de 3 columnas con insignias hexagonales y texto de impacto.
- * Cierra con la afirmación destacada del equipo con 8 años de experiencia.
+ * Cierra con la afirmación destacada del equipo y quién lo lidera (los 8 años son de Arianna Lupi).
  */
 import SectionShell from '../ui/SectionShell.astro';
 import CollageScene from '../collage/CollageScene.astro';
@@ -33,7 +33,7 @@ const data = await getLanding();
 
       <div class="blocker-col">
         <CollageScene scene="sticker-ojos" class="blocker-sticker" />
-        <h3 class="blocker-heading">Equipo con 8 años</h3>
+        <h3 class="blocker-heading">Al frente, 8 años en SEO</h3>
         <p class="blocker-text">
           {data.problem.items[2].text}
         </p>

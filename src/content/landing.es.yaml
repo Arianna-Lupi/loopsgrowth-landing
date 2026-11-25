@@ -43,7 +43,7 @@ es:
       status: verified
       reason: "Title (57) aprobado por Ari el 17-nov-2026 (hoja Content Strategy, fila 'agencia seo')."
     description:
-      text: "Agencia SEO para LATAM: aparece en Google y en ChatGPT. Un equipo con 8 años de experiencia ejecuta tu SEO y tu posicionamiento en IA. Habla con nosotros."
+      text: "Agencia SEO para LATAM: aparece en Google y en ChatGPT. Arianna Lupi, con 8 años en SEO, lidera el equipo que ejecuta tu estrategia. Habla con nosotros."
       status: verified
       reason: "Aprobado por Ari por escrito en Slack el 2026-11-24."
   hero:
@@ -59,7 +59,7 @@ es:
         status: verified
       - text: "Trabajamos para que tus clientes te encuentren en el momento que te están buscando, con contenido y optimizaciones y estrategias que terminan en ventas sin depender de ads."
         status: verified
-      - text: "Contrata un equipo de especialistas con 8 años de experiencia, que arman tu estrategia, ejecutan, implementan y monitorean los resultados y ventas de tu web."
+      - text: "Contrata un equipo de especialistas que arman tu estrategia, ejecutan, implementan y monitorean los resultados y ventas de tu web. Lo lidera Arianna Lupi, con 8 años de experiencia en SEO."
         status: verified
     clients:
       label:
@@ -116,10 +116,10 @@ es:
         status: verified
       - text: "Trabajamos para que tus clientes te encuentren en el momento que te están buscando, con contenido y optimizaciones y estrategias que terminan en ventas sin depender de ads."
         status: verified
-      - text: "Contrata un equipo de especialistas con 8 años de experiencia, que arman tu estrategia, ejecutan, implementan y monitorean los resultados y ventas de tu web."
+      - text: "Contrata un equipo de especialistas que arman tu estrategia, ejecutan, implementan y monitorean los resultados y ventas de tu web. Lo lidera Arianna Lupi, con 8 años de experiencia en SEO."
         status: verified
     closing:
-      text: "Contrata un equipo de especialistas con 8 años de experiencia, que arman tu estrategia, ejecutan, implementan y monitorean los resultados y ventas de tu web."
+      text: "Contrata un equipo de especialistas que arman tu estrategia, ejecutan, implementan y monitorean los resultados y ventas de tu web. Lo lidera Arianna Lupi, con 8 años de experiencia en SEO."
       status: verified
   why_now:
     title:
@@ -297,7 +297,7 @@ es:
       text: "Quiénes somos"
       status: verified
     intro:
-      text: "Somos un equipo ágil especializado en crecimiento orgánico a través de Google y plataformas de IA. Combinamos experiencia (8+ años), ejecución rigurosa y un contacto directo que responde por el resultado. No damos recomendaciones y desaparecemos: hacemos el trabajo y nos hacemos responsables del resultado."
+      text: "Somos un equipo ágil especializado en crecimiento orgánico a través de Google y plataformas de IA. Combinamos la experiencia de Arianna Lupi (8+ años en SEO), ejecución rigurosa y un contacto directo que responde por el resultado. No damos recomendaciones y desaparecemos: hacemos el trabajo y nos hacemos responsables del resultado."
       status: verified
     members:
       - name:
