@@ -24,7 +24,7 @@ const data = await getLanding();
 //   nosotros yellow, incluye light, como-funciona dark, para-quien light, faq yellow, agenda purple.
 const title = fill(data.meta.title_template, textVars(data), 'meta.title_template');
 const description = data.meta.description?.text ??
-  "Agencia SEO para LATAM: aparece en Google y en ChatGPT. Un equipo con 8 años de experiencia ejecuta tu SEO y tu posicionamiento en IA. Habla con nosotros.";
+  "Agencia SEO para LATAM: aparece en Google y en ChatGPT. Arianna Lupi, con 8 años en SEO, lidera el equipo que ejecuta tu estrategia. Habla con nosotros.";
 
 const baseUrl = siteUrl || 'https://loopsgrowth.com';
 const pageUrl = siteUrl ? new URL('/', siteUrl).href : `${baseUrl}/`;
