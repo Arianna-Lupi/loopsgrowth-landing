@@ -1,9 +1,11 @@
-# Borrador para Ari. Ciudad anidada /agencia-seo-venezuela/caracas/. SIN dirección, mapa, LocalBusiness ni Google Business.
+# Ciudad anidada /agencia-seo-venezuela/caracas/. SIN dirección, mapa, LocalBusiness ni Google Business.
 tipo: ciudad
 pais: venezuela
 ciudad: caracas
 nombre: Caracas
-draft: true
+draft: false
+reviewedBy: "Juan Angulo (publicación pedida por escrito, 2026-11-24)"
+publishAt: 2026-11-24
 title: "Agencia SEO en Caracas: Google y ChatGPT | Loops Growth"
 description: "Agencia SEO para empresas de Caracas: trabajamos tu SEO y tu posicionamiento en IA para que te encuentren en Google y ChatGPT, con reuniones por videollamada."
 h1: "Agencia SEO en Caracas para aparecer en Google y en la IA"
@@ -15,6 +17,8 @@ secciones:
       Una empresa que sirve a clientes de Caracas suele competir por frases con el nombre de la ciudad: el servicio más "en Caracas". En esas frases aparecen directorios, redes sociales y otras agencias, además del resultado de IA que Google puede mostrar arriba.
 
       Para entrar ahí no basta con repetir la palabra Caracas en la página. Mira primero cómo trabajamos como [agencia SEO en Venezuela](/agencia-seo-venezuela/) y nuestro [posicionamiento en IA](/servicios/posicionamiento-en-ia/). Hace falta una web clara sobre qué ofreces y a quién, contenido que responda dudas reales de quien compra en la ciudad y señales de confianza coherentes en todos los sitios donde aparece tu negocio.
+
+      El volumen conectado es alto. Según las [estadísticas de internet de CONATEL](https://conatel.gob.ve/wp-content/uploads/2026/08/Presentacion_Internet-_IV-2025.pdf), con cifras preliminares al cuarto trimestre de 2025, Distrito Capital sumaba 4.143.190 usuarios y Miranda 3.414.326, de un total nacional de 24.929.532. Caracas se extiende por parte de ambas entidades y el informe muestra en Distrito Capital una penetración del 222,25 %, así que estas cifras no equivalen a habitantes de la ciudad. En [telefonía móvil](https://conatel.gob.ve/wp-content/uploads/2026/07/PDF_TM_IV_2025.pdf), el mismo regulador estimaba 2.726.404 suscriptores en Distrito Capital y 2.642.256 en Miranda.
   - titulo: Cómo lo revisamos
     cuerpo: |
       Miramos qué frases usan tus clientes en Caracas, qué páginas ocupan hoy los primeros lugares y qué le falta a tu web para disputarlos.
@@ -40,9 +44,15 @@ faq:
   - pregunta: "¿Pueden asegurar que aparezca primero en Google o en ChatGPT?"
     respuesta: |
       No. Nadie puede asegurar una posición, porque Google y los asistentes de IA deciden con sus propios criterios. Trabajamos para aumentar tus opciones y medimos el avance cada mes.
+hechos:
+  - dato: "Al cuarto trimestre de 2025, CONATEL estimaba 4.143.190 usuarios de internet en Distrito Capital y 3.414.326 en Miranda, de un total nacional de 24.929.532 (cifras preliminares)."
+    fuente: https://conatel.gob.ve/wp-content/uploads/2026/08/Presentacion_Internet-_IV-2025.pdf
+  - dato: "El mismo informe de CONATEL muestra en Distrito Capital una penetración de usuarios de internet del 222,25 %, frente al 81,64 % nacional (cifras preliminares)."
+    fuente: https://conatel.gob.ve/wp-content/uploads/2026/08/Presentacion_Internet-_IV-2025.pdf
+  - dato: "Al cuarto trimestre de 2025, CONATEL estimaba 2.726.404 suscriptores de telefonía móvil en Distrito Capital y 2.642.256 en Miranda (cifras preliminares)."
+    fuente: https://conatel.gob.ve/wp-content/uploads/2026/07/PDF_TM_IV_2025.pdf
 pendientes:
-  - "Ari: aprobar el texto (la hoja aprobó la página; el contenido local único es obligatorio por riesgo de doorway)."
-  - "Ari: sectores que más compiten en Caracas y clientes o ejemplos de Caracas con permiso. Sin ellos la sección 2 es un marcador y la página no debe publicarse."
-  - "Ari: 3 hechos con fuente https pública sobre el mercado de Caracas (la guarda exige 3 para publicar)."
-  - "Ari: confirmar que la primera llamada es por videollamada (la hoja lo indica) y que el avance mensual llega por escrito."
+  - "Revisar: CONATEL marca las cifras como preliminares; actualizar cuando publique las definitivas o un trimestre posterior."
+  - "Juan o Ari: sectores que más compiten en Caracas y ejemplos de Caracas con permiso (hoy ninguno)."
+  - "Juan o Ari: confirmar que la primera llamada es por videollamada y que el avance mensual llega por escrito."
   - "Regla dura: sin dirección, mapa, LocalBusiness con address ni Google Business mientras no haya oficina. Valencia, Maracaibo y Barquisimeto no tienen página propia."

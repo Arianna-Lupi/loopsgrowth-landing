@@ -5,7 +5,7 @@ familia: seo
 nombre: Venezuela
 draft: false
 reviewedBy: "Juan Angulo (revisión, 2026-11-24)"
-publishAt: 2026-12-08
+publishAt: 2026-11-24
 title: "Agencia SEO en Venezuela: Google y ChatGPT | Loops Growth"
 description: "Agencia SEO para empresas de Venezuela: trabajamos tu SEO y tu posicionamiento en IA para que te encuentren en Google y en ChatGPT. Trabajo remoto y reportes."
 h1: "Agencia SEO en Venezuela para crecer en Google y en la IA"
@@ -37,7 +37,7 @@ secciones:
 remoto_titulo: Trabajo remoto, sin importar la ciudad
 ciudades:
   - nombre: Caracas
-    pagina: false
+    pagina: true
   - nombre: Valencia
   - nombre: Maracaibo
   - nombre: Barquisimeto
