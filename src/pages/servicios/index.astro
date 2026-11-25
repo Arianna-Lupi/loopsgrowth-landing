@@ -6,7 +6,9 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Crumbs from '../../components/landing/Crumbs.astro';
 import Closing from '../../components/landing/Closing.astro';
+import Faq from '../../components/landing/Faq.astro';
 import { getPaginas } from '../../lib/paginas';
+import { getLanding } from '../../lib/content';
 import { buildBreadcrumb } from '../../lib/seo';
 import { siteUrl } from '../../lib/site';
 
@@ -22,6 +24,19 @@ if (servicios.length === 0) throw new Error('Sin servicios publicados no existe 
 const grupos = Object.entries(GRUPOS)
   .map(([id, nombre]) => ({ id, nombre, items: servicios.filter((s) => (s.data.grupo ?? 'ia') === id).sort((a, b) => a.data.nombre.localeCompare(b.data.nombre, 'es')) }))
   .filter((g) => g.items.length > 0);
+const { how_it_works: how } = await getLanding();
+const SITUACIONES = [
+  { titulo: 'Google no te muestra', texto: 'Tienes páginas que no aparecen o el tráfico se estancó. El punto de partida es la parte técnica: que Google pueda rastrear, indexar y entender tu sitio antes de escribir más.' },
+  { titulo: 'Te visitan, pero no te buscan por lo que vendes', texto: 'Aquí falta contenido que responda las preguntas de quien compra. Se trabaja qué páginas crear, cuáles mejorar y cómo enlazarlas entre sí.' },
+  { titulo: 'Tu competencia tiene más respaldo', texto: 'Cuando otros sitios hablan de tus competidores y no de ti, el trabajo pasa por conseguir enlaces y menciones en fuentes con lectores reales.' },
+  { titulo: 'La IA recomienda a otros', texto: 'Si preguntas a un asistente por tu categoría y tu marca no aparece, toca revisar qué puede leer sobre ti y qué fuentes cita.' },
+];
+const FAQ = [
+  { pregunta: '¿Puedo contratar un solo servicio?', respuesta: 'Sí. Los servicios se pueden contratar por separado o combinar. En la primera llamada vemos cuál responde a tu situación.' },
+  { pregunta: '¿El SEO y el posicionamiento en IA se trabajan por separado?', respuesta: 'Los tratamos como una sola estrategia, porque comparten la base: un sitio que se puede rastrear, contenido claro y menciones en fuentes confiables.' },
+  { pregunta: '¿Cómo se define la inversión?', respuesta: 'Depende de la auditoría. Después de revisar tu negocio presentamos una propuesta con el alcance, las prioridades y la inversión.' },
+  { pregunta: '¿Trabajan a distancia?', respuesta: 'Sí. Las llamadas y las revisiones se hacen por videollamada, y el avance se comparte por escrito.' },
+];
 const base = siteUrl.replace(/\/+$/, '');
 const crumbs = [{ name: 'Inicio', path: '/' }, { name: 'Servicios', path: '/servicios/' }];
 const schema = { '@context': 'https://schema.org', '@graph': [buildBreadcrumb(base, crumbs, `${base}/servicios/`)] };
@@ -52,6 +67,38 @@ const schema = { '@context': 'https://schema.org', '@graph': [buildBreadcrumb(ba
       }
     </div>
   </section>
+  <section class="extra" data-tone="yellow" aria-labelledby="sit-title">
+    <div class="wrap">
+      <h2 id="sit-title" data-rv>Cómo elegir según tu situación</h2>
+      <ul class="boxes" role="list">
+        {
+          SITUACIONES.map((s) => (
+            <li data-rv>
+              <h3>{s.titulo}</h3>
+              <p>{s.texto}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+  <section class="extra" data-tone="light" aria-labelledby="how-title">
+    <div class="wrap">
+      <h2 id="how-title" data-rv>{how.title.text}</h2>
+      <ol class="boxes" role="list">
+        {
+          how.steps.map((step, i) => (
+            <li data-rv>
+              <h3>{i + 1}. {step.title.text}</h3>
+              <p>{step.description.text}</p>
+              <p><strong>{step.timeframe.text}</strong></p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+  <Faq items={FAQ} tone="dark" />
   <Closing tone="purple" title="¿No sabes cuál necesitas?" text="Agenda una llamada con el equipo de Loops Growth y revisamos tu caso para decidir por dónde empezar." />
 </BaseLayout>
 
@@ -67,6 +114,13 @@ const schema = { '@context': 'https://schema.org', '@graph': [buildBreadcrumb(ba
   .cards a:focus-visible { outline: var(--focus-width) solid var(--focus-ring); outline-offset: var(--focus-offset); }
   .cards h3 { color: inherit; }
   .cards p { margin: 0; }
+  .extra { padding-block: var(--section-y); }
+  .extra h2 { max-width: 22ch; margin-bottom: 1.5rem; text-wrap: balance; }
+  .boxes { display: grid; gap: 1rem; margin: 0; padding: 0; list-style: none; }
+  .boxes li { display: grid; gap: 0.5rem; align-content: start; padding: 1.25rem; border: var(--border-pop); border-radius: var(--radius-card); background: var(--color-brand-white); color: var(--color-brand-dark); }
+  .boxes h3 { color: inherit; }
+  .boxes p { margin: 0; }
+  @media (min-width: 40em) { .boxes { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
   @media (min-width: 40em) { .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
   @media (min-width: 64em) { .cards { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 </style>
