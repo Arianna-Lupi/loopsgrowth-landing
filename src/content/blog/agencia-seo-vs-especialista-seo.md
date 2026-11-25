@@ -6,13 +6,13 @@ author: ari
 cluster: L4-eleccion
 keyword: agencia seo vs especialista seo
 draft: false
-updatedDate: 2026-11-24
+updatedDate: 2026-11-25
 reviewedBy: "Juan Angulo (revisión de la ampliación, 2026-11-24)"
 ---
 
 > **Respuesta corta:** contrata a un especialista SEO si necesitas criterio y guía sobre un trabajo que alguien de tu equipo puede ejecutar. Contrata a una agencia SEO si necesitas que otro equipo haga el trabajo completo: técnica, contenido y autoridad. Ninguna de las dos opciones es mejor en general. Depende de qué te falta hoy: criterio, tiempo o equipo.
 
-## Qué es cada opción
+## ¿Qué diferencia hay entre especialista, freelance y agencia?
 
 Un **especialista SEO** es una persona con experiencia que analiza tu sitio, define qué hacer y, según el acuerdo, ejecuta una parte. Un **freelance** suele ser también una persona, con la diferencia de que trabaja por proyecto o por horas y casi siempre ejecuta él mismo. Una **agencia SEO** es un equipo con varios perfiles, por ejemplo técnico, contenido y gestión de proyecto, que se reparten el trabajo.
 
@@ -30,7 +30,7 @@ Google resume en su guía [¿Necesitas un especialista en SEO?](https://develope
 | Qué necesitas de tu lado | Alguien que implemente los cambios | Que le des acceso y decisiones rápidas | Un contacto que apruebe y dé accesos |
 | Riesgo principal | Que no tenga tiempo para todo | Que no haya relevo si se ausenta | Que tu cuenta no tenga a alguien con nombre y apellido |
 
-## Qué trabajo hay que cubrir
+## ¿Qué trabajo hay que cubrir?
 
 Antes de elegir, mira el trabajo completo. Un proyecto de SEO suele repartirse en estos frentes:
 
@@ -43,7 +43,7 @@ Antes de elegir, mira el trabajo completo. Un proyecto de SEO suele repartirse e
 
 El frente que más se olvida es el último. Una recomendación que nadie implementa no cambia nada en tu web. Por eso conviene preguntar desde el principio quién ejecuta los cambios y con qué calendario.
 
-## Cuándo conviene un especialista
+## ¿Cuándo conviene un especialista?
 
 - Ya tienes un equipo de marketing o de desarrollo que puede implementar los cambios.
 - Lo que te falta es una estrategia clara y alguien que revise el trabajo.
@@ -52,7 +52,7 @@ El frente que más se olvida es el último. Una recomendación que nadie impleme
 
 Antes de firmar, confirma que tu equipo tiene tiempo real para implementar. Si las tareas técnicas van a esperar meses en la cola de desarrollo, el consejo se acumula sin efecto. Pregunta también qué pasa si la persona se enferma o se va de vacaciones, y dónde queda documentado el trabajo.
 
-## Cuándo conviene una agencia
+## ¿Cuándo conviene una agencia?
 
 - No tienes equipo interno que ejecute SEO.
 - Necesitas trabajo técnico, contenido y autoridad al mismo tiempo, y que alguien responda por el conjunto.
@@ -71,7 +71,7 @@ Estos ejemplos son hipotéticos y sirven para razonar tu caso.
 
 **Un sitio que va a cambiar de plataforma.** Es un proyecto acotado y con riesgo: URL que cambian, páginas que desaparecen, redirecciones. Importa que quien lo lleve tenga experiencia en una [migración SEO](/servicios/migracion-seo/), sea una persona o un equipo, y que entre antes del cambio. Google indica en su guía que contratar durante un rediseño o un lanzamiento es buen momento, cuanto antes mejor.
 
-## Cómo comparar dos propuestas
+## ¿Cómo comparar dos propuestas?
 
 Pon las propuestas en la misma tabla. Si una no responde alguna fila, pídelo por escrito.
 
@@ -87,7 +87,7 @@ Pon las propuestas en la misma tabla. Si una no responde alguna fila, pídelo po
 
 No compares solo la inversión. Dos cifras distintas pueden describir trabajos muy diferentes, y una propuesta sin alcance claro no se puede evaluar.
 
-## Qué preguntar en la primera reunión
+## ¿Qué preguntar en la primera reunión?
 
 1. ¿Quién trabajará mi cuenta y qué hará cada persona?
 2. ¿Cómo se define el objetivo y cómo se mide?
