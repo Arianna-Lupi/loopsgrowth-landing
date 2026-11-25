@@ -22,20 +22,26 @@ const published = (d, date, now) => d.draft === false && due(date, now);
 export function contentState(now = new Date()) {
   const live = new Set(['/']);
   const hidden = new Set();
-  const add = (path, ok) => (ok ? live : hidden).add(path);
+  /** Fecha real de la última publicación o actualización de cada ruta publicada (para `lastmod`). */
+  const dates = new Map();
+  const add = (path, ok, date) => {
+    (ok ? live : hidden).add(path);
+    if (ok && date) dates.set(path, new Date(date));
+  };
   const paginas = yamlEntries('src/content/paginas');
-  for (const [, d] of paginas) add(d.ruta, published(d, d.publishAt, now));
+  for (const [, d] of paginas) add(d.ruta, published(d, d.publishAt, now), d.publishAt);
   if (paginas.some(([, d]) => d.tipo === 'servicio' && published(d, d.publishAt, now))) live.add('/servicios/');
   else hidden.add('/servicios/');
   for (const [id, d] of yamlEntries('src/content/paises')) {
     const path = d.tipo === 'ciudad' ? `/agencia-seo-${d.pais}/${d.ciudad}/` : d.familia === 'aeo' ? `/agencia-aeo-${id.replace(/^aeo-/, '')}/` : `/agencia-seo-${id}/`;
-    add(path, published(d, d.publishAt, now));
+    add(path, published(d, d.publishAt, now), d.publishAt);
   }
   const posts = mdEntries('src/content/blog');
-  for (const [id, d] of posts) add(`/blog/${id}/`, published(d, d.pubDate, now));
-  if (posts.some(([, d]) => published(d, d.pubDate, now))) live.add('/blog/');
+  for (const [id, d] of posts) add(`/blog/${id}/`, published(d, d.pubDate, now), d.updatedDate ?? d.pubDate);
+  const postDates = [...dates].filter(([path]) => path.startsWith('/blog/')).map(([, date]) => date.valueOf());
+  if (posts.some(([, d]) => published(d, d.pubDate, now))) add('/blog/', true, postDates.length ? Math.max(...postDates) : undefined);
   else hidden.add('/blog/');
-  return { live, hidden };
+  return { live, hidden, dates };
 }
 
 /**

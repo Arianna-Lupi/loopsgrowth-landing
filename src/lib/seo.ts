@@ -62,7 +62,11 @@ export function buildOrganization(data: any, siteUrl: string, authorPath?: strin
     description: 'Agencia de crecimiento orgánico a través de Google, ChatGPT y Gemini.',
     email: 'hello@loopsgrowth.com',
     areaServed: AREA_SERVED,
-    sameAs: ['https://ariannalupi.com', 'https://www.linkedin.com/in/arianna-lupi/'],
+    sameAs: [
+      'https://www.linkedin.com/company/loops-growth/',
+      'https://ariannalupi.com',
+      'https://www.linkedin.com/in/arianna-lupi/',
+    ],
     founder: {
       '@type': 'Person',
       name: 'Arianna Lupi',
