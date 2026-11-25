@@ -57,7 +57,7 @@ es:
     description:
       - text: "Tu cliente te busca en Google y, cada vez más, le pregunta a un asistente de IA."
         status: verified
-      - text: "Trabajamos para que tus clientes te encuentren en el momento que te estan buscando, con contenido y optimizaciones y estrategias que terminan en ventas sin depender de ads."
+      - text: "Trabajamos para que tus clientes te encuentren en el momento que te están buscando, con contenido y optimizaciones y estrategias que terminan en ventas sin depender de ads."
         status: verified
       - text: "Contrata un equipo de especialistas con 8 años de experiencia, que arman tu estrategia, ejecutan, implementan y monitorean los resultados y ventas de tu web."
         status: verified
@@ -109,12 +109,12 @@ es:
       text: "Tu cliente te busca en Google y, cada vez más, le pregunta a un asistente de IA."
       status: verified
     subtitle:
-      text: "Trabajamos para que tus clientes te encuentren en el momento que te estan buscando, con contenido y optimizaciones y estrategias que terminan en ventas sin depender de ads."
+      text: "Trabajamos para que tus clientes te encuentren en el momento que te están buscando, con contenido y optimizaciones y estrategias que terminan en ventas sin depender de ads."
       status: verified
     items:
-      - text: "Tu cliente te busca en Google y, cada vez más, le pregunta a un asistente de IA. Posicionamos tu tienda donde se toman las decisiones de compra."
+      - text: "Posicionamos tu tienda donde se toman las decisiones de compra."
         status: verified
-      - text: "Trabajamos para que tus clientes te encuentren en el momento que te estan buscando, con contenido y optimizaciones y estrategias que terminan en ventas sin depender de ads."
+      - text: "Trabajamos para que tus clientes te encuentren en el momento que te están buscando, con contenido y optimizaciones y estrategias que terminan en ventas sin depender de ads."
         status: verified
       - text: "Contrata un equipo de especialistas con 8 años de experiencia, que arman tu estrategia, ejecutan, implementan y monitorean los resultados y ventas de tu web."
         status: verified
@@ -553,7 +553,7 @@ es:
           reason: "Aprobado por Ari por escrito en Slack el 2026-11-24."
   agenda:
     title:
-      text: "¿Listo para que te encuentren cuando te estan buscando?"
+      text: "¿Listo para que te encuentren cuando te están buscando?"
       status: verified
     intro:
       text: "Agenda una llamada de {duration}. Sin costo y sin compromiso. Entendemos tu negocio y te decimos con honestidad si podemos ayudarte. Si no somos el equipo correcto, también te lo decimos."

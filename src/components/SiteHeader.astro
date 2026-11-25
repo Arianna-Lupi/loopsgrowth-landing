@@ -7,7 +7,7 @@
  * asume después, basta mover esa línea).
  * Menú principal: `<nav>` con enlaces reales, sin JavaScript. Bajo 48em baja a una segunda fila del header
  * (que deja de ser pegajoso bajo 64em para no ocupar la pantalla); desde 48em va en línea entre el logo y la CTA.
- * El CTA del header se muestra siempre; bajo 40em va compacto (36 a 40 px de alto, cumple SC 2.5.8).
+ * El CTA del header se muestra siempre; bajo 40em va compacto (letra y relleno menores, alto mínimo de 44 px).
  */
 import CtaLink from './CtaLink.astro';
 import Logo from './brand/Logo.astro';
@@ -166,7 +166,7 @@ const tone = 'light';
       padding-block: 0.5rem;
     }
     .header-cta :global(.cta) {
-      min-height: 2.25rem;
+      min-height: var(--target-min);
       padding: 0.25rem 0.625rem;
       font-size: 0.75rem;
       box-shadow: 2px 2px 0 var(--pop-shadow-color);
@@ -179,7 +179,7 @@ const tone = 'light';
 
   @media (min-width: 26.51em) and (max-width: 39.99em) {
     .header-cta :global(.cta) {
-      min-height: 2.5rem;
+      min-height: var(--target-min);
       padding: 0.25rem 0.625rem;
       font-size: 0.75rem;
       box-shadow: 2px 2px 0 var(--pop-shadow-color);

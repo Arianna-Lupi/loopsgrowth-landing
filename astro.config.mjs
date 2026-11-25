@@ -3,6 +3,8 @@ import { defineConfig, fontProviders } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 import { loadEnv } from 'vite';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
+import { parse as parseYaml } from 'yaml';
 import { satteri } from '@astrojs/markdown-satteri';
 import { contentState, liveLinksPlugin } from './scripts/lib/live-content.mjs';
 
@@ -27,6 +29,17 @@ function parseSiteUrl(value) {
 const { live: livePaths, hidden: hiddenPaths } = contentState();
 const isProd = env.PUBLIC_ENV !== 'local' && env.PUBLIC_ENV !== 'preview';
 
+// Fecha de última modificación por artículo, leída del frontmatter (misma fuente que `contentState`).
+const postDates = new Map();
+for (const f of existsSync('src/content/blog') ? readdirSync('src/content/blog').filter((n) => n.endsWith('.md')) : []) {
+  const fm = readFileSync(`src/content/blog/${f}`, 'utf8').match(/^---\n([\s\S]*?)\n---/)?.[1] ?? '';
+  const data = parseYaml(fm) ?? {};
+  const date = data.updatedDate ?? data.pubDate;
+  if (date) postDates.set(f.replace(/\.md$/, ''), new Date(date));
+}
+
+const latestPostDate = [...postDates].filter(([slug]) => livePaths.has(`/blog/${slug}/`)).map(([, d]) => d).sort((a, b) => b.valueOf() - a.valueOf())[0];
+
 const site = parseSiteUrl(env.PUBLIC_SITE_URL) ?? 'https://loopsgrowth.com';
 
 // https://astro.build/config
@@ -36,7 +49,16 @@ export default defineConfig({
   integrations: [
     sitemap({
       filter: (page) =>
-        !page.includes('/privacidad') && !hiddenPaths.has(new URL(page).pathname) && !page.includes('/marca/hoja'),
+        !page.includes('/privacidad') && !page.includes('/404') && !hiddenPaths.has(new URL(page).pathname) && !page.includes('/marca/hoja'),
+      // `lastmod` solo cuando hay una fecha real: `updatedDate` o `pubDate` del artículo, y para el índice del blog la del
+      // artículo más reciente. El resto de páginas sale sin `lastmod` (la fecha del build cambiaría cada día sin que cambie nada).
+      serialize(item) {
+        const path = new URL(item.url).pathname;
+        const slug = path.match(/^\/blog\/([^/]+)\/$/)?.[1];
+        const date = slug ? postDates.get(slug) : path === '/blog/' ? latestPostDate : undefined;
+        if (date) item.lastmod = date.toISOString();
+        return item;
+      },
     }),
   ],
   markdown: isProd ? { processor: satteri({ mdastPlugins: [liveLinksPlugin(livePaths)] }) } : {},

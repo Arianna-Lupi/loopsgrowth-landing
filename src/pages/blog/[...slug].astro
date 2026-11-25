@@ -30,6 +30,11 @@ const author = AUTHORS[post.data.author];
 const authorPage = (await getLivePaths()).has('/equipo/arianna-lupi/') ? '/equipo/arianna-lupi/' : undefined;
 const authorHref = authorPage ?? author.url;
 const path = `/blog/${post.id}/`;
+// Otros artículos publicados (los más recientes) para enlazar entre sí.
+const related = (await getPosts()).filter((p) => p.id !== post.id).slice(0, 3);
+// Title de 60 caracteres o menos: el sufijo de marca solo entra si cabe.
+const withBrand = `${post.data.title} | Loops Growth`;
+const seoTitle = withBrand.length <= 60 ? withBrand : post.data.title;
 const data = await getLanding();
 const label = ctaLabel(data);
 const schema = buildArticleSchema({
@@ -51,7 +56,7 @@ const schema = buildArticleSchema({
 
 <BaseLayout
   reveal
-  title={`${post.data.title} | Loops Growth`}
+  title={seoTitle}
   description={post.data.description}
   path={path}
   ogType="article"
@@ -119,6 +124,18 @@ const schema = buildArticleSchema({
               </ul>
             </div>
           </aside>
+          {
+            related.length > 0 && (
+              <nav class="related" aria-labelledby="related-title">
+                <h2 id="related-title">Sigue leyendo</h2>
+                <ul role="list">
+                  {related.map((p) => (
+                    <li><a href={`/blog/${p.id}/`}>{p.data.title}</a></li>
+                  ))}
+                </ul>
+              </nav>
+            )
+          }
           <aside class="post-cta post-cta--end" aria-labelledby="post-cta-title">
             <h2 id="post-cta-title">¿Quieres revisar tu caso?</h2>
             <p>Agenda una llamada con el equipo de Loops Growth.</p>
@@ -436,6 +453,29 @@ const schema = buildArticleSchema({
       align-items: start;
       padding: 1.5rem;
     }
+  }
+  .related {
+    margin-block: 2.5rem;
+  }
+  .related h2 {
+    margin-block-end: 0.75rem;
+    font-size: var(--text-title);
+    line-height: var(--text-title--line-height);
+  }
+  .related ul {
+    display: grid;
+    gap: 0.25rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .related a {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--target-min);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
   }
   .post-cta {
     max-width: 65ch;

@@ -1,0 +1,54 @@
+---
+/**
+ * Página 404. Workers Assets la sirve con estado 404 (`not_found_handling: "404-page"` en wrangler.json).
+ * Siempre `noindex` y sin canonical. Enlaces absolutos desde la raíz, porque se muestra en cualquier ruta.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Página no encontrada: Loops Growth"
+  description="La página que buscas no existe o cambió de lugar. Vuelve al inicio, a los servicios o al blog."
+  path="/404/"
+  noindex
+>
+  <section class="not-found" aria-labelledby="nf-title" data-tone="light">
+    <div class="wrap">
+      <h1 id="nf-title">No encontramos esta página</h1>
+      <p>La dirección no existe o cambió de lugar. Puedes seguir por alguno de estos enlaces.</p>
+      <ul class="nf-links" role="list">
+        <li><a href="/">Ir al inicio</a></li>
+        <li><a href="/servicios/">Ver los servicios</a></li>
+        <li><a href="/blog/">Leer el blog</a></li>
+      </ul>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .not-found {
+    padding-block: var(--section-y);
+  }
+
+  .not-found h1 {
+    margin-block-end: 1rem;
+  }
+
+  .nf-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.5rem;
+    margin-block-start: 1.5rem;
+    padding: 0;
+    list-style: none;
+  }
+
+  .nf-links a {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--target-min);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+</style>

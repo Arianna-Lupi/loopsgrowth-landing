@@ -8,6 +8,20 @@
 export const THEME_COLOR = '#' + '4228d1';
 export const DEFAULT_OG_IMAGE = '/og-image.png';
 
+/** Texto plano para JSON-LD: quita enlaces y énfasis de Markdown y junta los saltos de línea. */
+export function plainText(md: string): string {
+  return md
+    .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
+    .replace(/(\*\*|__|\*|`)/g, '')
+    .replace(/\s*\n+\s*/g, ' ')
+    .trim();
+}
+
+/** Fecha de contenido (solo día, escrita en el frontmatter) como instante con la zona horaria de Venezuela. */
+export function isoVE(d: Date): string {
+  return `${d.toISOString().slice(0, 10)}T00:00:00-04:00`;
+}
+
 export interface LandingSchemaParams {
   data: any;
   siteUrl: string;
@@ -36,12 +50,19 @@ export function buildOrganization(data: any, siteUrl: string, authorPath?: strin
     name: data.brand?.name?.text || 'Loops Growth',
     alternateName: 'Loops',
     url: `${baseUrl}/`,
-    logo: `${baseUrl}/favicon.svg`,
+    logo: {
+      '@type': 'ImageObject',
+      '@id': `${baseUrl}/#logo`,
+      url: `${baseUrl}/logo-512.png`,
+      contentUrl: `${baseUrl}/logo-512.png`,
+      width: 512,
+      height: 512,
+    },
     image: `${baseUrl}/og-image.png`,
     description: 'Agencia de crecimiento orgánico a través de Google, ChatGPT y Gemini.',
     email: 'hello@loopsgrowth.com',
     areaServed: AREA_SERVED,
-    sameAs: ['https://ariannalupi.com', 'https://juan-tech.com', 'https://www.linkedin.com/in/arianna-lupi/'],
+    sameAs: ['https://ariannalupi.com', 'https://www.linkedin.com/in/arianna-lupi/'],
     founder: {
       '@type': 'Person',
       name: 'Arianna Lupi',
@@ -124,7 +145,7 @@ export function buildLandingSchema(params: LandingSchemaParams): Record<string, 
           name: item.question?.text || '',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: (item.answer?.text || '').replace(/\n+/g, ' '),
+            text: plainText(item.answer?.text || ''),
           },
         })),
       }
@@ -186,10 +207,16 @@ export function buildArticleSchema(p: ArticleSchemaParams): Record<string, unkno
         mainEntityOfPage: { '@type': 'WebPage', '@id': url },
         url,
         inLanguage: 'es',
-        datePublished: p.datePublished.toISOString(),
-        dateModified: (p.dateModified ?? p.datePublished).toISOString(),
+        datePublished: isoVE(p.datePublished),
+        dateModified: isoVE(p.dateModified ?? p.datePublished),
         image: `${base}${DEFAULT_OG_IMAGE}`,
-        author: { '@type': 'Person', name: p.authorName, url: p.authorUrl },
+        author: {
+          '@type': 'Person',
+          ...(p.authorUrl.startsWith(`${base}/equipo/`) ? { '@id': `${p.authorUrl}#person` } : {}),
+          name: p.authorName,
+          url: p.authorUrl,
+        },
+        isPartOf: { '@id': `${base}/#website` },
         publisher: { '@id': `${base}/#organization` },
       },
       buildBreadcrumb(base, p.breadcrumbs, url),
@@ -253,7 +280,7 @@ export function buildPageGraph(
       mainEntity: faq.map((f) => ({
         '@type': 'Question',
         name: f.pregunta,
-        acceptedAnswer: { '@type': 'Answer', text: f.respuesta.replace(/\s*\n+\s*/g, ' ') },
+        acceptedAnswer: { '@type': 'Answer', text: plainText(f.respuesta) },
       })),
     });
   }

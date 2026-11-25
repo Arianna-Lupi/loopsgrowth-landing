@@ -6,7 +6,7 @@ import { defineConfig, devices } from '@playwright/test';
 //
 // Nota: si un agente de IA ejecuta esto, Astro 7 deja `astro preview` en segundo plano y
 // Playwright ve que el proceso terminó. En ese caso levanta antes el servidor
-// (`npx astro build && npx astro preview --port 4322`); `reuseExistingServer` lo reutiliza.
+// (`PUBLIC_ENV=local npx astro build && npx astro preview --port 4322`); `reuseExistingServer` lo reutiliza.
 // Termínalo después con `npx astro preview stop`. En CI (`CI` definida) nunca se reutiliza:
 // siempre construye y levanta uno propio. Reutilizar un servidor previo es solo para local, y
 // `tests/global-setup.ts` falla si `dist` es más viejo que `src/`, para no validar un build viejo:
@@ -37,6 +37,8 @@ export default defineConfig({
   ],
   webServer: {
     command: 'npx astro build && npx astro preview --port 4322',
+    // Build de revisión: la hoja de marca (`/marca/hoja/`) no existe en un build de producción.
+    env: { PUBLIC_ENV: 'local' },
     url: 'http://localhost:4322',
     reuseExistingServer: !process.env.CI,
     timeout: 180000,

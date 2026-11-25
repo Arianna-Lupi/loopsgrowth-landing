@@ -29,12 +29,27 @@ if (d.tipo === 'autora') crumbs.push({ name: 'Nosotros', path: '/nosotros/' });
 crumbs.push({ name: d.nombre, path });
 
 const extra: Record<string, unknown>[] = [];
+if (d.tipo === 'nosotros' || d.tipo === 'servicio') {
+  extra.push({
+    '@type': d.tipo === 'nosotros' ? 'AboutPage' : 'WebPage',
+    '@id': `${base}${path}#webpage`,
+    url: `${base}${path}`,
+    name: d.title,
+    description: d.description,
+    isPartOf: { '@id': `${base}/#website` },
+    about: { '@id': d.tipo === 'nosotros' ? `${base}/#organization` : `${base}${path}#service` },
+    breadcrumb: { '@id': `${base}${path}#breadcrumb` },
+    inLanguage: 'es',
+  });
+}
 if (d.tipo === 'servicio') {
   extra.push({
     '@type': 'Service',
     '@id': `${base}${path}#service`,
     name: d.h1,
     serviceType: d.nombre,
+    description: d.description,
+    mainEntityOfPage: { '@id': `${base}${path}#webpage` },
     provider: { '@id': `${base}/#organization` },
     areaServed: AREA_SERVED,
     url: `${base}${path}`,
