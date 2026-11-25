@@ -496,6 +496,8 @@ test.describe('Lote C: tarjetas del equipo', () => {
       expect(new Set(styles.map((s) => s.radius)).size).toBe(1);
       // La tarjeta entra con una animación de scroll (transform + opacity): se mide cuando ya terminó.
       await cards.first().scrollIntoViewIfNeeded();
+      // `rv-done` marca que el observador ya lanzó la entrada; sin esperarlo, la animación puede empezar después de medir.
+      await expect(cards.first()).toHaveClass(/rv-done/);
       await settleMotion(page);
       const before = await cards.first().evaluate((el) => getComputedStyle(el).transform);
       expect(before).toBe('none');
