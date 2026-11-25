@@ -9,9 +9,15 @@
 import LangText from '../ui/LangText.astro';
 import FaqItem from '../ui/FaqItem.astro';
 import { getLanding } from '../../lib/content';
+import { getFooterExplore } from '../../lib/nav';
+import { getPosts } from '../../lib/blog';
 
 const data = await getLanding();
-const { faq } = data;
+const { faq, nav } = data;
+// Enlaces internos del cuerpo de la home: páginas y artículos publicados, con sus nombres reales.
+const pages = (await getFooterExplore()).filter((l) => !l.href.includes('#') && !l.href.startsWith('/equipo/'));
+const posts = (await getPosts()).slice(0, 3).map((p) => ({ href: `/blog/${p.id}/`, label: p.data.title }));
+const explore = [...pages, ...posts];
 ---
 
 <section id="faq" aria-labelledby="faq-title" data-tone="light">
@@ -27,6 +33,18 @@ const { faq } = data;
         ))
       }
     </div>
+    {
+      explore.length > 0 && (
+        <nav class="faq-explore" aria-labelledby="explore-title">
+          <h3 id="explore-title">{nav.explore_label.text}</h3>
+          <ul role="list">
+            {explore.map((l) => (
+              <li><a href={l.href}><LangText text={l.label} /></a></li>
+            ))}
+          </ul>
+        </nav>
+      )
+    }
   </div>
 </section>
 
@@ -50,6 +68,29 @@ const { faq } = data;
     display: grid;
     gap: 1rem;
     min-width: 0;
+  }
+
+  .faq-explore {
+    grid-column: 1 / -1;
+    min-width: 0;
+  }
+
+  .faq-explore ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 1.5rem;
+    margin: 0.5rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .faq-explore a {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--target-min);
+    color: var(--link);
+    text-decoration: underline;
+    text-underline-offset: 4px;
   }
 
   @media (min-width: 64em) {
