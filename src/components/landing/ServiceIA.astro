@@ -22,7 +22,7 @@ const { d, crumbs } = Astro.props;
 const data = await getLanding();
 const label = ctaLabel(data);
 const sub = toBlocks(d.intro)[0];
-const [que, decide] = d.secciones;
+const [que, decide, ...extra] = d.secciones;
 const steps = data.how_it_works.steps;
 ---
 
@@ -131,6 +131,21 @@ const steps = data.how_it_works.steps;
     </div>
   </section>
 
+  {
+    extra.length > 0 && (
+      <section class="rows" data-tone="light" aria-label="Más sobre el posicionamiento en IA">
+        <div class="wrap">
+          {extra.map((e: any) => (
+            <div class="row">
+              <h2 data-rv>{e.titulo}</h2>
+              <div data-rv data-rv-index="1"><Prose text={e.cuerpo} /></div>
+            </div>
+          ))}
+        </div>
+      </section>
+    )
+  }
+
   <Results tone="yellow" />
   <Faq items={d.faq} tone="light" />
   <Closing tone="purple" title="¿Quieres revisar tu caso?" text="Agenda una llamada con el equipo de Loops Growth y revisamos tu situación. Sin costo y sin compromiso." />
@@ -138,6 +153,10 @@ const steps = data.how_it_works.steps;
 
 <style>
   section { padding-block: var(--section-y); }
+  .row { display: grid; gap: 1rem; padding-block: 2rem; border-top: var(--border-pop); }
+  .row:last-child { border-bottom: var(--border-pop); }
+  .row h2 { max-width: 16ch; font-size: var(--text-heading); }
+  @media (min-width: 64em) { .row { grid-template-columns: 0.9fr 1.1fr; gap: 3rem; align-items: start; } }
   h2 { letter-spacing: -0.02em; max-width: 20ch; margin-bottom: 1rem; text-wrap: balance; }
   .hero { padding-block: 1.5rem var(--section-y); }
   .hero-grid { display: grid; gap: 2.5rem; align-items: center; }
