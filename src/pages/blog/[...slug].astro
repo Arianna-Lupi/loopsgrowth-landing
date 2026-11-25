@@ -240,6 +240,8 @@ const schema = buildArticleSchema({
     min-width: 0;
     padding: 0.5rem 0.5rem;
     overflow-wrap: anywhere;
+    /* En pantallas estrechas las palabras largas se cortan por sílaba y no por cualquier letra. */
+    hyphens: auto;
     border: 2px solid var(--color-brand-dark);
     text-align: left;
     vertical-align: top;

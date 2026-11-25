@@ -4,7 +4,8 @@ tipo: servicio
 ruta: /servicios/posicionamiento-en-ia/
 nombre: Posicionamiento en IA
 draft: false
-reviewedBy: "Arianna Lupi (aprobación escrita en Slack, 2026-11-24)"
+reviewedBy: "Ampliación del 2026-11-24 pendiente de lectura de Juan o Ari"
+updatedAt: 2026-11-24
 title: "Posicionamiento en IA: aparece en ChatGPT, Gemini y Google"
 description: "Servicio de posicionamiento en IA: trabajamos para que ChatGPT, Gemini y Google encuentren y consideren tu negocio. Auditoría, entregables y medición."
 h1: "Posicionamiento en IA: aparece en ChatGPT, Gemini y Google"
@@ -25,6 +26,34 @@ secciones:
       Por eso el trabajo no consiste en un truco. Consiste en que tu sitio se pueda leer, en que explique con claridad qué haces y para quién, y en que haya menciones tuyas en lugares que el asistente considera confiables. Cada plataforma decide con sus propios criterios, y esos criterios cambian.
 
       Si tu empresa está en Venezuela, mira cómo trabajamos como [agencia SEO en Venezuela](/agencia-seo-venezuela/).
+  - titulo: Señales de que lo necesitas
+    cuerpo: |
+      Conviene revisar tu visibilidad en IA si reconoces alguna de estas situaciones:
+
+      - Preguntas a un asistente por tu categoría y aparecen competidores, pero tu marca no.
+      - El asistente te menciona con datos antiguos o equivocados sobre lo que ofreces.
+      - Tus clientes comentan que llegaron a ti, o a otra empresa, después de preguntarle a la IA.
+      - Tu web explica poco qué haces, para quién y en qué lugares atiendes.
+      - Ya inviertes en SEO y quieres saber si ese trabajo también se refleja en las respuestas.
+  - titulo: Qué puedes revisar hoy
+    cuerpo: |
+      Antes de contratar a nadie puedes hacer una primera comprobación. Escribe cinco preguntas que haría un cliente que todavía no conoce tu marca y hazlas en una conversación nueva en cada asistente. Anota quién aparece y qué páginas cita la respuesta.
+
+      Después abre el archivo `robots.txt` de tu sitio y confirma que no bloquea el rastreador de búsqueda de OpenAI, llamado OAI-SearchBot. Su [documentación de rastreadores](https://developers.openai.com/api/docs/bots) explica la función de cada uno. Tienes el proceso completo en la guía sobre [cómo aparecer en ChatGPT](/blog/como-aparecer-en-chatgpt/).
+  - titulo: Qué pide Google para sus respuestas de IA
+    cuerpo: |
+      La [documentación de Google sobre las funciones de IA](https://developers.google.com/search/docs/appearance/ai-features?hl=es) indica que no hay requisitos adicionales para aparecer en AI Overviews o en el Modo IA. La página tiene que estar indexada y poder mostrarse con un fragmento en la búsqueda, y no hace falta crear archivos especiales ni un marcado propio para IA.
+
+      Por eso empezamos por las bases: rastreo, indexación y contenido claro. El tráfico que llega desde esas funciones figura en el informe de rendimiento de Search Console, dentro del tipo de búsqueda web.
+  - titulo: Qué necesitamos de tu parte
+    cuerpo: |
+      El trabajo avanza más rápido cuando tu equipo aporta lo que solo él conoce. Te pedimos:
+
+      - Una persona de contacto que apruebe contenidos y cambios.
+      - Acceso a Search Console y a la analítica, con las cuentas a nombre de tu empresa.
+      - Las preguntas y objeciones que escuchas de tus clientes.
+      - Los datos que puedas demostrar sobre tu experiencia, tus servicios y los lugares donde atiendes.
+      - Apoyo de quien publica cambios en la web.
 chat:
   pregunta: "¿Qué agencia SEO me recomiendas para mi tienda online?"
   filas:
@@ -84,6 +113,12 @@ faq:
   - pregunta: "¿Cuál es la inversión?"
     respuesta: |
       La inversión depende de la auditoría. Después de analizar tu negocio y tus oportunidades, presentamos una propuesta con el alcance, las prioridades y la inversión. No trabajamos con un paquete idéntico para todos.
+  - pregunta: "¿Tienen que rehacer mi web?"
+    respuesta: |
+      No como punto de partida. Primero revisamos qué pueden leer los rastreadores y qué entiende un asistente sobre tu negocio. Con ese diagnóstico decides qué cambios hacer y en qué orden.
+  - pregunta: "¿Qué recibo cada mes?"
+    respuesta: |
+      Un resumen escrito de lo que hicimos y de lo que se movió, junto con el resultado de la batería de preguntas: si el asistente te menciona, si te cita y qué otras fuentes y marcas aparecen.
 pendientes:
   - "Ari: aprobar el texto completo (la estrategia aprobó la estructura de la columna Page idea, no la redacción)."
   - "Ari: confirmar que los seis entregables de 'Qué incluye' coinciden con lo que Loops ejecuta hoy."

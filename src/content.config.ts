@@ -287,6 +287,8 @@ const paginas = defineCollection({
       ruta: z.string().regex(/^\/[a-z0-9-]+(?:\/[a-z0-9-]+)*\/$/),
       /** Publicación programada: no sale en producción antes de esta fecha (el cron diario la activa). */
       publishAt: z.coerce.date().optional(),
+      /** Última ampliación o revisión del texto: alimenta el `lastmod` del sitemap. */
+      updatedAt: z.coerce.date().optional(),
       /** Servicio: grupo del índice `/servicios/` y `serviceType` del schema. */
       grupo: z.enum(['tecnico', 'contenido', 'autoridad', 'ia', 'negocio']).optional(),
       /** Servicio genérico: señales de que el servicio hace falta. */

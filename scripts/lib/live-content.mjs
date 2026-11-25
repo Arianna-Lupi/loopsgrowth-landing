@@ -29,8 +29,11 @@ export function contentState(now = new Date()) {
     if (ok && date) dates.set(path, new Date(date));
   };
   const paginas = yamlEntries('src/content/paginas');
-  for (const [, d] of paginas) add(d.ruta, published(d, d.publishAt, now), d.publishAt);
-  if (paginas.some(([, d]) => d.tipo === 'servicio' && published(d, d.publishAt, now))) live.add('/servicios/');
+  for (const [, d] of paginas) add(d.ruta, published(d, d.publishAt, now), d.updatedAt ?? d.publishAt);
+  // El índice de servicios cambia cuando cambia alguno de sus servicios publicados.
+  const servicios = paginas.filter(([, d]) => d.tipo === 'servicio' && published(d, d.publishAt, now));
+  const serviceDates = servicios.map(([, d]) => dates.get(d.ruta)?.valueOf()).filter(Boolean);
+  if (servicios.length) add('/servicios/', true, serviceDates.length ? Math.max(...serviceDates) : undefined);
   else hidden.add('/servicios/');
   for (const [id, d] of yamlEntries('src/content/paises')) {
     const path = d.tipo === 'ciudad' ? `/agencia-seo-${d.pais}/${d.ciudad}/` : d.familia === 'aeo' ? `/agencia-aeo-${id.replace(/^aeo-/, '')}/` : `/agencia-seo-${id}/`;
